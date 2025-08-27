@@ -19,7 +19,6 @@ Usage:
     cstats_legend [-p path/dir/with/xlsx_files] [-csv CCFv3-2020_info.csv] [-v]
 """
 
-from glob import glob
 from pathlib import Path
 import openpyxl
 import pandas as pd
@@ -33,7 +32,7 @@ from openpyxl.styles import Alignment
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -84,10 +83,8 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    path = Path(args.path) if args.path else Path.cwd()
-
-    # Find cluster_* dirs in the current dir
-    xlsx_files = path.glob('*_valid_clusters_table.xlsx')
+    path = args.path or Path.cwd()
+    xlsx_files = match_files(['*_valid_clusters_table.xlsx'], base_path=path)
 
     # Filter out files starting with '~$'
     xlsx_files = [f for f in xlsx_files if not str(f).split('/')[-1].startswith('~$')]

@@ -14,20 +14,19 @@ Usage:
 import nibabel as nib
 import numpy as np
 import pandas as pd
-from glob import glob
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import log_command, print_func_name_args_times
+from unravel.core.utils import log_command, match_files, print_func_name_args_times
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='path/*.csv. Default: *.csv', default='*.csv', action=SM)
+    opts.add_argument('-i', '--input', help="One or more csv paths or glob patterns (space-separated). Default: '*.csv'", default='*.csv', nargs='*', action=SM)
     opts.add_argument('-s', '--sort_col', help='Column to sort by. If used, also use for decoding the NIfTI file.', action=SM)
     opts.add_argument('-val', '--value_cols', help='Column(s) to include in the output NIfTI files. Default: numeric columns other than sort_col.', nargs='*', action=SM)
 
@@ -36,7 +35,7 @@ def parse_args():
 @print_func_name_args_times()
 def csv_to_nii(input_pattern='*.csv', sort_col=None, value_cols=None):
     print()
-    csv_paths = [Path(file) for file in glob(input_pattern)]
+    csv_paths = match_files(input_pattern)
     for csv_path in csv_paths:
         df = pd.read_csv(csv_path)
 

@@ -16,7 +16,6 @@ Usage:
     io_h5_to_tifs -i path/image.h5 -t autofl [-v]
 """
 
-import glob
 import os
 import h5py
 import numpy as np
@@ -28,14 +27,14 @@ from tifffile import imwrite
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path/image.h5', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="Glob pattern for input h5/hdf5 image files (e.g., '*.h5')", required=True, nargs='*', action=SM)
     reqs.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', required=True, action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -43,19 +42,6 @@ def parse_args():
 
     return parser.parse_args()
 
-
-def find_largest_h5_file():
-    """ Find and return the path to the largest .h5 file in the current directory """
-    largest_file = None
-    max_size = -1
-
-    for file in glob.glob('*.h5'):
-        size = os.path.getsize(file)
-        if size > max_size:
-            max_size = size
-            largest_file = file
-
-    return largest_file
 
 def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False):
     """Load full res image from an HDF5 file (.h5) and return ndarray
@@ -112,14 +98,10 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    if args.input: 
-        h5_path = args.input
-    else: 
-        h5_path = find_largest_h5_file()
-        if h5_path:
-            print(f"\n    The largest .h5 file is: {h5_path}")
-        else:
-            print("\n    [red1]No .h5 files found.\n")
+    h5_path = match_files(args.input)
+    if len(h5_path) > 1:
+        print("\n    [red]Multiple .h5 files found. Please specify a single file or use glob patterns to match one file.\n")
+        return
 
     # Load h5 image (highest res dataset) as ndarray and extract voxel sizes in microns
     img, xy_res, z_res = load_h5(h5_path, desired_axis_order="xyz", return_res=True)

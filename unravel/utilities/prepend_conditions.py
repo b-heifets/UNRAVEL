@@ -38,7 +38,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
@@ -57,10 +57,13 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Add --input to specify glob pattern(s) for files to rename. Change default behavior to rename all matching files/dirs. Change -f and -d to enable selective renaming of files or directories.
+
 
 def rename_items(base_path, dir_name, condition, rename_files, rename_dirs, recursive):
-    search_pattern = f'**/{dir_name}*' if recursive else f'{dir_name}*'    
-    for item in base_path.glob(search_pattern):
+    search_pattern = f'**/{dir_name}*' if recursive else f'{dir_name}*'
+    items = match_files(search_pattern, base_path)
+    for item in items:
         if item.is_file() and rename_files:
             new_name = item.parent / f'{condition}_{item.name}'
             item.rename(new_name)

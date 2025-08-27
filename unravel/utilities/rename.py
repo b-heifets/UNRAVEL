@@ -14,7 +14,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -54,7 +54,9 @@ def rename_files(directory, old_text, new_text, recursive=False, rename_type='bo
     else:
         pattern = '*'
 
-    for path in Path(directory).glob(pattern):
+    paths = match_files(pattern, directory)
+
+    for path in paths:
         if (rename_type == 'both' or
             (rename_type == 'files' and path.is_file()) or
             (rename_type == 'dirs' and path.is_dir())):

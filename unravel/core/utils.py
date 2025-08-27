@@ -59,7 +59,7 @@ from rich.text import Text
 from unravel.core.config import Configuration, Config
 
 # TODO: Also output commands with default args to .verbose_command_log.txt or .command_log.txt. Rename to unravel_command_log.txt
-
+# TODO: Add a function for getting the stem from file names or paths that works with exensions with one or more dots.
 
 # Configuration loading
 def load_config(config_path):
@@ -161,10 +161,10 @@ def get_samples(dir_list=None, dir_pattern="sample??", verbose=False):
         # Print the found directories grouped by their parent directories in order
         uniq_parent_dirs = {sample_dir.parent for sample_dir in samples}  # Avoids printing ~ duplicate message when no sample?? dirs are found
         for parent_dir in uniq_parent_dirs:
-            print(f"\n    [bold gold1]get_samples[/]() found these directories in [bright_black bold]{parent_dir}[/]:\n")
+            print(f"\n  [bold gold3]get_samples[/]() found these directories in [bright_black bold]{parent_dir}[/]:\n")
             for sample_dir in samples:
                 if sample_dir.parent == parent_dir:
-                    print(f"        [bold orange_red1]{sample_dir.name}")
+                    print(f"    [bold dark_orange]{sample_dir.name}")
             print()
 
     return samples
@@ -229,8 +229,8 @@ def verbose_start_msg():
     """Print the start command and time if verbose mode is enabled."""
     if Configuration.verbose:
         cmd = f"\n{os.path.basename(sys.argv[0])} {' '.join(sys.argv[1:])}"
-        console.print(f"\n\n[bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]{' '.join(sys.argv[1:])}[/]\n")
-        print(f"\n    [bright_blue]Start:[/] {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        console.print(f"\n\n[bold magenta]{os.path.basename(sys.argv[0])}[/] [bold purple3]{' '.join(sys.argv[1:])}[/]\n")
+        print(f"\n  [bright_blue]Start:[/] {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         return cmd
     return None
 
@@ -238,7 +238,7 @@ def verbose_end_msg():
     """Print the end time if verbose mode is enabled."""
     if Configuration.verbose:
         end_time = datetime.now()
-        console.print(f"\n\n:mushroom: [bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold1]![/][dark_orange]![/][red1]![/] \n")
+        console.print(f"\n\n:mushroom: [bold magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold1]![/][dark_orange]![/][red1]![/] \n")
         return end_time.strftime('%Y-%m-%d %H:%M:%S')
     return None
 
@@ -269,22 +269,7 @@ def log_command(func):
     return wrapper
 
 
-# Function decorator
-
-def get_dir_name_from_args(args, kwargs):
-    """
-    This function checks args and kwargs for a file or directory path
-    and returns a string based on the name of the file or directory.
-    """
-    for arg in args:
-        if isinstance(arg, (str, Path)) and Path(arg).exists():
-            return Path(arg).resolve().name
-
-    for kwarg in kwargs.values():
-        if isinstance(kwarg, (str, Path)) and Path(kwarg).exists():
-            return Path(kwarg).resolve().name
-
-    return Path.cwd().name
+# Function decorators
 
 # Create a thread-local storage for indentation level
 thread_local_data = threading.local()
@@ -304,8 +289,7 @@ def print_func_name_args_times(print_dir=True):
 
     def arg_str_representation(arg):
         """Return a string representation of the argument passed to the decorated function."""
-        # return ARG_REPRESENTATIONS.get(type(arg), str)(arg)
-        return ARG_REPRESENTATIONS.get(type(arg), repr)(arg)
+        return ARG_REPRESENTATIONS.get(type(arg), repr)(arg) # repr is used for unsupported types
     
     def decorator(func):
         @functools.wraps(func)
@@ -323,26 +307,21 @@ def print_func_name_args_times(print_dir=True):
             thread_local_data.indentation_level += 1
 
             # Compute indentation based on the current level
-            indent_str = '  ' * thread_local_data.indentation_level  # Using 4 spaces for each indentation level
+            indent_str = '  ' * thread_local_data.indentation_level  # Using 2 spaces for each indentation level
             
             # Convert args and kwargs to string for printing
             args_str = ', '.join(arg_str_representation(arg) for arg in args)
             kwargs_str = ', '.join(f"{k}={arg_str_representation(v)}" for k, v in kwargs.items())
             combined_args = args_str + (', ' if args_str and kwargs_str else '') + kwargs_str
-            
-            if print_dir:
-                dir_name = get_dir_name_from_args(args, kwargs) # Get dir name the basename of 1st arg with a valid path (e.g., sample??)
-                dir_string = f" for [bold orange_red1]{dir_name}[/]"
-            else:
-                dir_string = ""
 
             # Print out the arguments with the added indent
+            name = func.__name__
             if thread_local_data.indentation_level > 2:  # considering that main function is at level 1
-                print(f"{indent_str}[gold3]{func.__name__!r}[/]\n{indent_str}[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
+                print(f"{indent_str}[dark_orange]{name}([/][bright_black]{args_str}{', ' + kwargs_str if kwargs_str else ''}[/][dark_orange])[/]")
             elif thread_local_data.indentation_level > 1:
-                print(f"\n{indent_str}[gold3]{func.__name__!r}[/]\n{indent_str}[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
+                print(f"\n{indent_str}[dark_orange]{name}([/][bright_black]{args_str}{', ' + kwargs_str if kwargs_str else ''}[/][dark_orange])[/]")
             else:
-                print(f"\nRunning: [bold gold1]{func.__name__!r}[/]{dir_string} with args: [bright_black]({combined_args})[/]")
+                print(f"\n{indent_str}[bold gold3]{name}([/][bright_black]{combined_args}[/][bold gold3])[/]") # bold orange_red1
 
             # Function execution
             start_time = time.perf_counter()
@@ -356,14 +335,17 @@ def print_func_name_args_times(print_dir=True):
 
             # Print out the arguments with the added indent
             if thread_local_data.indentation_level > 1:  # considering that main function is at level 1
-                print(f"{indent_str}[gold3]{duration_str}")
+                print(f"{indent_str}[dark_orange]{duration_str}")
             else:
-                print(f"\nFinished [bold gold1]{func.__name__!r}[/] in [orange_red1]{duration_str}\n")
+                print(f"\n{indent_str}[gold3]{duration_str}\n")
 
             thread_local_data.indentation_level -= 1
             return result
         return wrapper_timer
     return decorator
+
+
+# Other utility functions
 
 @print_func_name_args_times()
 def load_text_from_file(file_path):
@@ -399,33 +381,121 @@ def copy_files(source_dir, target_dir, filename, sample_path=None, verbose=False
         if verbose:
             print(f"File {src_file} does not exist and was not copied.")
 
-def process_files_with_glob(glob_pattern, processing_func, *args, **kwargs):
+def match_files(patterns, base_path=None):
+    """Expand one or more glob patterns to match file paths.
+
+    Parameters
+    ----------
+    patterns : str or list of str
+        Glob pattern(s) to match files. Supports wildcards like '*.nii.gz', '*.tif', etc.
+        Can include absolute paths with wildcards.
+    base_path : str or Path, optional
+        Base directory where relative patterns are applied. Defaults to the current working directory.
+
+    Returns
+    -------
+    list of Path
+        A sorted list of Path objects that match the provided glob patterns.
+
+    Raises
+    ------
+    TypeError
+        If patterns is not a string, Path, or list of such types.
+    ValueError
+        If no files match the given patterns.
     """
-    Process all files matching a glob pattern using the provided processing function.
+    # Normalize patterns to a list of strings
+    if isinstance(patterns, (str, Path)):
+        patterns = [str(patterns)]
+    elif isinstance(patterns, list) and all(isinstance(p, (str, Path)) for p in patterns):
+        patterns = [str(p) for p in patterns]
+    else:
+        raise TypeError("patterns must be a string, Path, or a list of those types.")
 
-    Parameters:
-    -----------
-    glob_pattern : str
-        The glob pattern to match files.
+    if base_path is not None and not isinstance(base_path, (str, Path)):
+        raise TypeError("base_path must be a string or Path object.")
 
-    processing_func : function
-        The function to process each file. Should accept a file path as the first argument.
+    base_path = Path.cwd() if base_path is None else Path(base_path)
+    paths = []
 
-    ``*args``, ``**kwargs`` :
-        Additional arguments and keyword arguments to pass to the processing function.
+    for pattern in patterns:
+        pattern_path = Path(pattern)
+        if pattern_path.is_absolute():
+            paths.extend(Path(pattern_path.parent).glob(pattern_path.name))
+        else:
+            paths.extend(base_path.glob(pattern))
+
+    if not paths:
+        raise ValueError(f"No files found matching patterns: {patterns}")
+
+    return sorted(paths)
+
+def get_stem(file_path):
     """
-    files = glob(glob_pattern)
-    if not files:
-        print(f"\n    [red1]No files found matching the pattern: {glob_pattern}\n")
-        return
+    Get the stem of a file path by removing known compound extensions
+    (e.g., '.nii.gz', '.ome.tif', '.tar.gz') and falling back to single-extension logic.
 
-    print(f"\nProcessing {len(files)} files matching the pattern {glob_pattern}:")
-    for file_path in files:
-        print(f"\n    {Path(file_path).name}")
+    Parameters
+    ----------
+    file_path : str or Path
+        Path to a file.
 
-    for file_path in files:
-        file_path = Path(file_path).resolve()
-        processing_func(file_path, *args, **kwargs)
+    Returns
+    -------
+    str
+        Stem of the file with all recognized extensions removed. E.g., path/to/file.nii.gz -> file
+    """
+    file_path = Path(file_path)
+    name = file_path.name
+
+    compound_extensions = [
+        '.nii.gz',
+        '.ome.tif',
+        '.ome.tiff',
+        '.zarr.gz',
+        '.tar.gz',
+        '.tar.bz2',
+        '.tar.xz',
+    ]
+
+    for ext in compound_extensions:
+        if str(name).endswith(ext):
+            return name[: -len(ext)]
+    
+    return file_path.stem
+
+def get_extension(file_path):
+    """
+    Get the extension of a file path, including compound extensions.
+
+    Parameters
+    ----------
+    file_path : str or Path
+        Path to a file.
+
+    Returns
+    -------
+    str
+        The extension of the file, including compound extensions. E.g., path/to/file.nii.gz -> .nii.gz
+    """
+    file_path = Path(file_path)
+    name = file_path.name
+
+    compound_extensions = [
+        '.nii.gz',
+        '.ome.tif',
+        '.ome.tiff',
+        '.zarr.gz',
+        '.tar.gz',
+        '.tar.bz2',
+        '.tar.xz',
+    ]
+
+    for ext in compound_extensions:
+        if str(name).endswith(ext):
+            return ext
+    
+    return file_path.suffix
 
 @print_func_name_args_times()
 def get_pad_percent(reg_outputs_path, pad_percent):
@@ -440,7 +510,7 @@ def get_pad_percent(reg_outputs_path, pad_percent):
             try:
                 return float(f.read().strip())
             except ValueError:
-                print("    Warning: Invalid value in pad_percent.txt. Using default pad_percent = 0.15")
+                print("    Warning: Invalid value in pad_percent.txt. Using default pad_percent = 0.25")
     else:
-        print("    Warning: pad_percent.txt not found. Using default pad_percent = 0.15")
-    return 0.15
+        print("    Warning: pad_percent.txt not found. Using default pad_percent = 0.25")
+    return 0.25

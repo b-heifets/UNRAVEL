@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -352,28 +366,49 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``img_resample`` (``resample``) from UNRAVEL to resample an image.nii.gz and save it.</span>
+<span class="sd">Use ``img_resample`` (``resample``) from UNRAVEL to resample a 3D image and save it.</span>
 
-<span class="sd">Usage with reference image:</span>
-<span class="sd">---------------------------</span>
-<span class="sd">    img_resample -i image.nii.gz -ref reference_image.nii.gz [-zo 0] [-o image_resampled.nii.gz] [-v]</span>
+<span class="sd">Note:</span>
+<span class="sd">    - target_res, xy_res, and z_res should have the same units (e.g., microns).</span>
+<span class="sd">    - If saving as .nii.gz without a reference, orientation defaults to RAS. Use ``io_reorient_nii`` to set orientation.</span>
+
+<span class="sd">Supports:</span>
+<span class="sd">    - Input formats: .nii.gz, .tif, .zarr, .h5, .czi</span>
+<span class="sd">    - Output formats: .nii.gz, .tif, .zarr, .h5</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    img_resample -i image.nii.gz [-tr target_res | -td target_dims | -sc scale_factor | -r reference_image] [-s save_as] [-zo zoom_order] [-o output_dir] [-c czi_channel] [-x xy_res] [-z z_res] [-d dtype] [-v]</span>
+<span class="sd">    </span>
 
 <span class="sd">Usage for isotropic resampling:</span>
 <span class="sd">-------------------------------</span>
-<span class="sd">    img_resample -i image.nii.gz -tr 50 [-zo 0] [-o image_resampled.nii.gz] [-v]</span>
+<span class="sd">    img_resample -i image.nii.gz -tr 50</span>
 
 <span class="sd">Usage for anisotropic resampling:</span>
 <span class="sd">---------------------------------</span>
-<span class="sd">    img_resample -i image.nii.gz -tr 200 10 10 -o image_200x10x10.nii.gz [-zo 0] [-v]</span>
+<span class="sd">    img_resample -i image.nii.gz -tr 200 10 10</span>
+
+<span class="sd">Usage for resampling by scale factor:</span>
+<span class="sd">-------------------------------------</span>
+<span class="sd">    img_resample -i image.nii.gz -sc 0.5</span>
+
+<span class="sd">Usage to resample using a reference image:</span>
+<span class="sd">------------------------------------------</span>
+<span class="sd">    img_resample -i image.nii.gz -r ref.nii.gz</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
-<span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
+<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">resample_nii</span>
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">save_3D_img</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">resample</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">get_stem</span>
 
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/image_tools/resample.html#unravel.image_tools.resample.parse_args">[docs]</a>
@@ -381,14 +416,24 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/input_image.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ref&#39;</span><span class="p">,</span> <span class="s1">&#39;--reference&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Reference image (.nii.gz) for resampling&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-tr&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target resolution in microns for resampling (can be isotropic or anisotropic)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-td&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_dims&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target dimensions for resampling (can be isotropic or anisotropic)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Image file path(s) or pattern(s), e.g., path/input_image.nii.gz or *.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-zo&#39;</span><span class="p">,</span> <span class="s1">&#39;--zoom_order&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/output_image.nii.gz. Default: None (saves as path/input_image_resampled.nii.gz)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">input_group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments for input processing&#39;</span><span class="p">)</span>
+    <span class="n">input_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--channel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Channel number. Default: 0&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">input_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="s1">&#39;--xy_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;xy resolution (e.g., in microns) for input .tif, .zarr, or .h5 files.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">input_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-z&#39;</span><span class="p">,</span> <span class="s1">&#39;--z_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;z resolution (e.g., in microns) for input .tif, .zarr, or .h5 files.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="n">resample_group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments for resampling (MUST PROVIDE: -tr, -td, -sc, or -r)&#39;</span><span class="p">)</span>
+    <span class="n">resample_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-tr&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target resolution (e.g., in microns) for resampling (can be isotropic or anisotropic)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">resample_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-td&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_dims&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target dimensions for resampling (x, y, z). E.g., 512 512 30&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">resample_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sc&#39;</span><span class="p">,</span> <span class="s1">&#39;--scale&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Scaling factor (e.g., 0.5 or 2 or 0.5 1 1)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">resample_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reference&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Use reference image to set resampling parameters and .nii.gz metadata.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">resample_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-zo&#39;</span><span class="p">,</span> <span class="s1">&#39;--zoom_order&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="n">save_group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments for saving&#39;</span><span class="p">)</span>
+    <span class="n">save_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--save_as&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output format extension (nii.gz, .zarr, .tif, or .h5). Default: .nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;.zarr&#39;</span><span class="p">,</span> <span class="s1">&#39;.h5&#39;</span><span class="p">],</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">save_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--out_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Optional output directory. If not provided, saves alongside input&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">save_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dtype&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Data type if saving as .nii.gz. Options: uint8, uint16, float32.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
     <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -396,7 +441,6 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-<span class="c1"># TODO: Add support for other image formats (e.g., tifs to tifs). Add args for scaling by a factor for each dimension.</span>
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../unravel/image_tools/resample.html#unravel.image_tools.resample.main">[docs]</a>
@@ -407,31 +451,95 @@
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-    <span class="n">nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">args</span><span class="o">.</span><span class="n">target_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must specify one of --target_res, --target_dims, --scale, or --reference.&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">reference</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ref_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
-        <span class="n">target_res</span> <span class="o">=</span> <span class="n">ref_nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]</span>
-        <span class="n">target_dims</span> <span class="o">=</span> <span class="n">ref_nii</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="n">target_res</span><span class="p">,</span> <span class="n">target_dims</span><span class="o">=</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">target_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">target_res</span> <span class="o">=</span> <span class="p">[</span><span class="n">res</span> <span class="o">/</span> <span class="mi">1000</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">target_res</span><span class="p">]</span>  <span class="c1"># Convert target resolution from microns to mm</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">target_res</span> <span class="o">=</span> <span class="n">target_res</span> <span class="o">*</span> <span class="mi">3</span>  <span class="c1"># Use isotropic resolution if only one value is provided</span>
-        <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="n">target_res</span><span class="p">,</span> <span class="n">target_dims</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">target_dims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_dims</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either target resolution, target dimensions, or a reference image must be specified.&quot;</span><span class="p">)</span>
 
-    <span class="n">data_type</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_data_dtype</span><span class="p">()</span>
-    <span class="n">resampled_nii</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
+    <span class="n">image_paths</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">resampled_img_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;_resampled.nii.gz&#39;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">resampled_img_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span>
-    <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">resampled_nii</span><span class="p">,</span> <span class="n">resampled_img_path</span><span class="p">)</span>
+    <span class="c1"># Reference logic</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">scale</span>
+    <span class="n">target_dims</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">target_dims</span>
+    <span class="n">target_res</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">target_res</span>
+
+    <span class="k">if</span> <span class="n">target_dims</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_dims</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Target dimensions must have 3 values (x, y, z).&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.czi&#39;</span><span class="p">):</span>
+            <span class="n">ref_img</span><span class="p">,</span> <span class="n">target_res_xy</span><span class="p">,</span> <span class="n">target_res_z</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ref_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="n">target_dims</span> <span class="o">=</span> <span class="n">ref_img</span><span class="o">.</span><span class="n">shape</span>   
+
+        <span class="k">if</span> <span class="n">ref_img</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reference image </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="si">}</span><span class="s2"> must be a 3D image. Got </span><span class="si">{</span><span class="n">ref_img</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="n">image_paths</span><span class="p">:</span>
+        <span class="n">stem</span> <span class="o">=</span> <span class="n">get_stem</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">stem</span> <span class="o">+</span> <span class="s1">&#39;_resampled&#39;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">save_as</span>
+
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">out_dir</span><span class="p">:</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">out_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">filename</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_path</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># Load image and resolution</span>
+        <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">z_res</span>
+        <span class="k">if</span> <span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">z_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># Resample</span>
+        <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span>
+            <span class="n">img</span><span class="p">,</span>
+            <span class="n">xy_res</span><span class="o">=</span><span class="n">xy_res</span><span class="p">,</span>
+            <span class="n">z_res</span><span class="o">=</span><span class="n">z_res</span><span class="p">,</span>
+            <span class="n">target_res</span><span class="o">=</span><span class="n">target_res</span><span class="p">,</span>
+            <span class="n">target_dims</span><span class="o">=</span><span class="n">target_dims</span><span class="p">,</span>
+            <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+            <span class="n">zoom_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Determine output resolution for saving</span>
+        <span class="k">if</span> <span class="n">scale</span><span class="p">:</span>
+            <span class="n">zooms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">zooms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">zooms</span> <span class="o">=</span> <span class="p">[</span><span class="n">zooms</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="mi">3</span>
+            <span class="n">target_res_xy</span> <span class="o">=</span> <span class="n">xy_res</span> <span class="o">/</span> <span class="n">zooms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">target_res_z</span> <span class="o">=</span> <span class="n">z_res</span> <span class="o">/</span> <span class="n">zooms</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">zooms</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">z_res</span> <span class="o">/</span> <span class="n">zooms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">target_dims</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">target_res_xy</span> <span class="o">=</span> <span class="n">xy_res</span> <span class="o">*</span> <span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">target_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">target_res_z</span> <span class="o">=</span> <span class="n">z_res</span> <span class="o">*</span> <span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">target_dims</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">target_res</span><span class="p">:</span>
+            <span class="n">target_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">target_res</span> <span class="o">=</span> <span class="p">[</span><span class="n">target_res</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="mi">3</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;target_res must be a float or list of 3 floats.&quot;</span><span class="p">)</span>
+            <span class="n">target_res_xy</span> <span class="o">=</span> <span class="n">target_res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">target_res_z</span> <span class="o">=</span> <span class="n">target_res</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="c1"># Calculate zoom factors</span>
+        <span class="n">zoom_xy</span> <span class="o">=</span> <span class="n">xy_res</span> <span class="o">/</span> <span class="n">target_res_xy</span>
+        <span class="n">zoom_z</span>  <span class="o">=</span> <span class="n">z_res</span> <span class="o">/</span> <span class="n">target_res_z</span>
+
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold]</span><span class="si">{</span><span class="n">image_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">[/bold]&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Original shape: </span><span class="si">{</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    xy res: </span><span class="si">{</span><span class="n">xy_res</span><span class="si">}</span><span class="s2"> µm, z res: </span><span class="si">{</span><span class="n">z_res</span><span class="si">}</span><span class="s2"> µm&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Zoom factors: xy=</span><span class="si">{</span><span class="n">zoom_xy</span><span class="si">}</span><span class="s2">, z=</span><span class="si">{</span><span class="n">zoom_z</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Resampled shape: </span><span class="si">{</span><span class="n">img_resampled</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Target xy res: </span><span class="si">{</span><span class="n">target_res_xy</span><span class="si">}</span><span class="s2"> µm, Target z res: </span><span class="si">{</span><span class="n">target_res_z</span><span class="si">}</span><span class="s2"> µm&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Zoom order: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Output path: </span><span class="si">{</span><span class="n">out_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">reference</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">save_as</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;.nii.gz&#39;</span><span class="p">:</span>
+            <span class="n">save_3D_img</span><span class="p">(</span><span class="n">img_resampled</span><span class="p">,</span> <span class="n">out_path</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="n">target_res_xy</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="n">target_res_z</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">reference_img</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">referenc</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">save_3D_img</span><span class="p">(</span><span class="n">img_resampled</span><span class="p">,</span> <span class="n">out_path</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="n">target_res_xy</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="n">target_res_z</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
     <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 

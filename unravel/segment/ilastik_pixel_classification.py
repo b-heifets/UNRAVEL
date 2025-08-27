@@ -11,7 +11,7 @@ Inputs:
     - ilastik_project: path/ilastik_project.ilp
     - Input: path/tif_dir or path/image (relative to current dir or sample??/)
     - Input image types: .tif, .czi, .nii.gz, .h5, .zarr
-    - If glob is used, the first match is used.
+    - If a glob pattern is used, the first match is used.
 
 Outputs:
     - seg_dir/seg_dir/`*`.tif series (segmented images; delete w/ --rm_out_tifs)
@@ -23,10 +23,11 @@ Note:
     - Linux and WSL: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh
     - Mac: /Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh
     - Windows: C:\\Program Files\\ilastik-1.4.0.post1\\run_ilastik.bat
+    - The Ilastik project should be closed before running this script.
 
 Usage:
 ------
-    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i <tif_dir or image> -o seg_dir [--labels 1 2 3] [--rm_out_tifs] [For .czi: --channel 1] [-d list of paths] [-p sample??] [-v]
+    seg_ilastik -ilp path/ilastik_project.ilp -i <tif_dir or image> -o seg_dir [--labels 1 2 3] [--rm_out_tifs] [--channel 1] [-ie path/ilastik_executable] [-d list of paths] [-p sample??] [-v]
 """
 
 import os
@@ -44,14 +45,13 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_tifs
 from unravel.core.img_tools import pixel_classification
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples, print_func_name_args_times, initialize_progress_bar
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, get_samples, print_func_name_args_times, initialize_progress_bar
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable.', required=True, action=SM)
     reqs.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
     reqs.add_argument('-i', '--input', help='Relative path to dir with tifs or an image (.nii.gz, .h5, .zarr).', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='Output dir name', required=True, action=SM)
@@ -59,7 +59,8 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-l', '--labels', help='Space-separated list of segmetation label IDs to save as 3D binary .nii.gz images', nargs='*', type=int, action=SM)
     opts.add_argument('-rmo', '--rm_out_tifs', help='Delete the dir w/ the output tifs. These have all labels. .nii.gz output(s) are smaller.', action='store_true', default=False)
-    opts.add_argument('-c', '--channel', help='.czi channel number (if this is the input image type). Default: 1', default=1, type=int, metavar='')
+    opts.add_argument('-c', '--channel', help='Channel to process if applicable. Default: 1', default=1, type=int, metavar='')
+    opts.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable. Default: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh', default='/usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
@@ -123,9 +124,7 @@ def main():
                 remove_tmp_tifs = False
             else:
                 # Load and process input image
-                matches = sorted(Path(sample_path).glob(args.input))
-                if not matches:
-                    raise FileNotFoundError(f"No files matching '{args.input}' found in {sample_path}")
+                matches = match_files(args.input, sample_path)
                 image_path = matches[0]
                 if args.verbose:
                     print(f"    Using {image_path} as the input image.")

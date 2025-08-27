@@ -18,7 +18,7 @@ Outputs:
 
 Note:
     - Images in reg_inputs are not padded.
-    - Images in reg_outputs have 15% padding by default. 
+    - Images in reg_outputs have 25% padding by default. 
     - If <template>_initial_alignment_to_fixed_img.nii.gz goes to the edge, increase padding (otherwise, region labels will be pulled out)
     - ort_code is a 3 letter orientation code of the fixed image if not set in fixed_img (e.g., RAS)
     - Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior
@@ -29,11 +29,11 @@ Next commands:
 
 Usage for tissue registration with brain mask and bias correction:
 ------------------------------------------------------------------
-    reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code> [-pad 0.15] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]
+    reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code> [-pad 0.25] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]
 
 Usage for tissue registration without brain mask and bias correction:
 ---------------------------------------------------------------------
-    reg -m <path/template.nii.gz> -f reg_inputs/autofl_50um.nii.gz -mas None -sm 0.4 -ort <orient code> [-pad 0.15] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]
+    reg -m <path/template.nii.gz> -f reg_inputs/autofl_50um.nii.gz -mas None -sm 0.4 -ort <orient code> [-pad 0.25] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]
 
 Usage for atlas to atlas registration:
 --------------------------------------
@@ -62,6 +62,7 @@ from unravel.core.config import Configuration
 from unravel.core.img_io import resolve_path
 from unravel.core.img_tools import pad
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
+from unravel.register.affine_initializer_check import affine_initializer_check
 from unravel.warp.warp import warp
 
 
@@ -76,12 +77,17 @@ def parse_args():
     opts.add_argument('-mas', '--mask', help="Brain mask for bias correction. Default: reg_inputs/autofl_50um_brain_mask.nii.gz. or pass in None", default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg`` (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
     opts.add_argument('-bc', '--bias_correct', help='Perform N4 bias field correction on autofluo image. Default: False', action='store_true', default=False)
-    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding to add to each dimension of the fixed image (gives space for initial alignment of the moving image). Default: 0.15 (15%%).', default=0.15, type=float, action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding to add to each dimension of the fixed image (gives space for initial alignment of the moving image). Default: 0.25 (25%%).', default=0.25, type=float, action=SM)
     opts.add_argument('-sm', '--smooth', help='Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl', default=0, type=float, action=SM)
     opts.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     opts.add_argument('-m2', '--moving_img2', help='path/atlas.nii.gz (outputs <reg_outputs>/<atlas>_in_tissue_space.nii.gz for checking reg; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     opts.add_argument('-inp', '--interpol', help='Interpolation method for warping -m2 to padded fixed img space (nearestNeighbor, multiLabel \[default], linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-it', '--init_time', help='Time in seconds allowed for ``reg_affine_initializer`` to run. Default: 30' , default='30', type=str, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments for checking if the initial template alignment is within the padded region of the fixed image')
+    opts.add_argument('-t', '--threshold', help='Surface voxel intensity threshold for checking if the initially aligned template is within the padded region of the fixed image. Default: 0', type=float, default=0, action=SM)
+    opts.add_argument('-msv', '--max_surface_voxels', help='Max allowed surface voxels above intensity threshold. Default: 0', type=int, default=0)
+    opts.add_argument('-mp', '--max_padding', help='Maximum padding percentage to allow before proceeding with registration. Default: 0.6 (60%%)', type=float, default=0.5, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
@@ -89,8 +95,6 @@ def parse_args():
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()  
-
-# TODO: Update padding/unpadding logic to allow for additional padding if needed.
 
 
 @print_func_name_args_times()
@@ -139,82 +143,117 @@ def main():
             fixed_img_for_reg = str(Path(args.fixed_img).name).replace(".nii.gz", "_fixed_reg_input.nii.gz")
             fixed_img_for_reg_path = str(Path(reg_outputs_path, fixed_img_for_reg))
 
-            # Preprocess the fixed image 
-            if not Path(fixed_img_for_reg_path).exists():
-                fixed_img_nii = nib.load(fixed_img_nii_path)
+            # Preprocess the fixed image to make it more like the template and add padding to accommodate the moving image
+            pad_percent = args.pad_percent
+            initial_alignment_ok = False
 
-                # Optionally perform bias correction on the fixed image (e.g., when it is an autofluorescence image)
-                if args.bias_correct: 
-                    print(f'\n    Bias correcting the registration input\n')
-                    if args.mask != "None": 
-                        mask_path = resolve_path(sample_path, args.mask)
-                        fixed_img = bias_correction(str(fixed_img_nii_path), mask_path=str(mask_path), shrink_factor=2, verbose=args.verbose)
-                    elif args.mask == "None": 
-                        fixed_img = bias_correction(str(fixed_img_nii_path), mask_path=None, shrink_factor=2, verbose=args.verbose)
+            if not Path(args.moving_img).exists(): 
+                print(f"\n    [red]The moving image for registration ({args.moving_img}) does not exist. Exiting.\n")
+                import sys ; sys.exit()
+            moving_image = ants.image_read(args.moving_img)
+
+            while not initial_alignment_ok:
+
+                if pad_percent > args.max_padding:
+                    print(f"\n    [red]The padding percentage ({pad_percent}) exceeds the maximum allowed ({args.max_padding}). Processing with the current padding percentage.\n")
+                    break
+
+                if not Path(fixed_img_for_reg_path).exists():
+                    
+                    fixed_img_nii = nib.load(fixed_img_nii_path)
+
+                    # Optionally perform bias correction on the fixed image (e.g., when it is an autofluorescence image)
+                    if args.bias_correct: 
+                        print(f'\n    Bias correcting the registration input\n')
+                        if args.mask != "None": 
+                            mask_path = resolve_path(sample_path, args.mask)
+                            fixed_img = bias_correction(str(fixed_img_nii_path), mask_path=str(mask_path), shrink_factor=2, verbose=args.verbose)
+                        elif args.mask == "None": 
+                            fixed_img = bias_correction(str(fixed_img_nii_path), mask_path=None, shrink_factor=2, verbose=args.verbose)
+                    else:
+                        fixed_img = fixed_img_nii.get_fdata(dtype=np.float32)
+
+                    # Pad the fixed image with 25% of voxels on all sides (keeps moving img in frame during initial alignment, avoiding edge effects)
+                    print(f'\n    Adding padding to the registration input\n')
+                    fixed_img = pad(fixed_img, pad_percent=pad_percent)
+                    pad_txt = reg_outputs_path / "pad_percent.txt"
+                    with open(pad_txt, 'w') as f:
+                        f.write(str(pad_percent))
+
+                    # Optionally smooth the fixed image (e.g., when it is an autofluorescence image)
+                    if args.smooth > 0:
+                        print(f'\n    Smoothing the registration input\n')
+                        fixed_img = gaussian_filter(fixed_img, sigma=args.smooth)
+
+                    # Create NIfTI, set header info, and save the registration input (reference image) 
+                    print(f'\n    Setting header info for the registration input\n')
+                    fixed_img = fixed_img.astype(np.float32) # Convert the fixed image to FLOAT32 for ANTsPy
+                    reg_inputs_fixed_img_nii = nib.Nifti1Image(fixed_img, fixed_img_nii.affine.copy(), fixed_img_nii.header)
+                    reg_inputs_fixed_img_nii.set_data_dtype(np.float32)
+
+                    # Set the orientation of the image (use if not already set correctly in the header; check with ``io_nii_info``)
+                    if args.ort_code: 
+                        reg_inputs_fixed_img_nii = reorient_nii(reg_inputs_fixed_img_nii, args.ort_code, zero_origin=True, apply=False, form_code=1)
+
+                    # Save the fixed input for registration
+                    nib.save(reg_inputs_fixed_img_nii, fixed_img_for_reg_path)
+
+                # Generate the initial transform matrix for aligning the moving image to the fixed image
+                init_tform_mat_path = Path(reg_outputs_path, f"ANTsPy_init_tform.mat")
+                if not init_tform_mat_path.exists():
+
+                    # Check if required files exist
+                    if not Path(fixed_img_for_reg_path).exists(): 
+                        print(f"\n    [red]The fixed image for registration ({fixed_img_for_reg_path})does not exist. Exiting.\n")
+                        import sys ; sys.exit()
+
+
+                    print(f'\n\n    Generating the initial transform matrix for aligning the moving image (e.g., template) to the fixed image (e.g., tissue) \n')
+                    command = [
+                        'reg_affine_initializer', 
+                        '-f', fixed_img_for_reg_path, 
+                        '-m', args.moving_img, 
+                        '-o', str(init_tform_mat_path), 
+                        '-t', args.init_time # Time in seconds allowed for this step. Increase time out duration if needed.
+                    ]
+
+                    # Redirect stderr to os.devnull
+                    with open(os.devnull, 'w') as devnull:
+                        subprocess.run(command, stderr=devnull)
+
+                    if not init_tform_mat_path.exists():
+                        raise RuntimeError(f"reg_affine_initializer failed to produce {init_tform_mat_path}")
+
+                # Perform initial approximate alignment of the moving image to the fixed image
+                init_align_out = str(Path(reg_outputs_path, str(Path(args.moving_img).name).replace(".nii.gz", "__initial_alignment_to_fixed_img.nii.gz")))
+                if not Path(init_align_out).exists():
+                    print(f'\n    Applying the initial transform matrix to aligning the moving image to the fixed image \n')
+                    fixed_image = ants.image_read(fixed_img_for_reg_path)
+                    transformed_image = ants.apply_transforms(
+                        fixed=fixed_image,
+                        moving=moving_image,
+                        transformlist=[str(init_tform_mat_path)]
+                    )
+                    # ants.image_write(transformed_image, str(Path(reg_outputs_path, init_align_out)))
+                    ants.image_write(transformed_image, init_align_out)
+
+                # Check if the initial alignment of the moving image is within the padded region of the fixed image
+                above_thresh_surface_voxel_count = affine_initializer_check(init_align_out, args.threshold)
+                if above_thresh_surface_voxel_count > args.max_surface_voxels:
+                    print(f"\n[yellow]WARNING: {init_align_out} has {above_thresh_surface_voxel_count} surface voxels above the threshold {args.threshold}, suggesting that the initially aligned template is not fully within the padded region of the fixed image. Increasing padding by 0.05. New padding = {pad_percent:.2f}")
+
+                    pad_percent += 0.05
+
+                    if not pad_percent > args.max_padding:
+                        # Delete pad_txt, fixed_img_for_reg_path, init_tform_path, init_align_out
+                        pad_txt.unlink(missing_ok=True)
+                        Path(fixed_img_for_reg_path).unlink(missing_ok=True)
+                        init_tform_mat_path.unlink(missing_ok=True)
+                        Path(init_align_out).unlink(missing_ok=True)
+
                 else:
-                    fixed_img = fixed_img_nii.get_fdata(dtype=np.float32)
-
-                # Pad the fixed image with 15% of voxels on all sides (keeps moving img in frame during initial alignment, avoiding edge effects)
-                print(f'\n    Adding padding to the registration input\n')
-                fixed_img = pad(fixed_img, pad_percent=args.pad_percent)
-                pad_txt = reg_outputs_path / "pad_percent.txt"
-                with open(pad_txt, 'w') as f:
-                    f.write(str(args.pad_percent))
-
-                # Optionally smooth the fixed image (e.g., when it is an autofluorescence image)
-                if args.smooth > 0:
-                    print(f'\n    Smoothing the registration input\n')
-                    fixed_img = gaussian_filter(fixed_img, sigma=args.smooth)
-
-                # Create NIfTI, set header info, and save the registration input (reference image) 
-                print(f'\n    Setting header info for the registration input\n')
-                fixed_img = fixed_img.astype(np.float32) # Convert the fixed image to FLOAT32 for ANTsPy
-                reg_inputs_fixed_img_nii = nib.Nifti1Image(fixed_img, fixed_img_nii.affine.copy(), fixed_img_nii.header)
-                reg_inputs_fixed_img_nii.set_data_dtype(np.float32)
-
-                # Set the orientation of the image (use if not already set correctly in the header; check with ``io_nii_info``)
-                if args.ort_code: 
-                    reg_inputs_fixed_img_nii = reorient_nii(reg_inputs_fixed_img_nii, args.ort_code, zero_origin=True, apply=False, form_code=1)
-
-                # Save the fixed input for registration
-                nib.save(reg_inputs_fixed_img_nii, fixed_img_for_reg_path)
-
-            # Generate the initial transform matrix for aligning the moving image to the fixed image
-            if not Path(reg_outputs_path, f"ANTsPy_init_tform.mat").exists():
-
-                # Check if required files exist
-                if not Path(fixed_img_for_reg_path).exists(): 
-                    print(f"\n    [red]The fixed image for registration ({fixed_img_for_reg_path})does not exist. Exiting.\n")
-                    import sys ; sys.exit()
-                if not Path(args.moving_img).exists(): 
-                    print(f"\n    [red]The moving image for registration ({args.moving_img}) does not exist. Exiting.\n")
-                    import sys ; sys.exit()
-
-                print(f'\n\n    Generating the initial transform matrix for aligning the moving image (e.g., template) to the fixed image (e.g., tissue) \n')
-                command = [
-                    'reg_affine_initializer', 
-                    '-f', fixed_img_for_reg_path, 
-                    '-m', args.moving_img, 
-                    '-o', str(Path(reg_outputs_path, f"ANTsPy_init_tform.mat")), 
-                    '-t', args.init_time # Time in seconds allowed for this step. Increase time out duration if needed.
-                ]
-
-                # Redirect stderr to os.devnull
-                with open(os.devnull, 'w') as devnull:
-                    subprocess.run(command, stderr=devnull)
-
-            # Perform initial approximate alignment of the moving image to the fixed image
-            init_align_out = str(Path(reg_outputs_path, str(Path(args.moving_img).name).replace(".nii.gz", "__initial_alignment_to_fixed_img.nii.gz")))
-            if not Path(init_align_out).exists():
-                print(f'\n    Applying the initial transform matrix to aligning the moving image to the fixed image \n')
-                fixed_image = ants.image_read(fixed_img_for_reg_path)
-                moving_image = ants.image_read(args.moving_img)
-                transformed_image = ants.apply_transforms(
-                    fixed=fixed_image,
-                    moving=moving_image,
-                    transformlist=[str(Path(reg_outputs_path, f"ANTsPy_init_tform.mat"))]
-                )
-                ants.image_write(transformed_image, str(Path(reg_outputs_path, init_align_out)))
+                    print(f"\n    [green]The initial alignment of the moving image is within the padded region of the fixed image. Proceeding with registration.\n")
+                    initial_alignment_ok = True
 
             # Define final output and skip processing if it exists
             output = str(Path(reg_outputs_path, str(Path(args.moving_img).name).replace(".nii.gz", "__warped_to_fixed_image.nii.gz")))

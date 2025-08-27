@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -409,7 +423,7 @@
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-inp&#39;</span><span class="p">,</span> <span class="s1">&#39;--interpol&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Type of interpolation (linear, bSpline \[default]).&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;bSpline&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-md&#39;</span><span class="p">,</span> <span class="s1">&#39;--metadata&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/metadata.txt. Default: parameters/metadata.txt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;parameters/metadata.txt&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-th&#39;</span><span class="p">,</span> <span class="s1">&#39;--threads&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of threads for rolling ball subtraction. Default: 8&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pad&#39;</span><span class="p">,</span> <span class="s1">&#39;--pad_percent&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pad&#39;</span><span class="p">,</span> <span class="s1">&#39;--pad_percent&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">compatability</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Compatability options&#39;</span><span class="p">)</span>
     <span class="n">compatability</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mi&#39;</span><span class="p">,</span> <span class="s1">&#39;--miracl&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Mode for compatibility (accounts for tif to nii reorienting)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

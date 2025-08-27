@@ -17,6 +17,8 @@ Helper Functions:
 - return_3D_img
 """
 
+import json
+import os
 import re
 import cv2 
 import dask.array as da
@@ -33,12 +35,13 @@ from lxml import etree
 from pathlib import Path
 from rich import print
 
-from unravel.core.utils import print_func_name_args_times
+from unravel.core.utils import match_files, print_func_name_args_times
 
 
-# TODO: Create save_3D_img() function for saving 3D images in various formats. 
 # TODO: save_as_nii() add logic for using the reference image for dtype (e.g., if reference is provided and dtype is None, use reference dtype)
+# TODO: Add support for extracting metadata from .zarr files.
 
+@print_func_name_args_times()
 def return_3D_img(ndarray, return_metadata=False, return_res=False, xy_res=None, z_res=None, x_dim=None, y_dim=None, z_dim=None):
     """
     Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim).
@@ -154,7 +157,7 @@ def extract_resolution(img_path):
             dataset = f[full_res_dataset_name] 
             res = dataset.attrs['element_size_um'] # z, y, x voxel sizes in microns (ndarray)
             xy_res = res[1]
-            z_res = res[0]  
+            z_res = res[0]
     return xy_res, z_res
 
 @print_func_name_args_times()
@@ -194,7 +197,7 @@ def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, re
     ndarray = np.squeeze(czi.read_image(C=channel)[0])
 
     if ndarray.ndim == 4:
-        print(f"\n    [red1].czi channel {channel} has 4 axes. Please stitch tiles from {Path(czi_path).name}\n")
+        print(f"\n[red1].czi channel {channel} has 4 axes. Please stitch tiles from {Path(czi_path).name}\n")
         import sys ; sys.exit()
 
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
@@ -240,7 +243,7 @@ def load_tifs(tif_dir_path, desired_axis_order="xyz", return_res=False, return_m
         if img is None:
             raise ValueError(f"Failed to load image: {tif_file}")
         return img
-    tif_files = sorted(Path(tif_dir_path).glob("*.tif"))
+    tif_files = match_files('*.tif', base_path=tif_dir_path)
     if parallel_loading:
         with ThreadPoolExecutor() as executor:
             tifs_stacked = list(executor.map(load_single_tif, tif_files))
@@ -301,6 +304,44 @@ def load_3D_tif(tif_path, desired_axis_order="xyz", return_res=False, return_met
 
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
+def nii_path_or_nii(nii):
+    """Helper function to load a NIfTI image if it's a path. Returns the NIfTI image object.
+    
+    Parameters:
+    -----------
+    nii : str, Path, or nib.Nifti1Image
+        Path to the NIfTI image file or a Nifti1Image object.
+
+    Returns:
+    --------
+    nib.Nifti1Image
+        The NIfTI image object.
+    """
+    if isinstance(nii, nib.Nifti1Image):
+        return nii
+    elif isinstance(nii, (str, Path)) and Path(nii).exists():
+        return nib.load(nii)
+    else:
+        raise FileNotFoundError(f"\nInput file not found: {nii}\n")
+
+@print_func_name_args_times()
+def nii_to_ndarray(nii):
+    """Load a NIfTI image and return as a 3D ndarray.
+
+    Parameters:
+    -----------
+    nii : str, Path, or nib.Nifti1Image
+        Path to the NIfTI image file or a Nifti1Image object.
+
+    Returns:
+    --------
+    ndarray : ndarray
+        The 3D image array.
+    """
+    nii = nii_path_or_nii(nii)
+    ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
+    return ndarray
+
 @print_func_name_args_times()
 def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
     """
@@ -336,11 +377,7 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     -----
     - If xy_res and z_res are provided, they will be used instead of the values from the metadata.
     """
-    if not Path(nii_path).exists():
-        raise FileNotFoundError(f"\nInput file not found: {nii_path}\n")
-
-    nii = nib.load(nii_path)
-    ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
+    ndarray = nii_to_ndarray(nii_path)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
 
     res_specified = True if xy_res is not None else False
@@ -355,44 +392,6 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
         z_res = original_z_res
 
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
-
-def nii_path_or_nii(nii):
-    """Helper function to load a NIfTI image if it's a path. Returns the NIfTI image object.
-    
-    Parameters:
-    -----------
-    nii : str, Path, or nib.Nifti1Image
-        Path to the NIfTI image file or a Nifti1Image object.
-
-    Returns:
-    --------
-    nib.Nifti1Image
-        The NIfTI image object.
-    """
-    if isinstance(nii, nib.Nifti1Image):
-        return nii
-    elif isinstance(nii, (str, Path)) and Path(nii).exists():
-        return nib.load(nii)
-    else:
-        raise FileNotFoundError(f"\n    [red1]Input file not found: {nii}\n")
-
-@print_func_name_args_times()
-def nii_to_ndarray(nii):
-    """Load a NIfTI image and return as a 3D ndarray.
-
-    Parameters:
-    -----------
-    nii : str, Path, or nib.Nifti1Image
-        Path to the NIfTI image file or a Nifti1Image object.
-
-    Returns:
-    --------
-    ndarray : ndarray
-        The 3D image array.
-    """
-    nii = nii_path_or_nii(nii)
-    ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
-    return ndarray
 
 @print_func_name_args_times()
 def load_nii_subset(nii_path, xmin, xmax, ymin, ymax, zmin, zmax):
@@ -456,26 +455,120 @@ def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metada
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
 @print_func_name_args_times()
-def load_zarr(zarr_path, desired_axis_order="xyz"):
+def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False,  return_metadata=False, save_metadata=None, xy_res=None, z_res=None, level=None, verbose=False):
     """
-    Load a .zarr image and return the ndarray.
+    Load a channel and level of a Zarr image, optionally returning voxel resolution.
 
     Parameters
     ----------
-    zarr_path : str
-        The path to the .zarr file.
+    zarr_path : str or Path
+        Path to .zarr directory.
+    channel : int, optional
+        Channel index to load (for 4D data). If None, loads all channels.
     desired_axis_order : str, optional
-        The desired order of the image axes. Default is 'xyz'.
+        Desired output axis order (default: "xyz").
+    return_res : bool, optional
+        If True, returns voxel resolution in mm (xy_res, z_res) along with the image.
+    save_metadata : str, optional
+        Path to save metadata file. Default is None.
+    xy_res : float, optional
+        Resolution in the xy-plane (in microns). If None, will be extracted from metadata.
+    z_res : float, optional
+        Resolution in the z-plane (in microns). If None, will be extracted from metadata.
+    level : str or int, optional
+        Resolution level to load (default: highest).
+    verbose : bool
+        Print debug output.
 
     Returns
     -------
     ndarray
-        The loaded 3D image array.
+        3D numpy array from the zarr store, with shape (z, y, x) or (z, x, y) depending on desired_axis_order.
+    tuple, optional
+        If return_res is True, returns (ndarray, xy_res, z_res).
+    tuple, optional
+        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
     """
-    zarr_dataset = zarr.open(zarr_path, mode='r')
-    ndarray = np.array(zarr_dataset)
-    ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-    return ndarray
+    zarr_path = Path(zarr_path)
+    if not zarr_path.exists():
+        raise FileNotFoundError(f"Zarr path {zarr_path} does not exist.")
+
+    def log(msg):
+        if verbose:
+            print(msg)
+
+    # Load .zattrs
+    zattrs = {}
+    zattrs_path = zarr_path / ".zattrs"
+    if zattrs_path.exists():
+        with open(zattrs_path) as f:
+            zattrs = json.load(f)
+
+    level_str = str(level) if level is not None else None
+    xy_res = z_res = None
+    if "multiscales" in zattrs:
+        multiscale = zattrs["multiscales"][0]
+        axes = multiscale.get("axes", [])
+        datasets = multiscale.get("datasets", [])
+
+        # Infer highest-res level available on disk
+        level_str = str(level) if level is not None else None
+        if level_str is None and datasets:
+            dataset_dirs = [ds["path"] for ds in datasets if ds["path"] == "." or str(ds["path"]).isdigit()]
+            existing_dirs = [p for p in dataset_dirs if (zarr_path / p).exists()]
+            if not level_str and existing_dirs:
+                if "." in existing_dirs:
+                    level_str = "."
+                elif existing_dirs:
+                    level_str = str(min(map(int, existing_dirs)))
+
+        # Extract resolution for this level
+        dataset = next((d for d in datasets if str(d["path"]) == level_str), None)
+        if dataset:
+            transforms = dataset.get("coordinateTransformations", [])
+            if transforms:
+                scale = transforms[0].get("scale", [])
+                if len(scale) == len(axes):
+                    res_dict = {axis["name"]: s for axis, s in zip(axes, scale)}
+                    xy_res = res_dict.get("x", None)
+                    z_res = res_dict.get("z", None)
+                    # Convert to micrometers
+                    xy_res = xy_res * 1e3 if xy_res is not None else None
+                    z_res = z_res * 1e3 if z_res is not None else None
+
+    # Load image data
+    ndarray = None
+    if level_str: # If a level is specified or found, load that level
+        level_path = zarr_path / level_str
+        if level_path.exists():
+            log(f"        Multi-resolution structure detected: loading level {level_str}")
+            ndarray = da.from_zarr(level_path).compute() # convert dask array to numpy array
+        else:
+            raise ValueError(f"Specified level {level_str} does not exist in {zarr_path}")
+    else: # Load flat format (.zattrs is missing or it does not match expected metadata structure)
+        log("        No compatible .zattrs metadata found. Loading flat zarr format.")
+        zarr_dataset = zarr.open(zarr_path, mode='r')
+        ndarray = np.array(zarr_dataset)
+
+    # Extract channel if specified (e.g., 0 for the first channel, 1 for the second, etc.)
+    log(f"        Array shape ([C], Z, Y, X): {ndarray.shape}")
+    if ndarray.ndim == 4:
+        if channel is not None:
+            log(f"        Extracted channel: {channel}")
+            ndarray = ndarray[channel]
+        else:
+            raise ValueError(f"Multiple channels found: {ndarray.shape[0]} channels. Please specify a channel index.")
+
+    if ndarray.ndim != 3:
+        raise ValueError(f"Expected 3D array, but got shape {ndarray.shape}")
+
+    # Transpose to desired axis order
+    if desired_axis_order == "xyz":
+        ndarray = np.transpose(ndarray, (2, 1, 0))
+        log(f"        Array shape after transposing to (X, Y, Z): {ndarray.shape}")
+
+    xy_res, z_res, x_dim, y_dim, z_dim = metadata(zarr_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
+    return return_3D_img(ndarray, return_metadata=return_metadata, return_res=return_res, xy_res=xy_res, z_res=z_res, x_dim=x_dim, y_dim=y_dim, z_dim=z_dim)
 
 def resolve_path(upstream_path, path_or_pattern, make_parents=True, is_file=True):
     """
@@ -564,7 +657,7 @@ def load_image_metadata_from_txt(metadata="./parameters/metadata*"):
     tuple
         Returns (xy_res, z_res, x_dim, y_dim, z_dim) or (None, None, None, None, None) if file not found.
     """
-    file_paths = glob(str(metadata))
+    file_paths = match_files(metadata)
     if file_paths:
         with open(file_paths[0], 'r') as file:
             for line in file:
@@ -623,26 +716,18 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
 
     # If file_path points to dir containing tifs, resolve path to first .tif
     img_path = Path(img_path)
-    if img_path.is_dir():
-        tif_files = img_path.glob(f"*.tif")
+    if img_path.is_dir() and not str(img_path).endswith('.zarr'):
+        tif_files = match_files('*.tif', base_path=img_path)
         if tif_files: 
             return load_tifs(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
-        else:
-            raise FileNotFoundError(f"\n    [red1]No .tif files found in directory: {img_path}\n")
 
     if not img_path.exists():
-        raise FileNotFoundError(f"\n    [red1]No compatible image files found at {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
+        raise FileNotFoundError(f"\nNo compatible image files found at {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
     
-    if verbose:
-        if str(img_path).endswith('.czi'):
-            print(f"\n    [default]Loading channel {channel} from {img_path} (channel 0 is the first channel)")
-        else: 
-            print(f"\n    [default]Loading {img_path}")
-
     # Load image based on file type and optionally return resolutions and dimensions
     try:
         if str(img_path).endswith('.czi'):
-            return load_czi(img_path, channel, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
+            return load_czi(img_path, channel=channel, desired_axis_order=desired_axis_order, return_res=return_res, return_metadata=return_metadata, save_metadata=save_metadata, xy_res=xy_res, z_res=z_res)
         elif str(img_path).endswith('.ome.tif') or str(img_path).endswith('.tif'):
             return load_3D_tif(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
         elif str(img_path).endswith('.nii.gz'):
@@ -650,7 +735,7 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
         elif str(img_path).endswith('.h5'):
             return load_h5(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
         elif str(img_path).endswith('.zarr'):
-            return load_zarr(img_path, desired_axis_order)
+            return load_zarr(img_path, channel=channel, desired_axis_order=desired_axis_order, return_res=return_res, return_metadata=return_metadata, save_metadata=save_metadata, xy_res=xy_res, z_res=z_res, verbose=verbose)
         else:
             raise ValueError(f"Unsupported file type: {img_path.suffix}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5")
     except (FileNotFoundError, ValueError) as e:
@@ -696,7 +781,7 @@ def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=None, refere
         elif isinstance(reference, nib.Nifti1Image):
             ref_nii = reference
         else:
-            raise ValueError("\n    [red1]Reference for save_as_nii() must be a path to a .nii.gz file or a Nifti1Image object.\n")
+            raise ValueError("\nReference for save_as_nii() must be a path to a .nii.gz file or a Nifti1Image object.\n")
         
         affine = ref_nii.affine
         header = ref_nii.header.copy()
@@ -715,7 +800,7 @@ def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=None, refere
     print(f"\n    Output: [default bold]{output}")
 
 @print_func_name_args_times()
-def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
+def save_as_tifs(ndarray, tif_dir_out=None, ndarray_axis_order="xyz", parallel=True, max_workers=None, verbose=False):
     """
     Save an ndarray as a series of .tif images.
 
@@ -723,31 +808,47 @@ def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
     ----------
     ndarray : ndarray
         The 3D image array to save.
-    tif_dir_out : str
+    tif_dir_out : str or Path
         The directory to save the .tif files.
     ndarray_axis_order : str, optional
         The order of the ndarray axes. Default is 'xyz'.
+    parallel : bool, optional
+        Whether to save slices in parallel. Default is False.
+    max_workers : int or None, optional
+        Number of threads to use for parallel saving. Defaults to os.cpu_count().
+    verbose : bool, optional
+        How to print the output directory. Default is False.
 
     Returns
     -------
     None
     """
-    # Ensure tif_dir_out is a Path object, not a string
     tif_dir_out = Path(tif_dir_out)
     tif_dir_out.mkdir(parents=True, exist_ok=True)
-    
+
     if ndarray_axis_order == "xyz":
-        ndarray = np.transpose(ndarray, (2, 1, 0)) # Transpose to zyx (tiff expects zyx)
-        
-    for i, slice_ in enumerate(ndarray):
+        ndarray = np.transpose(ndarray, (2, 1, 0))  # to zyx
+
+    def save_slice(i):
         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
-        tifffile.imwrite(str(slice_file_path), slice_)
-    print(f"\n    Output: [default bold]{tif_dir_out}")
+        tifffile.imwrite(str(slice_file_path), ndarray[i])
+
+    if parallel:
+        with ThreadPoolExecutor(max_workers=max_workers or os.cpu_count()) as executor:
+            list(executor.map(save_slice, range(ndarray.shape[0])))
+    else:
+        for i in range(ndarray.shape[0]):
+            save_slice(i)
+
+    if verbose:
+        print(f"        Output directory: [magenta]{tif_dir_out}")
+    else:
+        print(f"Output directory with tif series: [magenta]{tif_dir_out}")
 
 @print_func_name_args_times()
-def save_as_zarr(ndarray, output_path, ndarray_axis_order="xyz"):
+def save_as_zarr(ndarray, output_path=None, ndarray_axis_order="xyz", xy_res=None, z_res=None, verbose=False):
     """
-    Save an ndarray to a .zarr file.
+    Save a 3D ndarray to a .zarr file as well as OME-NGFF-compatible metadata.
 
     Parameters
     ----------
@@ -757,17 +858,47 @@ def save_as_zarr(ndarray, output_path, ndarray_axis_order="xyz"):
         The path to save the .zarr file.
     ndarray_axis_order : str, optional
         The order of the ndarray axes. Default is 'xyz'.
-
-    Returns
-    -------
-    None
+    xy_res : float, optional
+        The voxel size in the XY plane (in mm).
+    z_res : float, optional
+        The voxel size in the Z direction (in mm).
     """
     if ndarray_axis_order == "xyz":
         ndarray = np.transpose(ndarray, (2, 1, 0))
-    dask_array = da.from_array(ndarray, chunks='auto')
+
+    if isinstance(ndarray, da.Array):
+        dask_array = ndarray
+    else:
+        dask_array = da.from_array(ndarray, chunks='auto')
     compressor = zarr.Blosc(cname='lz4', clevel=9, shuffle=zarr.Blosc.BITSHUFFLE)
     dask_array.to_zarr(output_path, compressor=compressor, overwrite=True)
-    print(f"\n    Output: [default bold]{output_path}")
+    if verbose:
+        print(f"\n    Saved zarr as: [default bold]{output_path}")
+
+    # Add NGFF-style .zattrs
+    first_axis = "x" if ndarray_axis_order == "xyz" else "z"
+    third_axis = "z" if first_axis == "x" else "x"
+    if xy_res is not None or z_res is not None:
+        attrs = {
+            "multiscales": [{
+                "version": "0.4",
+                "axes": [
+                    {"name": first_axis, "type": "space", "unit": "millimeter"},
+                    {"name": "y", "type": "space", "unit": "millimeter"},
+                    {"name": third_axis, "type": "space", "unit": "millimeter"},
+                ],
+                "datasets": [{
+                    "path": ".",
+                    "coordinateTransformations": [{
+                        "type": "scale",
+                        "scale": [xy_res, xy_res, z_res]
+                    }]
+                }]
+            }]
+        }
+        zarr.open(output_path, mode='a').attrs.update(attrs)
+        if verbose:
+            print(f"    Added NGFF-style .zattrs with resolutions (in mm): xy_res={xy_res}, z_res={z_res}")
 
 @print_func_name_args_times()
 def save_as_h5(ndarray, output_path, ndarray_axis_order="xyz"):
@@ -793,7 +924,7 @@ def save_as_h5(ndarray, output_path, ndarray_axis_order="xyz"):
         f.create_dataset('data', data=ndarray, compression="lzf")
 
 @print_func_name_args_times()
-def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1000, data_type=np.float32, reference_img=None):
+def save_3D_img(img, output_path=None, ndarray_axis_order="xyz", xy_res=1000, z_res=1000, data_type=np.float32, reference_img=None, verbose=False):
     """
     Save a 3D image in various formats.
 
@@ -802,7 +933,7 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
     img : ndarray
         The 3D image array to save.
     output_path : str
-        The path to save the image.
+        The path to save the image. The file extension determines the format: .nii.gz, .zarr, .h5, .tif, or a directory path for a TIFF series.
     ndarray_axis_order : str, optional
         The order of the ndarray axes. Default is 'xyz'.
     xy_res : float, optional
@@ -813,21 +944,100 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
         Data type for a NIFTI image output. Default is np.float32.
     reference_img : str, Path, or a nib.Nifti1Image object, optional
         Either path to a .nii.gz file or a Nifti1Image object to set orientation and resolution. Default is None. If provided, xy_res and z_res are ignored.
+    verbose : bool, optional
+        Print addtional infomation. Default is False.
     """
     output = Path(output_path)
     output.parent.mkdir(exist_ok=True, parents=True)
-    
-    if output_path.endswith('.nii.gz'):
-        save_as_nii(img, output_path, xy_res, z_res, data_type=data_type, reference=reference_img)
-    elif output_path.endswith('.zarr'):
-        save_as_zarr(img, output_path, ndarray_axis_order=ndarray_axis_order)
-    elif output_path.endswith('.h5'):
-        save_as_h5(img, output_path, ndarray_axis_order=ndarray_axis_order)
-    elif output_path.endswith('.tif'): 
-        save_as_tifs(img, output_path, ndarray_axis_order=ndarray_axis_order)
+
+    output_str = str(output).lower()
+    suffix = output.suffix.lower()
+
+    if output_str.endswith('.nii.gz'):
+        save_as_nii(img, output, xy_res, z_res, data_type=data_type, reference=reference_img)
+    elif suffix == '.zarr':
+        save_as_zarr(img, output, ndarray_axis_order=ndarray_axis_order, xy_res=xy_res, z_res=z_res, verbose=verbose)
+    elif suffix == '.h5':
+        save_as_h5(img, output, ndarray_axis_order=ndarray_axis_order)
+    elif suffix == '.tif':
+        # If user gave a file path like red2/slice_0000.tif, use the parent directory
+        save_as_tifs(img, tif_dir_out=output.parent, ndarray_axis_order=ndarray_axis_order, parallel=True, max_workers=None, verbose=verbose)
+    elif suffix == '':
+        # If no suffix, assume directory path for TIFFs
+        save_as_tifs(img, tif_dir_out=output, ndarray_axis_order=ndarray_axis_order, parallel=True, max_workers=None, verbose=verbose)
     else:
-        raise ValueError(f"Unsupported file type for save_3D_img(): {output_path.suffix}. Use: .nii.gz, .zarr, .h5, .tif")
-    print(f"\n    Image saved to: {output_path}\n")
+        raise ValueError(f"Unsupported file type for save_3D_img(): '{suffix}'. Use: .nii.gz, .zarr, .h5, .tif, or a directory path for a TIFF series.")
+
+# TODO: Function to extract a resolution level from a Zarr file (return as ndarray)
+
+@print_func_name_args_times()
+def zarr_level_to_tifs(zarr_path, output_dir, channel_map, resolution_level=None, xy_res=None, z_res=None):
+    """
+    Extracts a specified resolution level from a Zarr file and saves the specified channels as TIFF files.
+
+    Parameters:
+    -----------
+    zarr_path : str or Path
+        Path to the Zarr file.
+    output_dir : str or Path
+        Directory to save the output TIFF files. If None, defaults to "TIFFs/<sample_name>".
+    resolution_level : str
+        Resolution level to extract (e.g., "0", "1", ..., "9").
+    channel_map : dict
+        Mapping of output directory names to Zarr channel indices (e.g., {'red': 0, 'green': 1}).
+    xy_res : float, optional
+        X/Y resolution in microns.
+    z_res : float, optional
+        Z resolution in microns. Default is 100 µm for Genetic Tools Atlas data.
+    """
+    # Check what resolution levels are available in the Zarr file
+    zarr_path = Path(zarr_path)
+    if not zarr_path.exists():
+        raise FileNotFoundError(f"Zarr input path does not exist: {zarr_path}")
+    else:
+        print(f"Zarr input path exists: {zarr_path}")
+        levels = [str(level) for level in zarr_path.iterdir() if level.is_dir()]
+
+    if len(levels) == 1:
+        resolution_level = levels[0]
+    elif resolution_level is None:
+        raise ValueError(f"Multiple resolution levels found in {zarr_path.name}. Please specify a resolution level. Available levels: {levels}")
+
+    if not zarr_path.is_dir():
+        raise NotADirectoryError(f"Zarr input path is not a directory: {zarr_path}")
+    if not (zarr_path / resolution_level).is_dir():
+        raise FileNotFoundError(f"Resolution level {resolution_level} not found in Zarr file: {zarr_path}")
+
+    z = zarr.open(zarr_path, mode="r")
+    z_level = z[resolution_level]
+
+    if z_level.ndim != 4:
+        raise ValueError(f"Expected shape (c, z, y, x), got {z_level.shape}")
+
+    num_channels = z_level.shape[0]
+    if num_channels == 1:
+        print(f"⚠️ Only one channel found in {zarr_path.name}")
+
+    print(f"📂 Processing {zarr_path.name} at resolution level {resolution_level}...")
+
+    for name, idx in channel_map.items():
+        out_dir = output_dir / name
+        tif_files = match_files('*.tif', base_path=out_dir)
+        if tif_files:
+            print(f"⚠️ Skipping {name} in {zarr_path.name}: output TIFFs already exist at {out_dir}")
+            continue
+        if idx >= num_channels:
+            print(f"⚠️ Channel index {idx} not found in {zarr_path.name} (only {num_channels} channels). Skipping {name}.")
+            continue
+        save_as_tifs(z_level[idx], out_dir, ndarray_axis_order="zyx", parallel=True)
+        save_metadata_to_file(
+            xy_res=xy_res, 
+            z_res=z_res, 
+            x_dim=z_level[idx].shape[2], 
+            y_dim=z_level[idx].shape[1], 
+            z_dim=z_level[idx].shape[0], 
+            save_metadata=Path(out_dir).parent / "parameters" / "metadata.txt"
+        )
 
 # Other functions
 def nii_voxel_size(nii, use_um=True):

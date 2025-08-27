@@ -17,7 +17,7 @@ from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -35,7 +35,7 @@ def parse_args():
 
 def max_intensity_projection(input_folder, output_tif):
     # Find all PNG images
-    png_files = sorted(Path(input_folder).glob("*.png"))
+    png_files = match_files('*.png', input_folder)
     if not png_files:
         raise ValueError(f"No PNG files found in {input_folder}")
 

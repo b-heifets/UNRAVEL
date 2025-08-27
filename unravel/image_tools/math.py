@@ -25,7 +25,7 @@ Thresholding:
 
 Usage to add two images and binarize the result:
 ------------------------------------------------
-    img_math -i A.nii.gz B.nii.gz -n + -t 0.5 -o result.nii.gz -r A.nii.gz -d uint8
+    img_math -i A.nii.gz B.nii.gz -n '+' -t 0.5 -o result.nii.gz -r A.nii.gz -d uint8
 
 Usage multiply three images and save as Zarr:
 ---------------------------------------------
@@ -36,21 +36,22 @@ Usage to binarize a single image and set to 8 bit:
     img_math -i A.nii.gz -t 0.5 -o binarized.nii.gz -r A.nii.gz -d uint8
 """
 
-
 import numpy as np
+from glob import glob
+from pathlib import Path
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--images', help="Paths to the input images. (path/image1 path/image2 ...)", nargs='*', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="Paths or glob patterns to the input images.", required=True, nargs='*', action=SM)
     reqs.add_argument('-o', '--output', help='Path to the output image', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
@@ -69,6 +70,8 @@ def parse_args():
 
 # TODO: Add support for chaining operations (e.g., img1 + img2 - img3 * img4)
 # TODO: Add the ability to apply operations to a single image (e.g., img1 * 2)
+# TODO: The logic for supporting multiple glob patterns could be centralized in a utility function
+# TODO: extend support to subtract for -, divide for /, etc. (currently only symbolic operations are supported)
 
 @print_func_name_args_times()
 def apply_operation(image1, image2, operation):
@@ -145,11 +148,15 @@ def main():
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
+    
+    img_paths = match_files(args.input)
 
-    if not args.images:
-        raise ValueError("At least one image must be specified with --images.")
+    # Sort and load
+    img_paths = sorted(img_paths)
+    images = [load_3D_img(str(p), verbose=args.verbose) for p in img_paths]
 
-    images = [load_3D_img(img_path, verbose=args.verbose) for img_path in args.images]
+    if not images:
+        raise ValueError("No valid images loaded. Check the input paths and formats.") 
 
     # Ensure all images are the same shape
     shape0 = images[0].shape

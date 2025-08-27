@@ -120,6 +120,12 @@ def main():
                 "common": False,
                 "alias": "rai"
             },
+            "reg_affine_initializer_check": {
+                "module": "unravel.register.affine_initializer_check",
+                "description": "Check initially aligned template.",
+                "common": False,
+                "alias": "rai"
+            },
         },
         "Warping": {
             "warp_to_atlas": {
@@ -342,7 +348,7 @@ def main():
                 "module": "unravel.cluster_stats.crop",
                 "description": "Crop clusters to a bounding box.",
                 "common": False,
-                "alias": "crop"
+                "alias": "crop_cluster"
             },
             "cstats_mean_IF": {
                 "module": "unravel.cluster_stats.mean_IF",
@@ -419,11 +425,11 @@ def main():
                 "common": True,
                 "alias": "m"
             },
-            "io_img": {
-                "module": "unravel.image_io.io_img",
-                "description": "Image I/O operations.",
+            "io_convert_img": {
+                "module": "unravel.image_io.convert_img",
+                "description": "Image conversion operations.",
                 "common": False,
-                "alias": "img"
+                "alias": "conv"
             },
             "io_nii_info": {
                 "module": "unravel.image_io.nii_info",
@@ -496,6 +502,12 @@ def main():
                 "description": "Populate an empty image with point coordinates.",
                 "common": False,
                 "alias": "p2i"
+            },
+            "io_zarr_compress": {
+                "module": "unravel.image_io.zarr_compress",
+                "description": "Compress .zarr or decompress .zarr.tar.gz files.",
+                "common": False,
+                "alias": "zc"
             }
         },
         "Image tools": {
@@ -662,82 +674,166 @@ def main():
         },
         "Allen Brain Cell Atlas (ABCA)": {
             "abca_cache": {
-                "module": "unravel.abca.cache",
+                "module": "unravel.allen_institute.abca.cache",
                 "description": "Download data from the Allen Brain Cell Atlas.",
                 "common": True,
                 "alias": "points_compressor"
             },
             "abca_merfish": {
-                "module": "unravel.abca.merfish.merfish",
+                "module": "unravel.allen_institute.abca.merfish.merfish",
                 "description": "Plot MERFISH data from the ABCA.",
                 "common": True,
                 "alias": "mf"
             },
             "abca_merfish_filter": {
-                "module": "unravel.abca.merfish.merfish_filter",
+                "module": "unravel.allen_institute.abca.merfish.merfish_filter",
                 "description": "Filter MERFISH data from the ABCA and output CSV.",
                 "common": True,
                 "alias": "mf_filter"
             },
             "abca_merfish_filter_by_mask": {
-                "module": "unravel.abca.merfish.merfish_filter_by_mask",
+                "module": "unravel.allen_institute.abca.merfish.merfish_filter_by_mask",
                 "description": "Filter MERFISH data using a mask.nii.gz and output CSV.",
                 "common": True,
                 "alias": "mf_filter_mask"
             },
             "abca_merfish_expression_to_nii": {
-                "module": "unravel.abca.merfish.abca_merfish_expression_to_nii",
+                "module": "unravel.allen_institute.abca.merfish.abca_merfish_expression_to_nii",
                 "description": "Make a 3D .nii.gz image of ABCA MERFISH expression data.",
                 "common": True,
                 "alias": "me"
             },
             "abca_merfish_cells_to_nii": {
-                "module": "unravel.abca.merfish.abca_merfish_cells_to_nii",
+                "module": "unravel.allen_institute.abca.merfish.abca_merfish_cells_to_nii",
                 "description": "Convert ABCA MERFISH cells to a .nii.gz 3D image.",
                 "common": False,
                 "alias": "mc"
             },
             "abca_sunburst": {
-                "module": "unravel.abca.sunburst.sunburst",
+                "module": "unravel.allen_institute.abca.sunburst.sunburst",
                 "description": "Make a CSV for a sunburst plot of cell type proportions across all ontological levels.",
                 "common": True,
                 "alias": "sb"
             },
             "abca_sunburst_expression": {
-                "module": "unravel.abca.sunburst.sunburst_expression",
+                "module": "unravel.allen_institute.abca.sunburst.sunburst_expression",
                 "description": "Calculate mean expression for all cell types in the ABCA and make a sunburst plot.",
                 "common": True,
                 "alias": "sbe"
             },
-            "abca_sunburst_filter": {
-                "module": "unravel.abca.sunburst.sunburst_filter",
+            "abca_sunburst_filter_by_expression": {
+                "module": "unravel.allen_institute.abca.sunburst.sunburst_filter",
                 "description": "Filter ABCA sunburst data, keeping cells with high expression at any level (class, subclass, etc.).",
                 "common": False,
-                "alias": "sbf"
+                "alias": "sfbe"
             },
             "abca_sunburst_filter_by_proportion": {
-                "module": "unravel.abca.sunburst.sunburst_filter_by_proportion",
+                "module": "unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion",
                 "description": "Filter ABCA sunburst data, keeping prevalent cells at any level.",
                 "common": False,
                 "alias": "sbfp"
             },
             "abca_mean_expression_color_scale": {
-                "module": "unravel.abca.sunburst.mean_expression_color_scale",
+                "module": "unravel.allen_institute.abca.sunburst.mean_expression_color_scale",
                 "description": "Save a color scale for mean RNA expression values.",
                 "common": False,
                 "alias": "mecs"
             },
             "abca_percent_expression_color_scale": {
-                "module": "unravel.abca.sunburst.percent_expression_color_scale",
+                "module": "unravel.allen_institute.abca.sunburst.percent_expression_color_scale",
                 "description": "Save a color scale for the percent of cells expressing a gene.",
                 "common": False,
                 "alias": "pecs"
             },
             "abca_scRNA-seq_filter": {
-                "module": "unravel.abca.scRNA_seq.filter",
+                "module": "unravel.allen_institute.abca.scRNA_seq.filter",
                 "description": "Filter ABCA scRNA-seq cells based on columns and values in the cell metadata and save as CSV.",
                 "common": True,
                 "alias": "s_filter"
+            },
+        },
+        "Genetic Tools Atlas (GTA)": {
+            "gta_download": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.download_STPT_zarr",
+                "description": "Download STPT Zarr files.",
+                "common": False,
+                "alias": "gta_dl"
+            },
+            "gta_metadata": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.metadata",
+                "description": "Simplify metadata from the GTA.",
+                "common": False,
+                "alias": "gta_m"
+            },
+            "gta_org_samples": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.org_samples",
+                "description": "Organize TIFFs dirs from the GTA after conversion.",
+                "common": False,
+                "alias": "gta_os"
+            },
+        },
+        "MapMySections (MMS)": {
+            "mms_soma_ratio": {
+                "module": "unravel.allen_institute.mapmysections.soma_ratio",
+                "description": "Check for oligodendrocytes: compute soma voxel ratio in the anterior commissure.",
+                "common": False,
+                "alias": "mms_sr"
+            },
+            "mms_concat_with_source": {
+                "module": "unravel.allen_institute.mapmysections.concat_with_source",
+                "description": "Concatenate multiple CSV files with a source_file column (for mms_sr and mms_ss outputs).",
+                "common": False,
+                "alias": "mms_c"
+            },
+            "mms_cell_type_proportions": {
+                "module": "unravel.allen_institute.mapmysections.cell_type_proportions",
+                "description": "Calculate cell type proportions for an ontological level, organized based on the MapMySections challenge.",
+                "common": False,
+                "alias": "mms_ctp"
+            },
+            "mms_cell_type_proportions_concat": {
+                "module": "unravel.allen_institute.mapmysections.cell_type_proportions_concat",
+                "description": "Calculate cell type proportions for an ontological level, organized based on the MapMySections challenge.",
+                "common": False,
+                "alias": "mms_ctp"
+            },
+            "mms_seg_summary": {
+                "module": "unravel.allen_institute.mapmysections.segmentation_summary",
+                "description": "Summarize the prevalence of voxels for somata, endothelial cells, and astrocytes from Ilastik segmentations.",
+                "common": False,
+                "alias": "mms_ss"
+            },
+        },
+        "Tabular data": {
+            "tabular_edit_columns": {
+                "module": "unravel.tabular.edit_columns",
+                "description": "Edit columns in a tabular dataset.",
+                "common": False,
+                "alias": "edit_cols"
+            },
+            "tabular_filter_rows": {
+                "module": "unravel.tabular.filter_rows",
+                "description": "Filter rows in a tabular dataset.",
+                "common": False,
+                "alias": "filter_rows"
+            },
+            "tabular_key_value_to_table": {
+                "module": "unravel.tabular.key_value_to_table",
+                "description": "Convert key-value pairs to a table format.",
+                "common": False,
+                "alias": "kv_table"
+            },
+            "tabular_columns": {
+                "module": "unravel.tabular.columns",
+                "description": "Print specified columns from a tabular dataset.",
+                "common": False,
+                "alias": "cols"
+            },
+            "tabular_unique_values": {
+                "module": "unravel.tabular.unique_values",
+                "description": "Print unique values in specified column(s) of a tabular dataset.",
+                "common": False,
+                "alias": "uniq_vals"
             },
         },
     }

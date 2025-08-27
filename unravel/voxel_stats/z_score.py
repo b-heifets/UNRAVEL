@@ -51,7 +51,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
+from unravel.core.utils import get_pad_percent, log_command, match_files, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
 from unravel.warp.to_atlas import to_atlas
 
 
@@ -59,7 +59,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='Path to the image(s) to be z-scored relative to the current dir or sample?? dirs (glob matches processed)', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path or glob pattern to the image to be z-scored relative to sample?? dirs', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-s', '--suffix', help='Output suffix. Default: z (.nii.gz replaced w/ _z.nii.gz)', default='z', action=SM)
@@ -68,7 +68,7 @@ def parse_args():
     tissue_mask_opts.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. For example, reg_inputs/autofl_50um_brain_mask.nii.gz', default=None, action=SM)
     tissue_mask_opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     tissue_mask_opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a reference image for warping the tissue mask to atlas space. Default: atlas/atlas_CCFv3_2020_30um.nii.gz', default=None, action=SM)
-    tissue_mask_opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
+    tissue_mask_opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
 
     atlas_mask_opts = parser.add_argument_group('Optional args for using an atlas mask')
     atlas_mask_opts.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
@@ -117,7 +117,7 @@ def z_score(input_nii_path, mask_img, suffix):
     z_scored_img = (masked_data - mean_intensity) / std_dev
 
     # Set voxels outside the mask to zero
-    z_scored_img *= mask
+    z_scored_img *= mask_img
 
     # Save the z-scored image
     output_path = Path(str(input_nii_path).replace('.nii.gz', f'_{suffix}.nii.gz'))
@@ -127,7 +127,7 @@ def z_score(input_nii_path, mask_img, suffix):
 
     return z_scored_img
 
-def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, atlas_path, pad_percent=0.15, verbose=False):
+def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, atlas_path, pad_percent=0.25, verbose=False):
     """Warp a tissue mask to atlas space (e.g., for z-scoring).
     
     Parameters:
@@ -150,7 +150,7 @@ def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, a
     tissue_mask_img = np.where(tissue_mask_img > 0, 1, 0).astype(np.uint8)
     return tissue_mask_img
 
-def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_mask_path=None, atlas_mask_path=None, pad_percent=0.15, verbose=False):
+def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_mask_path=None, atlas_mask_path=None, pad_percent=0.25, verbose=False):
     """Combine tissue and atlas masks if both are provided, otherwise use whichever is available.
     
     Parameters:
@@ -209,7 +209,7 @@ def main():
     progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
         for sample_path in sample_paths:
-            input_paths = list(sample_path.glob(str(args.input)))
+            input_paths = match_files(args.input, sample_path)
             if not input_paths:
                 print(f"\n    [red1]No files match the pattern {args.input} in {sample_path}\n")
                 continue

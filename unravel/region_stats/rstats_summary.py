@@ -22,11 +22,11 @@ Note:
 
 Usage for Tukey tests:
 ----------------------
-    rstats_summary --groups Saline MDMA Meth -hemi both [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]
+    rstats_summary --groups Saline MDMA Meth --side both [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]
 
 Usage for t-tests:
 ------------------
-    rstats_summary --groups Saline MDMA -hemi both -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]
+    rstats_summary --groups Saline MDMA --side both -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]
 """
 
 import ast
@@ -42,7 +42,7 @@ import textwrap
 from rich import print
 from rich.live import Live
 from rich.traceback import install
-from scipy.stats import ttest_ind
+from scipy.stats import ttest_ind, dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -55,8 +55,8 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('--groups', nargs='*', help='Group prefixes (e.g., saline meth mdma)', required=True, action=SM)
-    reqs.add_argument('-hemi', help="Hemisphere(s) to process (r, l or both)", choices=['r', 'l', 'both'], required=True, action=SM)
+    reqs.add_argument('-g', '--groups', nargs='*', help='Group prefixes (e.g., saline meth mdma)', required=True, action=SM)
+    reqs.add_argument('-s', '--side', help="Side of brain to process (r, l or both)", choices=['r', 'l', 'both'], required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", action=SM)  # Does the control need to be specified for a t-test? First group could be the control.
@@ -65,7 +65,7 @@ def parse_args():
     opts.add_argument('-y', '--ylabel', help='Y-axis label (Default: cell_density)', default='cell_density', action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', action=SM)
-    opts.add_argument('-s', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups", default='light:white', action=SM)
+    opts.add_argument('-sc', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups", default='light:white', action=SM)
     opts.add_argument('-o', '--output', help='Output directory for plots (Default: <t-test or tukey>_plots)', action=SM)
     opts.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
 
@@ -78,6 +78,7 @@ def parse_args():
 # TODO: Adapt this to work for cell counts and label densities. This could also be used for mean IF intensities.
 # TODO: Need a way to handle cases when some data from some samples is from one hemisphere and some from the other. (see filter_csv.py)
 # TODO: Fix plots for when there are > 3 groups (comparison lines are not positioned correctly)
+# TODO: Zip the output directory to save space and make it easier to move around.
 
 def get_region_details(region_id, df):
     # Adjust to account for the unique region IDs.
@@ -210,25 +211,25 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         test_results_df = pd.DataFrame(test_results)
         significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
 
-    # elif test_type == 'dunnett':
+    elif test_type == 'dunnett':
 
-    #     # Extract the data for the control group and the other groups
-    #     data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
-    #     control_data = df[group_columns[args.ctrl_group]].values.ravel()
+        # Extract the data for the control group and the other groups
+        data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
+        control_data = df[group_columns[args.ctrl_group]].values.ravel()
 
-    #     # The * operator unpacks the list so that each array is a separate argument, as required by dunnett
-    #     dunnett_results = dunnett(*data, control=control_data, alternative=args.alternate)
+        # The * operator unpacks the list so that each array is a separate argument, as required by dunnett
+        dunnett_results = dunnett(*data, control=control_data, alternative=args.alternate)
 
-    #     group2_data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
+        group2_data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
 
-    #     # Convert the result to a DataFrame
-    #     test_results_df = pd.DataFrame({
-    #         'group1': [args.ctrl_group] * len(dunnett_results.pvalue),
-    #         'group2': [prefix for prefix in args.groups if prefix != args.ctrl_group],
-    #         'p-value': dunnett_results.pvalue,
-    #         'meandiff': np.mean(group2_data, axis=1) - np.mean(control_data) # Calculate the mean difference between each group and the control group
-    #     })
-    #     significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
+        # Convert the result to a DataFrame
+        test_results_df = pd.DataFrame({
+            'group1': [args.ctrl_group] * len(dunnett_results.pvalue),
+            'group2': [prefix for prefix in args.groups if prefix != args.ctrl_group],
+            'p-value': dunnett_results.pvalue,
+            'meandiff': np.mean(group2_data, axis=1) - np.mean(control_data) # Calculate the mean difference between each group and the control group
+        })
+        significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
 
     elif test_type == 'tukey':
 
@@ -381,7 +382,7 @@ def main():
         elif args.hemi == 'l': 
             out_dirs = {side: f"{args.output}_{side}{suffix}" for side in ["L"]}
         else: 
-            print("--hemi should be l, r, or both")
+            print("--side should be l, r, or both")
             import sys ; sys.exit()
     else:
         if args.hemi == 'both': 
@@ -391,7 +392,7 @@ def main():
         elif args.hemi == 'l': 
             out_dirs = {side: f"{test_type}_plots_{side}{suffix}" for side in ["L"]}
         else: 
-            print("--hemi should be l, r, or both")
+            print("--side should be l, r, or both")
             import sys ; sys.exit()
 
     for out_dir in out_dirs.values():

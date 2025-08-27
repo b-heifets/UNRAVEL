@@ -38,7 +38,7 @@ def parse_args():
     opts.add_argument('-inp', '--interpol', help='Interpolator warping with ants.apply_transforms (nearestNeighbor, multiLabel \[default], linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``) w/ padding in <reg_outputs>. E.g., autofl_50um_masked_fixed_reg_input.nii.gz', required=True, action=SM)
-    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%%).', default=0.15, type=float, action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.25 (25%%).', default=0.25, type=float, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -48,8 +48,8 @@ def parse_args():
 # TODO: Can calculate_padded_dimensions() here and calculate_resampled_padded_dimensions() in to_native.py be combined?
 
 @print_func_name_args_times()
-def calculate_padded_dimensions(original_dimensions, pad_percent=0.15):
-    # Calculate padding for the original dimensions (15% of the original dimensions)
+def calculate_padded_dimensions(original_dimensions, pad_percent=0.25):
+    # Calculate padding for the original dimensions (25% of the original dimensions)
     padded_dimensions = []
     for dim in original_dimensions:
         # Calculate pad width for one side, then round to the nearest integer
@@ -63,14 +63,14 @@ def calculate_padded_dimensions(original_dimensions, pad_percent=0.15):
     return np.array(original_dimensions), np.array(padded_dimensions)
 
 @print_func_name_args_times()
-def forward_warp(fixed_img_path, reg_outputs_path, fixed_reg_in, moving_img_path, interpol, output=None, pad_percent=0.15):
+def forward_warp(fixed_img_path, reg_outputs_path, fixed_reg_in, moving_img_path, interpol, output=None, pad_percent=0.25):
     """Warp image from atlas space to tissue space and scale to full resolution"""
 
     # Warp the moving image to tissue space
     warp_outputs_dir = Path(reg_outputs_path) / "warp_outputs" 
     warp_outputs_dir.mkdir(exist_ok=True, parents=True)
     warped_nii_path = str(warp_outputs_dir / str(Path(moving_img_path).name).replace(".nii.gz", "_in_fixed_img_space.nii.gz"))
-    print(f'\n    Warping the moving image to fixed image space\n')
+    print(f'    Warping the moving image to fixed image space')
     fixed_img_for_reg_path = str(Path(reg_outputs_path) / fixed_reg_in)
     warp(Path(reg_outputs_path), moving_img_path, fixed_img_for_reg_path, warped_nii_path, inverse=False, interpol=interpol)
 

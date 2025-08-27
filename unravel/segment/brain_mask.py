@@ -23,13 +23,14 @@ Note:
     - Linux and WSL: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh
     - Mac: /Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh
     - Windows: C:\\Program Files\\ilastik-1.4.0.post1\\run_ilastik.bat
+    - The Ilastik project should be closed before running this script.
 
 Next command: 
     - ``reg``
 
 Usage:
 ------
-    seg_brain_mask -ie <path/ilastik_executable> -ilp <path/brain_mask.ilp> [-i reg_inputs/autofl_50um.nii.gz] [-d list of paths] [-p sample??] [-v]
+    seg_brain_mask -ilp <path/brain_mask.ilp> [-ie path/ilastik_executable ] [-i reg_inputs/autofl_50um.nii.gz] [-d list of paths] [-p sample??] [-v]
 """
 
 import numpy as np
@@ -49,11 +50,9 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
-    reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable.', required=True, action=SM)
-
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-ilp', '--ilastik_prj', help='path/brain_mask.ilp. Default: brain_mask.ilp', default='brain_mask.ilp', action=SM)
+    opts.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable. Default: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh', default='/usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh', action=SM)
     opts.add_argument('-i', '--input', help='Resampled autofluo image. Default: reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
 
     general = parser.add_argument_group('General arguments')

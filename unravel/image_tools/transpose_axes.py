@@ -29,7 +29,7 @@ def parse_args():
     opts.add_argument('-ya', '-y_axis', help='Default: 1', default=1, type=int, action=SM)
     opts.add_argument('-za', '-z_axis', help='Default: 2', default=2, type=int, action=SM)
     opts.add_argument('-o', '--output', help='path/img.nii.gz', action=SM)
-    opts.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
+    opts.add_argument('-c', '--channel', help='Channel number. Default: 0', default=0, type=int, action=SM)
     opts.add_argument('-ao', '--axis_order', help='Axis order for loading image. Default: xyz. (other option: zyx)', default='xyz', action=SM)
     opts.add_argument('-rr', '--return_res', help='Default: True. If false, enter a float for xy_res and z_res (in um) in prompts', action='store_true', default=True)
 

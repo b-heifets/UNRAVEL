@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -384,7 +398,6 @@
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">fsl.wrappers</span> <span class="kn">import</span> <span class="n">fslmaths</span><span class="p">,</span> <span class="n">avwutils</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -393,7 +406,7 @@
 
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
 
 
 <div class="viewcode-block" id="parse_args">
@@ -437,9 +450,8 @@
 <div class="viewcode-block" id="get_groups_info">
 <a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.get_groups_info">[docs]</a>
 <span class="k">def</span> <span class="nf">get_groups_info</span><span class="p">():</span>
-    <span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.nii.gz&#39;</span><span class="p">))</span>
     <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
-
+    <span class="n">files</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">&#39;*.nii.gz&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
         <span class="n">prefix</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
@@ -544,7 +556,7 @@
 
 
     <span class="c1"># Merge and smooth the input images</span>
-    <span class="n">images</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.nii.gz&#39;</span><span class="p">))</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">&#39;*.nii.gz&#39;</span><span class="p">)</span>
     <span class="n">merged_file</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">&#39;all.nii.gz&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">merged_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    Merging *.nii.gz into ./stats/all.nii.gz with this order of files:&#39;</span><span class="p">)</span>

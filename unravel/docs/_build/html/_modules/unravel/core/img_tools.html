@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -371,89 +385,70 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
-<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
 <span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">rotate</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">nii_to_ndarray</span>
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_func_name_args_times</span>
-
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
 
 <div class="viewcode-block" id="resample">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.resample">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">resample</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">target_res</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample a 3D ndarray</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters:</span>
-<span class="sd">        ndarray: 3D ndarray to resample</span>
-<span class="sd">        xy_res: x/y voxel size in microns (for the original image)</span>
-<span class="sd">        z_res: z voxel size in microns</span>
-<span class="sd">        res: resolution in microns for the resampled image</span>
-<span class="sd">        zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)&quot;&quot;&quot;</span>
-    <span class="n">zf_xy</span> <span class="o">=</span> <span class="n">xy_res</span> <span class="o">/</span> <span class="n">target_res</span> <span class="c1"># Zoom factor</span>
-    <span class="n">zf_z</span> <span class="o">=</span> <span class="n">z_res</span> <span class="o">/</span> <span class="n">target_res</span>
-    <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="n">zf_xy</span><span class="p">,</span> <span class="n">zf_xy</span><span class="p">,</span> <span class="n">zf_z</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="n">zoom_order</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">img_resampled</span></div>
+<span class="k">def</span> <span class="nf">resample</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample a 3D ndarray using target resolution, dimensions, or scale.</span>
 
-
-<div class="viewcode-block" id="resample_nii">
-<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.resample_nii">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample the input NIfTI image to the target resolution or dimensions.</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    nii : nibabel.nifti1.Nifti1Image</span>
-<span class="sd">        NIfTI image object to resample.</span>
-<span class="sd">        </span>
-<span class="sd">    target_res : tuple of float, optional</span>
-<span class="sd">        Target resolution in millimeters for resampling (x, y, z).</span>
-
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ndarray : np.ndarray</span>
+<span class="sd">        Input 3D array to resample.</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        Current resolution in the x and y dimensions (e.g., in microns). Required if using target_res.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        Current resolution in the z dimension (e.g., in microns). Required if using target_res.</span>
+<span class="sd">    target_res : float or tuple of float, optional</span>
+<span class="sd">        Target resolution for resampling. If a single float, it is assumed to be isotropic (same for x, y, and z). If a tuple/list of three floats, it is assumed to be anisotropic (different for x/y vs. z).</span>
 <span class="sd">    target_dims : tuple of int, optional</span>
-<span class="sd">        Target dimensions for resampling (x, y, z).</span>
+<span class="sd">        Target dimensions for resampling (x, y, z). If provided, it overrides target_res.</span>
+<span class="sd">    scale : float or list of float, optional</span>
+<span class="sd">        Scaling factor for resampling. If a single float, it scales all dimensions equally. If a list of three floats, it scales each dimension independently.</span>
+<span class="sd">    zoom_order : int, optional</span>
+<span class="sd">        SciPy zoom order for interpolation. Default is 1 (linear interpolation). Use 0 for nearest-neighbor interpolation.</span>
 
-<span class="sd">    zoom_order : int</span>
-<span class="sd">        SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    resampled_nii : nibabel.nifti1.Nifti1Image</span>
-<span class="sd">        Resampled NIfTI image object.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Resampled 3D array.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - This function assumes that the axes of the ndarray are ordered as (x, y, z).</span>
+<span class="sd">    - The units of measurement should match for xy_res, z_res, and target_res.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Load the image data and resample it</span>
-    <span class="n">img</span> <span class="o">=</span> <span class="n">nii_to_ndarray</span><span class="p">(</span><span class="n">nii</span><span class="p">)</span>
-
-    <span class="n">original_res</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]</span>
-
-    <span class="k">if</span> <span class="n">target_dims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">zoom_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">dim</span> <span class="o">/</span> <span class="n">orig_dim</span> <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">orig_dim</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)]</span>
-        <span class="k">if</span> <span class="n">target_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Update target_res based on target_dims</span>
-            <span class="n">target_res</span> <span class="o">=</span> <span class="p">[</span><span class="n">orig_dim</span> <span class="o">/</span> <span class="n">new_dim</span> <span class="o">*</span> <span class="n">original_res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">orig_dim</span><span class="p">,</span> <span class="n">new_dim</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">target_dims</span><span class="p">))]</span>
+    <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">zoom_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="mi">3</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">zoom_factors</span> <span class="o">=</span> <span class="n">scale</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scale must be a float or list of 3 floats.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">target_dims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">zoom_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">new</span> <span class="o">/</span> <span class="n">old</span> <span class="k">for</span> <span class="n">new</span><span class="p">,</span> <span class="n">old</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">)]</span>
     <span class="k">elif</span> <span class="n">target_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">zoom_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">orig</span> <span class="o">/</span> <span class="n">targ</span> <span class="k">for</span> <span class="n">orig</span><span class="p">,</span> <span class="n">targ</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">original_res</span><span class="p">,</span> <span class="n">target_res</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">z_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xy_res and z_res must be provided if using target_res.&quot;</span><span class="p">)</span>
+        <span class="n">target_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">target_res</span> <span class="o">=</span> <span class="p">[</span><span class="n">target_res</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="mi">3</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;target_res must be a float or a list of 3 floats.&quot;</span><span class="p">)</span>
+        <span class="n">zoom_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">xy_res</span> <span class="o">/</span> <span class="n">target_res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xy_res</span> <span class="o">/</span> <span class="n">target_res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">z_res</span> <span class="o">/</span> <span class="n">target_res</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either target resolution or target dimensions must be specified.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must provide either scale, target_res, or target_dims.&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Resample the image</span>
-    <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">zoom_factors</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">zoom_order</span><span class="p">)</span>
-
-    <span class="c1"># Update the affine matrix</span>
-    <span class="n">new_affine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nii</span><span class="o">.</span><span class="n">affine</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-        <span class="n">new_affine</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="p">(</span><span class="n">target_res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">original_res</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    
-    <span class="c1"># Update the header</span>
-    <span class="n">new_header</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">new_header</span><span class="o">.</span><span class="n">set_zooms</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span>
-
-    <span class="c1"># Create the resampled NIfTI image</span>
-    <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">img_resampled</span><span class="p">,</span> <span class="n">new_affine</span><span class="p">,</span> <span class="n">new_header</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">resampled_nii</span></div>
+    <span class="k">return</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">zoom_factors</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">zoom_order</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="reorient_axes">
@@ -491,10 +486,8 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]Ilastik executable path not provided. Please provide the path to the Ilastik executable.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span>
 
-    <span class="n">tif_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tif_dir</span><span class="si">}</span><span class="s2">/*.tif&quot;</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">tif_list</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No TIF files found in </span><span class="si">{</span><span class="n">tif_dir</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
+    <span class="n">tif_list</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">,</span> <span class="n">base_path</span><span class="o">=</span><span class="n">tif_dir</span><span class="p">)</span>
+    <span class="n">tif_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">tif</span><span class="p">)</span> <span class="k">for</span> <span class="n">tif</span> <span class="ow">in</span> <span class="n">tif_list</span><span class="p">]</span>
     
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">ilastik_executable</span><span class="p">,</span> <span class="c1"># Path to ilastik executable as a string</span>
@@ -504,6 +497,7 @@
         <span class="s1">&#39;--output_format&#39;</span><span class="p">,</span> <span class="s1">&#39;tif&#39;</span><span class="p">,</span>
         <span class="s1">&#39;--output_filename_format&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span><span class="si">}</span><span class="s1">/</span><span class="se">{{</span><span class="s1">nickname</span><span class="se">}}</span><span class="s1">.tif&#39;</span>
     <span class="p">]</span> <span class="o">+</span> <span class="n">tif_list</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cmd</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Running Ilastik with command:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">[:</span><span class="mi">10</span><span class="p">]),</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tif_list</span><span class="p">[:</span><span class="mi">3</span><span class="p">]),</span> <span class="sa">f</span><span class="s1">&#39;[default bold]...</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -515,7 +509,7 @@
 <div class="viewcode-block" id="pad">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.pad">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pad_percent</span><span class="o">=</span><span class="mf">0.15</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pad_percent</span><span class="o">=</span><span class="mf">0.25</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pads ndarray by a specified percentage.</span>
 
 <span class="sd">    Parameters:</span>
@@ -524,7 +518,7 @@
 <span class="sd">        Input 3D ndarray to pad.</span>
 
 <span class="sd">    pad_percent : float</span>
-<span class="sd">        Percentage of padding to add to each dimension. Default: 0.15 (15%%).</span>
+<span class="sd">        Percentage of padding to add to each dimension. Default: 0.25 (25%%).</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Guide &#8212; UNRAVEL docs</title>
+    <title>LSFM/STPT Guide &#8212; UNRAVEL docs</title>
   
   
   
@@ -54,7 +54,7 @@
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="unravel package" href="unravel/toc.html" />
+    <link rel="next" title="MapMySections Guide" href="guide_mms.html" />
     <link rel="prev" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -152,7 +152,14 @@
 
 <li class="nav-item pst-header-nav-item current active">
   <a class="nav-link nav-internal" href="#">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -260,7 +267,14 @@
 
 <li class="nav-item pst-header-nav-item current active">
   <a class="nav-link nav-internal" href="#">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -342,7 +356,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">Guide</li>
+    <li class="breadcrumb-item active" aria-current="page">LSFM/STPT Guide</li>
   </ul>
 </nav>
 </div>
@@ -359,8 +373,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="guide">
-<h1>Guide<a class="headerlink" href="#guide" title="Link to this heading">#</a></h1>
+  <section id="lsfm-stpt-guide">
+<h1>LSFM/STPT Guide<a class="headerlink" href="#lsfm-stpt-guide" title="Link to this heading">#</a></h1>
 <ul class="simple">
 <li><p>This guide focuses on our most common workflow (IF/iDISCO –&gt; LSFM –&gt; atlas registration –&gt; voxel-wise stats –&gt; cluster validation).</p></li>
 <li><p>These <a class="reference external" href="https://drive.google.com/drive/folders/1y5G0A1vnQhfM41FlJyMnOf7KIDZ7o3sD?usp=sharing">video tutorials</a> cover roughly similar content, but please refer to this guide and command help guides for additional info.</p></li>
@@ -762,6 +776,7 @@ Registration</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/register/reg_prep.html#unravel-register-reg-prep"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image to lower res).</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg.html#unravel-register-reg"><span class="std std-ref"><strong>reg</strong></span></a>: Perform registration (e.g., register the autofluo image to an average template).</p></li>
 <li><p><a class="reference internal" href="unravel/register/affine_initializer.html#unravel-register-affine-initializer"><span class="std std-ref"><strong>reg_affine_initializer</strong></span></a>: Part of reg. Roughly aligns the template to the autofl image.</p></li>
+<li><p><a class="reference internal" href="unravel/register/affine_initializer.html#unravel-register-affine-initializer"><span class="std std-ref"><strong>reg_affine_initializer_check</strong></span></a>: Check initially aligned template.</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg_check.html#unravel-register-reg-check"><span class="std std-ref"><strong>reg_check</strong></span></a>: Check registration (aggregate the autofluo and warped atlas images).</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg_check.html#unravel-register-reg-check"><span class="std std-ref"><strong>reg_check_fsleyes</strong></span></a>: Check registration using the aggregated images.</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg_check_brain_mask.html#unravel-register-reg-check-brain-mask"><span class="std std-ref"><strong>reg_check_brain_mask</strong></span></a>: Check brain mask for over/under segmentation.</p></li>
@@ -849,7 +864,7 @@ Region-wise stats</label><div class="sd-tab-content docutils">
 Image I/O</label><div class="sd-tab-content docutils">
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/image_io/metadata.html#unravel-image-io-metadata"><span class="std std-ref"><strong>io_metadata</strong></span></a>: Save raw voxel dimensions in microns and image dimensions to parameters/metadata.txt.</p></li>
-<li><p><a class="reference internal" href="unravel/image_io/io_img.html#unravel-image-io-io-img"><span class="std std-ref"><strong>io_img</strong></span></a>: Image I/O operations.</p></li>
+<li><p><a class="reference internal" href="unravel/image_io/convert_img.html#unravel-image-io-convert-img"><span class="std std-ref"><strong>io_convert_img</strong></span></a>: Convert a 3D image to another format. Supports .czi, .tif, .nii.gz, .zarr.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/nii_info.html#unravel-image-io-nii-info"><span class="std std-ref"><strong>io_nii_info</strong></span></a>: Print info about NIfTI files.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/nii_hd.html#unravel-image-io-nii-hd"><span class="std std-ref"><strong>io_nii_hd</strong></span></a>: Print NIfTI headers.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/io_nii.html#unravel-image-io-io-nii"><span class="std std-ref"><strong>io_nii</strong></span></a>: NIfTI I/O operations (binarize, convert data type, scale, etc).</p></li>
@@ -860,8 +875,9 @@ Image I/O</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/image_io/h5_to_tifs.html#unravel-image-io-h5-to-tifs"><span class="std std-ref"><strong>io_h5_to_tifs</strong></span></a>: Convert H5 files to TIFFs.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/tif_to_tifs.html#unravel-image-io-tif-to-tifs"><span class="std std-ref"><strong>io_tif_to_tifs</strong></span></a>: Convert TIF to TIFF series.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/img_to_npy.html#unravel-image-io-img-to-npy"><span class="std std-ref"><strong>io_img_to_npy</strong></span></a>: Convert images to Numpy arrays.</p></li>
-<li><p><a class="reference internal" href="unravel/image_io/points_to_img.html#unravel-image-io-points-to-img"><span class="std std-ref"><strong>io_points_to_img</strong></span></a>: Populate an empty image with point coordinates</p></li>
-<li><p><a class="reference internal" href="unravel/image_io/img_to_points.html#unravel-image-io-img-to-points"><span class="std std-ref"><strong>io_img_to_points</strong></span></a>: Convert and image into points coordinates</p></li>
+<li><p><a class="reference internal" href="unravel/image_io/points_to_img.html#unravel-image-io-points-to-img"><span class="std std-ref"><strong>io_points_to_img</strong></span></a>: Populate an empty image with point coordinates.</p></li>
+<li><p><a class="reference internal" href="unravel/image_io/img_to_points.html#unravel-image-io-img-to-points"><span class="std std-ref"><strong>io_img_to_points</strong></span></a>: Convert and image into points coordinates.</p></li>
+<li><p><a class="reference internal" href="unravel/image_io/zarr_compress.html#unravel-image-io-zarr-compress"><span class="std std-ref"><strong>io_zarr_compress</strong></span></a>: Compress .zarr or decompress .zarr.tar.gz files.</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-16" name="sd-tab-set-1" type="radio">
@@ -1352,6 +1368,7 @@ reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE<
 <ul>
 <li><p>autofl_??um_masked_fixed_reg_input.nii.gz</p></li>
 <li><p>atlas_in_tissue_space.nii.gz</p></li>
+<li><p>The original reg_inputs/autofl_50um.nii.gz can also be copied to the target dir to check for overmasking.</p></li>
 </ul>
 </li>
 </ul>
@@ -1455,7 +1472,7 @@ vstats_prep<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/image&
 <li><p><a class="reference internal" href="unravel/image_tools/rb.html#module-unravel.image_tools.rb" title="unravel.image_tools.rb"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_tools.rb</span></code></a></p>
 <ul>
 <li><p>Copy a tif to a test dir for this (e.g., with <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code>)</p></li>
-<li><p>Use <a class="reference internal" href="unravel/image_io/io_img.html#module-unravel.image_io.io_img" title="unravel.image_io.io_img"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.io_img</span></code></a> to create a tif series</p></li>
+<li><p>Use <code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.io_img_convert</span></code> to create a tif series</p></li>
 </ul>
 </li>
 </ul>
@@ -2107,11 +2124,11 @@ rstats_summary<span class="w"> </span>--groups<span class="w"> </span>Saline<spa
       </div>
     </a>
     <a class="right-next"
-       href="unravel/toc.html"
+       href="guide_mms.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel package</p>
+        <p class="prev-next-title">MapMySections Guide</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

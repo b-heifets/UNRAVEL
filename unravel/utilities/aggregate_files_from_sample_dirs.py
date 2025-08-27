@@ -31,14 +31,14 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='Glob pattern to match files within sample?? directories', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path(s) or glob pattern(s) to files relative to sample?? directories', required=True, nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-td', '--target_dir', help='path/target_dir name for gathering files. Default: current working dir', default=None, action=SM)
@@ -53,15 +53,13 @@ def parse_args():
 
 # TODO: If a path is provided starting with a '/', a warning should be printed that the path should be relative (w/o the leading '/').
 
-def aggregate_files_from_sample_dirs(sample_path, glob_pattern, target_dir, add_prefix=False, verbose=False):
-    # Use glob to find files matching the pattern
-    if len(list(sample_path.glob(glob_pattern))) == 0:
-        print(f"\n    [red1]No files found matching the pattern:[/] [bold]{glob_pattern}[/] in {sample_path}\n")
-        return
+def aggregate_files_from_sample_dirs(sample_path, pattern, target_dir, add_prefix=False, verbose=False):
 
-    for src_path in sample_path.glob(glob_pattern):
-        
-        if add_prefix: 
+    src_paths = match_files(pattern, sample_path)
+
+    for src_path in src_paths:
+
+        if add_prefix:
             target_output = target_dir / f"{sample_path.name}_{src_path.name}"
             if verbose:
                 print(f"Copying {src_path.name} as {target_output.name}")

@@ -31,7 +31,7 @@ def parse_args():
     reqs.add_argument('-c', '--cluster_ID', help='Cluster ID.', required=True, type=int, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-c', '--channel', help='.czi channel number. Default: 1', default=1, type=int, action=SM)
+    opts.add_argument('-c', '--channel', help='Channel number. Default: 1', default=1, type=int, action=SM)
     opts.add_argument('-cn', '--chann_name', help='Channel name. Default: ochann', default='ochann', action=SM)
     opts.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
     opts.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)

@@ -17,14 +17,14 @@ from rich.traceback import install
 from unravel.core.img_io import load_nii
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='Path to the image or images to compute variance. Default: "*.nii.gz"', default='*.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help="Glob pattern for input .nii.gz files (e.g., '*.nii.gz'). Default: '*.nii.gz'", default='*.nii.gz', nargs='*', action=SM)
     opts.add_argument('-o', '--output', help='Output image path. Default: var.nii.gz', default='var.nii.gz', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -40,7 +40,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    nii_paths = sorted(Path.cwd().glob(args.input))
+    nii_paths = match_files(args.input)
     if not nii_paths:
         raise ValueError(f"No .nii.gz files found matching pattern {args.input}")
 

@@ -17,14 +17,14 @@ from rich.traceback import install
 from unravel.core.img_io import load_nii
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='Glob pattern for ANOVA f statistic 1-p value images. Default: "*vox_p_fstat*.nii.gz"', default='*vox_p_fstat*.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help='Glob pattern(s) for ANOVA f statistic 1-p value images. Default: "*vox_p_fstat*.nii.gz"', default='*vox_p_fstat*.nii.gz', nargs='*', action=SM)
     opts.add_argument('-t', '--threshold', help='Threshold for the p-value. Default: 0.95', default=0.95, type=float, action=SM)
     opts.add_argument('-o', '--output', help='Output file path. Default: fstat_sig_vx_mask.nii.gz', default='fstat_sig_vx_mask.nii.gz', action=SM)
 
@@ -43,10 +43,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    nii_paths = list(Path.cwd().glob(args.input))
-    if not nii_paths:
-        print("[red]Error: No files found matching the pattern.[/red]")
-        exit(1)
+    nii_paths = match_files(args.input)
 
     imgs = [load_nii(path) for path in nii_paths]
     

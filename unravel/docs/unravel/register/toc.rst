@@ -7,6 +7,7 @@ unravel.register package
    reg_prep
    reg
    affine_initializer
+   affine_initializer_check
    reg_check
    reg_check_fsleyes
    reg_check_brain_mask

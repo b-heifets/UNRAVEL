@@ -20,14 +20,14 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, initialize_progress_bar
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-p', '--pattern', help='Regex pattern in quotes for matching .nii.gz images', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path(s) or glob pattern(s) in quotes for matching .nii.gz images', required=True, nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-m', '--mask', help='path/mask.nii.gz', default=None, action=SM)
@@ -61,8 +61,7 @@ def main():
 
     mask = load_3D_img(args.mask, verbose=args.verbose)
 
-    # Collect .nii.gz files matching the pattern
-    images = [f for f in glob.glob(args.pattern) if os.path.basename(f) != args.mask]
+    images = match_files(args.input)
 
     mean_values = []
 

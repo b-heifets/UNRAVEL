@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -381,9 +395,8 @@
 <span class="kn">from</span> <span class="nn">rich.live</span> <span class="kn">import</span> <span class="n">Live</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
-<span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
-
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">load_image_metadata_from_txt</span><span class="p">,</span> <span class="n">resolve_path</span><span class="p">,</span> <span class="n">save_as_tifs</span><span class="p">,</span> <span class="n">save_as_nii</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">resample</span><span class="p">,</span> <span class="n">reorient_axes</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">initialize_progress_bar</span><span class="p">,</span> <span class="n">get_samples</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
@@ -399,7 +412,7 @@
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-md&#39;</span><span class="p">,</span> <span class="s1">&#39;--metadata&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/metadata.txt. Default: parameters/metadata.txt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;parameters/metadata.txt&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--channel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;.czi channel number. Default: 0 for autofluo&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--channel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Channel number. Default: 0&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output path. Default: reg_inputs/autofl_50um.nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_inputs/autofl_50um.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Resample input to this res in um for reg. Default: 50&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-zo&#39;</span><span class="p">,</span> <span class="s1">&#39;--zoom_order&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Order for resampling (scipy.ndimage.zoom). Default: 1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>

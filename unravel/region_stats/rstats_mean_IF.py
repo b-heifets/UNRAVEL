@@ -30,7 +30,7 @@ from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img
 from unravel.core.img_tools import label_IDs
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 from unravel.voxel_stats.apply_mask import load_mask
 
 
@@ -38,7 +38,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="Path(s) or glob pattern(s) for NIfTI images to process (e.g., '*.nii.gz')", required=True, nargs='*', action=SM)
     reqs.add_argument('-a', '--atlas', help='Path/atlas.nii.gz (e.g., atlas_CCFv3_2020_30um.nii.gz or atlas_CCFv3_2020_30um_split.nii.gz)', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -127,7 +127,7 @@ def main():
     output_folder = Path('rstats_mean_IF')
     output_folder.mkdir(parents=True, exist_ok=True)
 
-    files = Path().cwd().glob(args.input)
+    files = match_files(args.input)
     for file in files:
         if str(file).endswith('.nii.gz'):
             

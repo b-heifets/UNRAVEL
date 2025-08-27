@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -355,7 +369,9 @@
 <span class="sd">Use ``cstats_validation`` (``cv``) from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify cell/label densities.</span>
 
 <span class="sd">Prereqs:</span>
+<span class="sd">    - Optional: ``cstats_fdr_range`` to determine the q value thresholds yielding significant clusters</span>
 <span class="sd">    - ``cstats_fdr`` to generate a cluster index in atlas space (a map of clusters of significant voxels)</span>
+<span class="sd">    - ``cstats_mirror_indices`` to recursively mirror the cluster indices to the other hemisphere (if bilateral data was combined and processed w/ a hemispheric mask).</span>
 <span class="sd">    - ``seg_ilastik`` to generate a segmentation mask in tissue space (e.g., to label c-Fos+ cells)</span>
 
 <span class="sd">Inputs:</span>
@@ -411,18 +427,18 @@
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-de&#39;</span><span class="p">,</span> <span class="s1">&#39;--density&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Density to measure: cell_density (default) or label_density&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;cell_density&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cell_density&#39;</span><span class="p">,</span> <span class="s1">&#39;label_density&#39;</span><span class="p">],</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;rel_path/clusters_info.csv. Default: clusters/&lt;cluster_index_dir&gt;/cluster_data.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--clusters&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Clusters to process: all or list of clusters (e.g., 1 3 4). Processes all clusters by default&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--clusters&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Clusters to process: all or list of clusters (e.g., 1 3 4). Default: Processes all clusters&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="c1"># Optional to_native() args</span>
     <span class="n">opts_to_native</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args for to_native()&#39;</span><span class="p">)</span>
     <span class="n">opts_to_native</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--native_idx&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Load/save native cluster index from/to rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts_to_native</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-fri&#39;</span><span class="p">,</span> <span class="s1">&#39;--fixed_reg_in&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Fixed input for registration (unravel.register.reg). Default: autofl_50um_masked_fixed_reg_input.nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;autofl_50um_masked_fixed_reg_input.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>    
-    <span class="n">opts_to_native</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-inp&#39;</span><span class="p">,</span> <span class="s1">&#39;--interpol&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Interpolator for ants.apply_transforms (nearestNeighbor \[default], multiLabel [slow])&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;nearestNeighbor&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts_to_native</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-inp&#39;</span><span class="p">,</span> <span class="s1">&#39;--interpol&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Interpolator for ants.apply_transforms (nearestNeighbor \[default], multiLabel)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;nearestNeighbor&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts_to_native</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ro&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_outputs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of folder w/ outputs from unravel.register.reg (e.g., transforms). Default: reg_outputs&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_outputs&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts_to_native</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Resolution of registration inputs in microns. Default: 50&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;50&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts_to_native</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-md&#39;</span><span class="p">,</span> <span class="s1">&#39;--metadata&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/metadata.txt. Default: parameters/metadata.txt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;parameters/metadata.txt&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts_to_native</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-zo&#39;</span><span class="p">,</span> <span class="s1">&#39;--zoom_order&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts_to_native</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pad&#39;</span><span class="p">,</span> <span class="s1">&#39;--pad_percent&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts_to_native</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pad&#39;</span><span class="p">,</span> <span class="s1">&#39;--pad_percent&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="c1"># Compatability args</span>
     <span class="n">compatability</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Compatability options for to_native()&#39;</span><span class="p">)</span>

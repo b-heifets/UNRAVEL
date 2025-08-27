@@ -30,7 +30,6 @@ Usage:
 
 import numpy as np
 import nibabel as nib
-from glob import glob
 from fsl.wrappers import fslmaths
 from pathlib import Path
 from rich import print
@@ -39,7 +38,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 from unravel.voxel_stats.apply_mask import load_mask
 from unravel.voxel_stats.mirror import mirror
         
@@ -48,7 +47,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='Pattern to match atlas space input images in the working dir. Default: *.nii.gz', default='*.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help='File path(s) or pattern(s) for atlas space images. Default: *.nii.gz', default='*.nii.gz', nargs='*', action=SM)
     opts.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0', default=0, type=float, action=SM)
     opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
     opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping (if atlas is asym.). Default: 0', default=0, type=int, action=SM)
@@ -110,8 +109,10 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    files = list(Path().cwd().glob(args.input))
-    print(f'\nImages to process: {files}\n')
+    files = match_files(args.input)
+
+    if args.verbose:
+        print(f'\nInput files: {files}\n')
 
     if args.parallel:
         with ThreadPoolExecutor() as executor:

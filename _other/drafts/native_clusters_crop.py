@@ -10,7 +10,6 @@ inputs: ./sample??/clusters/output_folder/bounding_boxes/outer_bounds.txt and ./
 outputs: ./sample??/clusters/output_folder/<chann_name>_cropped/<sample>_cluster_*.nii.gz
 """
 
-from glob import glob
 from pathlib import Path
 import re
 import numpy as np
@@ -23,7 +22,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
 from unravel.core.img_tools import crop
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples, load_text_from_file
+from unravel.core.utils import match_files, print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples, load_text_from_file
 
 
 def parse_args():
@@ -104,8 +103,9 @@ def main():
             print(f'\n    {outer_bbox=}\n')
 
             # Load inner bounding boxes and crop image for each cluster
-            file_pattern = str(Path(bbox_dir, f"bounding_box_{sample}_cluster_*.txt")) # Define the pattern to match the file names
-            file_list = glob(file_pattern) # Use glob to find files matching the pattern            
+            file_pattern = f"bounding_box_{sample}_cluster_*.txt"
+            file_list = match_files([file_pattern], base_path=bbox_dir)
+
             clusters = [int(re.search(r"cluster_(\d+).txt", file).group(1)) for file in file_list] # Extract cluster IDs
             for cluster in clusters:
                 # Load bounding box

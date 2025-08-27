@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -362,7 +376,7 @@
 <span class="sd">    - ilastik_project: path/ilastik_project.ilp</span>
 <span class="sd">    - Input: path/tif_dir or path/image (relative to current dir or sample??/)</span>
 <span class="sd">    - Input image types: .tif, .czi, .nii.gz, .h5, .zarr</span>
-<span class="sd">    - If glob is used, the first match is used.</span>
+<span class="sd">    - If a glob pattern is used, the first match is used.</span>
 
 <span class="sd">Outputs:</span>
 <span class="sd">    - seg_dir/seg_dir/`*`.tif series (segmented images; delete w/ --rm_out_tifs)</span>
@@ -374,10 +388,11 @@
 <span class="sd">    - Linux and WSL: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh</span>
 <span class="sd">    - Mac: /Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh</span>
 <span class="sd">    - Windows: C:\\Program Files\\ilastik-1.4.0.post1\\run_ilastik.bat</span>
+<span class="sd">    - The Ilastik project should be closed before running this script.</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i &lt;tif_dir or image&gt; -o seg_dir [--labels 1 2 3] [--rm_out_tifs] [For .czi: --channel 1] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">    seg_ilastik -ilp path/ilastik_project.ilp -i &lt;tif_dir or image&gt; -o seg_dir [--labels 1 2 3] [--rm_out_tifs] [--channel 1] [-ie path/ilastik_executable] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
@@ -395,7 +410,7 @@
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">save_as_tifs</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">pixel_classification</span>
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">get_samples</span><span class="p">,</span> <span class="n">print_func_name_args_times</span><span class="p">,</span> <span class="n">initialize_progress_bar</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">get_samples</span><span class="p">,</span> <span class="n">print_func_name_args_times</span><span class="p">,</span> <span class="n">initialize_progress_bar</span>
 
 
 <div class="viewcode-block" id="parse_args">
@@ -404,7 +419,6 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ie&#39;</span><span class="p">,</span> <span class="s1">&#39;--ilastik_exe&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/ilastik_executable.&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ilp&#39;</span><span class="p">,</span> <span class="s1">&#39;--ilastik_prj&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/ilastik_project.ilp&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Relative path to dir with tifs or an image (.nii.gz, .h5, .zarr).&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output dir name&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -412,7 +426,8 @@
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--labels&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Space-separated list of segmetation label IDs to save as 3D binary .nii.gz images&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-rmo&#39;</span><span class="p">,</span> <span class="s1">&#39;--rm_out_tifs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Delete the dir w/ the output tifs. These have all labels. .nii.gz output(s) are smaller.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--channel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;.czi channel number (if this is the input image type). Default: 1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--channel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Channel to process if applicable. Default: 1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ie&#39;</span><span class="p">,</span> <span class="s1">&#39;--ilastik_exe&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/ilastik_executable. Default: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;/usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
     <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -485,9 +500,7 @@
                 <span class="n">remove_tmp_tifs</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Load and process input image</span>
-                <span class="n">matches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">))</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No files matching &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="si">}</span><span class="s2">&#39; found in </span><span class="si">{</span><span class="n">sample_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">matches</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">sample_path</span><span class="p">)</span>
                 <span class="n">image_path</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Using </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2"> as the input image.&quot;</span><span class="p">)</span>

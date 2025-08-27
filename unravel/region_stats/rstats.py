@@ -69,7 +69,7 @@ def parse_args():
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (reg). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default='CCFv3-2020__regionID_side_IDpath_region_abbr.csv', action=SM)
-    opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
 
     compatibility = parser.add_argument_group('Compatibility options')
     compatibility.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
@@ -81,6 +81,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Using the sample_key.csv would be better for batch processing than using -c for the condition.
 
 def get_atlas_region_at_coords(atlas, x, y, z):
     """"Get the ndarray atlas region intensity at the given coordinates"""
@@ -308,7 +309,7 @@ def main():
             if args.atlas_path is not None and Path(sample_path, args.atlas_path).exists():
                 atlas_path = sample_path / args.atlas_path
                 atlas_img = load_3D_img(atlas_path, verbose=args.verbose)
-            elif args.moving_img is not None and Path(sample_path, args.moving_img).exists():
+            elif args.moving_img is not None and Path(args.moving_img).exists():
                 fixed_reg_input = sample_path / args.reg_outputs / args.fixed_reg_in
                 if not fixed_reg_input.exists():
                     fixed_reg_input = sample_path / args.reg_outputs / "autofl_50um_fixed_reg_input.nii.gz"

@@ -5,7 +5,7 @@ Use ``CCF30_to_gubra.py`` from UNRAVEL to warp an image from Allen CCFv3 30 um s
 
 Usage:
 ------
-``CCF30_to_gubra.py`` -m path/CCF30_image.nii.gz -o path/image_gubra_space.nii.gz [-a path/atlas.nii.gz] [-inp nearestNeighbor] [-fri path/fixed_reg_input.nii.gz] [-pad 0.15] [-dt uint16] [-v]
+``CCF30_to_gubra.py`` -m path/CCF30_image.nii.gz -o path/image_gubra_space.nii.gz [-a path/atlas.nii.gz] [-inp nearestNeighbor] [-fri path/fixed_reg_input.nii.gz] [-pad 0.25] [-dt uint16] [-v]
 """
 
 from pathlib import Path

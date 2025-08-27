@@ -49,7 +49,14 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
     * Voxel-wise analysis of fluorescent signals and cluster correction
     * Validation of hot/cold spots via cell/label density quantification at cellular resolution
 * `UNRAVEL GitHub repository <https://github.com/b-heifets/UNRAVEL/tree/main>`_
+<<<<<<< HEAD
 * `UNRAVEL can be installed via PyPI <https://pypi.org/project/heifetslab-unravel/>`_: ``pip install heifetslab-unravel``
+=======
+* `UNRAVEL can be installed via the Python Package Index (PyPI) <https://pypi.org/project/heifetslab-unravel/>`_ with this command:
+  .. code-block:: bash
+
+      pip install heifetslab-unravel
+>>>>>>> dev
 * `Initial UNRAVEL publication <https://www.nature.com/articles/s41386-023-01613-4>`_
 * UNRAVEL was developed by `the Heifets lab <https://heifetslab.stanford.edu/>`_ and `TensorAnalytics <https://sites.google.com/view/tensoranalytics/home?authuser=0>`_
 * Additional support/guidance was provided by:
@@ -74,6 +81,7 @@ Getting started
 * `Guide on immunofluorescence staining, iDISCO+, & lightsheet fluorescence microscopy <https://docs.google.com/document/d/16yowBhiBQWz8_VX2t9Rf6Xo3Ub4YPYD6qeJP6vJo6P4/edit?usp=sharing>`_
 * :doc:`installation`
 * :doc:`guide`
+* :doc:`guide_mms`
 * :doc:`unravel/toc`
 
 
@@ -145,6 +153,7 @@ Support is welcome for
 
    installation
    guide
+   guide_mms
    unravel/toc
 
 .. raw:: html

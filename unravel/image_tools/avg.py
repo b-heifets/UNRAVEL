@@ -17,14 +17,14 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--inputs', help='Input file(s) or pattern(s) to process. Default is "*.nii.gz".',  nargs='*', default=['*.nii.gz'], action=SM)
+    opts.add_argument('-i', '--input', help="Input file(s) or pattern(s) to process. Default is '*.nii.gz'.",  nargs='*', default='*.nii.gz', action=SM)
     opts.add_argument('-o', '--output', help='Output file name. Default is "avg.nii.gz".', default='avg.nii.gz', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -41,24 +41,17 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    
     # Resolve file patterns to actual file paths
-    all_files = []
-    for pattern in args.inputs:
-        all_files.extend(Path().glob(pattern))
+    file_paths = match_files(args.input)
 
-    print(f'\n    Averaging: {str(all_files)}\n')
-
-    if not all_files:
-        print("    [red1]No NIfTI files found. Exiting.")
-        return
+    print(f'\n    Averaging: {str(file_paths)}\n')
 
     # Initialize sum array and affine matrix
     sum_image = None
     affine = None
 
     # Process each file
-    for file_path in all_files:
+    for file_path in file_paths:
         nii = nib.load(str(file_path))
         if sum_image is None:
             sum_image = np.asanyarray(nii.dataobj, dtype=np.float64).squeeze()  # Use float64 to avoid overflow
@@ -70,7 +63,7 @@ def main():
     
 
     # Calculate the average
-    average_image = sum_image / len(all_files)
+    average_image = sum_image / len(file_paths)
 
     # Save the averaged image
     averaged_nii = nib.Nifti1Image(average_image, affine, header)

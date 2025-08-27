@@ -1,4 +1,4 @@
-# Guide
+# LSFM/STPT Guide
 
 
 * This guide focuses on our most common workflow (IF/iDISCO --> LSFM --> atlas registration --> voxel-wise stats --> cluster validation).
@@ -340,6 +340,7 @@ uc -m
 - [**reg_prep**](unravel.register.reg_prep): Prepare registration (resample the autofluo image to lower res).
 - [**reg**](unravel.register.reg): Perform registration (e.g., register the autofluo image to an average template).
 - [**reg_affine_initializer**](unravel.register.affine_initializer): Part of reg. Roughly aligns the template to the autofl image.
+- [**reg_affine_initializer_check**](unravel.register.affine_initializer): Check initially aligned template.
 - [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
 - [**reg_check_fsleyes**](unravel.register.reg_check): Check registration using the aggregated images.
 - [**reg_check_brain_mask**](unravel.register.reg_check_brain_mask): Check brain mask for over/under segmentation.
@@ -409,7 +410,7 @@ uc -m
 
 :::{tab-item} Image I/O
 - [**io_metadata**](unravel.image_io.metadata): Save raw voxel dimensions in microns and image dimensions to parameters/metadata.txt. 
-- [**io_img**](unravel.image_io.io_img): Image I/O operations.
+- [**io_convert_img**](unravel.image_io.convert_img): Convert a 3D image to another format. Supports .czi, .tif, .nii.gz, .zarr.
 - [**io_nii_info**](unravel.image_io.nii_info): Print info about NIfTI files.
 - [**io_nii_hd**](unravel.image_io.nii_hd): Print NIfTI headers.
 - [**io_nii**](unravel.image_io.io_nii): NIfTI I/O operations (binarize, convert data type, scale, etc).
@@ -420,8 +421,9 @@ uc -m
 - [**io_h5_to_tifs**](unravel.image_io.h5_to_tifs): Convert H5 files to TIFFs.
 - [**io_tif_to_tifs**](unravel.image_io.tif_to_tifs): Convert TIF to TIFF series.
 - [**io_img_to_npy**](unravel.image_io.img_to_npy): Convert images to Numpy arrays.
-- [**io_points_to_img**](unravel.image_io.points_to_img): Populate an empty image with point coordinates
-- [**io_img_to_points**](unravel.image_io.img_to_points): Convert and image into points coordinates
+- [**io_points_to_img**](unravel.image_io.points_to_img): Populate an empty image with point coordinates.
+- [**io_img_to_points**](unravel.image_io.img_to_points): Convert and image into points coordinates.
+- [**io_zarr_compress**](unravel.image_io.zarr_compress): Compress .zarr or decompress .zarr.tar.gz files.
 :::
 
 :::{tab-item} Image tools
@@ -874,6 +876,7 @@ for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -sm 0.4 
 * Check registration by copying these images from each sample??/reg_ouputs folder to a target directory: 
     * autofl_??um_masked_fixed_reg_input.nii.gz
     * atlas_in_tissue_space.nii.gz
+    * The original reg_inputs/autofl_50um.nii.gz can also be copied to the target dir to check for overmasking.
 ```bash
 reg_check [-td reg_results] [-d $DIRS]  # Default for -td: copy images to the current dir.
 # The default warped atlas from reg is atlas_CCFv3_2020_30um_in_tissue_space.nii.gz (in ./sample??/.reg_outputs). Use -wa <image_name.nii.gz> to set this.
@@ -962,7 +965,7 @@ You can test parameters for background subtraction with:
 * {py:mod}`unravel.image_tools.spatial_averaging`
 * {py:mod}`unravel.image_tools.rb`
     * Copy a tif to a test dir for this (e.g., with `seg_copy_tifs`)
-    * Use {py:mod}`unravel.image_io.io_img` to create a tif series
+    * Use {py:mod}`unravel.image_io.io_img_convert` to create a tif series
 :::
 
 ```{figure} _static/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg

@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -374,13 +388,14 @@
 <span class="sd">    - Linux and WSL: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh</span>
 <span class="sd">    - Mac: /Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh</span>
 <span class="sd">    - Windows: C:\\Program Files\\ilastik-1.4.0.post1\\run_ilastik.bat</span>
+<span class="sd">    - The Ilastik project should be closed before running this script.</span>
 
 <span class="sd">Next command: </span>
 <span class="sd">    - ``reg``</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    seg_brain_mask -ie &lt;path/ilastik_executable&gt; -ilp &lt;path/brain_mask.ilp&gt; [-i reg_inputs/autofl_50um.nii.gz] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">    seg_brain_mask -ilp &lt;path/brain_mask.ilp&gt; [-ie path/ilastik_executable ] [-i reg_inputs/autofl_50um.nii.gz] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -402,11 +417,9 @@
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
-    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ie&#39;</span><span class="p">,</span> <span class="s1">&#39;--ilastik_exe&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/ilastik_executable.&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ilp&#39;</span><span class="p">,</span> <span class="s1">&#39;--ilastik_prj&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/brain_mask.ilp. Default: brain_mask.ilp&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;brain_mask.ilp&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ie&#39;</span><span class="p">,</span> <span class="s1">&#39;--ilastik_exe&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/ilastik_executable. Default: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;/usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Resampled autofluo image. Default: reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_inputs/autofl_50um.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>

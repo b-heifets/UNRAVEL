@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -355,7 +369,7 @@
 <span class="sd">Use ``io_tif_to_tifs`` (``t2t``) from UNRAVEL to load a 3D .tif  or .ome.tif image and save it as tifs.</span>
 
 <span class="sd">Input: </span>
-<span class="sd">    - path/image.tif (can use glob patterns)</span>
+<span class="sd">    - path/image.tif</span>
 
 <span class="sd">Outputs:</span>
 <span class="sd">    - &lt;tif_dir&gt;/slice_0000.tif, &lt;tif_dir&gt;/slice_0001.tif, ...</span>
@@ -371,7 +385,6 @@
 <span class="sd">    io_tif_to_tifs -i &lt;path/image.tif&gt; -t autofl [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
@@ -380,7 +393,7 @@
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">save_metadata_to_file</span><span class="p">,</span> <span class="n">save_as_tifs</span><span class="p">,</span> <span class="n">load_3D_tif</span>
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 
 
 <div class="viewcode-block" id="parse_args">
@@ -411,7 +424,7 @@
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-    <span class="n">input_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)))</span>
+    <span class="n">input_paths</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">input_path</span> <span class="ow">in</span> <span class="n">input_paths</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Processing </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>

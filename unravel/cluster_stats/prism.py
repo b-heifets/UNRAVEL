@@ -40,7 +40,6 @@ Usage:
 """
 
 import pandas as pd
-from glob import glob
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -48,7 +47,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -163,15 +162,9 @@ def main():
     verbose_start_msg()
 
     path = Path(args.path) if args.path else Path.cwd()
+    csv_files = match_files('*.csv', base_path=path)
 
-    # Load all .csv files
-    csv_files = list(path.glob('*.csv'))
-
-    if not csv_files:
-        print(f"\n[red]    No CSV files found in {path}.[/]")
-        import sys ; sys.exit()
-
-    # Print CSVs in the working dir
+    # Print CSVs in the base path if verbose is enabled
     if args.verbose:
         print(f'\n[bold]CSVs in {path} to process (the first word defines the groups): \n')
         for filename in csv_files:

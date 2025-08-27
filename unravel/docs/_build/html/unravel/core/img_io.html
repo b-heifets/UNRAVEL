@@ -150,7 +150,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -258,7 +265,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -310,6 +324,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../register/reg_prep.html">unravel.register.reg_prep module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer_check.html">unravel.register.affine_initializer_check module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg_check.html">unravel.register.reg_check module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg_check_fsleyes.html">unravel.register.reg_check_fsleyes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg_check_brain_mask.html">unravel.register.reg_check_brain_mask module</a></li>
@@ -321,6 +336,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../warp/to_native.html">unravel.warp.to_native module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../warp/warp.html">unravel.warp.warp module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../warp/points_to_atlas.html">unravel.warp.points_to_atlas module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../warp/ccf30_to_merfish.html">unravel.warp.ccf30_to_merfish module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../segment/toc.html">unravel.segment package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -397,7 +413,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../image_io/toc.html">unravel.image_io package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/io_img.html">unravel.image_io.io_img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/convert_img.html">unravel.image_io.convert_img module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
@@ -407,6 +423,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_compress.html">unravel.image_io.zarr_compress module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
 </ul>
@@ -446,27 +463,58 @@
 <li class="toctree-l2"><a class="reference internal" href="../utilities/points_compressor.html">unravel.utilities.points_compressor module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../abca/toc.html">unravel.abca package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../abca/cache.html">unravel.abca.cache module</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/merfish/toc.html">unravel.abca.merfish package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish.html">unravel.abca.merfish.merfish module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_filter.html">unravel.abca.merfish.merfish_filter module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_filter_by_mask.html">unravel.abca.merfish.merfish_filter_by_mask module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_cells_to_nii.html">unravel.abca.merfish.merfish_cells_to_nii module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_expression_to_nii.html">unravel.abca.merfish.merfish_expression_to_nii module</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tabular/toc.html">unravel.segment package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/columns.html">unravel.tabular.columns module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/edit_columns.html">unravel.tabular.edit_columns module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/filter_rows.html">unravel.tabular.filter_rows module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/key_value_to_table.html">unravel.tabular.key_value_to_table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/unique_values.html">unravel.tabular.unique_values module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/utils.html">unravel.tabular.utils module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/sunburst/toc.html">unravel.abca.sunburst package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst.html">unravel.abca.sunburst.sunburst module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_expression.html">unravel.abca.sunburst.sunburst_expression module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_filter.html">unravel.abca.sunburst.sunburst_filter module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_filter_by_proportion.html">unravel.abca.sunburst.sunburst_filter_by_proportion module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/mean_expression_color_scale.html">unravel.abca.sunburst.mean_expression_color_scale module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/percent_expression_color_scale.html">unravel.abca.sunburst.percent_expression_color_scale module</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../allen_institute/toc.html">unravel.allen_institute package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../allen_institute/abca/toc.html">unravel.allen_institute.abca package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/abca/cache.html">unravel.allen_institute.abca.cache module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../allen_institute/abca/merfish/toc.html">unravel.allen_institute.abca.merfish package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish.html">unravel.allen_institute.abca.merfish.merfish module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_filter.html">unravel.allen_institute.abca.merfish.merfish_filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_filter_by_mask.html">unravel.allen_institute.abca.merfish.merfish_filter_by_mask module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_cells_to_nii.html">unravel.allen_institute.abca.merfish.merfish_cells_to_nii module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_expression_to_nii.html">unravel.allen_institute.abca.merfish.merfish_expression_to_nii module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_join_gene.html">unravel.allen_institute.abca.merfish.merfish_join_gene module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/scRNA_seq/toc.html">unravel.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../abca/scRNA_seq/filter.html">unravel.abca..scRNA_seq.filter module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../allen_institute/abca/sunburst/toc.html">unravel.allen_institute.abca.sunburst package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst.html">unravel.allen_institute.abca.sunburst.sunburst module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst_expression.html">unravel.allen_institute.abca.sunburst.sunburst_expression module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst_filter_by_expression.html">unravel.allen_institute.abca.sunburst.sunburst_filter_by_expression module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst_filter_by_proportion.html">unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/mean_expression_color_scale.html">unravel.allen_institute.abca.sunburst.mean_expression_color_scale module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/percent_expression_color_scale.html">unravel.allen_institute.abca.sunburst.percent_expression_color_scale module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/toc.html">unravel.allen_institute.genetic_tools_atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/download.html">unravel.allen_institute.genetic_tools_atlas.download module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/simplify_metadata.html">unravel.allen_institute.genetic_tools_atlas.simplify_metadata module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/org_samples.html">unravel.allen_institute.genetic_tools_atlas.org_samples module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/auto_crop.html">unravel.allen_institute.genetic_tools_atlas.auto_crop module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/bbox_crop.html">unravel.allen_institute.genetic_tools_atlas.bbox_crop module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../allen_institute/mapmysections/toc.html">unravel.allen_institute.mapmysections package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/cell_type_proportions_concat.html">unravel.allen_institute.mapmysections.cell_type_proportions_concat module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/cell_type_proportions.html">unravel.allen_institute.mapmysections.cell_type_proportions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/csv_concat_with_source.html">unravel.allen_institute.mapmysections.csv_concat_with_source module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/segmentation_summary.html">unravel.allen_institute.mapmysections.segmentation_summary module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/soma_in_grey.html">unravel.allen_institute.mapmysections.soma_ratio module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -700,37 +748,6 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_io.load_nii">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#load_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_nii" title="Link to this definition">#</a></dt>
-<dd><p>Load a .nii.gz image and return the ndarray.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>nii_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The path to the .nii.gz file.</p></li>
-<li><p><strong>desired_axis_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The desired order of the image axes. Default is ‘xyz’.</p></li>
-<li><p><strong>return_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to return resolutions. Default is False.</p></li>
-<li><p><strong>return_metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to return metadata. Default is False.</p></li>
-<li><p><strong>save_metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Path to save metadata file. Default is None.</p></li>
-<li><p><strong>xy_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – The resolution in the xy-plane (use if res is not specified in the metadata).</p></li>
-<li><p><strong>z_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – The resolution in the z-plane.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><em>ndarray</em> – The loaded 3D image array.</p></li>
-<li><p><em>tuple, optional</em> – If return_res is True, returns (ndarray, xy_res, z_res).</p></li>
-<li><p><em>tuple, optional</em> – If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>If xy_res and z_res are provided, they will be used instead of the values from the metadata.</p></li>
-</ul>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.nii_path_or_nii">
 <span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">nii_path_or_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#nii_path_or_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.nii_path_or_nii" title="Link to this definition">#</a></dt>
 <dd><p>Helper function to load a NIfTI image if it’s a path. Returns the NIfTI image object.</p>
@@ -768,6 +785,37 @@
 </dd>
 </dl>
 </section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.img_io.load_nii">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#load_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_nii" title="Link to this definition">#</a></dt>
+<dd><p>Load a .nii.gz image and return the ndarray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nii_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The path to the .nii.gz file.</p></li>
+<li><p><strong>desired_axis_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The desired order of the image axes. Default is ‘xyz’.</p></li>
+<li><p><strong>return_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to return resolutions. Default is False.</p></li>
+<li><p><strong>return_metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to return metadata. Default is False.</p></li>
+<li><p><strong>save_metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Path to save metadata file. Default is None.</p></li>
+<li><p><strong>xy_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – The resolution in the xy-plane (use if res is not specified in the metadata).</p></li>
+<li><p><strong>z_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – The resolution in the z-plane.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>ndarray</em> – The loaded 3D image array.</p></li>
+<li><p><em>tuple, optional</em> – If return_res is True, returns (ndarray, xy_res, z_res).</p></li>
+<li><p><em>tuple, optional</em> – If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If xy_res and z_res are provided, they will be used instead of the values from the metadata.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -824,20 +872,29 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.load_zarr">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_zarr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zarr_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#load_zarr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_zarr" title="Link to this definition">#</a></dt>
-<dd><p>Load a .zarr image and return the ndarray.</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_zarr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zarr_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#load_zarr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_zarr" title="Link to this definition">#</a></dt>
+<dd><p>Load a channel and level of a Zarr image, optionally returning voxel resolution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>zarr_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The path to the .zarr file.</p></li>
-<li><p><strong>desired_axis_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The desired order of the image axes. Default is ‘xyz’.</p></li>
+<li><p><strong>zarr_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>Path</em>) – Path to .zarr directory.</p></li>
+<li><p><strong>channel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to load (for 4D data). If None, loads all channels.</p></li>
+<li><p><strong>desired_axis_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Desired output axis order (default: “xyz”).</p></li>
+<li><p><strong>return_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, returns voxel resolution in mm (xy_res, z_res) along with the image.</p></li>
+<li><p><strong>save_metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Path to save metadata file. Default is None.</p></li>
+<li><p><strong>xy_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Resolution in the xy-plane (in microns). If None, will be extracted from metadata.</p></li>
+<li><p><strong>z_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Resolution in the z-plane (in microns). If None, will be extracted from metadata.</p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Resolution level to load (default: highest).</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Print debug output.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The loaded 3D image array.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>ndarray</em> – 3D numpy array from the zarr store, with shape (z, y, x) or (z, x, y) depending on desired_axis_order.</p></li>
+<li><p><em>tuple, optional</em> – If return_res is True, returns (ndarray, xy_res, z_res).</p></li>
+<li><p><em>tuple, optional</em> – If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -953,14 +1010,17 @@ to set orientation and resolution. If provided, <cite>xy_res</cite> and <cite>z_
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.save_as_tifs">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_dir_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#save_as_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_tifs" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_dir_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#save_as_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_tifs" title="Link to this definition">#</a></dt>
 <dd><p>Save an ndarray as a series of .tif images.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ndarray</strong> (<em>ndarray</em>) – The 3D image array to save.</p></li>
-<li><p><strong>tif_dir_out</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The directory to save the .tif files.</p></li>
+<li><p><strong>tif_dir_out</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>Path</em>) – The directory to save the .tif files.</p></li>
 <li><p><strong>ndarray_axis_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The order of the ndarray axes. Default is ‘xyz’.</p></li>
+<li><p><strong>parallel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to save slices in parallel. Default is False.</p></li>
+<li><p><strong>max_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – Number of threads to use for parallel saving. Defaults to os.cpu_count().</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – How to print the output directory. Default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -971,18 +1031,17 @@ to set orientation and resolution. If provided, <cite>xy_res</cite> and <cite>z_
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.save_as_zarr">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_zarr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#save_as_zarr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_zarr" title="Link to this definition">#</a></dt>
-<dd><p>Save an ndarray to a .zarr file.</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_zarr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#save_as_zarr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_zarr" title="Link to this definition">#</a></dt>
+<dd><p>Save a 3D ndarray to a .zarr file as well as OME-NGFF-compatible metadata.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ndarray</strong> (<em>ndarray</em>) – The 3D image array to save.</p></li>
 <li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The path to save the .zarr file.</p></li>
 <li><p><strong>ndarray_axis_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The order of the ndarray axes. Default is ‘xyz’.</p></li>
+<li><p><strong>xy_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – The voxel size in the XY plane (in mm).</p></li>
+<li><p><strong>z_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – The voxel size in the Z direction (in mm).</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1007,29 +1066,53 @@ to set orientation and resolution. If provided, <cite>xy_res</cite> and <cite>z_
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.save_3D_img">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_3D_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order='xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type=&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_img=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#save_3D_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_3D_img" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_3D_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order='xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type=&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_img=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#save_3D_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_3D_img" title="Link to this definition">#</a></dt>
 <dd><p>Save a 3D image in various formats.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>img</strong> (<em>ndarray</em>) – The 3D image array to save.</p></li>
-<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The path to save the image.</p></li>
+<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The path to save the image. The file extension determines the format: .nii.gz, .zarr, .h5, .tif, or a directory path for a TIFF series.</p></li>
 <li><p><strong>ndarray_axis_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The order of the ndarray axes. Default is ‘xyz’.</p></li>
 <li><p><strong>xy_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – The x/y resolution in microns for a NIFTI image output. Default is 1000.</p></li>
 <li><p><strong>z_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – The z resolution in microns for a NIFTI image output. Default is 1000.</p></li>
 <li><p><strong>data_type</strong> (<em>data-type</em><em>, </em><em>optional</em>) – Data type for a NIFTI image output. Default is np.float32.</p></li>
 <li><p><strong>reference_img</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>Path</em><em>, or </em><em>a nib.Nifti1Image object</em><em>, </em><em>optional</em>) – Either path to a .nii.gz file or a Nifti1Image object to set orientation and resolution. Default is None. If provided, xy_res and z_res are ignored.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Print addtional infomation. Default is False.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.img_io.zarr_level_to_tifs">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">zarr_level_to_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zarr_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#zarr_level_to_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.zarr_level_to_tifs" title="Link to this definition">#</a></dt>
+<dd><p>Extracts a specified resolution level from a Zarr file and saves the specified channels as TIFF files.</p>
+<section id="id3">
+<h2>Parameters:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>zarr_path<span class="classifier">str or Path</span></dt><dd><p>Path to the Zarr file.</p>
+</dd>
+<dt>output_dir<span class="classifier">str or Path</span></dt><dd><p>Directory to save the output TIFF files. If None, defaults to “TIFFs/&lt;sample_name&gt;”.</p>
+</dd>
+<dt>resolution_level<span class="classifier">str</span></dt><dd><p>Resolution level to extract (e.g., “0”, “1”, …, “9”).</p>
+</dd>
+<dt>channel_map<span class="classifier">dict</span></dt><dd><p>Mapping of output directory names to Zarr channel indices (e.g., {‘red’: 0, ‘green’: 1}).</p>
+</dd>
+<dt>xy_res<span class="classifier">float, optional</span></dt><dd><p>X/Y resolution in microns.</p>
+</dd>
+<dt>z_res<span class="classifier">float, optional</span></dt><dd><p>Z resolution in microns. Default is 100 µm for Genetic Tools Atlas data.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.nii_voxel_size">
 <span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">nii_voxel_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_um</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#nii_voxel_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.nii_voxel_size" title="Link to this definition">#</a></dt>
 <dd><p>Get the resolution (voxel size) of a NIfTI image.</p>
-<section id="id3">
-<h2>Parameters:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<section id="id4">
+<h2>Parameters:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
 <dl class="simple">
 <dt>nii<span class="classifier">str, Path, or nib.Nifti1Image</span></dt><dd><p>Path to the NIfTI image file or a Nifti1Image object.</p>
 </dd>
@@ -1037,8 +1120,8 @@ to set orientation and resolution. If provided, <cite>xy_res</cite> and <cite>z_
 </dd>
 </dl>
 </section>
-<section id="id4">
-<h2>Returns:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<section id="id5">
+<h2>Returns:<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
 <dl class="simple">
 <dt>res<span class="classifier">tuple of float or float</span></dt><dd><p>If anisotropic, returns (x_res, y_res, z_res) in micrometers (um) or millimeters (mm).
 If isotropic, returns a single float value for the resolution in micrometers (um) or millimeters (mm).</p>
@@ -1103,9 +1186,9 @@ If isotropic, returns a single float value for the resolution in micrometers (um
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_czi"><code class="docutils literal notranslate"><span class="pre">load_czi()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_tifs"><code class="docutils literal notranslate"><span class="pre">load_tifs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_3D_tif"><code class="docutils literal notranslate"><span class="pre">load_3D_tif()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_nii"><code class="docutils literal notranslate"><span class="pre">load_nii()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.nii_path_or_nii"><code class="docutils literal notranslate"><span class="pre">nii_path_or_nii()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.nii_to_ndarray"><code class="docutils literal notranslate"><span class="pre">nii_to_ndarray()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_nii"><code class="docutils literal notranslate"><span class="pre">load_nii()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_nii_subset"><code class="docutils literal notranslate"><span class="pre">load_nii_subset()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_h5"><code class="docutils literal notranslate"><span class="pre">load_h5()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_zarr"><code class="docutils literal notranslate"><span class="pre">load_zarr()</span></code></a></li>
@@ -1118,6 +1201,7 @@ If isotropic, returns a single float value for the resolution in micrometers (um
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.save_as_zarr"><code class="docutils literal notranslate"><span class="pre">save_as_zarr()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.save_as_h5"><code class="docutils literal notranslate"><span class="pre">save_as_h5()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.save_3D_img"><code class="docutils literal notranslate"><span class="pre">save_3D_img()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.zarr_level_to_tifs"><code class="docutils literal notranslate"><span class="pre">zarr_level_to_tifs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.nii_voxel_size"><code class="docutils literal notranslate"><span class="pre">nii_voxel_size()</span></code></a></li>
 </ul>
   </nav></div>

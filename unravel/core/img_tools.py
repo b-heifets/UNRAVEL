@@ -20,84 +20,68 @@ import nibabel as nib
 import numpy as np
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
-from glob import glob
 from pathlib import Path
 from rich import print
 from scipy import ndimage
 from scipy.ndimage import rotate
 
 from unravel.core.img_io import nii_to_ndarray
-from unravel.core.utils import print_func_name_args_times
-
-
-@print_func_name_args_times()
-def resample(ndarray, xy_res, z_res, target_res, zoom_order=1):
-    """Resample a 3D ndarray
-    
-    Parameters:
-        ndarray: 3D ndarray to resample
-        xy_res: x/y voxel size in microns (for the original image)
-        z_res: z voxel size in microns
-        res: resolution in microns for the resampled image
-        zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)"""
-    zf_xy = xy_res / target_res # Zoom factor
-    zf_z = z_res / target_res
-    img_resampled = ndimage.zoom(ndarray, (zf_xy, zf_xy, zf_z), order=zoom_order)
-    return img_resampled
+from unravel.core.utils import match_files, print_func_name_args_times
 
 @print_func_name_args_times()
-def resample_nii(nii, target_res=None, target_dims=None, zoom_order=0):
-    """Resample the input NIfTI image to the target resolution or dimensions.
-    
-    Parameters:
-    -----------
-    nii : nibabel.nifti1.Nifti1Image
-        NIfTI image object to resample.
-        
-    target_res : tuple of float, optional
-        Target resolution in millimeters for resampling (x, y, z).
+def resample(ndarray, xy_res=None, z_res=None, target_res=None, target_dims=None, scale=None, zoom_order=1):
+    """Resample a 3D ndarray using target resolution, dimensions, or scale.
 
+    Parameters
+    ----------
+    ndarray : np.ndarray
+        Input 3D array to resample.
+    xy_res : float, optional
+        Current resolution in the x and y dimensions (e.g., in microns). Required if using target_res.
+    z_res : float, optional
+        Current resolution in the z dimension (e.g., in microns). Required if using target_res.
+    target_res : float or tuple of float, optional
+        Target resolution for resampling. If a single float, it is assumed to be isotropic (same for x, y, and z). If a tuple/list of three floats, it is assumed to be anisotropic (different for x/y vs. z).
     target_dims : tuple of int, optional
-        Target dimensions for resampling (x, y, z).
+        Target dimensions for resampling (x, y, z). If provided, it overrides target_res.
+    scale : float or list of float, optional
+        Scaling factor for resampling. If a single float, it scales all dimensions equally. If a list of three floats, it scales each dimension independently.
+    zoom_order : int, optional
+        SciPy zoom order for interpolation. Default is 1 (linear interpolation). Use 0 for nearest-neighbor interpolation.
 
-    zoom_order : int
-        SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.
-        
-    Returns:
-    --------
-    resampled_nii : nibabel.nifti1.Nifti1Image
-        Resampled NIfTI image object.
+    Returns
+    -------
+    np.ndarray
+        Resampled 3D array.
+
+    Notes
+    -----
+    - This function assumes that the axes of the ndarray are ordered as (x, y, z).
+    - The units of measurement should match for xy_res, z_res, and target_res.
     """
-    # Load the image data and resample it
-    img = nii_to_ndarray(nii)
-
-    original_res = nii.header.get_zooms()[:3]
-
-    if target_dims is not None:
-        zoom_factors = [dim / orig_dim for dim, orig_dim in zip(target_dims, img.shape)]
-        if target_res is None:
-            # Update target_res based on target_dims
-            target_res = [orig_dim / new_dim * original_res[i] for i, (orig_dim, new_dim) in enumerate(zip(img.shape, target_dims))]
+    if scale is not None:
+        scale = np.atleast_1d(scale)
+        if len(scale) == 1:
+            zoom_factors = [scale[0]] * 3
+        elif len(scale) == 3:
+            zoom_factors = scale
+        else:
+            raise ValueError("Scale must be a float or list of 3 floats.")
+    elif target_dims is not None:
+        zoom_factors = [new / old for new, old in zip(target_dims, ndarray.shape)]
     elif target_res is not None:
-        zoom_factors = [orig / targ for orig, targ in zip(original_res, target_res)]
+        if xy_res is None or z_res is None:
+            raise ValueError("xy_res and z_res must be provided if using target_res.")
+        target_res = np.atleast_1d(target_res)
+        if len(target_res) == 1:
+            target_res = [target_res[0]] * 3
+        elif len(target_res) != 3:
+            raise ValueError("target_res must be a float or a list of 3 floats.")
+        zoom_factors = [xy_res / target_res[0], xy_res / target_res[1], z_res / target_res[2]]
     else:
-        raise ValueError("Either target resolution or target dimensions must be specified.")
+        raise ValueError("Must provide either scale, target_res, or target_dims.")
 
-    # Resample the image
-    img_resampled = ndimage.zoom(img, zoom_factors, order=zoom_order)
-
-    # Update the affine matrix
-    new_affine = np.array(nii.affine.copy())
-    for i in range(3):
-        new_affine[0:3, i] *= (target_res[i] / original_res[i])
-    
-    # Update the header
-    new_header = nii.header.copy()
-    new_header.set_zooms(target_res)
-
-    # Create the resampled NIfTI image
-    resampled_nii = nib.Nifti1Image(img_resampled, new_affine, new_header)
-    return resampled_nii
+    return ndimage.zoom(ndarray, zoom_factors, order=zoom_order)
 
 @print_func_name_args_times()
 def reorient_axes(ndarray):
@@ -126,10 +110,8 @@ def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executabl
         print("\n    [red1]Ilastik executable path not provided. Please provide the path to the Ilastik executable.\n")
         return
 
-    tif_list = sorted(glob(f"{tif_dir}/*.tif"))
-    if not tif_list:
-        print(f"\n    [red1]No TIF files found in {tif_dir}.\n")
-        return
+    tif_list = match_files('*.tif', base_path=tif_dir)
+    tif_list = [str(tif) for tif in tif_list]
     
     cmd = [
         ilastik_executable, # Path to ilastik executable as a string
@@ -139,6 +121,7 @@ def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executabl
         '--output_format', 'tif',
         '--output_filename_format', f'{str(output_dir)}/{{nickname}}.tif'
     ] + tif_list
+    cmd = [str(x) for x in cmd]
     print("\n    Running Ilastik with command:\n", ' '.join(cmd[:10]), ' '.join(tif_list[:3]), f'[default bold]...\n')
     result = subprocess.run(cmd, capture_output=True, text=True, shell=(os.name == 'nt'))
     if result.returncode != 0:
@@ -147,7 +130,7 @@ def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executabl
         print("    Ilastik completed successfully.")
 
 @print_func_name_args_times()
-def pad(ndarray, pad_percent=0.15):
+def pad(ndarray, pad_percent=0.25):
     """Pads ndarray by a specified percentage.
 
     Parameters:
@@ -156,7 +139,7 @@ def pad(ndarray, pad_percent=0.15):
         Input 3D ndarray to pad.
 
     pad_percent : float
-        Percentage of padding to add to each dimension. Default: 0.15 (15%%).
+        Percentage of padding to add to each dimension. Default: 0.25 (25%%).
 
     Returns:
     --------

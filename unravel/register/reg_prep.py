@@ -30,9 +30,8 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-
 from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii
 from unravel.core.img_tools import resample, reorient_axes
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, print_func_name_args_times
@@ -46,7 +45,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
-    opts.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
+    opts.add_argument('-c', '--channel', help='Channel number. Default: 0', default=0, type=int, action=SM)
     opts.add_argument('-o', '--output', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     opts.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg. Default: 50', default=50, type=int, action=SM)
     opts.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)

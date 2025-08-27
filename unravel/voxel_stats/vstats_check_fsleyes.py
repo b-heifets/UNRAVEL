@@ -14,13 +14,12 @@ Usage:
 
 import os
 import subprocess
-from glob import glob
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import log_command
+from unravel.core.utils import log_command, match_files
 
 ATLAS = os.getenv("ATLAS", "None")
 
@@ -32,7 +31,7 @@ def parse_args():
     reqs.add_argument('-max', '--max', help='Maximum intensity value for ``fsleyes`` display (e.g., "3" for z-scored or "3000")', type=float, required=True)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", default='*.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help="NIfTI image path(s) or pattern(s) to process (e.g., '*.nii.gz')", default='*.nii.gz', nargs='*', action=SM)
     opts.add_argument('-a', '--atlas', help=f'path/atlas.nii.gz (e.g., atlas_CCFv3_2020_30um.nii.gz). Default: {ATLAS}', default=ATLAS, action=SM)
     opts.add_argument('-l', '--lut', help='Look up table name. Default: ccfv3_2020', default='ccfv3_2020', action=SM)
 
@@ -43,10 +42,7 @@ def main():
     install()
     args = parse_args()
 
-    if Path(args.input).is_absolute():
-        nii_paths = list(Path(args.input))
-    else:
-        nii_paths = list(Path.cwd().glob(args.input))
+    nii_paths = match_files(args.input)
 
     # Define command for fsleyes
     fsleyes_command = ['fsleyes']

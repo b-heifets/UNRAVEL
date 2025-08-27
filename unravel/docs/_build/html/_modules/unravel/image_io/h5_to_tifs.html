@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -367,7 +381,6 @@
 <span class="sd">    io_h5_to_tifs -i path/image.h5 -t autofl [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">h5py</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -379,7 +392,7 @@
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 
 
 <div class="viewcode-block" id="parse_args">
@@ -388,7 +401,7 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image.h5&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Glob pattern for input h5/hdf5 image files (e.g., &#39;*.h5&#39;)&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--tif_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of output folder for outputting tifs&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
@@ -396,22 +409,6 @@
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
-
-
-<div class="viewcode-block" id="find_largest_h5_file">
-<a class="viewcode-back" href="../../../unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.find_largest_h5_file">[docs]</a>
-<span class="k">def</span> <span class="nf">find_largest_h5_file</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Find and return the path to the largest .h5 file in the current directory &quot;&quot;&quot;</span>
-    <span class="n">largest_file</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">max_size</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.h5&#39;</span><span class="p">):</span>
-        <span class="n">size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="n">max_size</span><span class="p">:</span>
-            <span class="n">max_size</span> <span class="o">=</span> <span class="n">size</span>
-            <span class="n">largest_file</span> <span class="o">=</span> <span class="n">file</span>
-
-    <span class="k">return</span> <span class="n">largest_file</span></div>
 
 
 <div class="viewcode-block" id="load_h5">
@@ -480,14 +477,10 @@
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">:</span> 
-        <span class="n">h5_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span>
-    <span class="k">else</span><span class="p">:</span> 
-        <span class="n">h5_path</span> <span class="o">=</span> <span class="n">find_largest_h5_file</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">h5_path</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    The largest .h5 file is: </span><span class="si">{</span><span class="n">h5_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No .h5 files found.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">h5_path</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">h5_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red]Multiple .h5 files found. Please specify a single file or use glob patterns to match one file.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
 
     <span class="c1"># Load h5 image (highest res dataset) as ndarray and extract voxel sizes in microns</span>
     <span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">load_h5</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

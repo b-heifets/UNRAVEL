@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -373,11 +387,11 @@
 
 <span class="sd">Usage for Tukey tests:</span>
 <span class="sd">----------------------</span>
-<span class="sd">    rstats_summary --groups Saline MDMA Meth -hemi both [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]</span>
+<span class="sd">    rstats_summary --groups Saline MDMA Meth --side both [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]</span>
 
 <span class="sd">Usage for t-tests:</span>
 <span class="sd">------------------</span>
-<span class="sd">    rstats_summary --groups Saline MDMA -hemi both -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]</span>
+<span class="sd">    rstats_summary --groups Saline MDMA --side both -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">ast</span>
@@ -393,7 +407,7 @@
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 <span class="kn">from</span> <span class="nn">rich.live</span> <span class="kn">import</span> <span class="n">Live</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span><span class="p">,</span> <span class="n">dunnett</span>
 <span class="kn">from</span> <span class="nn">statsmodels.stats.multicomp</span> <span class="kn">import</span> <span class="n">pairwise_tukeyhsd</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
@@ -408,8 +422,8 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group prefixes (e.g., saline meth mdma)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-hemi&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Hemisphere(s) to process (r, l or both)&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group prefixes (e.g., saline meth mdma)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--side&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Side of brain to process (r, l or both)&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--ctrl_group&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Control group name for t-test or Dunnett&#39;s tests&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>  <span class="c1"># Does the control need to be specified for a t-test? First group could be the control.</span>
@@ -418,7 +432,7 @@
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-y&#39;</span><span class="p">,</span> <span class="s1">&#39;--ylabel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Y-axis label (Default: cell_density)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;cell_density&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-csv&#39;</span><span class="p">,</span> <span class="s1">&#39;--csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CCFv3-2020_regional_summary.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;--bar_color&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ABA&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--symbol_color&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;light:white&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sc&#39;</span><span class="p">,</span> <span class="s1">&#39;--symbol_color&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;light:white&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output directory for plots (Default: &lt;t-test or tukey&gt;_plots)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s2">&quot;--extension&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;File extension for plots. Choices: pdf (default), svg, eps, tiff, png)&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="s1">&#39;eps&#39;</span><span class="p">,</span> <span class="s1">&#39;tiff&#39;</span><span class="p">,</span> <span class="s1">&#39;png&#39;</span><span class="p">],</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
@@ -432,6 +446,7 @@
 <span class="c1"># TODO: Adapt this to work for cell counts and label densities. This could also be used for mean IF intensities.</span>
 <span class="c1"># TODO: Need a way to handle cases when some data from some samples is from one hemisphere and some from the other. (see filter_csv.py)</span>
 <span class="c1"># TODO: Fix plots for when there are &gt; 3 groups (comparison lines are not positioned correctly)</span>
+<span class="c1"># TODO: Zip the output directory to save space and make it easier to move around.</span>
 
 <div class="viewcode-block" id="get_region_details">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.get_region_details">[docs]</a>
@@ -575,25 +590,25 @@
         <span class="n">test_results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">test_results</span><span class="p">)</span>
         <span class="n">significant_comparisons</span> <span class="o">=</span> <span class="n">test_results_df</span><span class="p">[</span><span class="n">test_results_df</span><span class="p">[</span><span class="s1">&#39;p-value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]</span>
 
-    <span class="c1"># elif test_type == &#39;dunnett&#39;:</span>
+    <span class="k">elif</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s1">&#39;dunnett&#39;</span><span class="p">:</span>
 
-    <span class="c1">#     # Extract the data for the control group and the other groups</span>
-    <span class="c1">#     data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]</span>
-    <span class="c1">#     control_data = df[group_columns[args.ctrl_group]].values.ravel()</span>
+        <span class="c1"># Extract the data for the control group and the other groups</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">group_columns</span><span class="p">[</span><span class="n">prefix</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span> <span class="k">if</span> <span class="n">prefix</span> <span class="o">!=</span> <span class="n">args</span><span class="o">.</span><span class="n">ctrl_group</span><span class="p">]</span>
+        <span class="n">control_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">group_columns</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">ctrl_group</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
-    <span class="c1">#     # The * operator unpacks the list so that each array is a separate argument, as required by dunnett</span>
-    <span class="c1">#     dunnett_results = dunnett(*data, control=control_data, alternative=args.alternate)</span>
+        <span class="c1"># The * operator unpacks the list so that each array is a separate argument, as required by dunnett</span>
+        <span class="n">dunnett_results</span> <span class="o">=</span> <span class="n">dunnett</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">control</span><span class="o">=</span><span class="n">control_data</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">alternate</span><span class="p">)</span>
 
-    <span class="c1">#     group2_data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]</span>
+        <span class="n">group2_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">group_columns</span><span class="p">[</span><span class="n">prefix</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span> <span class="k">if</span> <span class="n">prefix</span> <span class="o">!=</span> <span class="n">args</span><span class="o">.</span><span class="n">ctrl_group</span><span class="p">]</span>
 
-    <span class="c1">#     # Convert the result to a DataFrame</span>
-    <span class="c1">#     test_results_df = pd.DataFrame({</span>
-    <span class="c1">#         &#39;group1&#39;: [args.ctrl_group] * len(dunnett_results.pvalue),</span>
-    <span class="c1">#         &#39;group2&#39;: [prefix for prefix in args.groups if prefix != args.ctrl_group],</span>
-    <span class="c1">#         &#39;p-value&#39;: dunnett_results.pvalue,</span>
-    <span class="c1">#         &#39;meandiff&#39;: np.mean(group2_data, axis=1) - np.mean(control_data) # Calculate the mean difference between each group and the control group</span>
-    <span class="c1">#     })</span>
-    <span class="c1">#     significant_comparisons = test_results_df[test_results_df[&#39;p-value&#39;] &lt; 0.05]</span>
+        <span class="c1"># Convert the result to a DataFrame</span>
+        <span class="n">test_results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;group1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">ctrl_group</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">dunnett_results</span><span class="o">.</span><span class="n">pvalue</span><span class="p">),</span>
+            <span class="s1">&#39;group2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">prefix</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span> <span class="k">if</span> <span class="n">prefix</span> <span class="o">!=</span> <span class="n">args</span><span class="o">.</span><span class="n">ctrl_group</span><span class="p">],</span>
+            <span class="s1">&#39;p-value&#39;</span><span class="p">:</span> <span class="n">dunnett_results</span><span class="o">.</span><span class="n">pvalue</span><span class="p">,</span>
+            <span class="s1">&#39;meandiff&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">group2_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">control_data</span><span class="p">)</span> <span class="c1"># Calculate the mean difference between each group and the control group</span>
+        <span class="p">})</span>
+        <span class="n">significant_comparisons</span> <span class="o">=</span> <span class="n">test_results_df</span><span class="p">[</span><span class="n">test_results_df</span><span class="p">[</span><span class="s1">&#39;p-value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]</span>
 
     <span class="k">elif</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s1">&#39;tukey&#39;</span><span class="p">:</span>
 
@@ -749,7 +764,7 @@
         <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">hemi</span> <span class="o">==</span> <span class="s1">&#39;l&#39;</span><span class="p">:</span> 
             <span class="n">out_dirs</span> <span class="o">=</span> <span class="p">{</span><span class="n">side</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">side</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">]}</span>
         <span class="k">else</span><span class="p">:</span> 
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--hemi should be l, r, or both&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--side should be l, r, or both&quot;</span><span class="p">)</span>
             <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">hemi</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span> 
@@ -759,7 +774,7 @@
         <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">hemi</span> <span class="o">==</span> <span class="s1">&#39;l&#39;</span><span class="p">:</span> 
             <span class="n">out_dirs</span> <span class="o">=</span> <span class="p">{</span><span class="n">side</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_type</span><span class="si">}</span><span class="s2">_plots_</span><span class="si">{</span><span class="n">side</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">]}</span>
         <span class="k">else</span><span class="p">:</span> 
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--hemi should be l, r, or both&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--side should be l, r, or both&quot;</span><span class="p">)</span>
             <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">out_dir</span> <span class="ow">in</span> <span class="n">out_dirs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>

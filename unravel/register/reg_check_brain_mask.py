@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``reg_check_brain_mask`` (``rcbm``) from UNRAVEL for masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sample to a target directory.
+Use ``reg_check_brain_mask`` (``rcbm``) from UNRAVEL for masking QC, copies autofluo_50um.nii.gz and autofluo_50um_masked.nii.gz for each sample to a target directory.
 
-Usage for copying to the current working directory:
----------------------------------------------------
-    reg_check_brain_mask [-d list of paths] [-p sample??] [-v]
-
-Usage for copying to a target directory:
-----------------------------------------
-    reg_check_brain_mask -td <target_output_dir> [-d list of paths] [-p sample??] [-v]
+Usage:
+------
+    reg_check_brain_mask [-td <path/target_output_dir>] [-d list of paths] [-p sample??] [-v]
 """
 
 from pathlib import Path

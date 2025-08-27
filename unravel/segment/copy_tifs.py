@@ -32,7 +32,7 @@ from unravel.core.img_io import load_3D_img
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration 
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -43,7 +43,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-td', '--target_dir', help='path/target_dir to copy TIF files to. Default: current dir', action=SM)
-    opts.add_argument('-c', '--channel', help='.czi channel number (if this is the input image type). Default: 1 (i.e., the 2nd channel)', default=1, type=int, metavar='')
+    opts.add_argument('-c', '--channel', help='Channel number if applicable. Default: 1 (i.e., the 2nd channel)', default=1, type=int, metavar='')
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
@@ -69,14 +69,11 @@ def copy_specific_tifs(sample_path, source_dir, target_dir, slice_numbers, verbo
     verbose : bool
         Print verbose output.
     """
-    tif_files = list(source_dir.glob('*.tif'))
-    if not tif_files:
-        print(f"\n    [red1]No .tif files found in {source_dir}\n")
-        return
+    tif_files = match_files("*.tif", source_dir)
     
     Path(target_dir).mkdir(exist_ok=True, parents=True)
 
-    for file_path in Path(source_dir).glob('*.tif'):
+    for file_path in tif_files:
         if any(file_path.stem.endswith(f"{slice:04}") for slice in map(int, slice_numbers)):
             dest_file = Path(target_dir) / f'{Path(sample_path).name}_{file_path.name}'
             shutil.copy(file_path, dest_file)
@@ -104,9 +101,7 @@ def main():
                 copy_specific_tifs(sample_path, input_path, target_dir, args.slices, args.verbose)
             else:
                 # Load the image, extract the specified slices, and save them to the target directory
-                matches = sorted(Path(sample_path).glob(args.input))
-                if not matches:
-                    raise FileNotFoundError(f"No files matching '{args.input}' found in {sample_path}")
+                matches = match_files(args.input, sample_path)
                 image_path = matches[0]  # Use the first match after sorting
                 if args.verbose:
                     print(f"    Using {image_path} as the input image.")

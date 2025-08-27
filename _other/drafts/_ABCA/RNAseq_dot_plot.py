@@ -39,7 +39,7 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Color region names based on metadata. Sort regions based on order in metadata. Define custom order for humans to match mice? 
+# TODO: Color region names based on metadata. Sort regions based on order in metadata. Define custom order for humans to match mice? Hierarchical clustering based on expression patterns?
 
 @log_command
 def main():
@@ -119,9 +119,10 @@ def main():
 
     # Update the legend
     handles, labels = plot.get_legend_handles_labels()
-    labels[0] = "Mean Expression"
-    # labels[7] = "Percent Expressing"
-    labels[len(labels) // 2] = "Percent Expressing"
+
+    # labels[0] = "Mean Expression"
+    ### labels[7] = "Percent Expressing"
+    # labels[len(labels) // 2] = "Percent Expressing"
 
     # Regenerate the legend with finer control over labels and layout
     legend = plot.legend(

@@ -4,7 +4,9 @@
 Use ``cstats_validation`` (``cv``) from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify cell/label densities.
 
 Prereqs:
+    - Optional: ``cstats_fdr_range`` to determine the q value thresholds yielding significant clusters
     - ``cstats_fdr`` to generate a cluster index in atlas space (a map of clusters of significant voxels)
+    - ``cstats_mirror_indices`` to recursively mirror the cluster indices to the other hemisphere (if bilateral data was combined and processed w/ a hemispheric mask).
     - ``seg_ilastik`` to generate a segmentation mask in tissue space (e.g., to label c-Fos+ cells)
 
 Inputs:
@@ -58,18 +60,18 @@ def parse_args():
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-de', '--density', help='Density to measure: cell_density (default) or label_density', default='cell_density', choices=['cell_density', 'label_density'], action=SM)
     opts.add_argument('-o', '--output', help='rel_path/clusters_info.csv. Default: clusters/<cluster_index_dir>/cluster_data.csv', default=None, action=SM)
-    opts.add_argument('-c', '--clusters', help='Clusters to process: all or list of clusters (e.g., 1 3 4). Processes all clusters by default', nargs='*', default='all', action=SM)
+    opts.add_argument('-c', '--clusters', help='Clusters to process: all or list of clusters (e.g., 1 3 4). Default: Processes all clusters', nargs='*', default='all', action=SM)
 
     # Optional to_native() args
     opts_to_native = parser.add_argument_group('Optional args for to_native()')
     opts_to_native.add_argument('-n', '--native_idx', help='Load/save native cluster index from/to rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
     opts_to_native.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (unravel.register.reg). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)    
-    opts_to_native.add_argument('-inp', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor \[default], multiLabel [slow])', default="nearestNeighbor", action=SM)
+    opts_to_native.add_argument('-inp', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor \[default], multiLabel)', default="nearestNeighbor", action=SM)
     opts_to_native.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from unravel.register.reg (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
     opts_to_native.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     opts_to_native.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts_to_native.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
-    opts_to_native.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
+    opts_to_native.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
 
     # Compatability args
     compatability = parser.add_argument_group('Compatability options for to_native()')

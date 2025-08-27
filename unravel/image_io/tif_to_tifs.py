@@ -4,7 +4,7 @@
 Use ``io_tif_to_tifs`` (``t2t``) from UNRAVEL to load a 3D .tif  or .ome.tif image and save it as tifs.
 
 Input: 
-    - path/image.tif (can use glob patterns)
+    - path/image.tif
 
 Outputs:
     - <tif_dir>/slice_0000.tif, <tif_dir>/slice_0001.tif, ...
@@ -20,7 +20,6 @@ Usage:
     io_tif_to_tifs -i <path/image.tif> -t autofl [-v]
 """
 
-from glob import glob
 import numpy as np
 from pathlib import Path
 from rich import print
@@ -29,7 +28,7 @@ from rich.traceback import install
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import save_metadata_to_file, save_as_tifs, load_3D_tif
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -55,7 +54,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    input_paths = list(Path().cwd().glob(str(args.input)))
+    input_paths = match_files(args.input)
 
     for input_path in input_paths:
         print(f"\n    Processing {input_path}\n")

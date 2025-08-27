@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -386,7 +400,7 @@
 <span class="kn">from</span> <span class="nn">unravel.voxel_stats.apply_mask</span> <span class="kn">import</span> <span class="n">load_mask</span>
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
 
 
 <div class="viewcode-block" id="parse_args">
@@ -395,7 +409,7 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mas&#39;</span><span class="p">,</span> <span class="s1">&#39;--masks&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Paths to mask .nii.gz files to restrict analysis. Default: None&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mas&#39;</span><span class="p">,</span> <span class="s1">&#39;--masks&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path(s) or pattern(s) to mask .nii.gz files to restrict analysis. Default: None&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the image or images to z-score. Default: &quot;*.nii.gz&quot;&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;*.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -453,17 +467,15 @@
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
-        <span class="n">nii_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">nii_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">))</span>
 
     <span class="c1"># Load the first image to get the shape</span>
+    <span class="n">nii_paths</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
     <span class="n">input_nii_path</span> <span class="o">=</span> <span class="n">nii_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">load_nii</span><span class="p">(</span><span class="n">input_nii_path</span><span class="p">)</span>
 
     <span class="c1"># Load the mask(s) and combine them</span>
-    <span class="n">mask_imgs</span> <span class="o">=</span> <span class="p">[</span><span class="n">load_mask</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">masks</span><span class="p">]</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">masks</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">mask_paths</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">masks</span><span class="p">)</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">masks</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">mask_imgs</span> <span class="o">=</span> <span class="p">[</span><span class="n">load_mask</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">mask_paths</span><span class="p">]</span>
     <span class="n">mask_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">mask_imgs</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">mask_imgs</span><span class="p">)</span>
 
     <span class="c1"># Z-score the image using the mask and save the output</span>
@@ -473,7 +485,7 @@
         <span class="n">z_scored_img</span> <span class="o">=</span> <span class="n">z_score_img</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">mask_img</span><span class="p">)</span>
 
         <span class="c1"># Save the z-scored image</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">input_nii_path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nii.gz&#39;</span><span class="p">))</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">nii_path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nii.gz&#39;</span><span class="p">))</span>
 
         <span class="n">z_scored_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">z_scored_img</span><span class="p">,</span> <span class="n">nii</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
         <span class="n">z_scored_nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
