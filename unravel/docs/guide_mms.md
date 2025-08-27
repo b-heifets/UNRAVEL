@@ -340,14 +340,6 @@ cd ..
 ---
 <br>
 
-## Next Steps
-
-* Revise and interpret proportions:
-  - Brains enriched for endothelial or astroglial voxels may need adjustment.  
-  - High anterior commissure somata proportion (>0.004) indicates oligodendrocyte labeling.
-
----
-<br>
 
 ## Gene Expression Across Cell Types: 
 * For gene expression sunburst plots:
@@ -356,5 +348,5 @@ abca_merfish_join_gene -b $A -i ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_A
 abca_sunburst_expression -i ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB_Drd2_expression.csv -g Drd2
 abca_mean_expression_color_scale
 ```
-* Copy the ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv into the Data tab as before.
+* Copy the ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv contents into the Data tab as before.
 * Open <input>_mean_expression_lut.txt and copy it into the Preview --> Colors --> Custom overrides
