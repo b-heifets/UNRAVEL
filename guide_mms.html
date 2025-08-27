@@ -364,13 +364,25 @@
   <section id="mapmysections-guide">
 <h1>MapMySections Guide<a class="headerlink" href="#mapmysections-guide" title="Link to this heading">#</a></h1>
 <ul class="simple">
-<li><p>This guide walks through our workflow for the <strong>Allen Institute MapMySections challenge</strong>.</p>
+<li><p>This guide walks through our workflow developed for the <strong>Allen Institute MapMySections challenge</strong>.</p>
 <ul>
 <li><p>Background: <a class="reference external" href="https://alleninstitute.org/events/mapmysections/">MapMySections</a></p></li>
 <li><p>Webinar: <a class="reference external" href="https://alleninstitute.org/events/cell_type_az_webinars/">Cell Type AZ Webinars</a></p></li>
 </ul>
 </li>
 </ul>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_images/MapMySections_example.jpg"><img alt="_images/MapMySections_example.jpg" src="_images/MapMySections_example.jpg" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text">Example MapMySections results.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="_images/MapMySections_flow_chart.png"><img alt="_images/MapMySections_flow_chart.png" src="_images/MapMySections_flow_chart.png" style="width: 50%;" /></a>
+<figcaption>
+<p><span class="caption-text">MapMySections workflow.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
 <div class="note admonition">
 <p class="admonition-title">Input Options</p>
 <ul class="simple">
@@ -454,6 +466,26 @@ gta_download<span class="w"> </span>-c<span class="w"> </span>MapMySections_Entr
 <ul class="simple">
 <li><p>Output: GTA_level_3/*.zarr</p></li>
 </ul>
+<div class="note dropdown admonition">
+<p class="admonition-title">GTA Zarr Image Resolution Levels</p>
+<ul class="simple">
+<li><p>X &amp; Y resolution levels are as follows:</p>
+<ul>
+<li><p>0: 0.35 µm</p></li>
+<li><p>1: 0.7 µm</p></li>
+<li><p>2: 1.4 µm</p></li>
+<li><p>3: 2.8 µm (good balance between resolution for segmentation vs. file sizes and processing speed)</p></li>
+<li><p>4: 5.6 µm</p></li>
+<li><p>5: 11.2 µm</p></li>
+<li><p>6: 22.4 µm</p></li>
+<li><p>7: 44.8 µm</p></li>
+<li><p>8: 89.6 µm</p></li>
+<li><p>9: 179.2 µm</p></li>
+</ul>
+</li>
+<li><p>Z resolution is always 100 µm.</p></li>
+</ul>
+</div>
 </section>
 <section id="convert-zarr-to-tiff">
 <h3>Convert Zarr to TIFF<a class="headerlink" href="#convert-zarr-to-tiff" title="Link to this heading">#</a></h3>
@@ -546,14 +578,6 @@ seg_ilastik<span class="w"> </span>-ilp<span class="w"> </span>&lt;path&gt;/soma
 </section>
 <section id="registration">
 <h2>Registration<a class="headerlink" href="#registration" title="Link to this heading">#</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>io_metadata<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>.8<span class="w"> </span>-z<span class="w"> </span><span class="m">100</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
-reg_prep<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red
-reg_prep<span class="w"> </span>-i<span class="w"> </span>red<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>green<span class="w"> </span>
-
-<span class="c1"># for dual, use the channel with less fluorescence for -i. For example:</span>
-reg_prep<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>dual<span class="w"> </span>
-</pre></div>
-</div>
 <ul class="simple">
 <li><p>Download the template and atlas</p></li>
 </ul>
@@ -563,7 +587,19 @@ curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>
 <span class="c1"># For iDISCO/LSFM use this template:</span>
 curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>iDISCO_template_CCFv3_30um.nii.gz<span class="w"> </span><span class="s2">&quot;https://drive.google.com/uc?export=download&amp;id=1BBg7ydj3WTfvbIqtBlrkkLiDl0ZmCeaP&quot;</span>
 
+<span class="c1"># Allen brain atlas (CCFv3; 30 µm resolution):</span>
 curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>atlas_CCFv3_2020_30um.nii.gz<span class="w"> </span><span class="s2">&quot;https://drive.google.com/uc?export=download&amp;id=1IL0Qgi1ctJEM0Ask89l4CQqEj2RZWy7H&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Prep the fixed input for registration:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>io_metadata<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>.8<span class="w"> </span>-z<span class="w"> </span><span class="m">100</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+reg_prep<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red
+reg_prep<span class="w"> </span>-i<span class="w"> </span>red<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>green<span class="w"> </span>
+
+<span class="c1"># for dual, use the channel with less fluorescence for -i. For example:</span>
+reg_prep<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>dual<span class="w"> </span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -614,13 +650,13 @@ agg<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;atlas
 <section id="oligodendocytes-check">
 <h3>Oligodendocytes check<a class="headerlink" href="#oligodendocytes-check" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Determine the prevalence of voxels segmented as oligodentrocyte somata in the anterior commisure</p></li>
+<li><p>Determine the prevalence of voxels segmented as oligodentrocyte somata in the anterior commissure</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mms_soma_ratio<span class="w"> </span>-a<span class="w"> </span>&lt;path&gt;/atlas_CCFv3_2020_30um.nii.gz
 <span class="nb">cd</span><span class="w"> </span>soma_ratio
 mms_concat_with_source<span class="w"> </span>
 <span class="c1"># The concatenated_output.csv can be used later to revise cell type proportions. </span>
-<span class="c1"># For example, if the proportion of somatic voxels in the anterior commisure is greater than 0.004, then labeling is likely occurring in oligodendrocytes. </span>
+<span class="c1"># For example, if the proportion of somatic voxels in the anterior commissure is greater than 0.004, then labeling is likely occurring in oligodendrocytes. </span>
 <span class="nb">cd</span><span class="w"> </span>..
 </pre></div>
 </div>
@@ -661,7 +697,7 @@ mms_concat_with_source<span class="w"> </span>
 <br>
 </section>
 <section id="spatially-filter-merfish-cells">
-<h2>Spatially Filter MERFISH Cells:<a class="headerlink" href="#spatially-filter-merfish-cells" title="Link to this heading">#</a></h2>
+<h2>Spatially Filter MERFISH Cells<a class="headerlink" href="#spatially-filter-merfish-cells" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>abca_merfish_filter_by_mask<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.nii.gz&#39;</span><span class="w"> </span>-b<span class="w"> </span>&lt;ABCA_download_root&gt;<span class="w"> </span>-o<span class="w"> </span>cells
 
 <span class="nb">cd</span><span class="w"> </span>cells
@@ -702,7 +738,7 @@ abca_sunburst<span class="w"> </span>-i<span class="w"> </span>ID_1104197092_MMS
 </section>
 </section>
 <section id="quantify-cell-type-proportions">
-<h2>Quantify cell type proportions:<a class="headerlink" href="#quantify-cell-type-proportions" title="Link to this heading">#</a></h2>
+<h2>Quantify cell type proportions<a class="headerlink" href="#quantify-cell-type-proportions" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>For a region (e.g., VISp):</p></li>
 </ul>
@@ -744,13 +780,13 @@ mms_concat_with_source<span class="w">  </span><span class="c1"># Combine output
 <li><p>Revise cell type proportions</p></li>
 <li><p>If the majority of voxels are endothelial, this brain is likely enriched for endothelial cell labeling.</p></li>
 <li><p>If the majority of voxels are astroglial, this brain is likely enriched for astroglial labeling.</p></li>
-<li><p>If the proportion of somatic voxels in the anterior commisure is &gt; 0.004 in concatenated_output.csv, this brain is enriched for oligodendrocyte labeling.</p></li>
+<li><p>If the proportion of somatic voxels in the anterior commissure is &gt; 0.004 in concatenated_output.csv, this brain is enriched for oligodendrocyte labeling.</p></li>
 </ul>
 <hr class="docutils" />
 <br>
 </section>
 <section id="gene-expression-across-cell-types">
-<h2>Gene Expression Across Cell Types:<a class="headerlink" href="#gene-expression-across-cell-types" title="Link to this heading">#</a></h2>
+<h2>Gene Expression Across Cell Types<a class="headerlink" href="#gene-expression-across-cell-types" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>For gene expression sunburst plots:</p></li>
 </ul>
@@ -761,7 +797,7 @@ abca_mean_expression_color_scale
 </div>
 <ul class="simple">
 <li><p>Copy the ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv contents into the Data tab as before.</p></li>
-<li><p>Open <input>_mean_expression_lut.txt and copy it into the Preview –&gt; Colors –&gt; Custom overrides</p></li>
+<li><p>Open the &lt;…&gt;_mean_expression_lut.txt and copy it into the Preview –&gt; Colors –&gt; Custom overrides</p></li>
 </ul>
 </section>
 </section>
@@ -833,15 +869,15 @@ abca_mean_expression_color_scale
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#warp-to-merfish-space">Warp to MERFISH space</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spatially-filter-merfish-cells">Spatially Filter MERFISH Cells:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spatially-filter-merfish-cells">Spatially Filter MERFISH Cells</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-cell-type-proportions">Visualize Cell-Type Proportions</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#for-all-cells-across-the-brain">For all cells across the brain:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#for-region-specific-filtering-visualization">For region-specific filtering &amp; visualization:</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quantify-cell-type-proportions">Quantify cell type proportions:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quantify-cell-type-proportions">Quantify cell type proportions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#revising-cell-type-proportions">Revising cell type proportions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gene-expression-across-cell-types">Gene Expression Across Cell Types:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gene-expression-across-cell-types">Gene Expression Across Cell Types</a></li>
 </ul>
   </nav></div>
 

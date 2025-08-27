@@ -1,9 +1,22 @@
 # MapMySections Guide
 
 
-* This guide walks through our workflow for the **Allen Institute MapMySections challenge**.  
+* This guide walks through our workflow developed for the **Allen Institute MapMySections challenge**.  
   - Background: [MapMySections](https://alleninstitute.org/events/mapmysections/)  
   - Webinar: [Cell Type AZ Webinars](https://alleninstitute.org/events/cell_type_az_webinars/)  
+
+```{figure} _static/MapMySections_example.jpg
+:width: 100%
+:align: center
+Example MapMySections results.
+```
+
+```{figure} _static/MapMySections_flow_chart.png
+:width: 50%
+:align: center
+MapMySections workflow.
+```
+
 
 ::: {admonition} Input Options
 :class: note
@@ -81,6 +94,22 @@ gta_download -c SpecimenMetadata_subset.csv -l 3 -col 'Image Series ID'
 gta_download -c MapMySections_EntrantData_Test_Set.csv -l 3 -col 'STPT Data File Path'
 ```
 * Output: GTA_level_3/*.zarr
+
+:::{admonition} GTA Zarr Image Resolution Levels
+:class: note dropdown
+- X & Y resolution levels are as follows:
+   - 0: 0.35 µm
+   - 1: 0.7 µm
+   - 2: 1.4 µm
+   - 3: 2.8 µm (good balance between resolution for segmentation vs. file sizes and processing speed)
+   - 4: 5.6 µm
+   - 5: 11.2 µm
+   - 6: 22.4 µm
+   - 7: 44.8 µm
+   - 8: 89.6 µm
+   - 9: 179.2 µm
+- Z resolution is always 100 µm.
+:::
 
 ### Convert Zarr to TIFF
 ```bash
@@ -164,14 +193,6 @@ seg_ilastik -ilp <path>/somata1_bkg2_endo3_astro4.ilp -i red -o MMS_seg -l 1 3 4
 
 ## Registration
 
-```bash
-io_metadata -i green -x 2.8 -z 100 -p 'ID_*' -d red green dual
-reg_prep -i green -p 'ID_*' -d red
-reg_prep -i red -p 'ID_*' -d green 
-
-# for dual, use the channel with less fluorescence for -i. For example:
-reg_prep -i green -p 'ID_*' -d dual 
-```
 * Download the template and atlas
 ```bash
 # For STPT data use this template:
@@ -180,8 +201,19 @@ curl -L -o average_template_CCFv3_30um.nii.gz "https://drive.google.com/uc?expor
 # For iDISCO/LSFM use this template:
 curl -L -o iDISCO_template_CCFv3_30um.nii.gz "https://drive.google.com/uc?export=download&id=1BBg7ydj3WTfvbIqtBlrkkLiDl0ZmCeaP"
 
+# Allen brain atlas (CCFv3; 30 µm resolution):
 curl -L -o atlas_CCFv3_2020_30um.nii.gz "https://drive.google.com/uc?export=download&id=1IL0Qgi1ctJEM0Ask89l4CQqEj2RZWy7H"
 ```
+* Prep the fixed input for registration:
+```bash
+io_metadata -i green -x 2.8 -z 100 -p 'ID_*' -d red green dual
+reg_prep -i green -p 'ID_*' -d red
+reg_prep -i red -p 'ID_*' -d green 
+
+# for dual, use the channel with less fluorescence for -i. For example:
+reg_prep -i green -p 'ID_*' -d dual 
+```
+
 * Run registration:
 ```bash
 reg -m average_template_CCFv3_30um.nii.gz -f reg_inputs/autofl_50um.nii.gz -m2 atlas_CCFv3_2020_30um.nii.gz -mas None -sm 0.4 -ort RIA -v -p 'ID_*' -d red green dual
@@ -226,13 +258,13 @@ cd CCF30_space
 ```
 
 ### Oligodendocytes check
-* Determine the prevalence of voxels segmented as oligodentrocyte somata in the anterior commisure
+* Determine the prevalence of voxels segmented as oligodentrocyte somata in the anterior commissure
 ```bash
 mms_soma_ratio -a <path>/atlas_CCFv3_2020_30um.nii.gz
 cd soma_ratio
 mms_concat_with_source 
 # The concatenated_output.csv can be used later to revise cell type proportions. 
-# For example, if the proportion of somatic voxels in the anterior commisure is greater than 0.004, then labeling is likely occurring in oligodendrocytes. 
+# For example, if the proportion of somatic voxels in the anterior commissure is greater than 0.004, then labeling is likely occurring in oligodendrocytes. 
 cd ..
 ```
 
@@ -264,7 +296,7 @@ cd MERFISH
 ---
 <br>
 
-## Spatially Filter MERFISH Cells:
+## Spatially Filter MERFISH Cells
 ```bash
 abca_merfish_filter_by_mask -i '*.nii.gz' -b <ABCA_download_root> -o cells
 
@@ -301,7 +333,7 @@ abca_sunburst -i ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv
 <br>
 
 
-## Quantify cell type proportions:
+## Quantify cell type proportions
 * For a region (e.g., VISp):
 ```bash
 mms_cell_type_proportions -i '*.csv' -col subclass -rc parcellation_structure -r VISp -t
@@ -335,13 +367,13 @@ cd ..
 * Revise cell type proportions
 * If the majority of voxels are endothelial, this brain is likely enriched for endothelial cell labeling.
 * If the majority of voxels are astroglial, this brain is likely enriched for astroglial labeling.
-* If the proportion of somatic voxels in the anterior commisure is > 0.004 in concatenated_output.csv, this brain is enriched for oligodendrocyte labeling. 
+* If the proportion of somatic voxels in the anterior commissure is > 0.004 in concatenated_output.csv, this brain is enriched for oligodendrocyte labeling. 
 
 ---
 <br>
 
 
-## Gene Expression Across Cell Types: 
+## Gene Expression Across Cell Types
 * For gene expression sunburst plots:
 ```bash
 abca_merfish_join_gene -b $A -i ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv -g Drd2
@@ -349,4 +381,4 @@ abca_sunburst_expression -i ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB_D
 abca_mean_expression_color_scale
 ```
 * Copy the ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv contents into the Data tab as before.
-* Open <input>_mean_expression_lut.txt and copy it into the Preview --> Colors --> Custom overrides
+* Open the <...>_mean_expression_lut.txt and copy it into the Preview --> Colors --> Custom overrides
