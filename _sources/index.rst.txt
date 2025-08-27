@@ -52,6 +52,7 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 * `UNRAVEL can be installed via PyPI <https://pypi.org/project/heifetslab-unravel/>`_: ``pip install heifetslab-unravel``
 =======
 =======
@@ -68,6 +69,11 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
 
 >>>>>>> dev
 =======
+>>>>>>> dev
+=======
+* `UNRAVEL can be installed via the Python Package Index (PyPI) <https://pypi.org/project/heifetslab-unravel/>`_ with this command:
+  .. code-block:: bash
+      pip install heifetslab-unravel
 >>>>>>> dev
 * `Initial UNRAVEL publication <https://www.nature.com/articles/s41386-023-01613-4>`_
 * UNRAVEL was developed by `the Heifets lab <https://heifetslab.stanford.edu/>`_ and `TensorAnalytics <https://sites.google.com/view/tensoranalytics/home?authuser=0>`_
