@@ -321,7 +321,7 @@ mms_cell_type_proportions_concat
 ---
 <br>
 
-## Segmentation Summary
+## Revising cell type proportions
 
 * Summarize relative proportions of voxel counts for each segmentation label (somata, endothelial, astroglial)
 ```bash
@@ -332,8 +332,10 @@ cd seg_summary
 mms_concat_with_source  # Combine outputs into one file (one row per brain)
 cd ..
 ```
-* Revise cell type proportions in brains with abundant endothelial or astroglial labeling (e.g., if the majority of voxels are astroglial, this brain is likely enriched for astroglial labeling)
-* Use the concatenated_output.csv from mms_soma_ratio to revise cell type proportions. If the proportion of somatic voxels in the anterior commisure is > 0.004, the labeling is enriched in oligodendrocytes. 
+* Revise cell type proportions
+* If the majority of voxels are endothelial, this brain is likely enriched for endothelial cell labeling.
+* If the majority of voxels are astroglial, this brain is likely enriched for astroglial labeling.
+* If the proportion of somatic voxels in the anterior commisure is > 0.004 in concatenated_output.csv, this brain is enriched for oligodendrocyte labeling. 
 
 ---
 <br>
