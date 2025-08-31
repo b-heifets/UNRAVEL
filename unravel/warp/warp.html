@@ -571,8 +571,71 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-warp-warp-module">
-<span id="unravel-warp-warp"></span><h1>unravel.warp.warp module<a class="headerlink" href="#unravel-warp-warp-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.warp.warp">
+<span id="unravel-warp-warp-module"></span><span id="unravel-warp-warp"></span><h1>unravel.warp.warp module<a class="headerlink" href="#module-unravel.warp.warp" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">warp</span></code> from UNRAVEL to warp to/from atlas space and registration input space</p>
+<dl class="simple">
+<dt>Prereq:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This warps padded images in ./reg_outputs (i.e., images that match the padded fixed reg input). For unpadded final images, use <code class="docutils literal notranslate"><span class="pre">warp_to_fixed</span></code> and <code class="docutils literal notranslate"><span class="pre">warp_to_atlas</span></code>.</p></li>
+<li><p>To make an average template, run reg as usual then follow the usage to inverse warp the autofl images to atlas space.</p></li>
+<li><p>agg -i ‘atlas_space/tissue_in_atlas_space.nii.gz’ -a -td autofl_CCF30 -d $DIRS</p></li>
+<li><p>cd autofl_CCF30</p></li>
+<li><p>avg -o SMM2_autofl_avg.nii.gz</p></li>
+<li><p>lr_avg -i SMM2_autofl_avg.nii.gz</p></li>
+<li><p>for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m path/SMM2_autofl_avg_LRavg.nii.gz -bc -sm 0.4 -ort $(cat $s/parameters/ort.txt) -m2 path/atlas_CCFv3_2020_30um.nii.gz -v -d $s  ; done ; done</p></li>
+</ul>
+</div>
+<section id="usage-for-forward-warping-atlas-to-tissue-space">
+<h2>Usage for forward warping atlas to tissue space:<a class="headerlink" href="#usage-for-forward-warping-atlas-to-tissue-space" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>warp -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -o native_space/atlas_in_tissue_space.nii.gz -inp multiLabel [-ro reg_outputs] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-inverse-warping-tissue-to-atlas-space">
+<h2>Usage for inverse warping tissue to atlas space:<a class="headerlink" href="#usage-for-inverse-warping-tissue-to-atlas-space" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>warp -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -o atlas_space/tissue_in_atlas_space.nii.gz -inv [–inp bSpline] [-ro reg_outputs] [-v]</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.warp.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.warp.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/warp.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.warp.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.warp.warp">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.warp.</span></span><span class="sig-name descname"><span class="pre">warp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg_outputs_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/warp.html#warp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.warp.warp" title="Link to this definition">#</a></dt>
+<dd><p>Applies the transformations to an image using ANTsPy.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<p>reg_outputs_path (Path): Path to the reg_outputs folder (contains transformation files)
+moving_img_path (str): Path to the image to be transformed.
+fixed_img_path (str): Path to the reference image for applying the transform.
+output_path (str): Path where the transformed image will be saved.
+inverse (bool): If True, apply the inverse transformation. Defaults to False.
+interpol (str): Type of interpolation (e.g., ‘Linear’, ‘NearestNeighbor’, etc.).</p>
+</section>
+<section id="notes">
+<h2>Notes:<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>If multiLabel interpolation is used, the label values are rounded.</p></li>
+<li><p>If bSpline interpolation is used, negative values are set to 0.</p></li>
+</ul>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.warp.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.warp.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/warp.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.warp.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -613,6 +676,22 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-forward-warping-atlas-to-tissue-space">Usage for forward warping atlas to tissue space:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-inverse-warping-tissue-to-atlas-space">Usage for inverse warping tissue to atlas space:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.warp.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.warp.warp"><code class="docutils literal notranslate"><span class="pre">warp()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.warp.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

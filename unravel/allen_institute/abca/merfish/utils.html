@@ -577,8 +577,345 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-abca-merfish-utils-module">
-<span id="unravel-allen-institute-abca-merfish-utils"></span><h1>unravel.allen_institute.abca.merfish.utils module<a class="headerlink" href="#unravel-allen-institute-abca-merfish-utils-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.abca.merfish.utils">
+<span id="unravel-allen-institute-abca-merfish-utils-module"></span><span id="unravel-allen-institute-abca-merfish-utils"></span><h1>unravel.allen_institute.abca.merfish.utils module<a class="headerlink" href="#module-unravel.allen_institute.abca.merfish.utils" title="Link to this heading">#</a></h1>
+<p>Utilities for processing Allen Brain Cell Atlas (ABCA) MERFISH cells metadata and visualizing a brain slice with cells or gene expression data.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.filter_neurons">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">filter_neurons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#filter_neurons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.filter_neurons" title="Link to this definition">#</a></dt>
+<dd><p>Filter cells to neuronal classes (class index ≤ 29), based on integer prefix of ‘class’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.load_cell_metadata">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">load_cell_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base_or_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#load_cell_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.load_cell_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Load MERFISH cell metadata (index: cell_label).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>download_base_or_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.join_reconstructed_coords">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">join_reconstructed_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#join_reconstructed_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.join_reconstructed_coords" title="Link to this definition">#</a></dt>
+<dd><p>Join reconstructed coordinates + parcellation_index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.join_cluster_details">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">join_cluster_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mouse'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#join_cluster_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.join_cluster_details" title="Link to this definition">#</a></dt>
+<dd><p>Join cluster annotations (class/subclass/etc.).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a><em>[</em><em>'mouse'</em><em>, </em><em>'human'</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.join_cluster_colors">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">join_cluster_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mouse'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#join_cluster_colors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.join_cluster_colors" title="Link to this definition">#</a></dt>
+<dd><p>Join cluster color columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a><em>[</em><em>'mouse'</em><em>, </em><em>'human'</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.join_parcellation_annotation">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">join_parcellation_annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#join_parcellation_annotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.join_parcellation_annotation" title="Link to this definition">#</a></dt>
+<dd><p>Join parcellation term acronyms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.join_parcellation_color">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">join_parcellation_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#join_parcellation_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.join_parcellation_color" title="Link to this definition">#</a></dt>
+<dd><p>Join parcellation color columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.filter_brain_section">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">filter_brain_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#filter_brain_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.filter_brain_section" title="Link to this definition">#</a></dt>
+<dd><p>Subset to a single-section label by numeric slice index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>slice_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.load_expression_data">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">load_expression_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imputed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#load_expression_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.load_expression_data" title="Link to this definition">#</a></dt>
+<dd><p>Open the (imputed or raw) log2 expression matrix .h5ad (backed=’r’).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>imputed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.select_gene">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">select_gene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#select_gene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.select_gene" title="Link to this definition">#</a></dt>
+<dd><p>Return (adata_subset_in_memory, gene_symbol) for a single gene.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>gene</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.join_expression_to_section">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">join_expression_to_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata_sub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#join_expression_to_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.join_expression_to_section" title="Link to this definition">#</a></dt>
+<dd><p>Join single-gene expression to a section-level metadata table by cell_label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gene_symbol</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>section_df</strong> (<em>DataFrame</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.genes_in_merfish_data">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">genes_in_merfish_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#genes_in_merfish_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.genes_in_merfish_data" title="Link to this definition">#</a></dt>
+<dd><p>Return list of gene symbols in the raw MERFISH log2 matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.genes_in_imputed_merfish_data">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">genes_in_imputed_merfish_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#genes_in_imputed_merfish_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.genes_in_imputed_merfish_data" title="Link to this definition">#</a></dt>
+<dd><p>Return list of gene symbols in the imputed MERFISH log2 matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.prepare_cells_table">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">prepare_cells_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mouse'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('coords',</span> <span class="pre">'cluster',</span> <span class="pre">'colors',</span> <span class="pre">'parcellation',</span> <span class="pre">'parcellation_color')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#prepare_cells_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.prepare_cells_table" title="Link to this definition">#</a></dt>
+<dd><p>Run the frequent sequence of joins and return a fully enriched cell table.</p>
+<dl class="simple">
+<dt>include flags:</dt><dd><p>‘coords’ → reconstructed coords + parcellation_index
+‘cluster’ → cluster annotations (class/subclass/etc.)
+‘colors’ → cluster colors
+‘parcellation’ → parcellation term acronyms
+‘parcellation_color’ → parcellation colors</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a><em>[</em><em>'mouse'</em><em>, </em><em>'human'</em><em>]</em>) – </p></li>
+<li><p><strong>include</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.build_neuron_subset">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">build_neuron_subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#build_neuron_subset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.build_neuron_subset" title="Link to this definition">#</a></dt>
+<dd><p>Return a metadata dataframe subset containing ONLY neurons
+(rows where the integer prefix of the ‘class’ column &lt;= 29)</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Requires a ‘class’ column like ‘12 IT-L2/3 …’.</p></li>
+<li><p>Adds the standard joins so downstream plotting has colors and labels.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.slice_index_dict">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">slice_index_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#slice_index_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.slice_index_dict" title="Link to this definition">#</a></dt>
+<dd><p>Mapping from brain section labels (e.g. ‘C57BL6J-638850.40’)
+to corresponding slice indices in the 3D boundary volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Keys are section labels, values are z indices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.load_region_boundaries">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">load_region_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#load_region_boundaries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.load_region_boundaries" title="Link to this definition">#</a></dt>
+<dd><p>Load the boundary NIfTI and return (array[z,y,x], extent) suitable for imshow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<em>ndarray</em>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.auto_zoom">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">auto_zoom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#auto_zoom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.auto_zoom" title="Link to this definition">#</a></dt>
+<dd><p>Tighten axes to the bounding box of x_reconstructed/y_reconstructed
+for the given section (plus a small padding).</p>
+<p>Note: y-axis is inverted (top=small y), so we set ylim with (top, bottom).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pad</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.plot_slice_color">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">plot_slice_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_col</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_all</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_subset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_all</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_subset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neurons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#plot_slice_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.plot_slice_color" title="Link to this definition">#</a></dt>
+<dd><p>Color mode: plots all cells for the slice using a categorical/hex color column,
+optionally overlays a subset, and adds boundary wireframe on top.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>slice_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
+<li><p><strong>color_col</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>s_all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
+<li><p><strong>s_subset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
+<li><p><strong>alpha_all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
+<li><p><strong>alpha_subset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
+<li><p><strong>df</strong> (<em>DataFrame</em><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>neurons</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.utils.plot_slice_gene">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.utils.</span></span><span class="sig-name descname"><span class="pre">plot_slice_gene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_all</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_subset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_all</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_subset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imputed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neurons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/utils.html#plot_slice_gene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.utils.plot_slice_gene" title="Link to this definition">#</a></dt>
+<dd><p>Gene mode: colors <em>all</em> cells by continuous expression (magma_r), adds a colorbar,
+optionally overlays a subset (also colored by expression), and adds the boundary wireframe.
+Highest-expressing cells are drawn last (on top).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>slice_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – </p></li>
+<li><p><strong>gene</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>s_all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
+<li><p><strong>s_subset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
+<li><p><strong>alpha_all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
+<li><p><strong>alpha_subset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – </p></li>
+<li><p><strong>subset_df</strong> (<em>DataFrame</em><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>imputed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – </p></li>
+<li><p><strong>neurons</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -619,6 +956,37 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.filter_neurons"><code class="docutils literal notranslate"><span class="pre">filter_neurons()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.load_cell_metadata"><code class="docutils literal notranslate"><span class="pre">load_cell_metadata()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.join_reconstructed_coords"><code class="docutils literal notranslate"><span class="pre">join_reconstructed_coords()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.join_cluster_details"><code class="docutils literal notranslate"><span class="pre">join_cluster_details()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.join_cluster_colors"><code class="docutils literal notranslate"><span class="pre">join_cluster_colors()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.join_parcellation_annotation"><code class="docutils literal notranslate"><span class="pre">join_parcellation_annotation()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.join_parcellation_color"><code class="docutils literal notranslate"><span class="pre">join_parcellation_color()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.filter_brain_section"><code class="docutils literal notranslate"><span class="pre">filter_brain_section()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.load_expression_data"><code class="docutils literal notranslate"><span class="pre">load_expression_data()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.select_gene"><code class="docutils literal notranslate"><span class="pre">select_gene()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.join_expression_to_section"><code class="docutils literal notranslate"><span class="pre">join_expression_to_section()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.genes_in_merfish_data"><code class="docutils literal notranslate"><span class="pre">genes_in_merfish_data()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.genes_in_imputed_merfish_data"><code class="docutils literal notranslate"><span class="pre">genes_in_imputed_merfish_data()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.prepare_cells_table"><code class="docutils literal notranslate"><span class="pre">prepare_cells_table()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.build_neuron_subset"><code class="docutils literal notranslate"><span class="pre">build_neuron_subset()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.slice_index_dict"><code class="docutils literal notranslate"><span class="pre">slice_index_dict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.load_region_boundaries"><code class="docutils literal notranslate"><span class="pre">load_region_boundaries()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.auto_zoom"><code class="docutils literal notranslate"><span class="pre">auto_zoom()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.plot_slice_color"><code class="docutils literal notranslate"><span class="pre">plot_slice_color()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.utils.plot_slice_gene"><code class="docutils literal notranslate"><span class="pre">plot_slice_gene()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

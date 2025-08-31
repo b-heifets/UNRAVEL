@@ -1,0 +1,1070 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unravel.allen_institute.abca.merfish.utils &#8212; UNRAVEL docs</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=872d93e8" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/allen_institute/abca/merfish/utils';</script>
+    <link rel="icon" href="../../../../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide.html">
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide_mms.html">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide.html">
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide_mms.html">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">unravel.allen_institute.abca.merfish.utils</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for unravel.allen_institute.abca.merfish.utils</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for processing Allen Brain Cell Atlas (ABCA) MERFISH cells metadata and visualizing a brain slice with cells or gene expression data.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nibabel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Optional; only needed for expression-related functions</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span> 
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  
+    <span class="n">anndata</span> <span class="o">=</span> <span class="kc">None</span> 
+
+
+<div class="viewcode-block" id="filter_neurons">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.filter_neurons">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">filter_neurons</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter cells to neuronal classes (class index ≤ 29), based on integer prefix of &#39;class&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;class&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot filter neurons: &#39;class&#39; column not found.&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">class_idx</span> <span class="o">=</span> <span class="n">cell_df</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cell_df</span><span class="p">[</span><span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to parse &#39;class&#39; column as integers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># ----------------------------- core joins -------------------------------------</span>
+
+<div class="viewcode-block" id="load_cell_metadata">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_cell_metadata">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_cell_metadata</span><span class="p">(</span><span class="n">download_base_or_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load MERFISH cell metadata (index: cell_label).&quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">download_base_or_file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">cell_metadata_path</span> <span class="o">=</span> <span class="n">p</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cell_metadata_path</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;metadata/MERFISH-C57BL6J-638850/20231215/cell_metadata.csv&quot;</span>
+        <span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cell_metadata_path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cell_label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;x_section&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;y_section&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="s2">&quot;z_section&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cell_label&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+
+<div class="viewcode-block" id="join_reconstructed_coords">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_reconstructed_coords">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">join_reconstructed_coords</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join reconstructed coordinates + parcellation_index.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">{</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;y_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;z_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;parcellation_index&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span>
+        <span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">cell_df</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
+        <span class="o">/</span> <span class="s2">&quot;metadata/MERFISH-C57BL6J-638850-CCF/20231215/reconstructed_coordinates.csv&quot;</span>
+    <span class="p">)</span>
+    <span class="n">rc</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cell_label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;x_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;y_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="s2">&quot;z_reconstructed&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cell_label&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rc</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="join_cluster_details">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_cluster_details">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">join_cluster_details</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">species</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;human&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mouse&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join cluster annotations (class/subclass/etc.).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;subclass&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster_alias&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cell_df</span>
+    <span class="k">if</span> <span class="n">species</span> <span class="o">!=</span> <span class="s2">&quot;mouse&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only &#39;mouse&#39; supported; extend as needed.&quot;</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
+        <span class="o">/</span> <span class="s2">&quot;metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_pivoted.csv&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ann</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cluster_alias&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ann</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;cluster_alias&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="join_cluster_colors">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_cluster_colors">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">join_cluster_colors</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">species</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;human&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mouse&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join cluster color columns.&quot;&quot;&quot;</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;neurotransmitter_color&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;class_color&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;subclass_color&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;supertype_color&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cluster_color&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">expected</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cell_df</span>
+    <span class="k">if</span> <span class="n">species</span> <span class="o">!=</span> <span class="s2">&quot;mouse&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only &#39;mouse&#39; supported; extend as needed.&quot;</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
+        <span class="o">/</span> <span class="s2">&quot;metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_color.csv&quot;</span>
+    <span class="p">)</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cluster_alias&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;cluster_alias&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="join_parcellation_annotation">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_parcellation_annotation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">join_parcellation_annotation</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join parcellation term acronyms.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">{</span><span class="s2">&quot;parcellation_structure&quot;</span><span class="p">,</span> <span class="s2">&quot;parcellation_substructure&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cell_df</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
+        <span class="o">/</span> <span class="s2">&quot;metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ann</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;parcellation_index&quot;</span><span class="p">)</span>
+    <span class="n">ann</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;parcellation_</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ann</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ann</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;parcellation_index&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="join_parcellation_color">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_parcellation_color">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">join_parcellation_color</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join parcellation color columns.&quot;&quot;&quot;</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;parcellation_structure_color&quot;</span><span class="p">,</span> <span class="s2">&quot;parcellation_substructure_color&quot;</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">expected</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cell_df</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
+        <span class="o">/</span> <span class="s2">&quot;metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_color.csv&quot;</span>
+    <span class="p">)</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;parcellation_index&quot;</span><span class="p">)</span>
+    <span class="n">col</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;parcellation_</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">col</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;parcellation_index&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="filter_brain_section">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.filter_brain_section">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">filter_brain_section</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">slice_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subset to a single-section label by numeric slice index.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="p">[</span><span class="n">cell_df</span><span class="p">[</span><span class="s2">&quot;brain_section_label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="sa">f</span><span class="s2">&quot;C57BL6J-638850.</span><span class="si">{</span><span class="n">slice_index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span></div>
+
+
+
+<span class="c1"># -------------------------- expression helpers --------------------------------</span>
+
+<div class="viewcode-block" id="load_expression_data">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_expression_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_expression_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">imputed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Open the (imputed or raw) log2 expression matrix .h5ad (backed=&#39;r&#39;).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">anndata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Please install `anndata` to enable gene-expression plots.&quot;</span><span class="p">)</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">base</span> <span class="o">/</span> <span class="s2">&quot;expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad&quot;</span>
+        <span class="k">if</span> <span class="n">imputed</span>
+        <span class="k">else</span> <span class="n">base</span> <span class="o">/</span> <span class="s2">&quot;expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">anndata</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">backed</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="select_gene">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.select_gene">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">select_gene</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">gene</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return (adata_subset_in_memory, gene_symbol) for a single gene.&quot;&quot;&quot;</span>
+    <span class="n">sym</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gene_symbol&quot;</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="o">==</span> <span class="n">gene</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">sym</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gene &#39;</span><span class="si">{</span><span class="n">gene</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">to_memory</span><span class="p">()</span>
+    <span class="n">gene_symbol</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sym</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">sub</span><span class="p">,</span> <span class="n">gene_symbol</span></div>
+
+
+
+<div class="viewcode-block" id="join_expression_to_section">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_expression_to_section">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">join_expression_to_section</span><span class="p">(</span><span class="n">adata_sub</span><span class="p">,</span> <span class="n">gene_symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">section_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join single-gene expression to a section-level metadata table by cell_label.&quot;&quot;&quot;</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">adata_sub</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">gene_symbol</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">section_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="genes_in_merfish_data">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.genes_in_merfish_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">genes_in_merfish_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return list of gene symbols in the raw MERFISH log2 matrix.&quot;&quot;&quot;</span>
+    <span class="n">ad</span> <span class="o">=</span> <span class="n">load_expression_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gene_symbol&quot;</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">var_names</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="genes_in_imputed_merfish_data">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.genes_in_imputed_merfish_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">genes_in_imputed_merfish_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return list of gene symbols in the imputed MERFISH log2 matrix.&quot;&quot;&quot;</span>
+    <span class="n">ad</span> <span class="o">=</span> <span class="n">load_expression_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gene_symbol&quot;</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">var_names</span><span class="p">))</span></div>
+
+
+
+<span class="c1"># ------------------------------ one-call pipeline -----------------------------</span>
+
+<div class="viewcode-block" id="prepare_cells_table">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.prepare_cells_table">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">prepare_cells_table</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">species</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;human&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mouse&quot;</span><span class="p">,</span>
+                        <span class="n">include</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;coords&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;colors&quot;</span><span class="p">,</span> <span class="s2">&quot;parcellation&quot;</span><span class="p">,</span> <span class="s2">&quot;parcellation_color&quot;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run the frequent sequence of joins and return a fully enriched cell table.</span>
+
+<span class="sd">    include flags:</span>
+<span class="sd">      &#39;coords&#39; → reconstructed coords + parcellation_index</span>
+<span class="sd">      &#39;cluster&#39; → cluster annotations (class/subclass/etc.)</span>
+<span class="sd">      &#39;colors&#39; → cluster colors</span>
+<span class="sd">      &#39;parcellation&#39; → parcellation term acronyms</span>
+<span class="sd">      &#39;parcellation_color&#39; → parcellation colors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_cell_metadata</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;coords&quot;</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">join_reconstructed_coords</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;cluster&quot;</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">join_cluster_details</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;colors&quot;</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">join_cluster_colors</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;parcellation&quot;</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">join_parcellation_annotation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;parcellation_color&quot;</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">join_parcellation_color</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="build_neuron_subset">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.build_neuron_subset">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_neuron_subset</span><span class="p">(</span><span class="n">base</span><span class="p">:</span> <span class="s2">&quot;Path&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a metadata dataframe subset containing ONLY neurons</span>
+<span class="sd">    (rows where the integer prefix of the &#39;class&#39; column &lt;= 29)</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">      - Requires a &#39;class&#39; column like &#39;12 IT-L2/3 ...&#39;.</span>
+<span class="sd">      - Adds the standard joins so downstream plotting has colors and labels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_cell_metadata</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">join_reconstructed_coords</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">join_cluster_details</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">join_cluster_colors</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">join_parcellation_annotation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">join_parcellation_color</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;class&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Parse the integer code at the start of &#39;class&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">class_idx</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to parse &#39;class&#39; column as integers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">neuron_mask</span> <span class="o">=</span> <span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">neuron_mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">subset</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">subset</span><span class="o">.</span><span class="n">empty</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+
+<span class="c1"># ------------------------------ plotting helpers ------------------------------</span>
+
+<div class="viewcode-block" id="slice_index_dict">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.slice_index_dict">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">slice_index_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mapping from brain section labels (e.g. &#39;C57BL6J-638850.40&#39;)</span>
+<span class="sd">    to corresponding slice indices in the 3D boundary volume.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Keys are section labels, values are z indices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;C57BL6J-638850.05&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.06&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.08&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.09&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.10&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.11&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.12&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.13&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.14&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.15&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.16&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.17&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.18&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.19&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.24&quot;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.25&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.26&quot;</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.27&quot;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.28&quot;</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.29&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.30&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.31&quot;</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.32&quot;</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.33&quot;</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.35&quot;</span><span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.36&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.37&quot;</span><span class="p">:</span> <span class="mi">33</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.38&quot;</span><span class="p">:</span> <span class="mi">34</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.39&quot;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.40&quot;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.42&quot;</span><span class="p">:</span> <span class="mi">38</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.43&quot;</span><span class="p">:</span> <span class="mi">39</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.44&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.45&quot;</span><span class="p">:</span> <span class="mi">41</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.46&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.47&quot;</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.48&quot;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.49&quot;</span><span class="p">:</span> <span class="mi">46</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.50&quot;</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.51&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.52&quot;</span><span class="p">:</span> <span class="mi">49</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.54&quot;</span><span class="p">:</span> <span class="mi">51</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.55&quot;</span><span class="p">:</span> <span class="mi">52</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.56&quot;</span><span class="p">:</span> <span class="mi">54</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.57&quot;</span><span class="p">:</span> <span class="mi">55</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.58&quot;</span><span class="p">:</span> <span class="mi">56</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.59&quot;</span><span class="p">:</span> <span class="mi">57</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.60&quot;</span><span class="p">:</span> <span class="mi">59</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.61&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.62&quot;</span><span class="p">:</span> <span class="mi">61</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.64&quot;</span><span class="p">:</span> <span class="mi">65</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.66&quot;</span><span class="p">:</span> <span class="mi">69</span><span class="p">,</span>
+        <span class="s2">&quot;C57BL6J-638850.67&quot;</span><span class="p">:</span> <span class="mi">71</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="load_region_boundaries">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_region_boundaries">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_region_boundaries</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load the boundary NIfTI and return (array[z,y,x], extent) suitable for imshow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
+        <span class="o">/</span> <span class="s2">&quot;image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation_boundary.nii.gz&quot;</span>
+    <span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="c1"># Build imshow extent from affine</span>
+    <span class="n">aff</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">affine</span>
+    <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">aff</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="n">sx</span><span class="p">,</span> <span class="n">sy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">aff</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])),</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">aff</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">x0</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sx</span><span class="p">,</span> <span class="n">x0</span> <span class="o">+</span> <span class="p">(</span><span class="n">nx</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">sx</span><span class="p">,</span> <span class="n">y0</span> <span class="o">+</span> <span class="p">(</span><span class="n">ny</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">sy</span><span class="p">,</span> <span class="n">y0</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sy</span><span class="p">)</span>
+    <span class="c1"># Reorder to [z,y,x]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">extent</span>
+
+<span class="c1"># def load_region_boundaries(download_base):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Load the region boundaries from the MERFISH data.</span>
+
+<span class="c1">#     Parameters:</span>
+<span class="c1">#     -----------</span>
+<span class="c1">#     download_base : Path</span>
+<span class="c1">#         The root directory of the MERFISH data.</span>
+
+<span class="c1">#     Returns:</span>
+<span class="c1">#     --------</span>
+<span class="c1">#     annotation_boundary_array : np.ndarray</span>
+<span class="c1">#         The region boundaries.</span>
+<span class="c1">#     extent : tuple</span>
+<span class="c1">#         The extent of the image in mm coordinates for plotting with matplotlib.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     annotation_boundary_image_path = download_base / &#39;image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation_boundary.nii.gz&#39;</span>
+<span class="c1">#     print(f&quot;\n    Loading annotation boundary image from {annotation_boundary_image_path}\n&quot;)</span>
+<span class="c1">#     annotation_boundary_image = sitk.ReadImage(annotation_boundary_image_path)</span>
+<span class="c1">#     annotation_boundary_array = sitk.GetArrayViewFromImage(annotation_boundary_image)</span>
+
+<span class="c1">#     # Compute the extent the image in mm coordinates for plotting</span>
+<span class="c1">#     size = annotation_boundary_image.GetSize()</span>
+<span class="c1">#     spacing = annotation_boundary_image.GetSpacing()</span>
+<span class="c1">#     extent = (-0.5 * spacing[0], (size[0]-0.5) * spacing[0], (size[1]-0.5) * spacing[1], -0.5 * spacing[1])</span>
+
+    <span class="k">return</span> <span class="n">annotation_boundary_array</span><span class="p">,</span> <span class="n">extent</span></div>
+
+
+<div class="viewcode-block" id="auto_zoom">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.auto_zoom">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">auto_zoom</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">section_df</span><span class="p">,</span> <span class="n">pad</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tighten axes to the bounding box of x_reconstructed/y_reconstructed</span>
+<span class="sd">    for the given section (plus a small padding).</span>
+
+<span class="sd">    Note: y-axis is inverted (top=small y), so we set ylim with (top, bottom).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">section_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;y_reconstructed&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;y_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">xs</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="n">pad</span><span class="p">,</span> <span class="n">xs</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">pad</span>
+    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ys</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="n">pad</span><span class="p">,</span> <span class="n">ys</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">pad</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">)</span>   <span class="c1"># inverted y</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plot_slice_color">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.plot_slice_color">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_slice_color</span><span class="p">(</span>
+    <span class="n">base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">slice_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">color_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">s_all</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">s_subset</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha_all</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha_subset</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">df</span><span class="p">:</span> <span class="s2">&quot;pd.DataFrame | None&quot;</span><span class="p">,</span>   <span class="c1"># already fully joined by caller (or None)</span>
+    <span class="n">neurons</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Color mode: plots all cells for the slice using a categorical/hex color column,</span>
+<span class="sd">    optionally overlays a subset, and adds boundary wireframe on top.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+    <span class="c1"># 1) Build full table (coords + cluster + colors + parcellation + parcellation_color)</span>
+    <span class="n">all_df</span> <span class="o">=</span> <span class="n">prepare_cells_table</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+
+    <span class="c1"># 2) Optional neuron filter (opt-in only)</span>
+    <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">all_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">class_idx</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">all_df</span> <span class="o">=</span> <span class="n">all_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>  <span class="c1"># if parsing fails, fall back to unfiltered</span>
+
+    <span class="c1"># 3) Slice</span>
+    <span class="n">all_section</span> <span class="o">=</span> <span class="n">filter_brain_section</span><span class="p">(</span><span class="n">all_df</span><span class="p">,</span> <span class="n">slice_index</span><span class="p">)</span>
+
+    <span class="c1"># 4) Boundaries</span>
+    <span class="n">boundary</span><span class="p">,</span> <span class="n">extent</span> <span class="o">=</span> <span class="n">load_region_boundaries</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+    <span class="n">boundary_slice</span> <span class="o">=</span> <span class="n">boundary</span><span class="p">[</span><span class="n">slice_index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+    <span class="c1"># 5) Plot</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+        <span class="n">all_section</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">],</span>
+        <span class="n">all_section</span><span class="p">[</span><span class="s2">&quot;y_reconstructed&quot;</span><span class="p">],</span>
+        <span class="n">s</span><span class="o">=</span><span class="n">s_all</span><span class="p">,</span>
+        <span class="n">c</span><span class="o">=</span><span class="n">all_section</span><span class="p">[</span><span class="n">color_col</span><span class="p">],</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_all</span><span class="p">,</span>
+        <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+        <span class="n">boundary_slice</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Greys</span><span class="p">,</span>
+        <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="p">(</span><span class="n">boundary_slice</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># 6) Optional subset overlay (larger markers / higher alpha)</span>
+    <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">sub</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">class_idx</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="n">sub</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="n">subset_section</span> <span class="o">=</span> <span class="n">filter_brain_section</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">slice_index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">subset_section</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                <span class="n">subset_section</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">],</span>
+                <span class="n">subset_section</span><span class="p">[</span><span class="s2">&quot;y_reconstructed&quot;</span><span class="p">],</span>
+                <span class="n">s</span><span class="o">=</span><span class="n">s_subset</span><span class="p">,</span>
+                <span class="n">c</span><span class="o">=</span><span class="n">subset_section</span><span class="p">[</span><span class="n">color_col</span><span class="p">],</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_subset</span><span class="p">,</span>
+                <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">section_for_bbox</span> <span class="o">=</span> <span class="n">all_section</span> <span class="k">if</span> <span class="n">all_section</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">all_section</span><span class="o">.</span><span class="n">empty</span> <span class="k">else</span> <span class="n">subset_section</span>
+    <span class="k">if</span> <span class="n">section_for_bbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">section_for_bbox</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">auto_zoom</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">section_for_bbox</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_slice_gene">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.plot_slice_gene">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_slice_gene</span><span class="p">(</span>
+    <span class="n">base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">slice_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">gene</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">s_all</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">s_subset</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha_all</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha_subset</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">subset_df</span><span class="p">:</span> <span class="s2">&quot;pd.DataFrame | None&quot;</span><span class="p">,</span>
+    <span class="n">imputed</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">neurons</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gene mode: colors *all* cells by continuous expression (magma_r), adds a colorbar,</span>
+<span class="sd">    optionally overlays a subset (also colored by expression), and adds the boundary wireframe.</span>
+<span class="sd">    Highest-expressing cells are drawn last (on top).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+    <span class="c1"># 1) Build full table</span>
+    <span class="n">all_df</span> <span class="o">=</span> <span class="n">prepare_cells_table</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+
+    <span class="c1"># 2) Optional neuron filter</span>
+    <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">all_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">class_idx</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">all_df</span> <span class="o">=</span> <span class="n">all_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="c1"># 3) Load expression for the chosen gene and join</span>
+    <span class="n">ad</span> <span class="o">=</span> <span class="n">load_expression_data</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="n">imputed</span><span class="p">)</span>
+    <span class="n">ad_gene</span><span class="p">,</span> <span class="n">gene_symbol</span> <span class="o">=</span> <span class="n">select_gene</span><span class="p">(</span><span class="n">ad</span><span class="p">,</span> <span class="n">gene</span><span class="p">)</span>
+    <span class="c1"># join to ALL cells</span>
+    <span class="n">all_df</span> <span class="o">=</span> <span class="n">join_expression_to_section</span><span class="p">(</span><span class="n">ad_gene</span><span class="p">,</span> <span class="n">gene_symbol</span><span class="p">,</span> <span class="n">all_df</span><span class="p">)</span>
+    <span class="n">all_section</span> <span class="o">=</span> <span class="n">filter_brain_section</span><span class="p">(</span><span class="n">all_df</span><span class="p">,</span> <span class="n">slice_index</span><span class="p">)</span>
+
+    <span class="c1"># 4) Boundaries</span>
+    <span class="n">boundary</span><span class="p">,</span> <span class="n">extent</span> <span class="o">=</span> <span class="n">load_region_boundaries</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+    <span class="n">boundary_slice</span> <span class="o">=</span> <span class="n">boundary</span><span class="p">[</span><span class="n">slice_index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+    <span class="c1"># 5) Plot: continuous coloring for *all* cells (sorted so high expr on top)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">all_section</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">all_sorted</span> <span class="o">=</span> <span class="n">all_section</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">gene_symbol</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># low→high</span>
+        <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+            <span class="n">all_sorted</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">],</span>
+            <span class="n">all_sorted</span><span class="p">[</span><span class="s2">&quot;y_reconstructed&quot;</span><span class="p">],</span>
+            <span class="n">s</span><span class="o">=</span><span class="n">s_all</span><span class="p">,</span>
+            <span class="n">c</span><span class="o">=</span><span class="n">all_sorted</span><span class="p">[</span><span class="n">gene_symbol</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;magma_r&quot;</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_all</span><span class="p">,</span>
+            <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gene_symbol</span><span class="si">}</span><span class="s2"> log2 expression&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 6) Boundaries</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+        <span class="n">boundary_slice</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Greys</span><span class="p">,</span>
+        <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="p">(</span><span class="n">boundary_slice</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
+        <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 7) Optional subset overlay (also colored by expression; high expr on top)</span>
+    <span class="n">subset_section</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># ensure defined for later</span>
+    <span class="k">if</span> <span class="n">subset_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">subset_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">subset_df</span>
+        <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">sub</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">class_idx</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="n">sub</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">join_expression_to_section</span><span class="p">(</span><span class="n">ad_gene</span><span class="p">,</span> <span class="n">gene_symbol</span><span class="p">,</span> <span class="n">sub</span><span class="p">)</span>
+        <span class="n">subset_section</span> <span class="o">=</span> <span class="n">filter_brain_section</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">slice_index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">subset_section</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">sub_sorted</span> <span class="o">=</span> <span class="n">subset_section</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">gene_symbol</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                <span class="n">sub_sorted</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">],</span>
+                <span class="n">sub_sorted</span><span class="p">[</span><span class="s2">&quot;y_reconstructed&quot;</span><span class="p">],</span>
+                <span class="n">s</span><span class="o">=</span><span class="n">s_subset</span><span class="p">,</span>
+                <span class="n">c</span><span class="o">=</span><span class="n">sub_sorted</span><span class="p">[</span><span class="n">gene_symbol</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;magma_r&quot;</span><span class="p">,</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_subset</span><span class="p">,</span>
+                <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Axes style (no fixed limits; use auto_zoom if data exists)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+
+    <span class="n">section_for_bbox</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">all_section</span> <span class="k">if</span> <span class="n">all_section</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">all_section</span><span class="o">.</span><span class="n">empty</span> <span class="k">else</span> <span class="n">subset_section</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">section_for_bbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">section_for_bbox</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">auto_zoom</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">section_for_bbox</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, the UNRAVEL team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

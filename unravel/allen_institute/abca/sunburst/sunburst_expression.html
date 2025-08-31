@@ -577,8 +577,50 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-abca-sunburst-sunburst-expression-module">
-<span id="unravel-allen-institute-abca-sunburst-sunburst-expression"></span><h1>unravel.allen_institute.abca.sunburst.sunburst_expression module<a class="headerlink" href="#unravel-allen-institute-abca-sunburst-sunburst-expression-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.abca.sunburst.sunburst_expression">
+<span id="unravel-allen-institute-abca-sunburst-sunburst-expression-module"></span><span id="unravel-allen-institute-abca-sunburst-sunburst-expression"></span><h1>unravel.allen_institute.abca.sunburst.sunburst_expression module<a class="headerlink" href="#module-unravel.allen_institute.abca.sunburst.sunburst_expression" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">abca_sunburst_expression</span></code> or <code class="docutils literal notranslate"><span class="pre">sbe</span></code> from UNRAVEL to calculate mean expression for all cell types in the ABCA and make a sunburst plot.</p>
+<dl class="simple">
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">abca_merfish_filter</span></code> and <code class="docutils literal notranslate"><span class="pre">merfish_join_expression_data.py</span></code></p></li>
+<li><p>Or: <code class="docutils literal notranslate"><span class="pre">RNAseq_expression.py</span></code> and <code class="docutils literal notranslate"><span class="pre">RNAseq_filter.py</span></code></p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>path/input_sunburst_expression_thr&lt;value&gt;.csv, input_mean_expression_lut.txt, and input_percent_expression_thr&lt;value&gt;_lut.txt</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>LUT location: unravel/core/csvs/ABCA/WMB_sunburst_colors.csv</p></li>
+</ul>
+</div>
+<dl class="simple">
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p>Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (<a class="reference external" href="https://app.flourish.studio/">https://app.flourish.studio/</a>)</p></li>
+<li><p>It can be pasted into the Data tab (categories columns = cell type columns, Size by = percent column)</p></li>
+<li><p>Preview tab: Hierarchy -&gt; Depth to 5, Colors -&gt; paste content of …_colors.csv into Custom overrides</p></li>
+</ul>
+</dd>
+</dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_sunburst_expression -i path/VTA_DA_cells_Th_expression.csv -g gene [-o path/out_dir] [-n] [-v]</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.sunburst.sunburst_expression.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.sunburst.sunburst_expression.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/sunburst/sunburst_expression.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.sunburst.sunburst_expression.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.sunburst.sunburst_expression.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.sunburst.sunburst_expression.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/sunburst/sunburst_expression.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.sunburst.sunburst_expression.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -619,6 +661,20 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.sunburst.sunburst_expression.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.sunburst.sunburst_expression.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

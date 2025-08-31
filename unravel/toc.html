@@ -587,8 +587,25 @@
 <li class="toctree-l3"><a class="reference internal" href="register/reg_prep.html#unravel.register.reg_prep.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="register/reg.html">unravel.register.reg module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="register/reg.html#usage-for-tissue-registration-with-brain-mask-and-bias-correction">Usage for tissue registration with brain mask and bias correction:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/reg.html#usage-for-tissue-registration-without-brain-mask-and-bias-correction">Usage for tissue registration without brain mask and bias correction:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/reg.html#usage-for-atlas-to-atlas-registration">Usage for atlas to atlas registration:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/reg.html#usage-for-template-to-template-registration">Usage for template to template registration:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/reg.html#unravel.register.reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/reg.html#unravel.register.reg.bias_correction"><code class="docutils literal notranslate"><span class="pre">bias_correction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/reg.html#unravel.register.reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="register/affine_initializer.html">unravel.register.affine_initializer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="register/affine_initializer.html#python-usage">Python usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/affine_initializer.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/affine_initializer.html#unravel.register.affine_initializer.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/affine_initializer.html#unravel.register.affine_initializer.affine_initializer_wrapper"><code class="docutils literal notranslate"><span class="pre">affine_initializer_wrapper()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/affine_initializer.html#unravel.register.affine_initializer.run_with_timeout"><code class="docutils literal notranslate"><span class="pre">run_with_timeout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/affine_initializer.html#unravel.register.affine_initializer.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="register/affine_initializer_check.html">unravel.register.affine_initializer_check module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="register/affine_initializer_check.html#usage">Usage:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="register/affine_initializer_check.html#unravel.register.affine_initializer_check.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
@@ -617,12 +634,53 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="warp/toc.html">unravel.warp package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="warp/to_atlas.html">unravel.warp.to_atlas module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="warp/to_fixed.html">unravel.warp.to_fixed module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="warp/to_native.html">unravel.warp.to_native module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="warp/warp.html">unravel.warp.warp module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="warp/points_to_atlas.html">unravel.warp.points_to_atlas module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="warp/ccf30_to_merfish.html">unravel.warp.ccf30_to_merfish module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warp/to_atlas.html">unravel.warp.to_atlas module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_atlas.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_atlas.html#unravel.warp.to_atlas.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_atlas.html#unravel.warp.to_atlas.copy_nii_header"><code class="docutils literal notranslate"><span class="pre">copy_nii_header()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_atlas.html#unravel.warp.to_atlas.to_atlas"><code class="docutils literal notranslate"><span class="pre">to_atlas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_atlas.html#unravel.warp.to_atlas.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="warp/to_fixed.html">unravel.warp.to_fixed module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_fixed.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_fixed.html#unravel.warp.to_fixed.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_fixed.html#unravel.warp.to_fixed.calculate_padded_dimensions"><code class="docutils literal notranslate"><span class="pre">calculate_padded_dimensions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_fixed.html#unravel.warp.to_fixed.forward_warp"><code class="docutils literal notranslate"><span class="pre">forward_warp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_fixed.html#unravel.warp.to_fixed.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="warp/to_native.html">unravel.warp.to_native module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_native.html#python-usage">Python usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_native.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_native.html#unravel.warp.to_native.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_native.html#unravel.warp.to_native.calculate_resampled_padded_dimensions"><code class="docutils literal notranslate"><span class="pre">calculate_resampled_padded_dimensions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_native.html#unravel.warp.to_native.scale_to_full_res"><code class="docutils literal notranslate"><span class="pre">scale_to_full_res()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_native.html#unravel.warp.to_native.to_native"><code class="docutils literal notranslate"><span class="pre">to_native()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/to_native.html#unravel.warp.to_native.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="warp/warp.html">unravel.warp.warp module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="warp/warp.html#usage-for-forward-warping-atlas-to-tissue-space">Usage for forward warping atlas to tissue space:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/warp.html#usage-for-inverse-warping-tissue-to-atlas-space">Usage for inverse warping tissue to atlas space:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/warp.html#unravel.warp.warp.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/warp.html#unravel.warp.warp.warp"><code class="docutils literal notranslate"><span class="pre">warp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/warp.html#unravel.warp.warp.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="warp/points_to_atlas.html">unravel.warp.points_to_atlas module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="warp/points_to_atlas.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/points_to_atlas.html#unravel.warp.points_to_atlas.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/points_to_atlas.html#unravel.warp.points_to_atlas.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="warp/ccf30_to_merfish.html">unravel.warp.ccf30_to_merfish module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="warp/ccf30_to_merfish.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/ccf30_to_merfish.html#unravel.warp.ccf30_to_merfish.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/ccf30_to_merfish.html#unravel.warp.ccf30_to_merfish.ccf30_to_merfish"><code class="docutils literal notranslate"><span class="pre">ccf30_to_merfish()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp/ccf30_to_merfish.html#unravel.warp.ccf30_to_merfish.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="segment/toc.html">unravel.segment package</a><ul>
@@ -672,8 +730,24 @@
 <li class="toctree-l3"><a class="reference internal" href="voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="voxel_stats/vstats_prep.html">unravel.voxel_stats.vstats_prep module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voxel_stats/z_score.html">unravel.voxel_stats.z_score module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voxel_stats/vstats_prep.html">unravel.voxel_stats.vstats_prep module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/vstats_prep.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/vstats_prep.html#unravel.voxel_stats.vstats_prep.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/vstats_prep.html#unravel.voxel_stats.vstats_prep.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voxel_stats/z_score.html">unravel.voxel_stats.z_score module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score.html#usage-w-an-atlas-mask">Usage w/ an atlas mask:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score.html#usage-w-a-tissue-mask">Usage w/ a tissue mask:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score.html#usage-w-both-masks-for-side-specific-z-scoring">Usage w/ both masks for side-specific z-scoring:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score.html#unravel.voxel_stats.z_score.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score.html#unravel.voxel_stats.z_score.z_score"><code class="docutils literal notranslate"><span class="pre">z_score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score.html#unravel.voxel_stats.z_score.tissue_mask_to_atlas_space"><code class="docutils literal notranslate"><span class="pre">tissue_mask_to_atlas_space()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score.html#unravel.voxel_stats.z_score.z_score_mask"><code class="docutils literal notranslate"><span class="pre">z_score_mask()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score.html#unravel.voxel_stats.z_score.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="voxel_stats/z_score_cwd.html">unravel.voxel_stats.z_score_cwd module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score_cwd.html#usage">Usage:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="voxel_stats/z_score_cwd.html#unravel.voxel_stats.z_score_cwd.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
@@ -759,7 +833,18 @@
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/recursively_mirror_rev_cluster_indices.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_stats/validation.html">unravel.cluster_stats.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats/validation.html">unravel.cluster_stats.validation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.crop_outer_space"><code class="docutils literal notranslate"><span class="pre">crop_outer_space()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.cluster_bbox"><code class="docutils literal notranslate"><span class="pre">cluster_bbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.cluster_bbox_parallel"><code class="docutils literal notranslate"><span class="pre">cluster_bbox_parallel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.count_cells"><code class="docutils literal notranslate"><span class="pre">count_cells()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.density_in_cluster"><code class="docutils literal notranslate"><span class="pre">density_in_cluster()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.density_in_cluster_parallel"><code class="docutils literal notranslate"><span class="pre">density_in_cluster_parallel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/summary_config.html">unravel.cluster_stats.summary_config module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/summary_config.html#usage">Usage:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/summary_config.html#unravel.cluster_stats.summary_config.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
@@ -886,7 +971,16 @@
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF.html#unravel.cluster_stats.index.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_stats/mean_IF_summary.html">unravel.cluster_stats.mean_IF_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats/mean_IF_summary.html">unravel.cluster_stats.mean_IF_summary module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#usage-for-t-tests">Usage for t-tests:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions">Usage for Tukey’s tests w/ reordering and renaming of conditions:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.perform_t_tests"><code class="docutils literal notranslate"><span class="pre">perform_t_tests()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.plot_data"><code class="docutils literal notranslate"><span class="pre">plot_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/clusters.html">unravel.cluster_stats.clusters module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/clusters.html#usage">Usage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/clusters.html#unravel.cluster_stats.clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
@@ -902,8 +996,28 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="region_stats/toc.html">unravel.region_stats package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="region_stats/rstats.html">unravel.region_stats.rstats module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats.html#usage-if-the-atlas-is-already-in-native-space-from-warp-to-native">Usage if the atlas is already in native space from <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats.html#usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster">Usage if the native atlas is not available; it is not saved (faster):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats.html#unravel.region_stats.rstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats.html#unravel.region_stats.rstats.get_atlas_region_at_coords"><code class="docutils literal notranslate"><span class="pre">get_atlas_region_at_coords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats.html#unravel.region_stats.rstats.count_cells_in_regions"><code class="docutils literal notranslate"><span class="pre">count_cells_in_regions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats.html#unravel.region_stats.rstats.calculate_regional_volumes"><code class="docutils literal notranslate"><span class="pre">calculate_regional_volumes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats.html#unravel.region_stats.rstats.calculate_regional_densities"><code class="docutils literal notranslate"><span class="pre">calculate_regional_densities()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats.html#unravel.region_stats.rstats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_summary.html#usage-for-tukey-tests">Usage for Tukey tests:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_summary.html#usage-for-t-tests">Usage for t-tests:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.get_region_details"><code class="docutils literal notranslate"><span class="pre">get_region_details()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.parse_color_argument"><code class="docutils literal notranslate"><span class="pre">parse_color_argument()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.summarize_significance"><code class="docutils literal notranslate"><span class="pre">summarize_significance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.process_and_plot_data"><code class="docutils literal notranslate"><span class="pre">process_and_plot_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF.html#usage">Usage:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
@@ -912,8 +1026,30 @@
 <li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_in_segmented_voxels.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.calculate_mean_intensity"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.write_to_csv"><code class="docutils literal notranslate"><span class="pre">write_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#usage-for-t-tests">Usage for t-tests:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions">Usage for Tukey’s tests w/ reordering and renaming of conditions:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#usage-with-a-custom-atlas">Usage with a custom atlas:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_max_region_id_from_csvs"><code class="docutils literal notranslate"><span class="pre">get_max_region_id_from_csvs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_region_details"><code class="docutils literal notranslate"><span class="pre">get_region_details()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_all_region_ids"><code class="docutils literal notranslate"><span class="pre">get_all_region_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.filter_region_ids"><code class="docutils literal notranslate"><span class="pre">filter_region_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.remove_zero_intensity_regions"><code class="docutils literal notranslate"><span class="pre">remove_zero_intensity_regions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.perform_t_tests"><code class="docutils literal notranslate"><span class="pre">perform_t_tests()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.plot_data"><code class="docutils literal notranslate"><span class="pre">plot_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="core/toc.html">unravel.core package</a><ul>

@@ -661,27 +661,10 @@ utils_clean_tifs -t <path to directories with tifs relative to ./sample?? folder
 
 Overview of a typical workflow (voxel-wise analyses followed by cluster validation):
 
-:::{mermaid}
-flowchart TD
-    A(((LSFM))) 
-    A --> B[Stitched 3D autofluorescence image]
-    B --> C(Resample image to 50 µm resolution)
-    C --> D(Segment tissue with Ilastik to mask external voxels)
-    D --> E(Register image to an average template brain) 
-    A --> F[Stitched 3D immunofluorescence image]
-    F --> G(Remove autofluorescence from IF images)
-    G --> H(Warp IF images to atlas space)
-    E --> H
-    H --> I(Preprocess IF images: z-score, smooth, and average left/right sides)
-    I --> J(Perform voxel-wise statistical analyses)
-    J --> K(Apply FDR correction of 1-p value maps)
-    K --> L(Warp significant voxel clusters back to tissue space)
-    F --> N(Segment c-Fos+ cells or other features using Ilastik)
-    L --> M(Validate clusters with cell/label density measurements)
-    N --> M
-    D --> I
-    E --> L
-:::
+```{image} https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Analysis_Overview.png
+:width: 70%
+:align: center
+```
 ---
 <br>
 
@@ -769,21 +752,11 @@ alias ilastik=run_ilastik.sh  # run_ilastik.sh could be replaced w/ the full pat
 
 
 ## Registration
-:::{mermaid}
-flowchart TD
-    A(((LSFM))) 
-    A --> B[Stitch z-stacks if necessary]
-    B --> C(io_metadata: Save raw voxel dimentions in microns to ./sample??/parameters/metadata.txt)
-    C --> D(reg_prep: Resample autofluorescence images to 50 µm resolution for registration)
-    D --> E(seg_copy_tifs: Copy select slices from 50 µm autofl images to create brain masks using Ilastik)
-    E --> F(Train Ilastik using pixel classification to segment autofl brains)
-    F --> G(seg_brain_mask: Generate autofl brain masks with Ilastik and apply them to the 50 µm images)
-    G --> H(Optionally use 3D Slicer to make the masked autofl image and mask better match the average template)
-    H --> I(reg: Register the template brain with the masked autofl images and warp the atlas)
-    I --> J(reg_check and reg_check_fsleyes: Aggregate padded autofl images and warped atlas images from reg)
-    J --> K(Assess registration quality in FSLeyes and refine if necessary by repeating the 3D Slicer step, etc.)
+```{image} https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Registration.png
+:width: 70%
+:align: center
+```
 
-:::
 
 ### `io_metadata`
 {py:mod}`unravel.image_io.metadata`
@@ -925,21 +898,10 @@ sudo chmod a+w /usr/local/fsl/fslpython/envs/fslpython/lib/python3.8/site-packag
 <br>
 
 ## Voxel-wise Statistics
-:::{mermaid}
-flowchart TD
-    A(((LSFM))) 
-    A --> B[Stitch z-stacks if required]
-    B --> C(vstats_prep: Optionally remove autofluorescence and warp immunofluo images to atlas space)
-    C --> D(vstats_z_score: Optionally z-score IF images from each brain individually)
-    D --> E(utils_agg_files: Aggregate atlas-space IF images from all sample folders into the current directory)
-    E --> F(vstats_whole_to_avg: Optionally smooth image and average left/right sides)
-    F --> G(Check inputs for vstats: Open IF images and the atlas in FSLeyes to confirm aligment with the atlas and other IF images)
-    G --> H(Prep inputs for vstats: Add IF images to the current directory, without other .nii.gz files)
-    H --> I(utils_prepend: Prepend a one-word condition to each IF image)
-    I --> J(For ANOVA designs, run fsl and set up the design. If two groups are present, proceed to the next step)
-    J --> K(vstats: Run voxel-wise analyses using FSL's randomise tool)
-    K --> L(View 1-p value maps in FSLeyes and consult 'Cluster-wise stats' for multiple comparisons correction and cluster validation)
-:::
+```{image} https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Voxel-wise_Statistics.png
+:width: 70%
+:align: center
+```
 
 ### `vstats_prep`
 {py:mod}`unravel.voxel_stats.vstats_prep`
@@ -1115,17 +1077,10 @@ vstats -mas $MASK -a $ATLAS [-p 18000] [-k 0.1]
 <br>
 
 ## Cluster-wise Statistics
-:::{mermaid}
-flowchart TD
-    A(vstats: Generates 1-p value maps with vox_p in the filename)
-    A --> B(cstats_fdr_range: Input a 1-p map to find FDR q values that yield clusters)
-    B --> C(cstats_fdr: Apply FDR correction on the 1-p map to identify clusters of significant voxels)
-    C --> D(cstats_mirror_indices: For whole-brains, recursively mirror cluster maps in ./stats/)
-    D --> E(seg_copy_tifs: Copy select full resolution TIFFs for Ilastik training)
-    E --> F(seg_ilastik: Perform pixel classification with a trained Ilastik project)
-    F --> G(cstats_validation: Warp clusters from atlas to full resolution tissue space, count cells, and calculate cluster volumes)
-    G --> H(cstats_summary: Aggregate and analyze cluster validation data)
-:::
+```{image} https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Cluster-wise_Statistics.png
+:width: 70%
+:align: center
+```
 
 ### False Discovery Rate (FDR) Correction
 
@@ -1193,19 +1148,11 @@ seg_ilastik -ie <path/ilastik_executable> -ilp <path/ilastik_project.ilp> -i <re
 <br>
 
 ## Cluster Validation and Statistics
-:::{mermaid}
-flowchart TD    
-    A(cstats_org_data: Organize cell/label density data from cluster validation)
-    A --> B(cstats_group_data: Pool left and right hemisphere data)
-    B --> C(utils_prepend: Prepend CSV names with conditions)
-    C --> D(cstats: Run statistics to determine cluster validity)
-    D --> E(cstats_index: Create valid cluster maps and CSVs for sunburst plots)
-    E --> F(cstats_brain_model: Create files for 3D brain models)
-    F --> G(cstats_table: Create tables summarizing top regions and volumes)
-    G --> H(cstats_prism: Generate CSVs for plotting bar graphs with Prism)
-    H --> I(cstats_legend: Create legend files defining region abbreviations)
-    I --> J(Summarize cluster validation rates, aggregate files for 3D brains, compile SI tables, etc.)
-:::
+```{image} https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Cluster_Validation_and_Statistics.png
+:width: 70%
+:align: center
+```
+
 
 ### `cstats_validation`
 {py:mod}`unravel.cluster_stats.validation`
@@ -1363,19 +1310,11 @@ Under "Hierarchy" select "Sunburst"
 
 ## Region-wise Statistics
 
-:::{mermaid}
-flowchart TD
-    A(((LSFM))) 
-    A --> B[3D autofluorescence image]
-    B --> C(Registration to an average template brain) 
-    C --> D(Optional: warp_to_native: Warp the atlas to full-resolution tissue space and save as .zarr)
-    A --> E[3D immunofluorescence image]
-    E --> F(seg_copy_tifs & seg_ilastik: Segment c-Fos+ cells using Ilastik)
-    F --> G(rstats: Perform regional cell counting and volume measurements)
-    D --> G
-    G --> H(utils_agg_files: Aggregate CSV outputs from rstats across all sample folders)
-    H --> I(rstats_summary: Plot cell densities by region and summarize results)
-:::
+```{image} https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Region-wise_Statistics.png
+:width: 70%
+:align: center
+```
+
 
 ### `rstats`
 {py:mod}`unravel.region_stats.regional_cell_densities`

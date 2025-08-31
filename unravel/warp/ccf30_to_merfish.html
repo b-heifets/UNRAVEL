@@ -571,8 +571,40 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-warp-ccf30-to-merfish-module">
-<span id="unravel-warp-ccf30-to-merfish"></span><h1>unravel.warp.ccf30_to_merfish module<a class="headerlink" href="#unravel-warp-ccf30-to-merfish-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.warp.ccf30_to_merfish">
+<span id="unravel-warp-ccf30-to-merfish-module"></span><span id="unravel-warp-ccf30-to-merfish"></span><h1>unravel.warp.ccf30_to_merfish module<a class="headerlink" href="#module-unravel.warp.ccf30_to_merfish" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">warp_ccf30_to_merfish</span></code> or <code class="docutils literal notranslate"><span class="pre">c2m</span></code> from UNRAVEL to warp an image from Allen CCFv3 30 um space to MERFISH-CCF space (10 x 10 x 200 µm).</p>
+<dl class="simple">
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p>Download files for warping (CCF30_to_MERFISH.tar.gz) from:</p></li>
+<li><p><a class="reference external" href="https://stanfordmedicine.box.com/s/u9vg2wdmrx1t4bvqu321vmggg793kvuo">https://stanfordmedicine.box.com/s/u9vg2wdmrx1t4bvqu321vmggg793kvuo</a> (This is 1.4 GB)</p></li>
+<li><p>Extract it (double click or use tar -xvzf CCF30_to_MERFISH.tar.gz) to a folder (e.g., /path/CCF30_to_MERFISH; this is the warp root).</p></li>
+<li><p>This folder should contain:</p></li>
+<li><p>MERFISH_resampled_average_template.nii.gz</p></li>
+<li><p>reg_outputs/MERFISH_resampled_average_template_fixed_reg_input.nii.gz</p></li>
+<li><p>reg_outputs/ANTsPy_`*`</p></li>
+</ul>
+</dd>
+</dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p>warp_ccf30_to_merfish -i path/image.nii.gz -w path/to/warp_root [-o MERFISH] [-inp nearestNeighbor] [-v]</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.ccf30_to_merfish.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.ccf30_to_merfish.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/ccf30_to_merfish.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.ccf30_to_merfish.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.ccf30_to_merfish.ccf30_to_merfish">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.ccf30_to_merfish.</span></span><span class="sig-name descname"><span class="pre">ccf30_to_merfish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warp_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nearestNeighbor'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/ccf30_to_merfish.html#ccf30_to_merfish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.ccf30_to_merfish.ccf30_to_merfish" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.ccf30_to_merfish.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.ccf30_to_merfish.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/ccf30_to_merfish.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.ccf30_to_merfish.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -613,6 +645,21 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.ccf30_to_merfish.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.ccf30_to_merfish.ccf30_to_merfish"><code class="docutils literal notranslate"><span class="pre">ccf30_to_merfish()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.ccf30_to_merfish.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

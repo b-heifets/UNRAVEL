@@ -51,14 +51,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">
-import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
-window.addEventListener("load", () => mermaid.run());
-</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guide';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -1115,27 +1107,8 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
 <section id="analysis-overview">
 <h2>Analysis Overview<a class="headerlink" href="#analysis-overview" title="Link to this heading">#</a></h2>
 <p>Overview of a typical workflow (voxel-wise analyses followed by cluster validation):</p>
-<pre  class="mermaid">
-        flowchart TD
-    A(((LSFM))) 
-    A --&gt; B[Stitched 3D autofluorescence image]
-    B --&gt; C(Resample image to 50 µm resolution)
-    C --&gt; D(Segment tissue with Ilastik to mask external voxels)
-    D --&gt; E(Register image to an average template brain) 
-    A --&gt; F[Stitched 3D immunofluorescence image]
-    F --&gt; G(Remove autofluorescence from IF images)
-    G --&gt; H(Warp IF images to atlas space)
-    E --&gt; H
-    H --&gt; I(Preprocess IF images: z-score, smooth, and average left/right sides)
-    I --&gt; J(Perform voxel-wise statistical analyses)
-    J --&gt; K(Apply FDR correction of 1-p value maps)
-    K --&gt; L(Warp significant voxel clusters back to tissue space)
-    F --&gt; N(Segment c-Fos+ cells or other features using Ilastik)
-    L --&gt; M(Validate clusters with cell/label density measurements)
-    N --&gt; M
-    D --&gt; I
-    E --&gt; L
-    </pre><hr class="docutils" />
+<a class="reference internal image-reference" href="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Analysis_Overview.png"><img alt="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Analysis_Overview.png" class="align-center" src="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Analysis_Overview.png" style="width: 70%;" /></a>
+<hr class="docutils" />
 <br>
 </section>
 <section id="training-ilastik">
@@ -1232,21 +1205,8 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
 </section>
 <section id="registration">
 <h2>Registration<a class="headerlink" href="#registration" title="Link to this heading">#</a></h2>
-<pre  class="mermaid">
-        flowchart TD
-    A(((LSFM))) 
-    A --&gt; B[Stitch z-stacks if necessary]
-    B --&gt; C(io_metadata: Save raw voxel dimentions in microns to ./sample??/parameters/metadata.txt)
-    C --&gt; D(reg_prep: Resample autofluorescence images to 50 µm resolution for registration)
-    D --&gt; E(seg_copy_tifs: Copy select slices from 50 µm autofl images to create brain masks using Ilastik)
-    E --&gt; F(Train Ilastik using pixel classification to segment autofl brains)
-    F --&gt; G(seg_brain_mask: Generate autofl brain masks with Ilastik and apply them to the 50 µm images)
-    G --&gt; H(Optionally use 3D Slicer to make the masked autofl image and mask better match the average template)
-    H --&gt; I(reg: Register the template brain with the masked autofl images and warp the atlas)
-    I --&gt; J(reg_check and reg_check_fsleyes: Aggregate padded autofl images and warped atlas images from reg)
-    J --&gt; K(Assess registration quality in FSLeyes and refine if necessary by repeating the 3D Slicer step, etc.)
-
-    </pre><section id="io-metadata">
+<a class="reference internal image-reference" href="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Registration.png"><img alt="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Registration.png" class="align-center" src="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Registration.png" style="width: 70%;" /></a>
+<section id="io-metadata">
 <h3><code class="docutils literal notranslate"><span class="pre">io_metadata</span></code><a class="headerlink" href="#io-metadata" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="unravel/image_io/metadata.html#module-unravel.image_io.metadata" title="unravel.image_io.metadata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code></a></p>
 <ul class="simple">
@@ -1310,7 +1270,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/full_r
 </section>
 <section id="reg">
 <h3><code class="docutils literal notranslate"><span class="pre">reg</span></code><a class="headerlink" href="#reg" title="Link to this heading">#</a></h3>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.reg</span></code></p>
+<p><a class="reference internal" href="unravel/register/reg.html#module-unravel.register.reg" title="unravel.register.reg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.reg</span></code></a></p>
 <ul class="simple">
 <li><p>Register an average template brain/atlas to a resampled autofluo brain.</p></li>
 </ul>
@@ -1418,23 +1378,10 @@ reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE<
 </section>
 <section id="voxel-wise-statistics">
 <h2>Voxel-wise Statistics<a class="headerlink" href="#voxel-wise-statistics" title="Link to this heading">#</a></h2>
-<pre  class="mermaid">
-        flowchart TD
-    A(((LSFM))) 
-    A --&gt; B[Stitch z-stacks if required]
-    B --&gt; C(vstats_prep: Optionally remove autofluorescence and warp immunofluo images to atlas space)
-    C --&gt; D(vstats_z_score: Optionally z-score IF images from each brain individually)
-    D --&gt; E(utils_agg_files: Aggregate atlas-space IF images from all sample folders into the current directory)
-    E --&gt; F(vstats_whole_to_avg: Optionally smooth image and average left/right sides)
-    F --&gt; G(Check inputs for vstats: Open IF images and the atlas in FSLeyes to confirm aligment with the atlas and other IF images)
-    G --&gt; H(Prep inputs for vstats: Add IF images to the current directory, without other .nii.gz files)
-    H --&gt; I(utils_prepend: Prepend a one-word condition to each IF image)
-    I --&gt; J(For ANOVA designs, run fsl and set up the design. If two groups are present, proceed to the next step)
-    J --&gt; K(vstats: Run voxel-wise analyses using FSL's randomise tool)
-    K --&gt; L(View 1-p value maps in FSLeyes and consult 'Cluster-wise stats' for multiple comparisons correction and cluster validation)
-    </pre><section id="vstats-prep">
+<a class="reference internal image-reference" href="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Voxel-wise_Statistics.png"><img alt="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Voxel-wise_Statistics.png" class="align-center" src="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Voxel-wise_Statistics.png" style="width: 70%;" /></a>
+<section id="vstats-prep">
 <h3><code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code><a class="headerlink" href="#vstats-prep" title="Link to this heading">#</a></h3>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.vstats_prep</span></code></p>
+<p><a class="reference internal" href="unravel/voxel_stats/vstats_prep.html#module-unravel.voxel_stats.vstats_prep" title="unravel.voxel_stats.vstats_prep"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.vstats_prep</span></code></a></p>
 <ul class="simple">
 <li><p>Preprocess immunofluo images and warp them to atlas space for voxel-wise statistics.</p></li>
 </ul>
@@ -1476,7 +1423,7 @@ vstats_prep<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/image&
 </section>
 <section id="vstats-z-score">
 <h3><code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code><a class="headerlink" href="#vstats-z-score" title="Link to this heading">#</a></h3>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.z_score</span></code></p>
+<p><a class="reference internal" href="unravel/voxel_stats/z_score.html#module-unravel.voxel_stats.z_score" title="unravel.voxel_stats.z_score"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.z_score</span></code></a></p>
 <ul class="simple">
 <li><p>Z-score atlas space images using tissue masks (from brain_mask) and/or an atlas mask.</p></li>
 </ul>
@@ -1675,17 +1622,8 @@ vstats<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK
 </section>
 <section id="cluster-wise-statistics">
 <h2>Cluster-wise Statistics<a class="headerlink" href="#cluster-wise-statistics" title="Link to this heading">#</a></h2>
-<pre  class="mermaid">
-        flowchart TD
-    A(vstats: Generates 1-p value maps with vox_p in the filename)
-    A --&gt; B(cstats_fdr_range: Input a 1-p map to find FDR q values that yield clusters)
-    B --&gt; C(cstats_fdr: Apply FDR correction on the 1-p map to identify clusters of significant voxels)
-    C --&gt; D(cstats_mirror_indices: For whole-brains, recursively mirror cluster maps in ./stats/)
-    D --&gt; E(seg_copy_tifs: Copy select full resolution TIFFs for Ilastik training)
-    E --&gt; F(seg_ilastik: Perform pixel classification with a trained Ilastik project)
-    F --&gt; G(cstats_validation: Warp clusters from atlas to full resolution tissue space, count cells, and calculate cluster volumes)
-    G --&gt; H(cstats_summary: Aggregate and analyze cluster validation data)
-    </pre><section id="false-discovery-rate-fdr-correction">
+<a class="reference internal image-reference" href="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Cluster-wise_Statistics.png"><img alt="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Cluster-wise_Statistics.png" class="align-center" src="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Cluster-wise_Statistics.png" style="width: 70%;" /></a>
+<section id="false-discovery-rate-fdr-correction">
 <h3>False Discovery Rate (FDR) Correction<a class="headerlink" href="#false-discovery-rate-fdr-correction" title="Link to this heading">#</a></h3>
 </section>
 <section id="cstats-fdr-range">
@@ -1771,21 +1709,10 @@ cstats_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span c
 </section>
 <section id="cluster-validation-and-statistics">
 <h2>Cluster Validation and Statistics<a class="headerlink" href="#cluster-validation-and-statistics" title="Link to this heading">#</a></h2>
-<pre  class="mermaid">
-        flowchart TD    
-    A(cstats_org_data: Organize cell/label density data from cluster validation)
-    A --&gt; B(cstats_group_data: Pool left and right hemisphere data)
-    B --&gt; C(utils_prepend: Prepend CSV names with conditions)
-    C --&gt; D(cstats: Run statistics to determine cluster validity)
-    D --&gt; E(cstats_index: Create valid cluster maps and CSVs for sunburst plots)
-    E --&gt; F(cstats_brain_model: Create files for 3D brain models)
-    F --&gt; G(cstats_table: Create tables summarizing top regions and volumes)
-    G --&gt; H(cstats_prism: Generate CSVs for plotting bar graphs with Prism)
-    H --&gt; I(cstats_legend: Create legend files defining region abbreviations)
-    I --&gt; J(Summarize cluster validation rates, aggregate files for 3D brains, compile SI tables, etc.)
-    </pre><section id="cstats-validation">
+<a class="reference internal image-reference" href="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Cluster_Validation_and_Statistics.png"><img alt="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Cluster_Validation_and_Statistics.png" class="align-center" src="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Cluster_Validation_and_Statistics.png" style="width: 70%;" /></a>
+<section id="cstats-validation">
 <h3><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code><a class="headerlink" href="#cstats-validation" title="Link to this heading">#</a></h3>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validation</span></code></p>
+<p><a class="reference internal" href="unravel/cluster_stats/validation.html#module-unravel.cluster_stats.validation" title="unravel.cluster_stats.validation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validation</span></code></a></p>
 <ul class="simple">
 <li><p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell or label densities</p></li>
 </ul>
@@ -1949,19 +1876,8 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 </section>
 <section id="region-wise-statistics">
 <h2>Region-wise Statistics<a class="headerlink" href="#region-wise-statistics" title="Link to this heading">#</a></h2>
-<pre  class="mermaid">
-        flowchart TD
-    A(((LSFM))) 
-    A --&gt; B[3D autofluorescence image]
-    B --&gt; C(Registration to an average template brain) 
-    C --&gt; D(Optional: warp_to_native: Warp the atlas to full-resolution tissue space and save as .zarr)
-    A --&gt; E[3D immunofluorescence image]
-    E --&gt; F(seg_copy_tifs &amp; seg_ilastik: Segment c-Fos+ cells using Ilastik)
-    F --&gt; G(rstats: Perform regional cell counting and volume measurements)
-    D --&gt; G
-    G --&gt; H(utils_agg_files: Aggregate CSV outputs from rstats across all sample folders)
-    H --&gt; I(rstats_summary: Plot cell densities by region and summarize results)
-    </pre><section id="rstats">
+<a class="reference internal image-reference" href="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Region-wise_Statistics.png"><img alt="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Region-wise_Statistics.png" class="align-center" src="https://b-heifets.github.io/UNRAVEL-media/flowchart/guide/Region-wise_Statistics.png" style="width: 70%;" /></a>
+<section id="rstats">
 <h3><code class="docutils literal notranslate"><span class="pre">rstats</span></code><a class="headerlink" href="#rstats" title="Link to this heading">#</a></h3>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.region_stats.regional_cell_densities</span></code></p>
 <ul class="simple">

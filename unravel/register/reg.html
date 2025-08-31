@@ -571,8 +571,91 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-register-reg-module">
-<span id="unravel-register-reg"></span><h1>unravel.register.reg module<a class="headerlink" href="#unravel-register-reg-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.register.reg">
+<span id="unravel-register-reg-module"></span><span id="unravel-register-reg"></span><h1>unravel.register.reg module<a class="headerlink" href="#module-unravel.register.reg" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">reg</span></code> from UNRAVEL to register an average template brain/atlas to a resampled autofl brain.</p>
+<dl class="simple">
+<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>, [<code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code>], &amp; [<code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>]</p>
+</dd>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>template to register (e.g., gubra_template_CCFv3_30um.nii.gz, an iDISCO/LSFM template in CCFv3 space)</p></li>
+<li><p>reg_inputs/autofl_50um_masked.nii.gz (from <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>)</p></li>
+<li><p>atlas/atlas_CCFv3_2020_30um.nii.gz (default; from Allen Brain Institute)</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz (padded fixed image used for registration with ANTsPy)</p></li>
+<li><p>reg_outputs/&lt;atlas&gt;_in_tissue_space.nii.gz (warped atlas to tissue space for checking reg)</p></li>
+<li><p>transformation matrices and deformation fields in reg_outputs</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Images in reg_inputs are not padded.</p></li>
+<li><p>Images in reg_outputs have 25% padding by default.</p></li>
+<li><p>If &lt;template&gt;_initial_alignment_to_fixed_img.nii.gz goes to the edge, increase padding (otherwise, region labels will be pulled out)</p></li>
+<li><p>ort_code is a 3 letter orientation code of the fixed image if not set in fixed_img (e.g., RAS)</p></li>
+<li><p>Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior</p></li>
+<li><p>The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)</p></li>
+</ul>
+</div>
+<dl class="simple">
+<dt>Next commands:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg_check</span></code> for assessing registration, <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> for preparing voxel-wise stats inputs, or <code class="docutils literal notranslate"><span class="pre">rstats</span></code> for regional stats.</p>
+</dd>
+</dl>
+<section id="usage-for-tissue-registration-with-brain-mask-and-bias-correction">
+<h2>Usage for tissue registration with brain mask and bias correction:<a class="headerlink" href="#usage-for-tissue-registration-with-brain-mask-and-bias-correction" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/template.nii.gz&gt; -bc -sm 0.4 -ort &lt;3 letter orientation code&gt; [-pad 0.25] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-tissue-registration-without-brain-mask-and-bias-correction">
+<h2>Usage for tissue registration without brain mask and bias correction:<a class="headerlink" href="#usage-for-tissue-registration-without-brain-mask-and-bias-correction" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/template.nii.gz&gt; -f reg_inputs/autofl_50um.nii.gz -mas None -sm 0.4 -ort &lt;orient code&gt; [-pad 0.25] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-atlas-to-atlas-registration">
+<h2>Usage for atlas to atlas registration:<a class="headerlink" href="#usage-for-atlas-to-atlas-registration" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/atlas1.nii.gz&gt; -f &lt;path/atlas2.nii.gz&gt; -m2 &lt;path/atlas2.nii.gz&gt; [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-template-to-template-registration">
+<h2>Usage for template to template registration:<a class="headerlink" href="#usage-for-template-to-template-registration" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/template1.nii.gz&gt; -f &lt;path/template2.nii.gz&gt; -m2 &lt;path/template2.nii.gz&gt; -inp linear [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.reg.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.reg.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.reg.bias_correction">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.reg.</span></span><span class="sig-name descname"><span class="pre">bias_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shrink_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg.html#bias_correction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg.bias_correction" title="Link to this definition">#</a></dt>
+<dd><p>Perform N4 bias field correction on a .nii.gz and return an ndarray</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path to input image.nii.gz</p></li>
+<li><p><strong>mask_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path to mask image.nii.gz</p></li>
+<li><p><strong>shrink_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Shrink factor for bias field correction</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Print output</p></li>
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path to save corrected image</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.reg.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.reg.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -613,6 +696,24 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-tissue-registration-with-brain-mask-and-bias-correction">Usage for tissue registration with brain mask and bias correction:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-tissue-registration-without-brain-mask-and-bias-correction">Usage for tissue registration without brain mask and bias correction:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-atlas-to-atlas-registration">Usage for atlas to atlas registration:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-template-to-template-registration">Usage for template to template registration:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg.bias_correction"><code class="docutils literal notranslate"><span class="pre">bias_correction()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

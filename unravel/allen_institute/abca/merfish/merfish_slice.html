@@ -577,8 +577,65 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-abca-merfish-merfish-slice-module">
-<span id="unravel-allen-institute-abca-merfish-merfish-slice"></span><h1>unravel.allen_institute.abca.merfish.merfish_slice module<a class="headerlink" href="#unravel-allen-institute-abca-merfish-merfish-slice-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.abca.merfish.merfish_slice">
+<span id="unravel-allen-institute-abca-merfish-merfish-slice-module"></span><span id="unravel-allen-institute-abca-merfish-merfish-slice"></span><h1>unravel.allen_institute.abca.merfish.merfish_slice module<a class="headerlink" href="#module-unravel.allen_institute.abca.merfish.merfish_slice" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">abca_merfish_slice</span></code> or <code class="docutils literal notranslate"><span class="pre">mf_slice</span></code> from UNRAVEL to plot a MERFISH slice from the Allen Brain Cell Atlas (ABCA).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://alleninstitute.github.io/abc_atlas_access/notebooks/merfish_ccf_registration_tutorial.html#read-in-section-reconstructed-and-ccf-coordinates-for-all-cells">https://alleninstitute.github.io/abc_atlas_access/notebooks/merfish_ccf_registration_tutorial.html#read-in-section-reconstructed-and-ccf-coordinates-for-all-cells</a></p></li>
+<li><p>The slice index ranges from 05 to 67.</p></li>
+<li><p>Missing slices include: 07 20 21 22 23 34 41 63 65.</p></li>
+</ul>
+</div>
+<section id="usage-for-color-mode-choose-cell-metadata-csv-color-column">
+<h2>Usage for color mode (choose cell_metadata.csv color column):<a class="headerlink" href="#usage-for-color-mode-choose-cell-metadata-csv-color-column" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_merfish_slice -b path/to/base_dir -s 40 -c subclass_color -o slice40_subclass.png</p>
+</div></blockquote>
+</section>
+<section id="usage-for-gene-expression-mode">
+<h2>Usage for gene expression mode:<a class="headerlink" href="#usage-for-gene-expression-mode" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_merfish_slice -b path/to/base_dir -s 40 -g Htr2a –imputed -o slice40_Htr2a_imputed.png</p>
+</div></blockquote>
+</section>
+<section id="usage-for-overlaying-neurons">
+<h2>Usage for overlaying neurons:<a class="headerlink" href="#usage-for-overlaying-neurons" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_merfish_slice -b path/to/base_dir -s 40 -g Htr2a –neurons -o slice40_Htr2a_neurons.png</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_slice.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_slice.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_slice.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_slice.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_slice.join_cell_metadata">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_slice.</span></span><span class="sig-name descname"><span class="pre">join_cell_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neurons_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_slice.html#join_cell_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_slice.join_cell_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Return a fully-joined cell metadata DataFrame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_slice.legend_prep">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_slice.</span></span><span class="sig-name descname"><span class="pre">legend_prep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_loc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_slice.html#legend_prep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_slice.legend_prep" title="Link to this definition">#</a></dt>
+<dd><p>Build a categorical legend using the label column associated with &lt;color_col&gt;.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color_col</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+<li><p><strong>legend_loc</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_slice.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_slice.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_slice.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_slice.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -619,6 +676,24 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-color-mode-choose-cell-metadata-csv-color-column">Usage for color mode (choose cell_metadata.csv color column):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-gene-expression-mode">Usage for gene expression mode:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-overlaying-neurons">Usage for overlaying neurons:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_slice.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_slice.join_cell_metadata"><code class="docutils literal notranslate"><span class="pre">join_cell_metadata()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_slice.legend_prep"><code class="docutils literal notranslate"><span class="pre">legend_prep()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_slice.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
