@@ -48,10 +48,8 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
     * Quantification of cell/label densities across the brain
     * Voxel-wise analysis of fluorescent signals and cluster correction
     * Validation of hot/cold spots via cell/label density quantification at cellular resolution
+    * Integration of brain-wide maps with cell type and gene expression data from the Allen Brain Cell Atlas (ABCA)
 * `UNRAVEL GitHub repository <https://github.com/b-heifets/UNRAVEL/tree/main>`_
-* `UNRAVEL can be installed via the Python Package Index (PyPI) <https://pypi.org/project/heifetslab-unravel/>`_ with this command:
-  .. code-block:: bash
-      pip install heifetslab-unravel
 * `Initial UNRAVEL publication <https://www.nature.com/articles/s41386-023-01613-4>`_
 * UNRAVEL was developed by `the Heifets lab <https://heifetslab.stanford.edu/>`_ and `TensorAnalytics <https://sites.google.com/view/tensoranalytics/home?authuser=0>`_
 * Additional support/guidance was provided by:

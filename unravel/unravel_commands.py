@@ -677,7 +677,7 @@ def main():
                 "module": "unravel.allen_institute.abca.cache",
                 "description": "Download data from the Allen Brain Cell Atlas.",
                 "common": True,
-                "alias": "points_compressor"
+                "alias": "cache"
             },
             "abca_merfish": {
                 "module": "unravel.allen_institute.abca.merfish.merfish",
@@ -688,7 +688,7 @@ def main():
             "abca_merfish_slice": {
                 "module": "unravel.allen_institute.abca.merfish.merfish",
                 "description": "Plot MERFISH data from the ABCA.",
-                "common": True,
+                "common": False,
                 "alias": "mf_slice"
             },
             "abca_merfish_filter": {

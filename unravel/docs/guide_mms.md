@@ -38,7 +38,8 @@ MapMySections workflow.
 cd <path/to/where/you/want/UNRAVEL>
 git clone https://github.com/b-heifets/UNRAVEL.git
 cd UNRAVEL
-pip install -e ".[abca]"
+pip install -e .
+pip install git+https://github.com/AllenInstitute/abc_atlas_access.git
 ```
 
 * Verify UNRAVEL commands are working
