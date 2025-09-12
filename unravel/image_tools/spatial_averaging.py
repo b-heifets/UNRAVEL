@@ -1,33 +1,20 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_spatial_avg`` (``spatial_avg``) from UNRAVEL to load an image and apply 3D spatial averaging.
+Use ``img_spatial_avg`` (``spatial_avg``) from UNRAVEL to load an image and apply 2D or 3D spatial averaging.
 
-Input image types:
-    - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
+Inputs:
+    - 3D image: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
 Outputs: 
-    - .nii.gz, .tif series, or .zarr depending on the output path extension.
+    - Determined by the extension of the output path: .nii.gz, .tif series, or .zarr
 
-3D spatial averaging:
-    - Apply a 3D spatial averaging filter to a 3D numpy array.
-    - Default kernel size is 3x3x3, for the current voxel and its 26 neighbors.
-    - The output array is the same size as the input array.
-    - The edges of the output array are padded with zeros.
-    - The output array is the same data type as the input array.
-    - The input array must be 3D.
-    - The xy and z resolutions are required for saving the output as .nii.gz.
-    - The output is saved as .nii.gz, .tif series, or .zarr.
-
-2D spatial averaging:
-    - Apply a 2D spatial averaging filter to each slice of a 3D numpy array.
-    - Default kernel size is 3x3, for the current pixel and its 8 neighbors.
-    - The output array is the same size as the input array.
-    - The edges of the output array are padded with zeros.
-    - The output array is the same data type as the input array.
-    - The input array must be 3D.
-    - The xy and z resolutions are required for saving the output as .nii.gz.
-    - The output is saved as .nii.gz, .tif series, or .zarr.
+Note:
+    - 3D averaging: Applies a 3x3x3 kernel to each voxel and its 26 neighbors.
+    - 2D averaging: Applies a 3x3 kernel to each 2D slice independently.
+    - The output array is the same size as the input.
+    - Edges are zero-padded to preserve dimensions.
+    - For .nii.gz output, you must specify both xy and z resolutions.
 
 Usage:
 ------
@@ -52,7 +39,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/image .czi, path/img.nii.gz, or path/tif_dir', required=True, action=SM)
-    reqs.add_argument('-o', '--output', help='Output path. Default: None', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='Output path.', required=True, action=SM)
     reqs.add_argument('-d', '--dimensions', help='2D or 3D spatial averaging. (2 or 3)', required=True, type=int, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
