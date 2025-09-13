@@ -7,7 +7,7 @@ Inputs:
     - 3D image: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
 Outputs: 
-    - Determined by the extension of the output path: .nii.gz, .tif series, or .zarr
+    - Determined by the extension for .nii.gz and .zarr. Otherwise, saves as a .tif series.
 
 Note:
     - 3D averaging: Applies a 3x3x3 kernel to each voxel and its 26 neighbors.
@@ -140,10 +140,10 @@ def main():
     # Save image    
     if args.output.endswith('.nii.gz'):
         save_as_nii(img, args.output, xy_res, z_res, data_type=args.dtype, reference=args.reference)
-    elif args.output.endswith('.tif'):
-        save_as_tifs(img, args.output, ndarray_axis_order=args.axis_order)
     elif args.output.endswith('.zarr'):
         save_as_zarr(img, args.output, ndarray_axis_order=args.axis_order)
+    else:
+        save_as_tifs(img, args.output, ndarray_axis_order=args.axis_order)
 
     verbose_end_msg()
 
