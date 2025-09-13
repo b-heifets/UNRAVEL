@@ -149,7 +149,7 @@ def extract_resolution(img_path):
                     xy_res = float(pixels_element.get('PhysicalSizeX'))
                     z_res = float(pixels_element.get('PhysicalSizeZ'))
                 except Exception as e:
-                    print(f"⚠️  Could not parse OME-XML from {img_path}: {e}")
+                    print(f"⚠️  Could not parse OME-XML from {img_path}. Not extracting resolution. Error: {e}")
                     xy_res, z_res = None, None
             else:
                 print(f"⚠️  No ImageDescription tag in {img_path}")
