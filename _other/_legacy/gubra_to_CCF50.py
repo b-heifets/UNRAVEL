@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 """
 Use ``gubra_to_CCF.py`` from UNRAVEL to warp an image from gubra 50 um space to Allen CCFv3 50 um space. 
 This is useful for warping cell centroids from gubra space to CCFv3 space.
