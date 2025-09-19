@@ -72,6 +72,7 @@ def parse_args():
     opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default='CCFv3-2020__regionID_side_IDpath_region_abbr.csv', action=SM)
     opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
+    opts.add_argument('-min', '--min_voxels', help='Minimum voxel count per connected component to keep (default: 1 keeps all)', type=int, default=1, action=SM)
 
     compatibility = parser.add_argument_group('Compatibility options')
     compatibility.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
@@ -90,7 +91,7 @@ def get_atlas_region_at_coords(atlas, x, y, z):
     return atlas[int(x), int(y), int(z)]
 
 @print_func_name_args_times()
-def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition, region_info_df):
+def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition, region_info_df, min_voxels=1):
     """Count the number of cells in each region based on atlas region intensities
     
     Parameters:
@@ -101,6 +102,7 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     - connectivity (int): Connectivity for connected components. Options: 6, 18, or 26.
     - condition (str): Name of the group.
     - region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_path, Region, Abbr).
+    - min_voxels (int): Minimum voxel count per connected component to keep (default: 1 keeps all).
 
     Returns:
     --------
@@ -135,6 +137,11 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
 
     # Drop the first row, which is the background
     centroids = np.delete(centroids, 0, axis=0)
+    sizes = np.delete(stats['voxel_counts'], 0, axis=0)
+
+    # Apply min_voxels threshold
+    keep_mask = sizes >= min_voxels
+    centroids = centroids[keep_mask]
 
     # Convert the centroids ndarray to a dataframe
     centroids_df = pd.DataFrame(centroids, columns=['x', 'y', 'z'])
@@ -351,7 +358,7 @@ def main():
 
             # Count cells in regions
             if args.type == 'counts' or args.type == 'cell_densities':
-                regional_counts_df, region_ids = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df)
+                regional_counts_df, region_ids = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df, min_voxels=args.min_voxels)
 
             # Calculate volumes of segmented voxels in regions
             if args.type == 'label_densities' or args.type == 'label_volumes':
