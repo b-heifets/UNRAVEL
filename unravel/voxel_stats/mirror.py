@@ -51,15 +51,31 @@ def mirror(img, axis=2, shift=0):
 
     if shift == 0: 
         return flipped_img
-    else: 
-        # Shift the image data by padding with zeros on the left and cropping on the right
-        # This adds 2 voxels of zeros on the left side (beginning) and removes 2 voxels from the right side (end)
-        if axis == 0: 
-            mirrored_img = np.pad(flipped_img, ((shift, 0), (0, 0), (0, 0)), mode='constant', constant_values=0)[:-shift, :, :]
-            return mirrored_img
-        else: 
-            print('[red1]Logic for shifting content in axeses other than 0 has not been added. Please request this if needed.')
-    return
+    
+    if axis == 0:
+        if shift > 0:
+            # pad left, crop right
+            return np.pad(flipped_img, ((shift, 0), (0, 0), (0, 0)),
+                        mode='constant', constant_values=0)[:-shift, :, :]
+        else:
+            shift = abs(shift)
+            # pad right, crop left
+            return np.pad(flipped_img, ((0, shift), (0, 0), (0, 0)),
+                        mode='constant', constant_values=0)[shift:, :, :]
+    else:
+        raise NotImplementedError(
+            f"Shift logic for axis {axis} not implemented")
+
+
+    # else: 
+    #     # Shift the image data by padding with zeros on the left and cropping on the right
+    #     # This adds 2 voxels of zeros on the left side (beginning) and removes 2 voxels from the right side (end)
+    #     if axis == 0: 
+    #         mirrored_img = np.pad(flipped_img, ((shift, 0), (0, 0), (0, 0)), mode='constant', constant_values=0)[:-shift, :, :]
+    #         return mirrored_img
+    #     else: 
+    #         print('[red1]Logic for shifting content in axeses other than 0 has not been added. Please request this if needed.')
+    # return
 
     
 @log_command
