@@ -13,8 +13,7 @@ Inputs:
     - Reference image for warping to atlas space: e.g., atlas/atlas_CCFv3_2020_30um.nii.gz
 
 Outputs:
-    - ./sample??/atlas_space/<args.input name>
-    - ./sample??/atlas_space/<args.input name --> .nii.gz>
+    - ./sample??/atlas_space/<input>.nii.gz
 
 Notes:
     - If the input CSV has a 'count' column, use ``utils_points_compressor`` to unpack the points before running this script.
@@ -56,6 +55,8 @@ def parse_args():
     opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
+    opts.add_argument('-o', '--output', help='Output directory for atlas space images relative to sample??/. Default: atlas_space', default=None, action=SM)
+    opts.add_argument('-op', '--output_points', help='Output directory for resampled points csv relative to sample??/. Default: reg_inputs/points', default=None, action=SM)
 
     compatability = parser.add_argument_group('Compatability options')
     compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting). Default: False', action='store_true', default=False)
@@ -96,7 +97,9 @@ def main():
                 continue
 
             # Define main output path
-            output_img_path = sample_path / "atlas_space" / str(csv_path.name).replace(".csv", ".nii.gz")
+            output_dir = sample_path / "atlas_space" if args.output is None else sample_path / args.output
+            output_dir.mkdir(exist_ok=True, parents=True)
+            output_img_path = output_dir / str(csv_path.name).replace(".csv", ".nii.gz")
             output_img_path.parent.mkdir(exist_ok=True, parents=True)
             if output_img_path.exists():
                 print(f"\n\n    {output_img_path} already exists. Skipping.\n")
@@ -119,12 +122,12 @@ def main():
             if args.miracl: 
                 points_resampled_img = reorient_axes(points_resampled_img)
 
-            # Use function from img_to_points to convert the resampled image to a points DataFrame
+            # Convert the resampled image to a points DataFrame
             points_resampled_ndarray = img_to_points(points_resampled_img)
             points_resampled_df = pd.DataFrame(points_resampled_ndarray, columns=['x', 'y', 'z'])
 
             # Save the resampled points to a CSV file
-            csv_output_path = autofl_path.parent / "points" / str(csv_path.name)
+            csv_output_path = sample_path / args.output_points / str(csv_path.name) if args.output_points is not None else sample_path / "reg_inputs" / "points" / str(csv_path.name)
             csv_output_path.parent.mkdir(exist_ok=True, parents=True)
             points_resampled_df.to_csv(csv_output_path, index=False)
             print(f"\n    Points saved to: {csv_output_path}\n")
