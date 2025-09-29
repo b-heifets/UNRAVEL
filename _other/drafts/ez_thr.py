@@ -66,6 +66,8 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Test that this matches output from ez_thr.sh
+
 @log_command
 def main():
     install()
@@ -119,7 +121,7 @@ def main():
         print(f"\nReversing cluster order for {results_dir.name}\n")
         cluster_index_nii_path = results_dir / f"{results_dir.name}_cluster_index.nii.gz"
         cluster_index_img = nib.load(cluster_index_nii_path)
-        data_type = np.uint8 if np.max(cluster_index_img) < 255 else np.uint16
+        data_type = np.uint8 if np.max(cluster_index_img.get_fdata()) < 256 else np.uint16
         rev_cluster_index_img = reverse_clusters(cluster_index_img, rev_cluster_index, data_type, cluster_index_nii_path)
 
     else:
