@@ -130,7 +130,17 @@ def cluster_index(adj_p_val_img_path, min_size, threshold, output_index):
 
 @print_func_name_args_times()
 def reverse_clusters(cluster_index_img, output, data_type, cluster_index_nii):
-    """Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray."""
+    """Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray.
+    
+    Parameters:
+    - cluster_index_img (ndarray): The input cluster index image as a NumPy array
+    - output (str): The path to save the reversed cluster index image
+    - data_type (np.dtype): The desired data type for the output image (e.g., np.uint8, np.uint16)
+    - cluster_index_nii (Nifti1Image): The original cluster index NIfTI image for affine and header information
+
+    Returns:
+    - rev_cluster_index_img (ndarray): The reversed cluster index image as a NumPy array
+    """
     max_cluster_id = int(cluster_index_img.max())
     rev_cluster_index_img = np.zeros_like(cluster_index_img)
     
