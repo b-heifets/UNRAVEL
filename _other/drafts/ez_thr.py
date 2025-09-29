@@ -36,11 +36,11 @@ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Cluster
 
 Usage:
 ------
-    ``ez_thr.py`` -i path/zstat1.nii.gz [-mask path/mask.nii.gz] [-z 1.959964] [-p 0.05] [-o path/zstat1_thr.nii.gz] [-v]
+    ez_thr.py -i path/vox_p_tstat1.nii.gz [-mask path/mask.nii.gz] [-z 1.959964] [-p 0.05] [-o path/vox_p_tstat1_thr.nii.gz] [-v]
 
 """
 
-import subprocess
+from subprocess import run
 import numpy as np
 from pathlib import Path
 from rich import print
@@ -57,19 +57,13 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help="path/1-p_value_map.nii.gz (e.g., vox_p_tstat1 from ``vstats``)", required=True, action=SM)
-    reqs.add_argument('-mask', '--mask', help='path/mask.nii.gz to limit the thresholding', required=True, action=SM)
+    reqs.add_argument('-mas', '--mask', help='path/mask.nii.gz to limit the thresholding', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-z', '--z_thresh', help='Z-threshold for voxel-wise thresholding (default: 1.959964 for p<0.05, two-tailed)', default=1.959964, type=float, action=SM)
     opts.add_argument('-p', '--cluster_prob_thresh', help='Cluster probability threshold (default: 0.05)', default=0.05, type=float, action=SM)
 
     return parser.parse_args()
-
-@print_func_name_args_times()
-def run(cmd, **kwargs):
-    """Run a shell command with error checking"""
-    print("Running:", " ".join(map(str, cmd)))
-    subprocess.run(cmd, check=True, **kwargs)
 
 @log_command
 def main():
@@ -109,7 +103,7 @@ def main():
         run([
             "easythresh", str(zstats), str(args.mask),
             args.z_thresh, args.cluster_prob_thresh,
-            str(empty), image[:-7]
+            str(empty), str(image[:-7])
         ])
 
         # Rename outputs
