@@ -42,6 +42,7 @@ Usage:
 
 from subprocess import run
 import numpy as np
+import nibabel as nib
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -117,7 +118,7 @@ def main():
         # Reverse cluster IDs
         print(f"\nReversing cluster order for {results_dir.name}\n")
         cluster_index_nii_path = results_dir / f"{results_dir.name}_cluster_index.nii.gz"
-        cluster_index_img = load_nii(cluster_index_nii_path)
+        cluster_index_img = nib.load(cluster_index_nii_path)
         data_type = np.uint8 if np.max(cluster_index_img) < 255 else np.uint16
         rev_cluster_index_img = reverse_clusters(cluster_index_img, rev_cluster_index, data_type, cluster_index_nii_path)
 
