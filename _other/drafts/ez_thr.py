@@ -99,10 +99,9 @@ def main():
         run(["fslmaths", str(minus1_times), "-ptoz", str(zstats)])
 
         # Run easythresh
-        print(f"Running: easythresh {zstats} {args.mask} {args.z_thresh} {args.cluster_prob_thresh} {empty} {image[:-7]}")
         run([
             "easythresh", str(zstats), str(args.mask),
-            args.z_thresh, args.cluster_prob_thresh,
+            str(args.z_thresh), str(args.cluster_prob_thresh),
             str(empty), str(image[:-7])
         ])
 
