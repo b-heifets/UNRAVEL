@@ -167,7 +167,7 @@ def main():
             print(f"    Output path: {out_path}\n")
 
         if args.reference and str(args.save_as) == '.nii.gz':
-            save_3D_img(img_resampled, out_path, xy_res=target_res_xy, z_res=target_res_z, data_type=args.dtype, reference_img=args.referenc, verbose=args.verbose)
+            save_3D_img(img_resampled, out_path, xy_res=target_res_xy, z_res=target_res_z, data_type=args.dtype, reference_img=args.reference, verbose=args.verbose)
         else:
             save_3D_img(img_resampled, out_path, xy_res=target_res_xy, z_res=target_res_z, verbose=args.verbose)
 
