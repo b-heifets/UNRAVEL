@@ -417,16 +417,32 @@ window.addEventListener("load", () => mermaid.run());
 
     <span class="k">if</span> <span class="n">shift</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
         <span class="k">return</span> <span class="n">flipped_img</span>
-    <span class="k">else</span><span class="p">:</span> 
-        <span class="c1"># Shift the image data by padding with zeros on the left and cropping on the right</span>
-        <span class="c1"># This adds 2 voxels of zeros on the left side (beginning) and removes 2 voxels from the right side (end)</span>
-        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
-            <span class="n">mirrored_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">flipped_img</span><span class="p">,</span> <span class="p">((</span><span class="n">shift</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)[:</span><span class="o">-</span><span class="n">shift</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
-            <span class="k">return</span> <span class="n">mirrored_img</span>
-        <span class="k">else</span><span class="p">:</span> 
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[red1]Logic for shifting content in axeses other than 0 has not been added. Please request this if needed.&#39;</span><span class="p">)</span>
-    <span class="k">return</span></div>
+    
+    <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">shift</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># pad left, crop right</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">flipped_img</span><span class="p">,</span> <span class="p">((</span><span class="n">shift</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)[:</span><span class="o">-</span><span class="n">shift</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shift</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">shift</span><span class="p">)</span>
+            <span class="c1"># pad right, crop left</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">flipped_img</span><span class="p">,</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">shift</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="n">shift</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Shift logic for axis </span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2"> not implemented&quot;</span><span class="p">)</span></div>
 
+
+
+    <span class="c1"># else: </span>
+    <span class="c1">#     # Shift the image data by padding with zeros on the left and cropping on the right</span>
+    <span class="c1">#     # This adds 2 voxels of zeros on the left side (beginning) and removes 2 voxels from the right side (end)</span>
+    <span class="c1">#     if axis == 0: </span>
+    <span class="c1">#         mirrored_img = np.pad(flipped_img, ((shift, 0), (0, 0), (0, 0)), mode=&#39;constant&#39;, constant_values=0)[:-shift, :, :]</span>
+    <span class="c1">#         return mirrored_img</span>
+    <span class="c1">#     else: </span>
+    <span class="c1">#         print(&#39;[red1]Logic for shifting content in axeses other than 0 has not been added. Please request this if needed.&#39;)</span>
+    <span class="c1"># return</span>
 
     
 <div class="viewcode-block" id="main">

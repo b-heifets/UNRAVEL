@@ -18,6 +18,7 @@ unravel.image_tools package
    unique_intensities
    resample_points
    modify_labels
+   filter_objects_by_size
    atlas/toc
 
 .. automodule:: unravel.image_tools

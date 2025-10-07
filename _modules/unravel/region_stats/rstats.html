@@ -379,6 +379,7 @@ window.addEventListener("load", () => mermaid.run());
 <span class="sd">    - Regarding --type, alternatively use &#39;counts&#39; or &#39;volumes&#39; for object counts or regional volumes</span>
 <span class="sd">    - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv</span>
 <span class="sd">    - Columns: Region_ID, Side, ID_path, Region, Abbr</span>
+<span class="sd">    - If using serial-2 photon data, use the --stpt flag to interleave blank slices to prevent cells from fusing across slices during counting</span>
 
 <span class="sd">Next steps:</span>
 <span class="sd">    - Use ``utils_agg_files`` to aggregate the CSVs from sample directories to the current directory</span>
@@ -386,11 +387,11 @@ window.addEventListener("load", () => mermaid.run());
 
 <span class="sd">Usage if the atlas is already in native space from ``warp_to_native``:</span>
 <span class="sd">----------------------------------------------------------------------</span>
-<span class="sd">    rstats -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">    rstats -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 [-2p] [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]</span>
 
 <span class="sd">Usage if the native atlas is not available; it is not saved (faster):</span>
 <span class="sd">---------------------------------------------------------------------</span>
-<span class="sd">    rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36 [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">    rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36 [-2p] [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">cc3d</span>
@@ -424,6 +425,7 @@ window.addEventListener("load", () => mermaid.run());
     <span class="n">key_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atlas_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;rel_path/native_atlas_split.nii.gz (use this -a if this exists from ``warp_to_native``, otherwise use -m ; &quot;split&quot; == left label IDs increased by 20,000)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">key_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--moving_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/atlas_image.nii.gz to warp from atlas space&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">key_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--type&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Type of measurement (options: counts, region_volumes, cell_densities \[default], label_volumes, or label_densities)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;cell_densities&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">key_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-2p&#39;</span><span class="p">,</span> <span class="s1">&#39;--stpt&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;For serial-2 photon data, use this flag to interleave blank slices (prevents cells from fusing across slices during counting)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-md&#39;</span><span class="p">,</span> <span class="s1">&#39;--metadata&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/metadata.txt. Default: parameters/metadata.txt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;parameters/metadata.txt&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -433,6 +435,7 @@ window.addEventListener("load", () => mermaid.run());
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Resolution of registration inputs in microns. Default: 50&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;50&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-csv&#39;</span><span class="p">,</span> <span class="s1">&#39;--csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CCFv3-2020__regionID_side_IDpath_region_abbr.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pad&#39;</span><span class="p">,</span> <span class="s1">&#39;--pad_percent&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-min&#39;</span><span class="p">,</span> <span class="s1">&#39;--min_voxels&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Minimum voxel count per connected component to keep (default: 1 keeps all)&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">compatibility</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Compatibility options&#39;</span><span class="p">)</span>
     <span class="n">compatibility</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mi&#39;</span><span class="p">,</span> <span class="s1">&#39;--miracl&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Mode for compatibility (accounts for tif to nii reorienting)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -446,6 +449,7 @@ window.addEventListener("load", () => mermaid.run());
 
 
 <span class="c1"># TODO: Using the sample_key.csv would be better for batch processing than using -c for the condition.</span>
+<span class="c1"># TODO: Check other parameters of cc3d.connected_components to see if processing can be sped up (e.g., binary_image=True; may need to update cc3d first)</span>
 
 <div class="viewcode-block" id="get_atlas_region_at_coords">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.get_atlas_region_at_coords">[docs]</a>
@@ -457,7 +461,7 @@ window.addEventListener("load", () => mermaid.run());
 <div class="viewcode-block" id="count_cells_in_regions">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.count_cells_in_regions">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">region_info_df</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">region_info_df</span><span class="p">,</span> <span class="n">min_voxels</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Count the number of cells in each region based on atlas region intensities</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters:</span>
@@ -468,6 +472,7 @@ window.addEventListener("load", () => mermaid.run());
 <span class="sd">    - connectivity (int): Connectivity for connected components. Options: 6, 18, or 26.</span>
 <span class="sd">    - condition (str): Name of the group.</span>
 <span class="sd">    - region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_path, Region, Abbr).</span>
+<span class="sd">    - min_voxels (int): Minimum voxel count per connected component to keep (default: 1 keeps all).</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
@@ -502,6 +507,11 @@ window.addEventListener("load", () => mermaid.run());
 
     <span class="c1"># Drop the first row, which is the background</span>
     <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">centroids</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">sizes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;voxel_counts&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Apply min_voxels threshold</span>
+    <span class="n">keep_mask</span> <span class="o">=</span> <span class="n">sizes</span> <span class="o">&gt;=</span> <span class="n">min_voxels</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">centroids</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">]</span>
 
     <span class="c1"># Convert the centroids ndarray to a dataframe</span>
     <span class="n">centroids_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">centroids</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">])</span>
@@ -644,6 +654,23 @@ window.addEventListener("load", () => mermaid.run());
 
 
 
+<div class="viewcode-block" id="interleave_blank_slices">
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.interleave_blank_slices">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">interleave_blank_slices</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interleave blank slices in a 3D image to prevent cells from fusing across slices during counting.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        - img (ndarray): 3D numpy array with the image.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        - img_interleaved (ndarray): 3D numpy array with interleaved blank slices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img_interleaved</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">img_interleaved</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">img</span>
+    <span class="k">return</span> <span class="n">img_interleaved</span></div>
+
+
+
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.main">[docs]</a>
 <span class="nd">@log_command</span>
@@ -683,6 +710,10 @@ window.addEventListener("load", () => mermaid.run());
                     <span class="k">continue</span>
                 <span class="n">seg_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">seg_img_path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
+                <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">stpt</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Interleaving slices for serial-2 photon data to prevent cells from fusing across slices during counting&quot;</span><span class="p">)</span>
+                    <span class="n">seg_img</span> <span class="o">=</span> <span class="n">interleave_blank_slices</span><span class="p">(</span><span class="n">seg_img</span><span class="p">)</span>
+
             <span class="c1"># Load or generate the native atlas image</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="n">atlas_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas_path</span>
@@ -697,6 +728,10 @@ window.addEventListener("load", () => mermaid.run());
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    [red1]Atlas image not found. Please provide a path to the atlas image or the moving image&quot;</span><span class="p">)</span>
                 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">stpt</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Interleaving slices in atlas for serial-2 photon data to match segmentation image&quot;</span><span class="p">)</span>
+                <span class="n">atlas_img</span> <span class="o">=</span> <span class="n">interleave_blank_slices</span><span class="p">(</span><span class="n">atlas_img</span><span class="p">)</span>
+
             <span class="c1"># Load the region information dataframe</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020__regionID_side_IDpath_region_abbr.csv&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2017__regionID_side_IDpath_region_abbr.csv&#39;</span><span class="p">:</span>
                 <span class="n">region_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span><span class="p">)</span>
@@ -705,7 +740,7 @@ window.addEventListener("load", () => mermaid.run());
 
             <span class="c1"># Count cells in regions</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;counts&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;cell_densities&#39;</span><span class="p">:</span>
-                <span class="n">regional_counts_df</span><span class="p">,</span> <span class="n">region_ids</span> <span class="o">=</span> <span class="n">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">region_info_df</span><span class="p">)</span>
+                <span class="n">regional_counts_df</span><span class="p">,</span> <span class="n">region_ids</span> <span class="o">=</span> <span class="n">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">region_info_df</span><span class="p">,</span> <span class="n">min_voxels</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">min_voxels</span><span class="p">)</span>
 
             <span class="c1"># Calculate volumes of segmented voxels in regions</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;label_densities&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;label_volumes&#39;</span><span class="p">:</span>
@@ -718,14 +753,14 @@ window.addEventListener("load", () => mermaid.run());
                 <span class="c1"># Multiply the segmented image by the atlas image</span>
                 <span class="n">segmented_regions</span> <span class="o">=</span> <span class="n">seg_img</span> <span class="o">*</span> <span class="n">atlas_img</span>
 
-                <span class="c1"># Calculate the volume of each segmented region</span>
+                <span class="c1"># Calculate the volume of each segmented region (z_res not changed by interleaving)</span>
                 <span class="n">region_ids</span> <span class="o">=</span> <span class="n">region_info_df</span><span class="p">[</span><span class="s1">&#39;Region_ID&#39;</span><span class="p">]</span>
                 <span class="n">regional_volumes_in_seg_df</span> <span class="o">=</span> <span class="n">calculate_regional_volumes</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">segmented_regions</span><span class="p">,</span> <span class="n">region_ids</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">region_info_df</span><span class="p">)</span>
 
             <span class="c1"># Calculate regional volumes</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;region_volumes&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;cell_densities&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;label_densities&#39;</span><span class="p">:</span>
 
-                <span class="c1"># Calculate regional volumes</span>
+                <span class="c1"># Calculate regional volumes (z_res not changed by interleaving)</span>
                 <span class="n">region_ids</span> <span class="o">=</span> <span class="n">region_info_df</span><span class="p">[</span><span class="s1">&#39;Region_ID&#39;</span><span class="p">]</span>
                 <span class="n">regional_volumes_df</span> <span class="o">=</span> <span class="n">calculate_regional_volumes</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">region_ids</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">region_info_df</span><span class="p">)</span>
 

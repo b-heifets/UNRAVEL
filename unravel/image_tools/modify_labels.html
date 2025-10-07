@@ -55,7 +55,7 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="unravel.image_tools.atlas package" href="atlas/toc.html" />
+    <link rel="next" title="unravel.image_tools.filter_objects_by_size module" href="filter_objects_by_size.html" />
     <link rel="prev" title="unravel.image_tools.resample_points module" href="resample_points.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -430,6 +430,7 @@
 <li class="toctree-l2"><a class="reference internal" href="unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.image_tools.modify_labels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filter_objects_by_size.html">unravel.image_tools.filter_objects_by_size module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -593,8 +594,8 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>img</strong> (<em>ndarray</em>) – The input image as a numpy ndarray.</p></li>
-<li><p><strong>label_IDs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The label IDs to set to a specific value.</p></li>
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The intensity to set for specified label IDs (default: 0).</p></li>
+<li><p><strong>label_IDs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The label IDs to set to a specific value.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The intensity to set for specified label IDs (default: 0).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -614,8 +615,8 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>img</strong> (<em>ndarray</em>) – The input image as a numpy ndarray.</p></li>
-<li><p><strong>label_IDs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The label IDs to retain.</p></li>
-<li><p><strong>omit_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The intensity to set for labels not in label_IDs (default: 0).</p></li>
+<li><p><strong>label_IDs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The label IDs to retain.</p></li>
+<li><p><strong>omit_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The intensity to set for labels not in label_IDs (default: 0).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -654,11 +655,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="atlas/toc.html"
+       href="filter_objects_by_size.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.image_tools.atlas package</p>
+        <p class="prev-next-title">unravel.image_tools.filter_objects_by_size module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

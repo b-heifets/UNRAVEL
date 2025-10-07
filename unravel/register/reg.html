@@ -430,6 +430,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/modify_labels.html">unravel.image_tools.modify_labels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_tools/filter_objects_by_size.html">unravel.image_tools.filter_objects_by_size module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../image_tools/atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -595,7 +596,7 @@
 <ul class="simple">
 <li><p>Images in reg_inputs are not padded.</p></li>
 <li><p>Images in reg_outputs have 25% padding by default.</p></li>
-<li><p>If &lt;template&gt;_initial_alignment_to_fixed_img.nii.gz goes to the edge, increase padding (otherwise, region labels will be pulled out)</p></li>
+<li><p>If &lt;template&gt;_initial_alignment_to_fixed_img.nii.gz goes to the edge, additional padding will be added (otherwise, atlas labels will be pulled out)</p></li>
 <li><p>ort_code is a 3 letter orientation code of the fixed image if not set in fixed_img (e.g., RAS)</p></li>
 <li><p>Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior</p></li>
 <li><p>The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)</p></li>
@@ -641,11 +642,11 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>image_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path to input image.nii.gz</p></li>
-<li><p><strong>mask_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path to mask image.nii.gz</p></li>
-<li><p><strong>shrink_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Shrink factor for bias field correction</p></li>
-<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Print output</p></li>
-<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path to save corrected image</p></li>
+<li><p><strong>image_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to input image.nii.gz</p></li>
+<li><p><strong>mask_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to mask image.nii.gz</p></li>
+<li><p><strong>shrink_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Shrink factor for bias field correction</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Print output</p></li>
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to save corrected image</p></li>
 </ul>
 </dd>
 </dl>

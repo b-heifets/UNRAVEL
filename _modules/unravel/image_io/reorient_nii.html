@@ -546,15 +546,15 @@ window.addEventListener("load", () => mermaid.run());
     <span class="c1"># Determine the actual min and max values</span>
     <span class="n">actual_min</span><span class="p">,</span> <span class="n">actual_max</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">img</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
-    <span class="c1"># Infer true data type based on actual value range</span>
-    <span class="k">if</span> <span class="n">actual_min</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">actual_max</span> <span class="o">&lt;=</span> <span class="mi">255</span><span class="p">:</span>
-        <span class="n">inferred_type</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span>  <span class="c1"># 8-bit unsigned</span>
-    <span class="k">elif</span> <span class="n">actual_min</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">actual_max</span> <span class="o">&lt;=</span> <span class="mi">65535</span><span class="p">:</span>
-        <span class="n">inferred_type</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span>  <span class="c1"># 16-bit unsigned</span>
-    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">data_type</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">)</span> <span class="ow">or</span> <span class="n">actual_min</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">actual_max</span> <span class="o">&gt;</span> <span class="mi">65535</span><span class="p">:</span>
-        <span class="n">inferred_type</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span>  <span class="c1"># 32-bit floating-point</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">inferred_type</span> <span class="o">=</span> <span class="n">data_type</span>  <span class="c1"># Fall back to metadata-specified type</span>
+    <span class="c1"># # Infer true data type based on actual value range</span>
+    <span class="c1"># if actual_min &gt;= 0 and actual_max &lt;= 255:</span>
+    <span class="c1">#     inferred_type = np.uint8  # 8-bit unsigned</span>
+    <span class="c1"># elif actual_min &gt;= 0 and actual_max &lt;= 65535:</span>
+    <span class="c1">#     inferred_type = np.uint16  # 16-bit unsigned</span>
+    <span class="c1"># elif np.issubdtype(data_type, np.floating) or actual_min &lt; 0 or actual_max &gt; 65535:</span>
+    <span class="c1">#     inferred_type = np.float32  # 32-bit floating-point</span>
+    <span class="c1"># else:</span>
+    <span class="c1">#     inferred_type = data_type  # Fall back to metadata-specified type</span>
 
     <span class="k">if</span> <span class="n">apply</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Applying orientation change to the image data...&#39;</span><span class="p">)</span>
@@ -564,18 +564,24 @@ window.addEventListener("load", () => mermaid.run());
         <span class="n">img</span> <span class="o">=</span> <span class="n">apply_orientation</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">orientation_change</span><span class="p">)</span>
 
     <span class="c1"># Round values for integer types before casting</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">inferred_type</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">inferred_type</span><span class="p">)</span>
+    <span class="c1"># if np.issubdtype(inferred_type, np.integer):</span>
+    <span class="c1">#     img = np.round(img).astype(inferred_type)</span>
+    <span class="c1"># else:</span>
+    <span class="c1">#     # For floating-point types, preserve precision</span>
+    <span class="c1">#     img = img.astype(inferred_type)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">data_type</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># For floating-point types, preserve precision</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">inferred_type</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
 
     <span class="c1"># Generate the new affine matrix</span>
     <span class="n">new_affine</span> <span class="o">=</span> <span class="n">transform_nii_affine</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_ort</span><span class="p">,</span> <span class="n">zero_origin</span><span class="o">=</span><span class="n">zero_origin</span><span class="p">)</span>
 
     <span class="c1"># Create a new NIfTI image with the processed data and new affine</span>
     <span class="n">new_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">new_affine</span><span class="p">)</span>
-    <span class="n">new_nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">inferred_type</span><span class="p">)</span>  <span class="c1"># Preserve inferred data type</span>
+    <span class="c1"># new_nii.header.set_data_dtype(inferred_type)  # Preserve inferred data type</span>
+    <span class="n">new_nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>  <span class="c1"># Preserve inferred data type</span>
     <span class="n">new_nii</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;xyzt_units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># mm, s</span>
     <span class="n">new_nii</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;regular&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;r&#39;</span>
 

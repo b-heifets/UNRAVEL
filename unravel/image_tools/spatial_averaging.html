@@ -430,6 +430,7 @@
 <li class="toctree-l2"><a class="reference internal" href="unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modify_labels.html">unravel.image_tools.modify_labels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filter_objects_by_size.html">unravel.image_tools.filter_objects_by_size module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -573,39 +574,27 @@
                   
   <section id="module-unravel.image_tools.spatial_averaging">
 <span id="unravel-image-tools-spatial-averaging-module"></span><span id="unravel-image-tools-spatial-averaging"></span><h1>unravel.image_tools.spatial_averaging module<a class="headerlink" href="#module-unravel.image_tools.spatial_averaging" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">img_spatial_avg</span></code> (<code class="docutils literal notranslate"><span class="pre">spatial_avg</span></code>) from UNRAVEL to load an image and apply 3D spatial averaging.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">img_spatial_avg</span></code> (<code class="docutils literal notranslate"><span class="pre">spatial_avg</span></code>) from UNRAVEL to load an image and apply 2D or 3D spatial averaging.</p>
 <dl class="simple">
-<dt>Input image types:</dt><dd><ul class="simple">
-<li><p>.czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p></li>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>3D image: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>.nii.gz, .tif series, or .zarr depending on the output path extension.</p></li>
-</ul>
-</dd>
-<dt>3D spatial averaging:</dt><dd><ul class="simple">
-<li><p>Apply a 3D spatial averaging filter to a 3D numpy array.</p></li>
-<li><p>Default kernel size is 3x3x3, for the current voxel and its 26 neighbors.</p></li>
-<li><p>The output array is the same size as the input array.</p></li>
-<li><p>The edges of the output array are padded with zeros.</p></li>
-<li><p>The output array is the same data type as the input array.</p></li>
-<li><p>The input array must be 3D.</p></li>
-<li><p>The xy and z resolutions are required for saving the output as .nii.gz.</p></li>
-<li><p>The output is saved as .nii.gz, .tif series, or .zarr.</p></li>
-</ul>
-</dd>
-<dt>2D spatial averaging:</dt><dd><ul class="simple">
-<li><p>Apply a 2D spatial averaging filter to each slice of a 3D numpy array.</p></li>
-<li><p>Default kernel size is 3x3, for the current pixel and its 8 neighbors.</p></li>
-<li><p>The output array is the same size as the input array.</p></li>
-<li><p>The edges of the output array are padded with zeros.</p></li>
-<li><p>The output array is the same data type as the input array.</p></li>
-<li><p>The input array must be 3D.</p></li>
-<li><p>The xy and z resolutions are required for saving the output as .nii.gz.</p></li>
-<li><p>The output is saved as .nii.gz, .tif series, or .zarr.</p></li>
+<li><p>Determined by the extension for .nii.gz and .zarr. Otherwise, saves as a .tif series.</p></li>
 </ul>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>3D averaging: Applies a 3x3x3 kernel to each voxel and its 26 neighbors.</p></li>
+<li><p>2D averaging: Applies a 3x3 kernel to each 2D slice independently.</p></li>
+<li><p>The output array is the same size as the input.</p></li>
+<li><p>Edges are zero-padded to preserve dimensions.</p></li>
+<li><p>For .nii.gz output, you must specify both xy and z resolutions.</p></li>
+</ul>
+</div>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>

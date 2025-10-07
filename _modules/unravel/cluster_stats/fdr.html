@@ -502,7 +502,17 @@ window.addEventListener("load", () => mermaid.run());
 <a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.reverse_clusters">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">reverse_clusters</span><span class="p">(</span><span class="n">cluster_index_img</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">cluster_index_nii</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    - cluster_index_img (ndarray): The input cluster index image as a NumPy array</span>
+<span class="sd">    - output (str): The path to save the reversed cluster index image</span>
+<span class="sd">    - data_type (np.dtype): The desired data type for the output image (e.g., np.uint8, np.uint16)</span>
+<span class="sd">    - cluster_index_nii (Nifti1Image): The original cluster index NIfTI image for affine and header information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    - rev_cluster_index_img (ndarray): The reversed cluster index image as a NumPy array</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">max_cluster_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cluster_index_img</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
     <span class="n">rev_cluster_index_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">cluster_index_img</span><span class="p">)</span>
     

@@ -430,6 +430,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/modify_labels.html">unravel.image_tools.modify_labels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_tools/filter_objects_by_size.html">unravel.image_tools.filter_objects_by_size module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../image_tools/atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -667,6 +668,13 @@
 <dt class="sig sig-object py" id="unravel.cluster_stats.fdr.reverse_clusters">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">reverse_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_index_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_index_nii</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr.html#reverse_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr.reverse_clusters" title="Link to this definition">#</a></dt>
 <dd><p>Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray.</p>
+<p>Parameters:
+- cluster_index_img (ndarray): The input cluster index image as a NumPy array
+- output (str): The path to save the reversed cluster index image
+- data_type (np.dtype): The desired data type for the output image (e.g., np.uint8, np.uint16)
+- cluster_index_nii (Nifti1Image): The original cluster index NIfTI image for affine and header information</p>
+<p>Returns:
+- rev_cluster_index_img (ndarray): The reversed cluster index image as a NumPy array</p>
 </dd></dl>
 
 <dl class="py function">
