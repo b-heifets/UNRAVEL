@@ -1,0 +1,315 @@
+id,abbreviation,name,color,description,parent_id
+1000,Brain,Brain,#32a852,,
+1001,wmt,White matter,#ffffff,,1000
+1050,olf,Olfactory white matter,#ffffff,,1001
+180,lot,lateral olfactory tract,#ff00dd,,1050
+67,cc-ec-cing-dwm,corpus callosum and associated subcortical white matter,#ff6e00,,1001
+1002,ac,Anterior commissure,#ffffff,,1001
+36,aca,"anterior commissure, anterior limb",#7cfc00,"Name changed based on expert anatomist opinion, from 'anterior commissure, anterior part'",1002
+37,acp,"anterior commissure, posterior limb",#ffba00,"Name changed based on expert anatomist opinion, from 'anterior commissure, posterior part'",1002
+73,aci,"anterior commissure, intrabulbar part",#ff4fce,Named anterior commissure in the WHS v3 .label (error),1002
+1003,hiw,Hippocampal white matter,#ffffff,,1001
+6,alv,alveus of the hippocampus,#ff00ff,,1003
+38,vhc,ventral hippocampal commissure,#ae00e8,,1003
+52,f,fornix,#15c0ff,,1003
+59,fi,fimbria of the hippocampus,#00ff1d,,1003
+1004,cfp,Corticofugal pathways,#ffffff,,1001
+1,ic-cp-lfp-py,corticofugal tract and corona radiata,#ff3427,"Name changed based on expert anatomist opinion, from 'descending corticofugal pathways'",1004
+85,pyx,pyramidal decussation,#7209d4,,1004
+1005,ml,Medial lemniscus,#ffffff,,1001
+34,ml-u,"medial lemniscus, unspecified",#d4ff00,"Name changed to reflect the possibility for subdivision, from 'medial lemniscus'",1005
+84,mlx,medial lemniscus decussation,#4196ff,,1005
+1006,tht,Thalamic tracts,#ffffff,,1001
+1051,eml,External medullary lamina,#ffffff,,1006
+249,eml-u,"external medullary lamina, unspecified",#aaff00,,1051
+157,eml-ar,"external medullary lamina, auditory radiation",#f49cff,,1051
+291,iml,internal medullary lamina,#ff5c0a,,1006
+290,ima,intramedullary thalamic area,#9b946f,,1006
+270,scp-pr,superior cerebellar peduncle and prerubral field,#d2b68c,,1006
+239,ptl,pretectothalamic lamina,#db8ff7,,1006
+53,mtg,mammillotegmental tract,#eeba00,Named mammillothalamic tract in older label files (error),1006
+54,cst,commissural stria terminalis,#adff2f,,1006
+60,fr,fasciculus retroflexus,#f44345,,1006
+61,sm,stria medullaris thalami,#00ff00,"Name changed based on expert anatomist opinion, from 'stria medullaris of the thalamus'",1006
+62,st,stria terminalis,#ee7533,,1006
+80,hbc,habenular commissure,#45ebca,,1006
+63,pc,posterior commissure,#ff00da,,1001
+1007,7n,Facial nerve,#ffffff,,1001
+35,7n-u,"facial nerve, unspecified",#ff19f0,"Name changed to reflect the possibility for subdivision, from 'facial nerve'",1007
+72,asc7,ascending fibers of the facial nerve,#b31c35,,1007
+57,g7,genu of the facial nerve,#faf4f7,,1007
+1008,ofs,Optic fiber system and supraoptic decussation,#ffffff,,1001
+41,2n,optic nerve,#30da00,,1008
+42,opt-och,optic tract and optic chiasm,#267eff,,1008
+83,sox,supraoptic decussation,#faaa40,,1008
+1009,tew,White matter of the tectum,#ffffff,,1001
+46,csc,commissure of the superior colliculus,#21e6ff,,1009
+68,bsc,brachium of the superior colliculus,#bc20ad,,1009
+69,cic,"inferior colliculus, commissure",#ff2a27,,1009
+146,bic,"inferior colliculus, brachium",#b03a48,,1009
+1010,cbt,Cerebellar and precerebellar white matter,#ffffff,,1001
+7,icp,inferior cerebellar peduncle,#34ff0d,,1010
+78,mcp,middle cerebellar peduncle,#86cc4c,,1010
+79,tfp,transverse fibers of the pons,#80aaff,,1010
+1011,bsw,White matter of the brainstem,#ffffff,,1001
+1012,ll,Lateral lemniscus,#ffffff,,1011
+140,ll-c,"lateral lemniscus, commissure",#ff1d00,,1012
+141,ll-u,"lateral lemniscus, unspecified",#ffa600,"Name changed to reflect the possibility for subdivision, from 'lateral lemniscus'",1012
+129,as,acoustic striae,#ffd900,,1011
+130,tz,trapezoid body,#d5ff00,,1011
+504,5n,trigeminal nerve,#87cefa,"New in v4.01, partly replaces spinal trigeminal tract",1011
+505,msp5t,medullary spinal trigeminal tract,#556b2f,"New in v4.01, partly replaces spinal trigeminal tract",1011
+1013,GM,Gray matter,#808080,,1000
+1052,Tel,Telencephalon,#808080,,1013
+1053,LamP,Laminated pallium,#808080,,1052
+1020,OB,Olfactory bulb,#808080,,1053
+64,GlA,Glomerular layer of the accessory olfactory bulb,#0f6de6,,1020
+65,Gl,Glomerular layer of the olfactory bulb,#ffe300,,1020
+66,OB-u,"Olfactory bulb, unspecified",#ff8700,"Name changed to reflect the possibility for subdivision, 'olfactory bulb'",1020
+502,NLOT,Nucleus of the lateral olfactory tract,#e6b843,,1020
+506,AOA-u,"Anterior olfactory area, unspecified",#40e0d0,"New in v4.01, replaces part of Olfactory bulb, unspecified",1020
+1015,Cx,Cerebral cortex,#808080,,1053
+1055,HR,Hippocampal region,#808080,,1015
+1021,HF,Hippocampal formation,#808080,,1055
+99,FC,Fasciola cinereum,#ff0000,,1021
+100,SUB,Subiculum,#ffc000,,1021
+1022,CA,Cornu Ammonis,#808080,,1021
+98,CA1,Cornu ammonis 1,#d9680d,,1022
+97,CA2,Cornu ammonis 2,#ffff00,,1022
+95,CA3,Cornu ammonis 3,#a5836b,,1022
+96,DG,Dentate gyrus,#5b2d0a,,1021
+1023,PHR,Parahippocampal region,#808080,,1055
+108,POR,Postrhinal cortex,#287082,"Note: in Osen et al. 2019, POR was used as an abbreviation for the superior periolivary region",1023
+109,PrS,Presubiculum,#507baf,,1023
+110,PaS,Parasubiculum,#173660,,1023
+1024,PER,Perirhinal cortex,#808080,,1023
+112,PER35,Perirhinal area 35,#cd33ff,,1024
+113,PER36,Perirhinal area 36,#7030a0,,1024
+1025,EC,Entorhinal cortex,#808080,,1023
+114,MEC,Medial entorhinal cortex,#7abb33,,1025
+115,LEC,Lateral entorhinal cortex,#5a6f2f,,1025
+1056,PIR,Piriform cortex,#808080,,1015
+181,PIR1,"Piriform cortex, layer 1",#00ccff,,1056
+182,PIR2,"Piriform cortex, layer 2",#0000fe,,1056
+183,PIR3,"Piriform cortex, layer 3",#a578dd,,1056
+1057,CgR,Cingulate region,#808080,,1015
+1018,Cg,Cingulate cortex,#808080,,1057
+411,Cg1,Cingulate area 1,#008080,,1018
+10,Cg2,Cingulate area 2,#1d68eb,"Name changed to ensure consistency across hierarchical levels, from 'cingulate cortex, area 2'",1018
+1058,RS,Retrosplenial cortex,#808080,,1057
+427,RSD,Retrosplenial dysgranular area,#c849a4,,1058
+430,RSG,Retrosplenial granular area,#1964c8,,1058
+1059,INS,Insular region,#808080,,1015
+1060,AI,Agranular insular cortex,#808080,,1059
+409,AI-v,"Agranular insular cortex, ventral area",#ffc90e,,1060
+410,AI-d,Agranular insular cortex dorsal area ,#ff7f27,,1060
+424,AI-p,"Agranular insular cortex, posterior area ",#b5e61d,,1060
+414,DI,Dysgranular insular cortex,#fff200,,1059
+416,GI,Granular insular cortex,#efe4b0,,1059
+1061,Front,Frontal region,#808080,,1015
+77,FrA,Frontal association cortex,#ced307,,1061
+1062,Orb,Orbitofrontal cortex,#808080,,1061
+403,MO,Medial orbital area,#3f48cc,,1062
+402,VO,Ventral orbital area,#c8bfe7,,1062
+400,VLO,Ventrolateral orbital area,#ff0001,,1062
+401,LO,Lateral orbital area,#ffaec9,,1062
+404,DLO,Dorsolateral orbital area,#b97a57,,1062
+1063,MFC,Mediofrontal cortex,#808080,,1061
+405,PrL,Prelimbic area,#a349a4,,1063
+413,IL,Infralimbic area,#22b14c,,1063
+1064,M,Motor cortex,#808080,,1061
+408,M1,Primary motor area,#99d9ea,,1064
+406,M2,Secondary motor area,#00a2e8,,1064
+407,Ma,Motor association area,#880015,Name and abbreviation changed,1064
+1065,Par,Parietal region,#808080,,1015
+1066,SS,Somatosensory cortex,#808080,,1065
+1067,S1,Primary somatosensory area,#808080,,1066
+420,S1-f,"Primary somatosensory area, face representation",#ff80c0,,1067
+425,S1-bf,"Primary somatosensory area, barrel field",#78b14c,,1067
+418,S1-dz,"Primary somatosensory area, dysgranular zone",#ed1c24,,1067
+417,S1-fl,"Primary somatosensory area, forelimb representation",#b90e83,,1067
+423,S1-hl,"Primary somatosensory area, hindlimb representation",#886415,,1067
+429,S1-tr,"Primary somatosensory area, trunk representation",#e196c9,,1067
+422,S2,Secondary somatosensory area,#c864fa,,1066
+1068,PPC,Posterior parietal cortex,#808080,,1065
+433,mPPC,"Parietal association cortex, medial area",#6c006c,,1068
+432,lPPC,"Parietal association cortex, lateral area",#fff01d,,1068
+436,PtP,"Parietal association cortex, posterior area ",#800040,,1068
+1069,Oc,Occipital region,#808080,,1015
+1070,Vis,Visual cortex,#808080,,1069
+442,V1,Primary visual area,#543423,,1070
+1071,V2,Secondary visual area,#808080,,1070
+448,V2M,"Secondary visual area, medial part",#800064,,1071
+443,V2L,"Secondary visual area, lateral part",#ff6464,,1071
+1072,Te,Temporal region,#808080,,1015
+444,TeA,Temporal association cortex,#008000,,1072
+1019,Au,Auditory cortex,#808080,,1072
+151,Au1,Primary auditory area,#ffd700,"Name changed to ensure consistency across hierarchical levels, from 'primary auditory cortex'",1019
+1073,Au2,Secondary auditory area,#808080,,1019
+152,Au2-d,"Secondary auditory area, dorsal part",#f0ffff,"Name changed to ensure consistency across hierarchical levels, from 'secondary auditory cortex, dorsal area'",1073
+153,Au2-v,"Secondary auditory area, ventral part",#d8bfd8,"Name changed to ensure consistency across hierarchical levels, from 'secondary auditory cortex, ventral area'",1073
+1074,N-LamP,Non-laminated pallium,#808080,,1052
+412,CLA,Claustrum,#99d9c8,,1074
+500,Endo,Endopiriform nucleus,#010a64,,1074
+501,Am-u,"Amygdaloid area, unspecified",#0214c8,,1074
+1075,SubPAL, Subpallium,#808080,,1052
+1076,Str,Striatum,#808080,,1075
+197,CPu,Caudate putamen,#814f9b,,1076
+1077,NAc,Nucleus accumbens,#808080,,1076
+184,NAc-c,"Nucleus accumbens, core",#e6d8fa,,1077
+192,NAc-sh,"Nucleus accumbens, shell",#582f6c,,1077
+199,VSR-u,"Ventral striatal region, unspecified",#dc143c,,1076
+1028,PAL,Pallidum,#808080,,1075
+1078,GPe,Globus pallidus external,#808080,,1028
+195,GPe-m,"Globus pallidus external, medial part",#ff55ff,,1078
+198,GPe-l,"Globus pallidus external, lateral part",#c819c8,,1078
+32,EP,Entopeduncular nucleus,#1ae7ff,,1028
+193,VP,Ventral pallidum,#00a2ff,,1028
+1079,BRF,Basal forebrain region ,#808080,,1075
+82,BFR-u,"Basal forebrain region, unspecified",#e1f00d,"Name changed to reflect the possibility for subdivision, from 'basal forebrain region'",1079
+93,BNST,Bed nucleus of the stria terminalis,#0008b6,,1079
+40,Sep,Septal region,#ff0800,,1079
+3,STh,Subthalamic nucleus,#0000ff,,1079
+1080,Dien,Diencephalon,#808080,,1013
+1081,Thal-Pre,Prethalamus,#808080,,1080
+1033,RT,Reticular (pre)thalamic nucleus,#808080,"Name changed based on expert anatomist opinion, from 'reticular nucleus of the thalamus'",1081
+200,RT-u,"Reticular (pre)thalamic nucleus, unspecified",#00d9ff,,1033
+164,RT-a,"Reticular (pre)thalamic nucleus, auditory segment",#6e00ff,"Name changed based on expert anatomist opinion and to ensure consistency with superstructure, from 'reticular thalamic nucleus, auditory segment'",1033
+1082,ZI,Zona incerta,#808080,,1081
+235,ZI-d,"Zona incerta, dorsal part",#d8bfd9,,1082
+236,ZI-v,"Zona incerta, ventral part",#4bc88a,,1082
+257,ZI-r,"Zona incerta, rostral part",#1e90ff,,1082
+287,ZI-c,"Zona incerta, caudal part",#ffe4c4,,1082
+238,ZI-A13,"Zona incerta, A13 dopamine cells",#c2474f,,1082
+284,ZI-A11,"Zona incerta, A11 dopamine cells",#ffb6c1,,1082
+280,FoF,Fields of Forel,#fffafa,,1082
+204,PrG,Pregeniculate nucleus,#ff1900,,1081
+281,SubG,Subgeniculate nucleus,#9370db,,1081
+272,IGL,Intergeniculate leaflet,#000080,,1081
+1083,Thal-EPI,Epithalamus,#808080,,1080
+206,LHb,Lateral habenular nucleus,#d96c00,,1083
+207,MHb,Medial habenular nucleus,#cd0018,,1083
+81,SMn,Nucleus of the stria medullaris,#de07ed,,1083
+43,PG,Pineal gland,#daaa3e,,1083
+1084,Thal-D,Dorsal thalamus,#808080,,1080
+1085,ANT,Anterior nuclei of the dorsal thalamus,#808080,,1084
+213,AD,Anterodorsal thalamic nucleus,#830a79,,1085
+1086,AV,Anteroventral thalamic nucleus,#808080,,1085
+214,AV-dm,"Anteroventral thalamic nucleus, dorsomedial part",#ef79da,,1086
+215,AV-vl,"Anteroventral thalamic nucleus, ventrolateral part",#65238e,,1086
+254,AM,Anteromedial thalamic nucleus,#0055ff,,1085
+255,IAM,Interanteromedial thalamic nucleus,#f875de,,1085
+1087,DC-MID,Dorsal-caudal midline group of the dorsal thalamus,#808080,,1085
+242,PV,Paraventricular thalamic nuclei (anterior and posterior),#9c3333,,1085
+260,IMD,Intermediodorsal thalamic nucleus,#a0522d,,1085
+211,PT,Parataenial thalamic nucleus,#cd0006,,1085
+278,SPF,Subparafascicular nucleus,#e9967a,,1085
+208,PIL,Posterior intralaminar nucleus,#e470d6,,1085
+1088,V-MID,Ventral midline group of the dorsal thalamus,#808080,,1084
+216,Rh,Rhomboid thalamic nucleus,#00ff11,,1088
+219,Re,Reuniens thalamic nucleus,#ffaa00,,1088
+268,RRe,Retroreuniens thalamic nucleus,#0000cd,,1088
+218,Xi,Xiphoid thalamic nucleus,#23ffec,,1088
+1089,MD,Mediodorsal nucleus of the dorsal thalamus,#808080,,1084
+232,MD-l,"Mediodorsal thalamic nucleus, lateral part",#ff557f,,1089
+233,MD-c,"Mediodorsal thalamic nucleus, central part",#55aa00,,1089
+240,MD-m,"Mediodorsal thalamic nucleus, medial part",#aaffff,,1089
+1090,VENT,Ventral nuclei of the dorsal thalamus,#808080,,1084
+293,VA,Ventral anterior thalamic nucleus,#ff8800,,1090
+221,VM,Ventromedial thalamic nucleus,#00b97e,,1090
+231,VL,Ventrolateral thalamic nucleus,#aaaaff,,1090
+223,Ang,Angular thalamic nucleus,#8b5d8b,,1090
+1091,VPN,Ventral posterior thalamic nucleus,#808080,,1090
+227,VPM,Ventral posteromedial thalamic nucleus,#ff00fe,,1091
+294,VPL,Ventral posterolateral thalamic nucleus,#ab563e,,1091
+266,VP-pc,"Ventral posterior nucleus of the thalamus, parvicellular part",#00ff08,,1091
+222,SMT,Submedius thalamic nucleus,#8200d9,,1090
+1092,ILM,Intralaminar nuclei of the dorsal thalamus,#808080,,1084
+246,PCN,Paracentral thalamic nucleus,#f0f8ff,,1092
+247,CM,Central medial thalamic nucleus,#e0b640,,1092
+248,CL,Central lateral thalamic nucleus,#9932cc,,1092
+267,PF,Parafascicular thalamic nucleus,#ffefd5,,1092
+282,Eth,Ethmoid-Limitans nucleus,#833280,,1092
+1093,PoC,Posterior complex of the dorsal thalamus,#808080,,1084
+230,Po,Posterior thalamic nucleus,#ffff02,,1093
+210,Po-t,"Posterior thalamic nuclear group, triangular part",#ffffc8,,1093
+1094,LP,Lateral posterior (pulvinar) complex of the dorsal thalamus,#808080,,1084
+285,LP-mr,"Lateral posterior thalamic nucleus, mediorostral part",#3cb371,,1094
+286,LP-mc,"Lateral posterior thalamic nucleus, mediocaudal part",#ffebcd,,1094
+283,LP-l,"Lateral posterior thalamic nucleus, lateral part",#c7573d,,1094
+1095,LD,Laterodorsal thalamic nuclei of the dorsal thalamus,#808080,,1084
+228,LD-dm,"Laterodorsal thalamic nucleus, dorsomedial part",#ff7b00,,1095
+229,LD-vl,"Laterodorsal thalamic nucleus, ventrolateral part",#2b991f,,1095
+205,DLG,Dorsal lateral geniculate nucleus,#ffe200,,1095
+1032,MG,Medial geniculate complex of the dorsal thalamus,#808080,,1084
+298,MG-v,"Medial geniculate body, ventral division",#833a1f,,1032
+295,MG-d,"Medial geniculate body, dorsal division",#efa300,,1032
+150,MG-mz,"Medial geniculate body, marginal zone",#ff2ff2,,1032
+297,MG-m,"Medial geniculate body, medial division",#0af4d9,,1032
+299,MG-sg,"Medial geniculate body, suprageniculate nucleus",#0af496,,1032
+1034,HY,Hypothalamus,#808080,,1080
+48,HTh-u,"Hypothalamic region, unspecified",#e278a1,"Name changed to reflect the possibility for subdivision, from 'hypothalamic region'",1034
+1096,PreT,Pretectum,#808080,,1080
+94,PRT,Pretectal region,#ff571e,,1096
+163,Sag,Nucleus sagulum,#63cd00,,1096
+1097,Mes,Mesencephalon,#808080,,1013
+1035,MB,Midbrain,#808080,,1097
+1036,Tc,Tectum,#808080,,1035
+1037,IC,Inferior colliculus,#808080,,1036
+142,DCIC,"Inferior colliculus, dorsal cortex",#ceff8e,,1037
+143,CNIC,"Inferior colliculus, central nucleus",#00eefe,,1037
+145,ECIC,"Inferior colliculus, external cortex",#3088cb,,1037
+1038,Su,Superior colliculus,#808080,,1036
+50,SuG,Superficial gray layer of the superior colliculus,#5600dd,,1038
+55,SuD,Deeper layers of the superior colliculus,#e1970f,,1038
+1039,Tg,Tegmentum,#808080,,1035
+1098,SN,Substantia nigra,#808080,,1039
+187,SN-r,"Substantia nigra, reticular part",#63c512,,1098
+188,SN-c,"Substantia nigra, compact part",#ffff7f,,1098
+189,SN-l,"Substantia nigra, lateral part",#009f9f,,1098
+196,VTA,Ventral tegmental area,#7fffd4,,1039
+201,PP,Peripeduncular nucleus,#b7c788,,1039
+71,IP,Interpeduncular nucleus,#3fc0ff,,1039
+51,PAG,Periaqueductal gray,#07ff59,,1039
+47,BS-u,"Brainstem, unspecified",#9953ff,"Name changed to reflect the possibility for subdivision, from 'brainstem'",1097
+1099,Rho,Rhombencephalon,#808080,,1013
+1100,Met,Metencephalon,#808080,,1099
+58,Pn,Pontine nuclei,#00d70b,Abbreviation changed from Osen et al. 2019 (PN),1100
+1047,Cb,Cerebellum,#808080,,1100
+4,Cb-m,Molecular cell layer of the cerebellum,#ffff01,,1047
+5,Cb-u,"Cerebellum, unspecified",#00ffff,"Name changed to reflect the possibility for subdivision, from 'deeper cerebellum'",1047
+1101,Myel,Myelencephalon,#808080,,1099
+1043,VCN,"Cochlear nucleus, ventral part",#808080,,1101
+158,AVCN,"Ventral cochlear nucleus, anterior part",#2298ff,,1043
+159,PVCN,"Ventral cochlear nucleus, posterior part",#00e6cf,,1043
+160,Cap,"Ventral cochlear nucleus, cap area",#00ff6a,,1043
+123,GCL,"Ventral cochlear nucleus, granule cell layer",#000cff,,1043
+1044,DCN,"Cochlear nucleus, dorsal part",#808080,,1101
+126,DCNM,"Dorsal cochlear nucleus, molecular layer",#5c9cd3,,1044
+127,DCNFG,"Dorsal cochlear nucleus, fusiform and granule layer",#00509c,,1044
+128,DCND,"Dorsal cochlear nucleus, deep core",#c5eeff,,1044
+75,Sp5n,Spinal trigeminal nucleus,#5bf1ff,,1101
+56,PVG,Periventricular gray,#eb57ff,,1101
+1045,SO,Superior olivary complex,#808080,,1101
+131,NTB,Nucleus of the trapezoid body,#00ff51,,1045
+132,SPN,Superior paraolivary nucleus,#00eeff,,1045
+133,MSO,Medial superior olive,#dbef3d,,1045
+134,LSO,Lateral superior olive,#234cbe,,1045
+135,SPR,Superior periolivary region,#019915,Abbreviated as POR in Osen et al. 2019,1045
+136,VPO,Ventral periolivary nuclei,#00aeff,,1045
+1046,NLL,Nuclei of the lateral lemniscus,#808080,,1101
+137,VLL,"Lateral lemniscus, ventral nucleus",#ff0073,,1046
+138,ILL,"Lateral lemniscus, intermediate nucleus",#ab105b,,1046
+139,DLL,"Lateral lemniscus, dorsal nucleus",#6c125b,,1046
+74,IO,Inferior olive,#00f60e,,1101
+1048,V,Ventricular system,#727eba,,1000
+33,V-u,"ventricular system, unspecified",#022cff,"Name changed to reflect the possibility for subdivision, from 'ventricular system'",1048
+125,4V,4th ventricle,#341d90,,1048
+70,CC,central canal,#27f4fd,,1048
+45,SpC,spinal cord,#86ff5a,,
+1049,IE,Inner ear,#104f18,,
+119,VeA,vestibular apparatus,#009037,,1049
+120,Co,cochlea,#00ff1c,,1049
+121,8cn,cochlear nerve,#fd9400,Abbreviation changed from Osen et al. 2019 (cn),1049
+122,8vn,vestibular nerve,#fd3200,Abbreviation changed from Osen et al. 2019 (vn),1049
+162,SpG,spiral ganglion,#b9ffe9,Abbreviation changed from Osen et al. 2019 (SG),1049
