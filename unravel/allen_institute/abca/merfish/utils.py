@@ -46,6 +46,36 @@ def load_cell_metadata(download_base_or_file: Path | str) -> pd.DataFrame:
     df.set_index("cell_label", inplace=True)
     return df
 
+def load_cell_metadata_og(download_base):
+    """
+    Load the cell metadata DataFrame from the MERFISH data (using cell_label as the index).
+
+    Parameters:
+    -----------
+    download_base : Path
+        The root directory of the MERFISH data or the path to the cell metadata.
+
+    Returns:
+    --------
+    cell_df : pd.DataFrame
+        The cell metadata. Columns: 'brain_section_label', 'cluster_alias', 'average_correlation_score', 'feature_matrix_label', 'donor_label', 'donor_genotype', 'donor_sex', 'x_section', 'y_section', 'z_section'
+
+    """
+    if Path(download_base).is_file():
+        cell_metadata_path = download_base
+    else:
+        cell_metadata_path = download_base / 'metadata/MERFISH-C57BL6J-638850/20231215/cell_metadata.csv'
+    print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
+    cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str})
+    cell_df.rename(columns={'x': 'x_section',
+                        'y': 'y_section',
+                        'z': 'z_section'},
+                inplace=True)
+    cell_df.set_index('cell_label', inplace=True)
+    return cell_df
+
+
+
 
 def join_reconstructed_coords(cell_df: pd.DataFrame, download_base: Path | str) -> pd.DataFrame:
     """Join reconstructed coordinates + parcellation_index."""
