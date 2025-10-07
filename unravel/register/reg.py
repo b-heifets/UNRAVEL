@@ -97,6 +97,9 @@ def parse_args():
     return parser.parse_args()  
 
 
+# TODO: Write script for testing -sm
+
+
 @print_func_name_args_times()
 def bias_correction(image_path, mask_path=None, shrink_factor=2, verbose=False):
     """Perform N4 bias field correction on a .nii.gz and return an ndarray
