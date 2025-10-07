@@ -51,6 +51,7 @@ def parse_args():
     opts.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
     opts.add_argument('-scsv', '--sunburst_csv_path', help='CSV name or path/name.csv. Default: sunburst_IDPath_Abbrv.csv', default='sunburst_IDPath_Abbrv.csv', action=SM)
     opts.add_argument('-icsv', '--info_csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
+    opts.add_argument('-d', '--depth', help='Number of depth levels to include in the sunburst plot. Default: 10', default=10, type=int, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -82,7 +83,7 @@ def calculate_regional_volumes(img, atlas, atlas_res_in_um):
 
     return dict(zip(uniq_values, volumes))
 
-def sunburst(img, atlas, atlas_res_in_um, output_path, sunburst_csv_path='sunburst_IDPath_Abbrv.csv', info_csv_path='CCFv3-2020_info.csv', output_rgb_lut=False):
+def sunburst(img, atlas, atlas_res_in_um, output_path, sunburst_csv_path='sunburst_IDPath_Abbrv.csv', info_csv_path='CCFv3-2020_info.csv', output_rgb_lut=False, depth=10):
     """Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.
     
     Args:
@@ -113,7 +114,7 @@ def sunburst(img, atlas, atlas_res_in_um, output_path, sunburst_csv_path='sunbur
     merged_df = pd.merge(histo_df, ccf_df, left_on='Region', right_on='lowered_ID', how='inner') 
 
     # Determine the maximum depth for each abbreviation
-    depth_columns = [f'Depth_{i}' for i in range(10)]
+    depth_columns = [f'Depth_{i}' for i in range(depth)]
     sunburst_df['max_depth_abbr'] = sunburst_df[depth_columns].apply(lambda row: row.dropna().iloc[-1], axis=1)
 
     # Merge the volumes into sunburst_df based on the finest granularity abbreviation
@@ -160,8 +161,8 @@ def main():
 
     output_name = str(Path(args.input).name).replace('.nii.gz', '_sunburst.csv')
     output_path = Path(args.input).parent / output_name
-    
-    sunburst_df = sunburst(img, atlas, xyz_res_in_um, output_path, args.sunburst_csv_path, args.info_csv_path, args.output_rgb_lut)
+
+    sunburst_df = sunburst(img, atlas, xyz_res_in_um, output_path, args.sunburst_csv_path, args.info_csv_path, args.output_rgb_lut, depth=args.depth)
 
     print(f'\n\n[magenta bold]{output_name}[/]:')    
     print(f'\n{sunburst_df}\n')
