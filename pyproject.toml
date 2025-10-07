@@ -1,6 +1,6 @@
 [project]
 name = "heifetslab-unravel"
-version = "1.0.0b11"
+version = "1.0.0b12"
 description = "UNRAVEL: UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images"
 readme = "README.md"
 license = "GPL-3.0-or-later"
@@ -17,7 +17,7 @@ dependencies = [
     "antspyx>=0.4.2,<1.0.0",
     "boto3==1.28.17",
     "botocore==1.31.17",
-    "connected_components_3d>=3.12.3,<4.0.0",
+    "connected_components_3d>=3.24.0,<4.0.0", # was using 3.16.0, but upgraded for more parameters
     "czifile>=2019.7.2,<2020.0.0",
     "dask>=2023.4.1,<2024.0.0",
     "fslpy>=3.18.2,<4.0.0",
@@ -193,6 +193,8 @@ unique = "unravel.image_tools.unique_intensities:main"
 img_resample_points = "unravel.image_tools.resample_points:main"
 resample_points = "unravel.image_tools.resample_points:main"
 img_modify_labels = "unravel.image_tools.modify_labels:main"
+img_filter_objects_by_size = "unravel.image_tools.filter_objects_by_size:main"
+filter_objects = "unravel.image_tools.filter_objects_by_size:main"
 ml = "unravel.image_tools.modify_labels:main"
 rstats_summary = "unravel.region_stats.rstats_summary:main"
 rss = "unravel.region_stats.rstats_summary:main"

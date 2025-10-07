@@ -139,12 +139,21 @@ def extract_resolution(img_path):
     elif str(img_path).endswith('.ome.tif') or str(img_path).endswith('.tif'):
         with tifffile.TiffFile(img_path) as tif:
             meta = tif.pages[0].tags
-            ome_xml_str = meta['ImageDescription'].value
-            ome_xml_root = etree.fromstring(ome_xml_str.encode('utf-8'))
-            default_ns = ome_xml_root.nsmap[None]
-            pixels_element = ome_xml_root.find(f'.//{{{default_ns}}}Pixels')
-            xy_res = float(pixels_element.get('PhysicalSizeX'))
-            z_res = float(pixels_element.get('PhysicalSizeZ'))
+            if "ImageDescription" in meta:
+                ome_xml_str = meta["ImageDescription"].value
+                try:
+                    ome_xml_str = meta['ImageDescription'].value
+                    ome_xml_root = etree.fromstring(ome_xml_str.encode('utf-8'))
+                    default_ns = ome_xml_root.nsmap[None]
+                    pixels_element = ome_xml_root.find(f'.//{{{default_ns}}}Pixels')
+                    xy_res = float(pixels_element.get('PhysicalSizeX'))
+                    z_res = float(pixels_element.get('PhysicalSizeZ'))
+                except Exception as e:
+                    print(f"⚠️  Could not parse OME-XML from {img_path}. Not extracting resolution. Error: {e}")
+                    xy_res, z_res = None, None
+            else:
+                print(f"⚠️  No ImageDescription tag in {img_path}")
+                xy_res, z_res = None, None
     elif str(img_path).endswith('.nii.gz'):
         nii = nib.load(img_path)
         res = nii.header.get_zooms() # (x, y, z) in mm

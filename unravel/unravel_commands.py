@@ -595,10 +595,16 @@ def main():
                 "common": False,
                 "alias": "ml"
             },
+            "img_filter_objects_by_size": {
+                "module": "unravel.image_tools.filter_objects_by_size",
+                "description": "Filter objects (e.g., cells) by size.",
+                "common": False,
+                "alias": "filter_objects"
+            },
         },
         "Atlas tools": {
             "atlas_relabel": {
-                "module": "unravel.image_tools.atlas.relable_nii",
+                "module": "unravel.image_tools.atlas.relabel_nii",
                 "description": "Relabel atlas IDs.",
                 "common": False,
                 "alias": "relabel"

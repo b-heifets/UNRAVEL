@@ -177,15 +177,15 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
     # Determine the actual min and max values
     actual_min, actual_max = img.min(), img.max()
 
-    # Infer true data type based on actual value range
-    if actual_min >= 0 and actual_max <= 255:
-        inferred_type = np.uint8  # 8-bit unsigned
-    elif actual_min >= 0 and actual_max <= 65535:
-        inferred_type = np.uint16  # 16-bit unsigned
-    elif np.issubdtype(data_type, np.floating) or actual_min < 0 or actual_max > 65535:
-        inferred_type = np.float32  # 32-bit floating-point
-    else:
-        inferred_type = data_type  # Fall back to metadata-specified type
+    # # Infer true data type based on actual value range
+    # if actual_min >= 0 and actual_max <= 255:
+    #     inferred_type = np.uint8  # 8-bit unsigned
+    # elif actual_min >= 0 and actual_max <= 65535:
+    #     inferred_type = np.uint16  # 16-bit unsigned
+    # elif np.issubdtype(data_type, np.floating) or actual_min < 0 or actual_max > 65535:
+    #     inferred_type = np.float32  # 32-bit floating-point
+    # else:
+    #     inferred_type = data_type  # Fall back to metadata-specified type
 
     if apply:
         print('Applying orientation change to the image data...')
@@ -195,18 +195,24 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
         img = apply_orientation(img, orientation_change)
 
     # Round values for integer types before casting
-    if np.issubdtype(inferred_type, np.integer):
-        img = np.round(img).astype(inferred_type)
+    # if np.issubdtype(inferred_type, np.integer):
+    #     img = np.round(img).astype(inferred_type)
+    # else:
+    #     # For floating-point types, preserve precision
+    #     img = img.astype(inferred_type)
+    if np.issubdtype(data_type, np.integer):
+        img = np.round(img).astype(data_type)
     else:
         # For floating-point types, preserve precision
-        img = img.astype(inferred_type)
+        img = img.astype(data_type)
 
     # Generate the new affine matrix
     new_affine = transform_nii_affine(nii, target_ort, zero_origin=zero_origin)
 
     # Create a new NIfTI image with the processed data and new affine
     new_nii = nib.Nifti1Image(img, new_affine)
-    new_nii.header.set_data_dtype(inferred_type)  # Preserve inferred data type
+    # new_nii.header.set_data_dtype(inferred_type)  # Preserve inferred data type
+    new_nii.header.set_data_dtype(data_type)  # Preserve inferred data type
     new_nii.header['xyzt_units'] = 10  # mm, s
     new_nii.header['regular'] = b'r'
 

@@ -55,6 +55,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: process each cluster in parallel
+# TODO: Change naming from mean_IF to mean_intensity (more general)
 
 def calculate_mean_intensity_in_clusters(cluster_index, img, clusters=None):
     """Calculates mean intensity in the img ndarray for each cluster in the cluster index ndarray and saves it to a CSV file."""

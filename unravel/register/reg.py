@@ -19,7 +19,7 @@ Outputs:
 Note:
     - Images in reg_inputs are not padded.
     - Images in reg_outputs have 25% padding by default. 
-    - If <template>_initial_alignment_to_fixed_img.nii.gz goes to the edge, increase padding (otherwise, region labels will be pulled out)
+    - If <template>_initial_alignment_to_fixed_img.nii.gz goes to the edge, additional padding will be added (otherwise, atlas labels will be pulled out)
     - ort_code is a 3 letter orientation code of the fixed image if not set in fixed_img (e.g., RAS)
     - Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior
     - The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)
@@ -77,16 +77,16 @@ def parse_args():
     opts.add_argument('-mas', '--mask', help="Brain mask for bias correction. Default: reg_inputs/autofl_50um_brain_mask.nii.gz. or pass in None", default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg`` (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
     opts.add_argument('-bc', '--bias_correct', help='Perform N4 bias field correction on autofluo image. Default: False', action='store_true', default=False)
-    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding to add to each dimension of the fixed image (gives space for initial alignment of the moving image). Default: 0.25 (25%%).', default=0.25, type=float, action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Initial percentage of padding to add to each dimension of the fixed image (gives space for initial alignment of the moving image). Default: 0.25 (25%%).', default=0.25, type=float, action=SM)
     opts.add_argument('-sm', '--smooth', help='Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl', default=0, type=float, action=SM)
     opts.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     opts.add_argument('-m2', '--moving_img2', help='path/atlas.nii.gz (outputs <reg_outputs>/<atlas>_in_tissue_space.nii.gz for checking reg; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     opts.add_argument('-inp', '--interpol', help='Interpolation method for warping -m2 to padded fixed img space (nearestNeighbor, multiLabel \[default], linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-it', '--init_time', help='Time in seconds allowed for ``reg_affine_initializer`` to run. Default: 30' , default='30', type=str, action=SM)
 
-    opts = parser.add_argument_group('Optional arguments for checking if the initial template alignment is within the padded region of the fixed image')
-    opts.add_argument('-t', '--threshold', help='Surface voxel intensity threshold for checking if the initially aligned template is within the padded region of the fixed image. Default: 0', type=float, default=0, action=SM)
-    opts.add_argument('-msv', '--max_surface_voxels', help='Max allowed surface voxels above intensity threshold. Default: 0', type=int, default=0)
+    opts = parser.add_argument_group('Optional arguments for checking if the initial template alignment fits fully within the padded version of the fixed image')
+    opts.add_argument('-t', '--threshold', help='Intensity threshold at the image surface to check if the initially aligned template does not extend outside the padded image. Default: 0', type=float, default=0, action=SM)
+    opts.add_argument('-msv', '--max_surface_voxels', help='Max number of allowed surface voxels above intensity threshold. Default: 0', type=int, default=0, action=SM)
     opts.add_argument('-mp', '--max_padding', help='Maximum padding percentage to allow before proceeding with registration. Default: 0.6 (60%%)', type=float, default=0.5, action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -95,6 +95,9 @@ def parse_args():
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()  
+
+
+# TODO: Write script for testing -sm
 
 
 @print_func_name_args_times()

@@ -57,6 +57,7 @@ def parse_args():
     opts.add_argument('--cluster_ids', help='List of cluster IDs to process (Default: process all clusters)', nargs='*', type=int, action=SM)
     opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. Default: ttest or tukey', default=None, choices=['tukey', 'dunnett', 'ttest'], action=SM)
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
+    opts.add_argument('-y', '--ylabel', help='Y-axis label for the plot. Default: Mean IF Intensity', default='Mean IF Intensity', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -114,7 +115,7 @@ def perform_t_tests(df, order):
             })
     return pd.DataFrame(comparisons)
 
-def plot_data(cluster_id, order=None, labels=None, test_type='tukey', alt='two-sided'):
+def plot_data(cluster_id, order=None, labels=None, test_type='tukey', alt='two-sided', ylabel='Mean IF Intensity'):
     df = load_data(cluster_id)
 
     if 'group' not in df.columns:
@@ -154,7 +155,7 @@ def plot_data(cluster_id, order=None, labels=None, test_type='tukey', alt='two-s
     ax = sns.barplot(x='group_label', y='mean_intensity', data=df, color='white', errorbar=('se'), capsize=0.1, linewidth=2, edgecolor='black')
 
     # Formatting
-    ax.set_ylabel('Mean IF Intensity', weight='bold')
+    ax.set_ylabel(ylabel, weight='bold')
     ax.set_xticks(np.arange(len(df['group_label'].unique())))
     ax.set_xticklabels(ax.get_xticklabels(), weight='bold')
     ax.tick_params(axis='both', which='major', width=2)
@@ -285,7 +286,7 @@ def main():
     # Process each cluster ID
     test_df_all = pd.DataFrame()
     for cluster_id in clusters_to_process:
-        test_df = plot_data(cluster_id, args.order, args.labels, test_type=test_type, alt=args.alternate)
+        test_df = plot_data(cluster_id, args.order, args.labels, test_type=test_type, alt=args.alternate, ylabel=args.ylabel)
 
         # Add the cluster ID to the DataFrame
         test_df['cluster_ID'] = cluster_id

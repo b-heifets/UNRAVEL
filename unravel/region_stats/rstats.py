@@ -18,6 +18,7 @@ Note:
     - Regarding --type, alternatively use 'counts' or 'volumes' for object counts or regional volumes
     - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv
     - Columns: Region_ID, Side, ID_path, Region, Abbr
+    - If using serial-2 photon data, use the --stpt flag to interleave blank slices to prevent cells from fusing across slices during counting
 
 Next steps:
     - Use ``utils_agg_files`` to aggregate the CSVs from sample directories to the current directory
@@ -25,11 +26,11 @@ Next steps:
 
 Usage if the atlas is already in native space from ``warp_to_native``:
 ----------------------------------------------------------------------
-    rstats -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]
+    rstats -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 [-2p] [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]
 
 Usage if the native atlas is not available; it is not saved (faster):
 ---------------------------------------------------------------------
-    rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36 [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]
+    rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36 [-2p] [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]
 """
 
 import cc3d
@@ -61,6 +62,7 @@ def parse_args():
     key_opts.add_argument('-a', '--atlas_path', help='rel_path/native_atlas_split.nii.gz (use this -a if this exists from ``warp_to_native``, otherwise use -m ; "split" == left label IDs increased by 20,000)', default=None, action=SM)
     key_opts.add_argument('-m', '--moving_img', help='path/atlas_image.nii.gz to warp from atlas space', default=None, action=SM)
     key_opts.add_argument('-t', '--type', help='Type of measurement (options: counts, region_volumes, cell_densities \[default], label_volumes, or label_densities)', default='cell_densities', action=SM)
+    key_opts.add_argument('-2p', '--stpt', help='For serial-2 photon data, use this flag to interleave blank slices (prevents cells from fusing across slices during counting)', action='store_true', default=False)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
@@ -70,6 +72,7 @@ def parse_args():
     opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default='CCFv3-2020__regionID_side_IDpath_region_abbr.csv', action=SM)
     opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
+    opts.add_argument('-min', '--min_voxels', help='Minimum voxel count per connected component to keep (default: 1 keeps all)', type=int, default=1, action=SM)
 
     compatibility = parser.add_argument_group('Compatibility options')
     compatibility.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
@@ -82,13 +85,14 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Using the sample_key.csv would be better for batch processing than using -c for the condition.
+# TODO: Check other parameters of cc3d.connected_components to see if processing can be sped up (e.g., binary_image=True; may need to update cc3d first)
 
 def get_atlas_region_at_coords(atlas, x, y, z):
     """"Get the ndarray atlas region intensity at the given coordinates"""
     return atlas[int(x), int(y), int(z)]
 
 @print_func_name_args_times()
-def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition, region_info_df):
+def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition, region_info_df, min_voxels=1):
     """Count the number of cells in each region based on atlas region intensities
     
     Parameters:
@@ -99,6 +103,7 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     - connectivity (int): Connectivity for connected components. Options: 6, 18, or 26.
     - condition (str): Name of the group.
     - region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_path, Region, Abbr).
+    - min_voxels (int): Minimum voxel count per connected component to keep (default: 1 keeps all).
 
     Returns:
     --------
@@ -133,6 +138,11 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
 
     # Drop the first row, which is the background
     centroids = np.delete(centroids, 0, axis=0)
+    sizes = np.delete(stats['voxel_counts'], 0, axis=0)
+
+    # Apply min_voxels threshold
+    keep_mask = sizes >= min_voxels
+    centroids = centroids[keep_mask]
 
     # Convert the centroids ndarray to a dataframe
     centroids_df = pd.DataFrame(centroids, columns=['x', 'y', 'z'])
@@ -268,6 +278,20 @@ def calculate_regional_densities(sample_path, regional_data_df, regional_volumes
     print(f"    Saving regional {density_type} to {output_path}\n")
 
 
+def interleave_blank_slices(img):
+    """Interleave blank slices in a 3D image to prevent cells from fusing across slices during counting.
+
+    Parameters:
+        - img (ndarray): 3D numpy array with the image.
+
+    Returns:
+        - img_interleaved (ndarray): 3D numpy array with interleaved blank slices.
+    """
+    img_interleaved = np.zeros((img.shape[0], img.shape[1], img.shape[2]*2), dtype=img.dtype)
+    img_interleaved[:, :, ::2] = img
+    return img_interleaved
+
+
 @log_command
 def main():
     install()
@@ -305,6 +329,10 @@ def main():
                     continue
                 seg_img = load_3D_img(seg_img_path, verbose=args.verbose)
 
+                if args.stpt:
+                    print(f"    Interleaving slices for serial-2 photon data to prevent cells from fusing across slices during counting")
+                    seg_img = interleave_blank_slices(seg_img)
+
             # Load or generate the native atlas image
             if args.atlas_path is not None and Path(sample_path, args.atlas_path).exists():
                 atlas_path = sample_path / args.atlas_path
@@ -319,6 +347,10 @@ def main():
                 print("    [red1]Atlas image not found. Please provide a path to the atlas image or the moving image")
                 import sys ; sys.exit()
 
+            if args.stpt:
+                print(f"    Interleaving slices in atlas for serial-2 photon data to match segmentation image")
+                atlas_img = interleave_blank_slices(atlas_img)
+
             # Load the region information dataframe
             if args.csv_path == 'CCFv3-2020__regionID_side_IDpath_region_abbr.csv' or args.csv_path == 'CCFv3-2017__regionID_side_IDpath_region_abbr.csv':
                 region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path)
@@ -327,7 +359,7 @@ def main():
 
             # Count cells in regions
             if args.type == 'counts' or args.type == 'cell_densities':
-                regional_counts_df, region_ids = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df)
+                regional_counts_df, region_ids = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df, min_voxels=args.min_voxels)
 
             # Calculate volumes of segmented voxels in regions
             if args.type == 'label_densities' or args.type == 'label_volumes':
@@ -340,14 +372,14 @@ def main():
                 # Multiply the segmented image by the atlas image
                 segmented_regions = seg_img * atlas_img
 
-                # Calculate the volume of each segmented region
+                # Calculate the volume of each segmented region (z_res not changed by interleaving)
                 region_ids = region_info_df['Region_ID']
                 regional_volumes_in_seg_df = calculate_regional_volumes(sample_path, segmented_regions, region_ids, xy_res, z_res, args.condition, region_info_df)
 
             # Calculate regional volumes
             if args.type == 'region_volumes' or args.type == 'cell_densities' or args.type == 'label_densities':
 
-                # Calculate regional volumes
+                # Calculate regional volumes (z_res not changed by interleaving)
                 region_ids = region_info_df['Region_ID']
                 regional_volumes_df = calculate_regional_volumes(sample_path, atlas_img, region_ids, xy_res, z_res, args.condition, region_info_df)
 
