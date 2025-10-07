@@ -1,0 +1,314 @@
+1	1.00000	0.20392	0.15294	ic-cp-lfp-py - corticofugal tract and corona radiata
+3	0.00000	0.00000	1.00000	STh - Subthalamic nucleus
+4	1.00000	1.00000	0.00392	Cb-m - Molecular cell layer of the cerebellum
+5	0.00000	1.00000	1.00000	Cb-u - Cerebellum, unspecified
+6	1.00000	0.00000	1.00000	alv - alveus of the hippocampus
+7	0.20392	1.00000	0.05098	icp - inferior cerebellar peduncle
+10	0.11373	0.40784	0.92157	Cg2 - Cingulate area 2
+32	0.10196	0.90588	1.00000	EP - Entopeduncular nucleus
+33	0.00784	0.17255	1.00000	V-u - ventricular system, unspecified
+34	0.83137	1.00000	0.00000	ml-u - medial lemniscus, unspecified
+35	1.00000	0.09804	0.94118	7n-u - facial nerve, unspecified
+36	0.48627	0.98824	0.00000	aca - anterior commissure, anterior limb
+37	1.00000	0.72941	0.00000	acp - anterior commissure, posterior limb
+38	0.68235	0.00000	0.90980	vhc - ventral hippocampal commissure
+40	1.00000	0.03137	0.00000	Sep - Septal region
+41	0.18824	0.85490	0.00000	2n - optic nerve
+42	0.14902	0.49412	1.00000	opt-och - optic tract and optic chiasm
+43	0.85490	0.66667	0.24314	PG - Pineal gland
+45	0.52549	1.00000	0.35294	SpC - spinal cord
+46	0.12941	0.90196	1.00000	csc - commissure of the superior colliculus
+47	0.60000	0.32549	1.00000	BS-u - Brainstem, unspecified
+48	0.88627	0.47059	0.63137	HTh-u - Hypothalamic region, unspecified
+50	0.33725	0.00000	0.86667	SuG - Superficial gray layer of the superior colliculus
+51	0.02745	1.00000	0.34902	PAG - Periaqueductal gray
+52	0.08235	0.75294	1.00000	f - fornix
+53	0.93333	0.72941	0.00000	mtg - mammillotegmental tract
+54	0.67843	1.00000	0.18431	cst - commissural stria terminalis
+55	0.88235	0.59216	0.05882	SuD - Deeper layers of the superior colliculus
+56	0.92157	0.34118	1.00000	PVG - Periventricular gray
+57	0.98039	0.95686	0.96863	g7 - genu of the facial nerve
+58	0.00000	0.84314	0.04314	Pn - Pontine nuclei
+59	0.00000	1.00000	0.11373	fi - fimbria of the hippocampus
+60	0.95686	0.26275	0.27059	fr - fasciculus retroflexus
+61	0.00000	1.00000	0.00000	sm - stria medullaris thalami
+62	0.93333	0.45882	0.20000	st - stria terminalis
+63	1.00000	0.00000	0.85490	pc - posterior commissure
+64	0.05882	0.42745	0.90196	GlA - Glomerular layer of the accessory olfactory bulb
+65	1.00000	0.89020	0.00000	Gl - Glomerular layer of the olfactory bulb
+66	1.00000	0.52941	0.00000	OB-u - Olfactory bulb, unspecified
+67	1.00000	0.43137	0.00000	cc-ec-cing-dwm - corpus callosum and associated subcortical white matter
+68	0.73725	0.12549	0.67843	bsc - brachium of the superior colliculus
+69	1.00000	0.16471	0.15294	cic - inferior colliculus, commissure
+70	0.15294	0.95686	0.99216	CC - central canal
+71	0.24706	0.75294	1.00000	IP - Interpeduncular nucleus
+72	0.70196	0.10980	0.20784	asc7 - ascending fibers of the facial nerve
+73	1.00000	0.30980	0.80784	aci - anterior commissure, intrabulbar part
+74	0.00000	0.96471	0.05490	IO - Inferior olive
+75	0.35686	0.94510	1.00000	Sp5n - Spinal trigeminal nucleus
+77	0.80784	0.82745	0.02745	FrA - Frontal association cortex
+78	0.52549	0.80000	0.29804	mcp - middle cerebellar peduncle
+79	0.50196	0.66667	1.00000	tfp - transverse fibers of the pons
+80	0.27059	0.92157	0.79216	hbc - habenular commissure
+81	0.87059	0.02745	0.92941	SMn - Nucleus of the stria medullaris
+82	0.88235	0.94118	0.05098	BFR-u - Basal forebrain region, unspecified
+83	0.98039	0.66667	0.25098	sox - supraoptic decussation
+84	0.25490	0.58824	1.00000	mlx - medial lemniscus decussation
+85	0.44706	0.03529	0.83137	pyx - pyramidal decussation
+93	0.00000	0.03137	0.71373	BNST - Bed nucleus of the stria terminalis
+94	1.00000	0.34118	0.11765	PRT - Pretectal region
+95	0.64706	0.51373	0.41961	CA3 - Cornu ammonis 3
+96	0.35686	0.17647	0.03922	DG - Dentate gyrus
+97	1.00000	1.00000	0.00000	CA2 - Cornu ammonis 2
+98	0.85098	0.40784	0.05098	CA1 - Cornu ammonis 1
+99	1.00000	0.00000	0.00000	FC - Fasciola cinereum
+100	1.00000	0.75294	0.00000	SUB - Subiculum
+108	0.15686	0.43922	0.50980	POR - Postrhinal cortex
+109	0.31373	0.48235	0.68627	PrS - Presubiculum
+110	0.09020	0.21176	0.37647	PaS - Parasubiculum
+112	0.80392	0.20000	1.00000	PER35 - Perirhinal area 35
+113	0.43922	0.18824	0.62745	PER36 - Perirhinal area 36
+114	0.47843	0.73333	0.20000	MEC - Medial entorhinal cortex
+115	0.35294	0.43529	0.18431	LEC - Lateral entorhinal cortex
+119	0.00000	0.56471	0.21569	VeA - vestibular apparatus
+120	0.00000	1.00000	0.10980	Co - cochlea
+121	0.99216	0.58039	0.00000	8cn - cochlear nerve
+122	0.99216	0.19608	0.00000	8vn - vestibular nerve
+123	0.00000	0.04706	1.00000	GCL - Ventral cochlear nucleus, granule cell layer
+125	0.20392	0.11373	0.56471	4V - 4th ventricle
+126	0.36078	0.61176	0.82745	DCNM - Dorsal cochlear nucleus, molecular layer
+127	0.00000	0.31373	0.61176	DCNFG - Dorsal cochlear nucleus, fusiform and granule layer
+128	0.77255	0.93333	1.00000	DCND - Dorsal cochlear nucleus, deep core
+129	1.00000	0.85098	0.00000	as - acoustic striae
+130	0.83529	1.00000	0.00000	tz - trapezoid body
+131	0.00000	1.00000	0.31765	NTB - Nucleus of the trapezoid body
+132	0.00000	0.93333	1.00000	SPN - Superior paraolivary nucleus
+133	0.85882	0.93725	0.23922	MSO - Medial superior olive
+134	0.13725	0.29804	0.74510	LSO - Lateral superior olive
+135	0.00392	0.60000	0.08235	SPR - Superior periolivary region
+136	0.00000	0.68235	1.00000	VPO - Ventral periolivary nuclei
+137	1.00000	0.00000	0.45098	VLL - Lateral lemniscus, ventral nucleus
+138	0.67059	0.06275	0.35686	ILL - Lateral lemniscus, intermediate nucleus
+139	0.42353	0.07059	0.35686	DLL - Lateral lemniscus, dorsal nucleus
+140	1.00000	0.11373	0.00000	ll-c - lateral lemniscus, commissure
+141	1.00000	0.65098	0.00000	ll-u - lateral lemniscus, unspecified
+142	0.80784	1.00000	0.55686	DCIC - Inferior colliculus, dorsal cortex
+143	0.00000	0.93333	0.99608	CNIC - Inferior colliculus, central nucleus
+145	0.18824	0.53333	0.79608	ECIC - Inferior colliculus, external cortex
+146	0.69020	0.22745	0.28235	bic - inferior colliculus, brachium
+150	1.00000	0.18431	0.94902	MG-mz - Medial geniculate body, marginal zone
+151	1.00000	0.84314	0.00000	Au1 - Primary auditory area
+152	0.94118	1.00000	1.00000	Au2-d - Secondary auditory area, dorsal part
+153	0.84706	0.74902	0.84706	Au2-v - Secondary auditory area, ventral part
+157	0.95686	0.61176	1.00000	eml-ar - external medullary lamina, auditory radiation
+158	0.13333	0.59608	1.00000	AVCN - Ventral cochlear nucleus, anterior part
+159	0.00000	0.90196	0.81176	PVCN - Ventral cochlear nucleus, posterior part
+160	0.00000	1.00000	0.41569	Cap - Ventral cochlear nucleus, cap area
+162	0.72549	1.00000	0.91373	SpG - spiral ganglion
+163	0.38824	0.80392	0.00000	Sag - Nucleus sagulum
+164	0.43137	0.00000	1.00000	RT-a - Reticular (pre)thalamic nucleus, auditory segment
+180	1.00000	0.00000	0.86667	lot - lateral olfactory tract
+181	0.00000	0.80000	1.00000	PIR1 - Piriform cortex, layer 1
+182	0.00000	0.00000	0.99608	PIR2 - Piriform cortex, layer 2
+183	0.64706	0.47059	0.86667	PIR3 - Piriform cortex, layer 3
+184	0.90196	0.84706	0.98039	NAc-c - Nucleus accumbens, core
+187	0.38824	0.77255	0.07059	SN-r - Substantia nigra, reticular part
+188	1.00000	1.00000	0.49804	SN-c - Substantia nigra, compact part
+189	0.00000	0.62353	0.62353	SN-l - Substantia nigra, lateral part
+192	0.34510	0.18431	0.42353	NAc-sh - Nucleus accumbens, shell
+193	0.00000	0.63529	1.00000	VP - Ventral pallidum
+195	1.00000	0.33333	1.00000	GPe-m - Globus pallidus external, medial part
+196	0.49804	1.00000	0.83137	VTA - Ventral tegmental area
+197	0.50588	0.30980	0.60784	CPu - Caudate putamen
+198	0.78431	0.09804	0.78431	GPe-l - Globus pallidus external, lateral part
+199	0.86275	0.07843	0.23529	VSR-u - Ventral striatal region, unspecified
+200	0.00000	0.85098	1.00000	RT-u - Reticular (pre)thalamic nucleus, unspecified
+201	0.71765	0.78039	0.53333	PP - Peripeduncular nucleus
+204	1.00000	0.09804	0.00000	PrG - Pregeniculate nucleus
+205	1.00000	0.88627	0.00000	DLG - Dorsal lateral geniculate nucleus
+206	0.85098	0.42353	0.00000	LHb - Lateral habenular nucleus
+207	0.80392	0.00000	0.09412	MHb - Medial habenular nucleus
+208	0.89412	0.43922	0.83922	PIL - Posterior intralaminar nucleus
+210	1.00000	1.00000	0.78431	Po-t - Posterior thalamic nuclear group, triangular part
+211	0.80392	0.00000	0.02353	PT - Parataenial thalamic nucleus
+213	0.51373	0.03922	0.47451	AD - Anterodorsal thalamic nucleus
+214	0.93725	0.47451	0.85490	AV-dm - Anteroventral thalamic nucleus, dorsomedial part
+215	0.39608	0.13725	0.55686	AV-vl - Anteroventral thalamic nucleus, ventrolateral part
+216	0.00000	1.00000	0.06667	Rh - Rhomboid thalamic nucleus
+218	0.13725	1.00000	0.92549	Xi - Xiphoid thalamic nucleus
+219	1.00000	0.66667	0.00000	Re - Reuniens thalamic nucleus
+221	0.00000	0.72549	0.49412	VM - Ventromedial thalamic nucleus
+222	0.50980	0.00000	0.85098	SMT - Submedius thalamic nucleus
+223	0.54510	0.36471	0.54510	Ang - Angular thalamic nucleus
+227	1.00000	0.00000	0.99608	VPM - Ventral posteromedial thalamic nucleus
+228	1.00000	0.48235	0.00000	LD-dm - Laterodorsal thalamic nucleus, dorsomedial part
+229	0.16863	0.60000	0.12157	LD-vl - Laterodorsal thalamic nucleus, ventrolateral part
+230	1.00000	1.00000	0.00784	Po - Posterior thalamic nucleus
+231	0.66667	0.66667	1.00000	VL - Ventrolateral thalamic nucleus
+232	1.00000	0.33333	0.49804	MD-l - Mediodorsal thalamic nucleus, lateral part
+233	0.33333	0.66667	0.00000	MD-c - Mediodorsal thalamic nucleus, central part
+235	0.84706	0.74902	0.85098	ZI-d - Zona incerta, dorsal part
+236	0.29412	0.78431	0.54118	ZI-v - Zona incerta, ventral part
+238	0.76078	0.27843	0.30980	ZI-A13 - Zona incerta, A13 dopamine cells
+239	0.85882	0.56078	0.96863	ptl - pretectothalamic lamina
+240	0.66667	1.00000	1.00000	MD-m - Mediodorsal thalamic nucleus, medial part
+242	0.61176	0.20000	0.20000	PV - Paraventricular thalamic nuclei (anterior and posterior)
+246	0.94118	0.97255	1.00000	PCN - Paracentral thalamic nucleus
+247	0.87843	0.71373	0.25098	CM - Central medial thalamic nucleus
+248	0.60000	0.19608	0.80000	CL - Central lateral thalamic nucleus
+249	0.66667	1.00000	0.00000	eml-u - external medullary lamina, unspecified
+254	0.00000	0.33333	1.00000	AM - Anteromedial thalamic nucleus
+255	0.97255	0.45882	0.87059	IAM - Interanteromedial thalamic nucleus
+257	0.11765	0.56471	1.00000	ZI-r - Zona incerta, rostral part
+260	0.62745	0.32157	0.17647	IMD - Intermediodorsal thalamic nucleus
+266	0.00000	1.00000	0.03137	VP-pc - Ventral posterior nucleus of the thalamus, parvicellular part
+267	1.00000	0.93725	0.83529	PF - Parafascicular thalamic nucleus
+268	0.00000	0.00000	0.80392	RRe - Retroreuniens thalamic nucleus
+270	0.82353	0.71373	0.54902	scp-pr - superior cerebellar peduncle and prerubral field
+272	0.00000	0.00000	0.50196	IGL - Intergeniculate leaflet
+278	0.91373	0.58824	0.47843	SPF - Subparafascicular nucleus
+280	1.00000	0.98039	0.98039	FoF - Fields of Forel
+281	0.57647	0.43922	0.85882	SubG - Subgeniculate nucleus
+282	0.51373	0.19608	0.50196	Eth - Ethmoid-Limitans nucleus
+283	0.78039	0.34118	0.23922	LP-l - Lateral posterior thalamic nucleus, lateral part
+284	1.00000	0.71373	0.75686	ZI-A11 - Zona incerta, A11 dopamine cells
+285	0.23529	0.70196	0.44314	LP-mr - Lateral posterior thalamic nucleus, mediorostral part
+286	1.00000	0.92157	0.80392	LP-mc - Lateral posterior thalamic nucleus, mediocaudal part
+287	1.00000	0.89412	0.76863	ZI-c - Zona incerta, caudal part
+290	0.60784	0.58039	0.43529	ima - intramedullary thalamic area
+291	1.00000	0.36078	0.03922	iml - internal medullary lamina
+293	1.00000	0.53333	0.00000	VA - Ventral anterior thalamic nucleus
+294	0.67059	0.33725	0.24314	VPL - Ventral posterolateral thalamic nucleus
+295	0.93725	0.63922	0.00000	MG-d - Medial geniculate body, dorsal division
+297	0.03922	0.95686	0.85098	MG-m - Medial geniculate body, medial division
+298	0.51373	0.22745	0.12157	MG-v - Medial geniculate body, ventral division
+299	0.03922	0.95686	0.58824	MG-sg - Medial geniculate body, suprageniculate nucleus
+400	1.00000	0.00000	0.00392	VLO - Ventrolateral orbital area
+401	1.00000	0.68235	0.78824	LO - Lateral orbital area
+402	0.78431	0.74902	0.90588	VO - Ventral orbital area
+403	0.24706	0.28235	0.80000	MO - Medial orbital area
+404	0.72549	0.47843	0.34118	DLO - Dorsolateral orbital area
+405	0.63922	0.28627	0.64314	PrL - Prelimbic area
+406	0.00000	0.63529	0.90980	M2 - Secondary motor area
+407	0.53333	0.00000	0.08235	Ma - Motor association area
+408	0.60000	0.85098	0.91765	M1 - Primary motor area
+409	1.00000	0.78824	0.05490	AI-v - Agranular insular cortex, ventral area
+410	1.00000	0.49804	0.15294	AI-d - Agranular insular cortex dorsal area 
+411	0.00000	0.50196	0.50196	Cg1 - Cingulate area 1
+412	0.60000	0.85098	0.78431	CLA - Claustrum
+413	0.13333	0.69412	0.29804	IL - Infralimbic area
+414	1.00000	0.94902	0.00000	DI - Dysgranular insular cortex
+416	0.93725	0.89412	0.69020	GI - Granular insular cortex
+417	0.72549	0.05490	0.51373	S1-fl - Primary somatosensory area, forelimb representation
+418	0.92941	0.10980	0.14118	S1-dz - Primary somatosensory area, dysgranular zone
+420	1.00000	0.50196	0.75294	S1-f - Primary somatosensory area, face representation
+422	0.78431	0.39216	0.98039	S2 - Secondary somatosensory area
+423	0.53333	0.39216	0.08235	S1-hl - Primary somatosensory area, hindlimb representation
+424	0.70980	0.90196	0.11373	AI-p - Agranular insular cortex, posterior area 
+425	0.47059	0.69412	0.29804	S1-bf - Primary somatosensory area, barrel field
+427	0.78431	0.28627	0.64314	RSD - Retrosplenial dysgranular area
+429	0.88235	0.58824	0.78824	S1-tr - Primary somatosensory area, trunk representation
+430	0.09804	0.39216	0.78431	RSG - Retrosplenial granular area
+432	1.00000	0.94118	0.11373	lPPC - Parietal association cortex, lateral area
+433	0.42353	0.00000	0.42353	mPPC - Parietal association cortex, medial area
+436	0.50196	0.00000	0.25098	PtP - Parietal association cortex, posterior area 
+442	0.32941	0.20392	0.13725	V1 - Primary visual area
+443	1.00000	0.39216	0.39216	V2L - Secondary visual area, lateral part
+444	0.00000	0.50196	0.00000	TeA - Temporal association cortex
+448	0.50196	0.00000	0.39216	V2M - Secondary visual area, medial part
+500	0.00392	0.03922	0.39216	Endo - Endopiriform nucleus
+501	0.00784	0.07843	0.78431	Am-u - Amygdaloid area, unspecified
+502	0.90196	0.72157	0.26275	NLOT - Nucleus of the lateral olfactory tract
+504	0.52941	0.80784	0.98039	5n - trigeminal nerve
+505	0.33333	0.41961	0.18431	msp5t - medullary spinal trigeminal tract
+506	0.25098	0.87843	0.81569	AOA-u - Anterior olfactory area, unspecified
+1000	0.19608	0.65882	0.32157	Brain - Brain
+1001	1.00000	1.00000	1.00000	wmt - White matter
+1002	1.00000	1.00000	1.00000	ac - Anterior commissure
+1003	1.00000	1.00000	1.00000	hiw - Hippocampal white matter
+1004	1.00000	1.00000	1.00000	cfp - Corticofugal pathways
+1005	1.00000	1.00000	1.00000	ml - Medial lemniscus
+1006	1.00000	1.00000	1.00000	tht - Thalamic tracts
+1007	1.00000	1.00000	1.00000	7n - Facial nerve
+1008	1.00000	1.00000	1.00000	ofs - Optic fiber system and supraoptic decussation
+1009	1.00000	1.00000	1.00000	tew - White matter of the tectum
+1010	1.00000	1.00000	1.00000	cbt - Cerebellar and precerebellar white matter
+1011	1.00000	1.00000	1.00000	bsw - White matter of the brainstem
+1012	1.00000	1.00000	1.00000	ll - Lateral lemniscus
+1013	0.50196	0.50196	0.50196	GM - Gray matter
+1015	0.50196	0.50196	0.50196	Cx - Cerebral cortex
+1018	0.50196	0.50196	0.50196	Cg - Cingulate cortex
+1019	0.50196	0.50196	0.50196	Au - Auditory cortex
+1020	0.50196	0.50196	0.50196	OB - Olfactory bulb
+1021	0.50196	0.50196	0.50196	HF - Hippocampal formation
+1022	0.50196	0.50196	0.50196	CA - Cornu Ammonis
+1023	0.50196	0.50196	0.50196	PHR - Parahippocampal region
+1024	0.50196	0.50196	0.50196	PER - Perirhinal cortex
+1025	0.50196	0.50196	0.50196	EC - Entorhinal cortex
+1028	0.50196	0.50196	0.50196	PAL - Pallidum
+1032	0.50196	0.50196	0.50196	MG - Medial geniculate complex of the dorsal thalamus
+1033	0.50196	0.50196	0.50196	RT - Reticular (pre)thalamic nucleus
+1034	0.50196	0.50196	0.50196	HY - Hypothalamus
+1035	0.50196	0.50196	0.50196	MB - Midbrain
+1036	0.50196	0.50196	0.50196	Tc - Tectum
+1037	0.50196	0.50196	0.50196	IC - Inferior colliculus
+1038	0.50196	0.50196	0.50196	Su - Superior colliculus
+1039	0.50196	0.50196	0.50196	Tg - Tegmentum
+1043	0.50196	0.50196	0.50196	VCN - Cochlear nucleus, ventral part
+1044	0.50196	0.50196	0.50196	DCN - Cochlear nucleus, dorsal part
+1045	0.50196	0.50196	0.50196	SO - Superior olivary complex
+1046	0.50196	0.50196	0.50196	NLL - Nuclei of the lateral lemniscus
+1047	0.50196	0.50196	0.50196	Cb - Cerebellum
+1048	0.44706	0.49412	0.72941	V - Ventricular system
+1049	0.06275	0.30980	0.09412	IE - Inner ear
+1050	1.00000	1.00000	1.00000	olf - Olfactory white matter
+1051	1.00000	1.00000	1.00000	eml - External medullary lamina
+1052	0.50196	0.50196	0.50196	Tel - Telencephalon
+1053	0.50196	0.50196	0.50196	LamP - Laminated pallium
+1055	0.50196	0.50196	0.50196	HR - Hippocampal region
+1056	0.50196	0.50196	0.50196	PIR - Piriform cortex
+1057	0.50196	0.50196	0.50196	CgR - Cingulate region
+1058	0.50196	0.50196	0.50196	RS - Retrosplenial cortex
+1059	0.50196	0.50196	0.50196	INS - Insular region
+1060	0.50196	0.50196	0.50196	AI - Agranular insular cortex
+1061	0.50196	0.50196	0.50196	Front - Frontal region
+1062	0.50196	0.50196	0.50196	Orb - Orbitofrontal cortex
+1063	0.50196	0.50196	0.50196	MFC - Mediofrontal cortex
+1064	0.50196	0.50196	0.50196	M - Motor cortex
+1065	0.50196	0.50196	0.50196	Par - Parietal region
+1066	0.50196	0.50196	0.50196	SS - Somatosensory cortex
+1067	0.50196	0.50196	0.50196	S1 - Primary somatosensory area
+1068	0.50196	0.50196	0.50196	PPC - Posterior parietal cortex
+1069	0.50196	0.50196	0.50196	Oc - Occipital region
+1070	0.50196	0.50196	0.50196	Vis - Visual cortex
+1071	0.50196	0.50196	0.50196	V2 - Secondary visual area
+1072	0.50196	0.50196	0.50196	Te - Temporal region
+1073	0.50196	0.50196	0.50196	Au2 - Secondary auditory area
+1074	0.50196	0.50196	0.50196	N-LamP - Non-laminated pallium
+1075	0.50196	0.50196	0.50196	SubPAL -  Subpallium
+1076	0.50196	0.50196	0.50196	Str - Striatum
+1077	0.50196	0.50196	0.50196	NAc - Nucleus accumbens
+1078	0.50196	0.50196	0.50196	GPe - Globus pallidus external
+1079	0.50196	0.50196	0.50196	BRF - Basal forebrain region 
+1080	0.50196	0.50196	0.50196	Dien - Diencephalon
+1081	0.50196	0.50196	0.50196	Thal-Pre - Prethalamus
+1082	0.50196	0.50196	0.50196	ZI - Zona incerta
+1083	0.50196	0.50196	0.50196	Thal-EPI - Epithalamus
+1084	0.50196	0.50196	0.50196	Thal-D - Dorsal thalamus
+1085	0.50196	0.50196	0.50196	ANT - Anterior nuclei of the dorsal thalamus
+1086	0.50196	0.50196	0.50196	AV - Anteroventral thalamic nucleus
+1087	0.50196	0.50196	0.50196	DC-MID - Dorsal-caudal midline group of the dorsal thalamus
+1088	0.50196	0.50196	0.50196	V-MID - Ventral midline group of the dorsal thalamus
+1089	0.50196	0.50196	0.50196	MD - Mediodorsal nucleus of the dorsal thalamus
+1090	0.50196	0.50196	0.50196	VENT - Ventral nuclei of the dorsal thalamus
+1091	0.50196	0.50196	0.50196	VPN - Ventral posterior thalamic nucleus
+1092	0.50196	0.50196	0.50196	ILM - Intralaminar nuclei of the dorsal thalamus
+1093	0.50196	0.50196	0.50196	PoC - Posterior complex of the dorsal thalamus
+1094	0.50196	0.50196	0.50196	LP - Lateral posterior (pulvinar) complex of the dorsal thalamus
+1095	0.50196	0.50196	0.50196	LD - Laterodorsal thalamic nuclei of the dorsal thalamus
+1096	0.50196	0.50196	0.50196	PreT - Pretectum
+1097	0.50196	0.50196	0.50196	Mes - Mesencephalon
+1098	0.50196	0.50196	0.50196	SN - Substantia nigra
+1099	0.50196	0.50196	0.50196	Rho - Rhombencephalon
+1100	0.50196	0.50196	0.50196	Met - Metencephalon
+1101	0.50196	0.50196	0.50196	Myel - Myelencephalon
