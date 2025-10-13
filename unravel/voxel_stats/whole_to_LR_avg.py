@@ -93,10 +93,6 @@ def whole_to_LR_avg(file, kernel=0, axis=0, shift=2, atlas_mask=None):
 
     # Apply the mask
     if atlas_mask is not None:
-        atlas_mask = Path(atlas_mask)
-        if not atlas_mask.exists():
-            raise FileNotFoundError(f"Atlas mask file {atlas_mask} not found.")
-
         mask_img = load_mask(atlas_mask)
         averaged_img[~mask_img] = 0  # Use logical NOT to flip True/False
 
