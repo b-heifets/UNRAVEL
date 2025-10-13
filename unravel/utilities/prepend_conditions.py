@@ -58,7 +58,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Add --input to specify glob pattern(s) for files to rename. Change default behavior to rename all matching files/dirs. Change -f and -d to enable selective renaming of files or directories.
-
+# TODO: This tries to rename files/dirs for each row in the CSV. If a sample is not found in the current directory, it raises: "ValueError: No files found matching patterns"
 
 def rename_items(base_path, dir_name, condition, rename_files, rename_dirs, recursive):
     search_pattern = f'**/{dir_name}*' if recursive else f'{dir_name}*'
