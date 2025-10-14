@@ -1,39 +1,35 @@
-#!/usr/bin/env python3
-
 """
 Use ``img_math`` (``math``) from UNRAVEL to perform mathematical operations on 3D images.
 
-Inputs: 
-    - Any of the following formats: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
-    
-Outputs:
-    - .nii.gz, .tif series, or .zarr depending on the output path extension
+Inputs:
+    - Supported formats: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
-Supported Operations:
-    - Use with the ``-n`` or ``--operation`` flag:
-    - Arithmetic: ``+``, ``-``, ``<asterisk>``, ``/``, ``//``, ``%``, ``<asterisk><asterisk>``  
-    - Comparison: ``==``, ``!=``, ``>``, ``>=``, ``<``, ``<=``  
-    - Logical: ``and``, ``or``, ``xor``, ``not``  
+Outputs:
+    - Automatically determined by output extension (.nii.gz, .tif, or .zarr)
+
+Operations:
+    - Arithmetic: ``+``, ``-``, ``*``, ``/``, ``//``, ``%``, ``**``
+    - Comparison: ``==``, ``!=``, ``>``, ``>=``, ``<``, ``<=``
+    - Logical: ``and``, ``or``, ``xor``, ``not``
     - Other: ``abs_diff`` (absolute difference)
 
-Thresholding:
-    Optionally apply a threshold (lower and/or upper) to the result using:
-    - --threshold      : Lower threshold
-    - --upper_thres    : Upper threshold
-    - --True_val       : Value to assign if the condition is met (default: 1)
-    - --False_val      : Value to assign if the condition is not met (default: 0)
+Thresholding and Masking:
+    - Apply thresholding with ``--threshold`` (exclude values below) and/or ``--upper_thres`` (exclude values above)
+    - Apply mask(s) with ``--masks``
+    - Use ``--bin`` to binarize (assign ``--True_val`` and ``--False_val``); otherwise retain intensities within the mask or threshold range
 
-Usage to add two images and binarize the result:
-------------------------------------------------
-    img_math -i A.nii.gz B.nii.gz -n '+' -t 0.5 -o result.nii.gz -r A.nii.gz -d uint8
+Usage to add two .nii.gz images [and apply a mask]:
+---------------------------------------------------
+    img_math -i A.nii.gz B.nii.gz -n '+' -o result.nii.gz [-mas mask.nii.gz]
 
 Usage multiply three images and save as Zarr:
 ---------------------------------------------
     img_math -i A.nii.gz B.nii.gz C.nii.gz -n <asterisk> -o result.zarr
 
-Usage to binarize a single image and set to 8 bit:
---------------------------------------------------
-    img_math -i A.nii.gz -t 0.5 -o binarized.nii.gz -r A.nii.gz -d uint8
+Usage to binarize an image and set to 8 bit:
+--------------------------------------------
+    img_math -i A.nii.gz -t 0.5 -b -o binarized.nii.gz -d uint8
+
 """
 
 import numpy as np
@@ -46,6 +42,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
 from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+from unravel.voxel_stats.apply_mask import load_mask
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -56,12 +53,13 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-n', '--operation', help="Numpy operation to perform (+, -, *, /, etc.).", default=None, action=SM)
+    opts.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', default=None, action=SM)
     opts.add_argument('-t', '--threshold', help='Apply a lower threshold.', default=None, type=float, action=SM)
     opts.add_argument('-ut', '--upper_thres', help='Upper threshold for thresholding.', default=None, type=float, action=SM)
+    opts.add_argument('-b', '--bin', help='Binarize the result using --True_val and --False_val when thresholding or masking.', action='store_true')
     opts.add_argument('-T', '--True_val', help='Value to assign when threshold condition is true. Default: 1', default=1, type=float, action=SM)
     opts.add_argument('-F', '--False_val', help='Value to assign when threshold condition is false. Default: 0', default=0, type=float, action=SM)
     opts.add_argument('-d', '--dtype', help='Numpy array data type', default=None, action=SM)
-    opts.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata.', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -70,8 +68,7 @@ def parse_args():
 
 # TODO: Add support for chaining operations (e.g., img1 + img2 - img3 * img4)
 # TODO: Add the ability to apply operations to a single image (e.g., img1 * 2)
-# TODO: The logic for supporting multiple glob patterns could be centralized in a utility function
-# TODO: extend support to subtract for -, divide for /, etc. (currently only symbolic operations are supported)
+# TODO: extend support to 'subtract' for -, 'divide' for /, etc. (currently only symbolic operations are supported)
 
 @print_func_name_args_times()
 def apply_operation(image1, image2, operation):
@@ -133,14 +130,23 @@ def apply_operation(image1, image2, operation):
         raise ValueError("Unsupported operation.")
 
 @print_func_name_args_times()
-def threshold_image(image, lower_thr=None, upper_thr=None, true_val=1, false_val=0):
+def apply_mask(image, mask, binarize=False, true_val=1, false_val=0):
+    """Apply a binary mask to an image."""
+    if binarize:
+        return np.where(mask, true_val, false_val)
+    else:
+        return np.where(mask, image, 0)
+
+@print_func_name_args_times()
+def threshold_image(image, lower_thr=None, upper_thr=None, binarize=False, true_val=1, false_val=0):
     """Apply lower and/or upper thresholding to an image."""
     mask = np.ones_like(image, dtype=bool)
     if lower_thr is not None:
         mask &= image >= lower_thr
     if upper_thr is not None:
         mask &= image <= upper_thr
-    return np.where(mask, true_val, false_val)
+    return apply_mask(image, mask, binarize=binarize, true_val=true_val, false_val=false_val)
+
 
 @log_command
 def main():    
@@ -181,9 +187,14 @@ def main():
             result,
             lower_thr=args.threshold,
             upper_thr=args.upper_thres,
+            binarize=args.bin,
             true_val=args.True_val,
-            false_val=args.False_val
+            false_val=args.False_val,
         )
+
+    if args.masks:
+        mask_img = np.logical_and.reduce([load_mask(m) for m in args.masks]) if args.masks else np.ones(shape0, dtype=bool)
+        result = apply_mask(result, mask_img, binarize=args.bin, true_val=args.True_val, false_val=args.False_val)
 
     # Set data type
     if args.dtype: 
@@ -191,7 +202,8 @@ def main():
 
     # Save image    
     if args.output.endswith('.nii.gz'):
-        save_as_nii(result, args.output, reference=args.reference, data_type=args.dtype)
+        ref_path = next((p for p in img_paths if str(p).endswith('.nii.gz')), None)
+        save_as_nii(result, args.output, reference=ref_path, data_type=args.dtype)
     elif args.output.endswith('.tif'):
         save_as_tifs(result, args.output)
     elif args.output.endswith('.zarr'):
