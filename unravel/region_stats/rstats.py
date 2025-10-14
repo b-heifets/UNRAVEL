@@ -92,7 +92,7 @@ def get_atlas_region_at_coords(atlas, x, y, z):
     return atlas[int(x), int(y), int(z)]
 
 @print_func_name_args_times()
-def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition, region_info_df, min_voxels=1):
+def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition, region_info_df, stpt=False, min_voxels=1):
     """Count the number of cells in each region based on atlas region intensities
     
     Parameters:
@@ -103,6 +103,7 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     - connectivity (int): Connectivity for connected components. Options: 6, 18, or 26.
     - condition (str): Name of the group.
     - region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_path, Region, Abbr).
+    - stpt (bool): Whether to account for interleaved blank slices (adjustment for serial-2 photon data).
     - min_voxels (int): Minimum voxel count per connected component to keep (default: 1 keeps all).
 
     Returns:
@@ -143,6 +144,10 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     # Apply min_voxels threshold
     keep_mask = sizes >= min_voxels
     centroids = centroids[keep_mask]
+
+    # Adjust z-coordinate if interleaving was applied
+    if stpt:
+        centroids[:, 2] /= 2.0
 
     # Convert the centroids ndarray to a dataframe
     centroids_df = pd.DataFrame(centroids, columns=['x', 'y', 'z'])
@@ -288,7 +293,7 @@ def interleave_blank_slices(img):
         - img_interleaved (ndarray): 3D numpy array with interleaved blank slices.
     """
     img_interleaved = np.zeros((img.shape[0], img.shape[1], img.shape[2]*2), dtype=img.dtype)
-    img_interleaved[:, :, ::2] = img
+    img_interleaved[:, :, ::2] = img  # ::2 means every second slice
     return img_interleaved
 
 
@@ -359,7 +364,7 @@ def main():
 
             # Count cells in regions
             if args.type == 'counts' or args.type == 'cell_densities':
-                regional_counts_df, region_ids = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df, min_voxels=args.min_voxels)
+                regional_counts_df, region_ids = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df, stpt=args.stpt, min_voxels=args.min_voxels)
 
             # Calculate volumes of segmented voxels in regions
             if args.type == 'label_densities' or args.type == 'label_volumes':

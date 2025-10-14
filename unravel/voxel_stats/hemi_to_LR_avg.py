@@ -83,6 +83,8 @@ def hemi_to_LR_avg(lh_file, rh_file, kernel=0, axis=0, shift=2, atlas_mask=None)
         averaged_img[~mask_img] = 0  # Use logical NOT to flip True/False
 
     # Save the averaged image
+    if kernel > 0:
+        right_nii.header.set_data_dtype(np.float32)
     averaged_nii = nib.Nifti1Image(averaged_img, right_nii.affine, right_nii.header)
     nib.save(averaged_nii, output_path)
     print(f"    Saved averaged image to {output_filename}")

@@ -82,6 +82,7 @@ def whole_to_LR_avg(file, kernel=0, axis=0, shift=2, atlas_mask=None):
         print(f"    Smoothing image with a kernel radius of {kernel} mm")
         nii_smoothed = fslmaths(nii).s(kernel).run()
         img = np.asanyarray(nii_smoothed.dataobj, dtype=np.float32).squeeze()
+        nii.header.set_data_dtype(np.float32)
     else:
         img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
 
