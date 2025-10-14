@@ -359,42 +359,38 @@ window.addEventListener("load", () => mermaid.run());
                 <article class="bd-article">
                   
   <h1>Source code for unravel.image_tools.math</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python3</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Use ``img_math`` (``math``) from UNRAVEL to perform mathematical operations on 3D images.</span>
 
-<span class="sd">Inputs: </span>
-<span class="sd">    - Any of the following formats: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</span>
-<span class="sd">    </span>
-<span class="sd">Outputs:</span>
-<span class="sd">    - .nii.gz, .tif series, or .zarr depending on the output path extension</span>
+<span class="sd">Inputs:</span>
+<span class="sd">    - Supported formats: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</span>
 
-<span class="sd">Supported Operations:</span>
-<span class="sd">    - Use with the ``-n`` or ``--operation`` flag:</span>
-<span class="sd">    - Arithmetic: ``+``, ``-``, ``&lt;asterisk&gt;``, ``/``, ``//``, ``%``, ``&lt;asterisk&gt;&lt;asterisk&gt;``  </span>
-<span class="sd">    - Comparison: ``==``, ``!=``, ``&gt;``, ``&gt;=``, ``&lt;``, ``&lt;=``  </span>
-<span class="sd">    - Logical: ``and``, ``or``, ``xor``, ``not``  </span>
+<span class="sd">Outputs:</span>
+<span class="sd">    - Automatically determined by output extension (.nii.gz, .tif, or .zarr)</span>
+
+<span class="sd">Operations:</span>
+<span class="sd">    - Arithmetic: ``+``, ``-``, ``*``, ``/``, ``//``, ``%``, ``**``</span>
+<span class="sd">    - Comparison: ``==``, ``!=``, ``&gt;``, ``&gt;=``, ``&lt;``, ``&lt;=``</span>
+<span class="sd">    - Logical: ``and``, ``or``, ``xor``, ``not``</span>
 <span class="sd">    - Other: ``abs_diff`` (absolute difference)</span>
 
-<span class="sd">Thresholding:</span>
-<span class="sd">    Optionally apply a threshold (lower and/or upper) to the result using:</span>
-<span class="sd">    - --threshold      : Lower threshold</span>
-<span class="sd">    - --upper_thres    : Upper threshold</span>
-<span class="sd">    - --True_val       : Value to assign if the condition is met (default: 1)</span>
-<span class="sd">    - --False_val      : Value to assign if the condition is not met (default: 0)</span>
+<span class="sd">Thresholding and Masking:</span>
+<span class="sd">    - Apply thresholding with ``--threshold`` (exclude values below) and/or ``--upper_thres`` (exclude values above)</span>
+<span class="sd">    - Apply mask(s) with ``--masks``</span>
+<span class="sd">    - Use ``--bin`` to binarize (assign ``--True_val`` and ``--False_val``); otherwise retain intensities within the mask or threshold range</span>
 
-<span class="sd">Usage to add two images and binarize the result:</span>
-<span class="sd">------------------------------------------------</span>
-<span class="sd">    img_math -i A.nii.gz B.nii.gz -n &#39;+&#39; -t 0.5 -o result.nii.gz -r A.nii.gz -d uint8</span>
+<span class="sd">Usage to add two .nii.gz images [and apply a mask]:</span>
+<span class="sd">---------------------------------------------------</span>
+<span class="sd">    img_math -i A.nii.gz B.nii.gz -n &#39;+&#39; -o result.nii.gz [-mas mask.nii.gz]</span>
 
 <span class="sd">Usage multiply three images and save as Zarr:</span>
 <span class="sd">---------------------------------------------</span>
 <span class="sd">    img_math -i A.nii.gz B.nii.gz C.nii.gz -n &lt;asterisk&gt; -o result.zarr</span>
 
-<span class="sd">Usage to binarize a single image and set to 8 bit:</span>
-<span class="sd">--------------------------------------------------</span>
-<span class="sd">    img_math -i A.nii.gz -t 0.5 -o binarized.nii.gz -r A.nii.gz -d uint8</span>
+<span class="sd">Usage to binarize an image and set to 8 bit:</span>
+<span class="sd">--------------------------------------------</span>
+<span class="sd">    img_math -i A.nii.gz -t 0.5 -b -o binarized.nii.gz -d uint8</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -407,6 +403,7 @@ window.addEventListener("load", () => mermaid.run());
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.img_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">save_as_nii</span><span class="p">,</span> <span class="n">save_as_tifs</span><span class="p">,</span> <span class="n">save_as_zarr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.voxel_stats.apply_mask</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_mask</span>
 
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/image_tools/math.html#unravel.image_tools.math.parse_args">[docs]</a>
@@ -419,12 +416,13 @@ window.addEventListener("load", () => mermaid.run());
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--operation&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Numpy operation to perform (+, -, *, /, etc.).&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mas&#39;</span><span class="p">,</span> <span class="s1">&#39;--masks&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Paths to mask .nii.gz files to restrict analysis. Default: None&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--threshold&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Apply a lower threshold.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ut&#39;</span><span class="p">,</span> <span class="s1">&#39;--upper_thres&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Upper threshold for thresholding.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;--bin&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Binarize the result using --True_val and --False_val when thresholding or masking.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-T&#39;</span><span class="p">,</span> <span class="s1">&#39;--True_val&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Value to assign when threshold condition is true. Default: 1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-F&#39;</span><span class="p">,</span> <span class="s1">&#39;--False_val&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Value to assign when threshold condition is false. Default: 0&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dtype&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Numpy array data type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reference&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Reference image for .nii.gz metadata.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
     <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -434,8 +432,7 @@ window.addEventListener("load", () => mermaid.run());
 
 <span class="c1"># TODO: Add support for chaining operations (e.g., img1 + img2 - img3 * img4)</span>
 <span class="c1"># TODO: Add the ability to apply operations to a single image (e.g., img1 * 2)</span>
-<span class="c1"># TODO: The logic for supporting multiple glob patterns could be centralized in a utility function</span>
-<span class="c1"># TODO: extend support to subtract for -, divide for /, etc. (currently only symbolic operations are supported)</span>
+<span class="c1"># TODO: extend support to &#39;subtract&#39; for -, &#39;divide&#39; for /, etc. (currently only symbolic operations are supported)</span>
 
 <div class="viewcode-block" id="apply_operation">
 <a class="viewcode-back" href="../../../unravel/image_tools/math.html#unravel.image_tools.math.apply_operation">[docs]</a>
@@ -499,17 +496,29 @@ window.addEventListener("load", () => mermaid.run());
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported operation.&quot;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="apply_mask">
+<a class="viewcode-back" href="../../../unravel/image_tools/math.html#unravel.image_tools.math.apply_mask">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_mask</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">true_val</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">false_val</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply a binary mask to an image.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">binarize</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">true_val</span><span class="p">,</span> <span class="n">false_val</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="threshold_image">
 <a class="viewcode-back" href="../../../unravel/image_tools/math.html#unravel.image_tools.math.threshold_image">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">threshold_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">lower_thr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upper_thr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">true_val</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">false_val</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">threshold_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">lower_thr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upper_thr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">true_val</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">false_val</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply lower and/or upper thresholding to an image.&quot;&quot;&quot;</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">lower_thr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">mask</span> <span class="o">&amp;=</span> <span class="n">image</span> <span class="o">&gt;=</span> <span class="n">lower_thr</span>
     <span class="k">if</span> <span class="n">upper_thr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">mask</span> <span class="o">&amp;=</span> <span class="n">image</span> <span class="o">&lt;=</span> <span class="n">upper_thr</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">true_val</span><span class="p">,</span> <span class="n">false_val</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">apply_mask</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="n">binarize</span><span class="p">,</span> <span class="n">true_val</span><span class="o">=</span><span class="n">true_val</span><span class="p">,</span> <span class="n">false_val</span><span class="o">=</span><span class="n">false_val</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="main">
@@ -553,9 +562,14 @@ window.addEventListener("load", () => mermaid.run());
             <span class="n">result</span><span class="p">,</span>
             <span class="n">lower_thr</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
             <span class="n">upper_thr</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">upper_thres</span><span class="p">,</span>
+            <span class="n">binarize</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">bin</span><span class="p">,</span>
             <span class="n">true_val</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">True_val</span><span class="p">,</span>
-            <span class="n">false_val</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">False_val</span>
+            <span class="n">false_val</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">False_val</span><span class="p">,</span>
         <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">masks</span><span class="p">:</span>
+        <span class="n">mask_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="o">.</span><span class="n">reduce</span><span class="p">([</span><span class="n">load_mask</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">masks</span><span class="p">])</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">masks</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">apply_mask</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">mask_img</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">bin</span><span class="p">,</span> <span class="n">true_val</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">True_val</span><span class="p">,</span> <span class="n">false_val</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">False_val</span><span class="p">)</span>
 
     <span class="c1"># Set data type</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dtype</span><span class="p">:</span> 
@@ -563,7 +577,8 @@ window.addEventListener("load", () => mermaid.run());
 
     <span class="c1"># Save image    </span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">):</span>
-        <span class="n">save_as_nii</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">ref_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">img_paths</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">save_as_nii</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">ref_path</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">):</span>
         <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zarr&#39;</span><span class="p">):</span>

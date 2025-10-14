@@ -449,6 +449,8 @@ window.addEventListener("load", () => mermaid.run());
         <span class="n">averaged_img</span><span class="p">[</span><span class="o">~</span><span class="n">mask_img</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Use logical NOT to flip True/False</span>
 
     <span class="c1"># Save the averaged image</span>
+    <span class="k">if</span> <span class="n">kernel</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">right_nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">averaged_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">averaged_img</span><span class="p">,</span> <span class="n">right_nii</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span> <span class="n">right_nii</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
     <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">averaged_nii</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Saved averaged image to </span><span class="si">{</span><span class="n">output_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>

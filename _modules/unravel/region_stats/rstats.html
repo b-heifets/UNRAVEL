@@ -461,7 +461,7 @@ window.addEventListener("load", () => mermaid.run());
 <div class="viewcode-block" id="count_cells_in_regions">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.count_cells_in_regions">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">region_info_df</span><span class="p">,</span> <span class="n">min_voxels</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">region_info_df</span><span class="p">,</span> <span class="n">stpt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_voxels</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Count the number of cells in each region based on atlas region intensities</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters:</span>
@@ -472,6 +472,7 @@ window.addEventListener("load", () => mermaid.run());
 <span class="sd">    - connectivity (int): Connectivity for connected components. Options: 6, 18, or 26.</span>
 <span class="sd">    - condition (str): Name of the group.</span>
 <span class="sd">    - region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_path, Region, Abbr).</span>
+<span class="sd">    - stpt (bool): Whether to account for interleaved blank slices (adjustment for serial-2 photon data).</span>
 <span class="sd">    - min_voxels (int): Minimum voxel count per connected component to keep (default: 1 keeps all).</span>
 
 <span class="sd">    Returns:</span>
@@ -512,6 +513,10 @@ window.addEventListener("load", () => mermaid.run());
     <span class="c1"># Apply min_voxels threshold</span>
     <span class="n">keep_mask</span> <span class="o">=</span> <span class="n">sizes</span> <span class="o">&gt;=</span> <span class="n">min_voxels</span>
     <span class="n">centroids</span> <span class="o">=</span> <span class="n">centroids</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">]</span>
+
+    <span class="c1"># Adjust z-coordinate if interleaving was applied</span>
+    <span class="k">if</span> <span class="n">stpt</span><span class="p">:</span>
+        <span class="n">centroids</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/=</span> <span class="mf">2.0</span>
 
     <span class="c1"># Convert the centroids ndarray to a dataframe</span>
     <span class="n">centroids_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">centroids</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">])</span>
@@ -666,7 +671,7 @@ window.addEventListener("load", () => mermaid.run());
 <span class="sd">        - img_interleaved (ndarray): 3D numpy array with interleaved blank slices.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">img_interleaved</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-    <span class="n">img_interleaved</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">img</span>
+    <span class="n">img_interleaved</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">img</span>  <span class="c1"># ::2 means every second slice</span>
     <span class="k">return</span> <span class="n">img_interleaved</span></div>
 
 
@@ -740,7 +745,7 @@ window.addEventListener("load", () => mermaid.run());
 
             <span class="c1"># Count cells in regions</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;counts&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;cell_densities&#39;</span><span class="p">:</span>
-                <span class="n">regional_counts_df</span><span class="p">,</span> <span class="n">region_ids</span> <span class="o">=</span> <span class="n">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">region_info_df</span><span class="p">,</span> <span class="n">min_voxels</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">min_voxels</span><span class="p">)</span>
+                <span class="n">regional_counts_df</span><span class="p">,</span> <span class="n">region_ids</span> <span class="o">=</span> <span class="n">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">region_info_df</span><span class="p">,</span> <span class="n">stpt</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">stpt</span><span class="p">,</span> <span class="n">min_voxels</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">min_voxels</span><span class="p">)</span>
 
             <span class="c1"># Calculate volumes of segmented voxels in regions</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;label_densities&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;label_volumes&#39;</span><span class="p">:</span>

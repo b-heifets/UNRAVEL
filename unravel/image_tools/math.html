@@ -577,32 +577,31 @@
 <p>Use <code class="docutils literal notranslate"><span class="pre">img_math</span></code> (<code class="docutils literal notranslate"><span class="pre">math</span></code>) from UNRAVEL to perform mathematical operations on 3D images.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><ul class="simple">
-<li><p>Any of the following formats: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p></li>
+<li><p>Supported formats: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>.nii.gz, .tif series, or .zarr depending on the output path extension</p></li>
+<li><p>Automatically determined by output extension (.nii.gz, .tif, or .zarr)</p></li>
 </ul>
 </dd>
-<dt>Supported Operations:</dt><dd><ul class="simple">
-<li><p>Use with the <code class="docutils literal notranslate"><span class="pre">-n</span></code> or <code class="docutils literal notranslate"><span class="pre">--operation</span></code> flag:</p></li>
-<li><p>Arithmetic: <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;asterisk&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">//</span></code>, <code class="docutils literal notranslate"><span class="pre">%</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;asterisk&gt;&lt;asterisk&gt;</span></code></p></li>
+<dt>Operations:</dt><dd><ul class="simple">
+<li><p>Arithmetic: <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">//</span></code>, <code class="docutils literal notranslate"><span class="pre">%</span></code>, <code class="docutils literal notranslate"><span class="pre">**</span></code></p></li>
 <li><p>Comparison: <code class="docutils literal notranslate"><span class="pre">==</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code></p></li>
 <li><p>Logical: <code class="docutils literal notranslate"><span class="pre">and</span></code>, <code class="docutils literal notranslate"><span class="pre">or</span></code>, <code class="docutils literal notranslate"><span class="pre">xor</span></code>, <code class="docutils literal notranslate"><span class="pre">not</span></code></p></li>
 <li><p>Other: <code class="docutils literal notranslate"><span class="pre">abs_diff</span></code> (absolute difference)</p></li>
 </ul>
 </dd>
-<dt>Thresholding:</dt><dd><p>Optionally apply a threshold (lower and/or upper) to the result using:
-- –threshold      : Lower threshold
-- –upper_thres    : Upper threshold
-- –True_val       : Value to assign if the condition is met (default: 1)
-- –False_val      : Value to assign if the condition is not met (default: 0)</p>
+<dt>Thresholding and Masking:</dt><dd><ul class="simple">
+<li><p>Apply thresholding with <code class="docutils literal notranslate"><span class="pre">--threshold</span></code> (exclude values below) and/or <code class="docutils literal notranslate"><span class="pre">--upper_thres</span></code> (exclude values above)</p></li>
+<li><p>Apply mask(s) with <code class="docutils literal notranslate"><span class="pre">--masks</span></code></p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">--bin</span></code> to binarize (assign <code class="docutils literal notranslate"><span class="pre">--True_val</span></code> and <code class="docutils literal notranslate"><span class="pre">--False_val</span></code>); otherwise retain intensities within the mask or threshold range</p></li>
+</ul>
 </dd>
 </dl>
-<section id="usage-to-add-two-images-and-binarize-the-result">
-<h2>Usage to add two images and binarize the result:<a class="headerlink" href="#usage-to-add-two-images-and-binarize-the-result" title="Link to this heading">#</a></h2>
+<section id="usage-to-add-two-nii-gz-images-and-apply-a-mask">
+<h2>Usage to add two .nii.gz images [and apply a mask]:<a class="headerlink" href="#usage-to-add-two-nii-gz-images-and-apply-a-mask" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>img_math -i A.nii.gz B.nii.gz -n ‘+’ -t 0.5 -o result.nii.gz -r A.nii.gz -d uint8</p>
+<div><p>img_math -i A.nii.gz B.nii.gz -n ‘+’ -o result.nii.gz [-mas mask.nii.gz]</p>
 </div></blockquote>
 </section>
 <section id="usage-multiply-three-images-and-save-as-zarr">
@@ -611,10 +610,10 @@
 <div><p>img_math -i A.nii.gz B.nii.gz C.nii.gz -n &lt;asterisk&gt; -o result.zarr</p>
 </div></blockquote>
 </section>
-<section id="usage-to-binarize-a-single-image-and-set-to-8-bit">
-<h2>Usage to binarize a single image and set to 8 bit:<a class="headerlink" href="#usage-to-binarize-a-single-image-and-set-to-8-bit" title="Link to this heading">#</a></h2>
+<section id="usage-to-binarize-an-image-and-set-to-8-bit">
+<h2>Usage to binarize an image and set to 8 bit:<a class="headerlink" href="#usage-to-binarize-an-image-and-set-to-8-bit" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>img_math -i A.nii.gz -t 0.5 -o binarized.nii.gz -r A.nii.gz -d uint8</p>
+<div><p>img_math -i A.nii.gz -t 0.5 -b -o binarized.nii.gz -d uint8</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -655,8 +654,14 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_tools.math.apply_mask">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.math.</span></span><span class="sig-name descname"><span class="pre">apply_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binarize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/math.html#apply_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.math.apply_mask" title="Link to this definition">#</a></dt>
+<dd><p>Apply a binary mask to an image.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.math.threshold_image">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.math.</span></span><span class="sig-name descname"><span class="pre">threshold_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_thr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_thr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/math.html#threshold_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.math.threshold_image" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.math.</span></span><span class="sig-name descname"><span class="pre">threshold_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_thr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_thr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binarize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/math.html#threshold_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.math.threshold_image" title="Link to this definition">#</a></dt>
 <dd><p>Apply lower and/or upper thresholding to an image.</p>
 </dd></dl>
 
@@ -714,11 +719,12 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-add-two-images-and-binarize-the-result">Usage to add two images and binarize the result:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-add-two-nii-gz-images-and-apply-a-mask">Usage to add two .nii.gz images [and apply a mask]:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-multiply-three-images-and-save-as-zarr">Usage multiply three images and save as Zarr:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-binarize-a-single-image-and-set-to-8-bit">Usage to binarize a single image and set to 8 bit:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-binarize-an-image-and-set-to-8-bit">Usage to binarize an image and set to 8 bit:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.math.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.math.apply_operation"><code class="docutils literal notranslate"><span class="pre">apply_operation()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.math.apply_mask"><code class="docutils literal notranslate"><span class="pre">apply_mask()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.math.threshold_image"><code class="docutils literal notranslate"><span class="pre">threshold_image()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.math.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
