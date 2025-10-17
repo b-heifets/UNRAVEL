@@ -180,7 +180,7 @@ def main():
             '-vc', args.val_crit
         ]
         if args.comparisons:
-            stats_args += ['-c', *args.comparisons]
+            stats_args += ['-comp', *args.comparisons]
         if args.group_map:
             stats_args += ['-gm', args.group_map]
         if args.formula:
