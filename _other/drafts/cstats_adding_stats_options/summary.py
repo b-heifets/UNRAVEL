@@ -8,11 +8,11 @@ Prereqs:
     - The name of the rev_cluster_index file should relate to the name of the cluster validation directory.
     - cluster_index_dir = Path(args.moving_img from cstats_validation).name w/o "_rev_cluster_index" and ".nii.gz" 
     - _cluster_info.txt should be named like: cluster_index_dir + "_cluster_info.txt"
-    - vstats_path / 'stats' / cluster_correction_dir should contain: 
+    - Each cluster map directory must contain:
     - <cluster_index_dir>_rev_cluster_index[_LH | _RH].nii.gz, <cluster_index_dir>_cluster_info.txt, and p_value_threshold.txt
 
 Inputs:
-    - Cell/label density CSVs from from ``cstats_validation``
+    - Cell or label density CSVs from ``cstats_validation``
     - The current directory should not have other folders when running this script for the first time. 
     - Directories from ``cstats_summary`` or ``cstats_org_data`` are ok though.
     - The sample_key.csv file should have the following format:
@@ -34,7 +34,8 @@ Outputs:
 Note: 
     - Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.
     - Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run ``cstats_legend``).
-    - See ``cstats`` for more information on -cp and -hg.
+    - ``cstats_summary_config``: This can copy the cluster_summary.ini file to a new location.
+    - For info on statistical options, run ``cstats -h``.
 
 If you need to rerun this script, delete the following directories and files in the current working directory:
 find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} \; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} \; -o -name 3D_brains -exec rm -rf {} \; -o -name valid_clusters_tables_and_legend -exec rm -rf {} \; -o -name _valid_clusters_stats -exec rm -rf {} \;
@@ -45,20 +46,19 @@ find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dir
 Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv).
 
 Next steps:
-    - ``cstats_summary_config``: Copy the cluster_summary.ini file to a new location.
     - ``cstats_summary``: Aggregate and analyze cluster validation data from cstats_validation.
 
 Usage if running directly after ``cstats_validation``:
 ------------------------------------------------------
-    cstats_summary -c <path/config.ini> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
+    cstats_summary -c <path/config.ini> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> <args for cstats> [-d <list of paths>] [-v]
 
 Usage from a cluster correction dir after ``cstats_validation``:
 ----------------------------------------------------------------
-    cstats_summary -c cluster_summary.ini -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd ../.. -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
+    cstats_summary -c cluster_summary.ini -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd ../.. -sk <path/sample_key.csv> <args for cstats> [-d <list of paths>] [-v]
 
 Usage if running after ``cstats_validation`` and ``cstats_org_data``:
 ---------------------------------------------------------------------
-    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
+    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> <args for cstats> [-d <list of paths>] [-v]
 """
 
 import nibabel as nib
@@ -69,9 +69,8 @@ from rich import print
 from rich.traceback import install
 
 from unravel.cluster_stats.org_data import cp
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-
 from unravel.core.config import Configuration 
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, load_config
 from unravel.utilities.aggregate_files_recursively import find_and_copy_files
 
@@ -80,7 +79,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-c', '--config', help='Path to the config.ini file. Default: unravel/cluster_stats/summary.ini', default=Path(__file__).parent / 'summary.ini', action=SM)
+    reqs.add_argument('-c', '--config', help='Path to the config.ini file. Default: unravel/cluster_stats/cluster_summary.ini', default=Path(__file__).parent / 'cluster_summary.ini', action=SM)
 
     # cstats_org_data -d <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
     cstats_org_data = parser.add_argument_group('Optional args for cstats_org_data')
@@ -94,12 +93,23 @@ def parse_args():
 
     # cstats --groups <group1> <group2>
     # Optional args for cstats
-    cstats = parser.add_argument_group('Optional args for cstats')
+    cstats = parser.add_argument_group('Optional args for cstats (For help: cstats -h)')
     cstats.add_argument('-c', '--comparisons', help='List of pairwise comparisons (e.g., saline<MDMA MDMA,R-MDMA). Use "all" for Tukey.', nargs='*', action=SM)
     cstats.add_argument('-gm', '--group_map', help='Path to group_map CSV for ANOVA', action=SM)
     cstats.add_argument('-f', '--formula', help='ANOVA model formula (e.g., Psilocybin+Housing or Psilocybin*Housing)', action=SM)
     cstats.add_argument('-e', '--effect', help='Effect or interaction to test from ANOVA model (e.g., Psilocybin or Psilocybin:Housing)', action=SM)
     cstats.add_argument('-vc', '--val_crit', help='Validation criteria: all, any, or number of sig comparisons required. Default: all', default='all', action=SM)
+
+    cstats_opts_comparisons = parser.add_argument_group('Optional args for comparisons (Use this or ANOVA; cstats -h)')
+    cstats_opts_comparisons.add_argument('-c', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=['all'], action=SM)
+
+    cstats_opts_anova = parser.add_argument_group('Optional args for ANOVA. (Use this or -c; cstats -h)')
+    cstats_opts_anova.add_argument('-gm', '--group_map', help='CSV file mapping condition names to factor levels (required for ANOVA).', action=SM)
+    cstats_opts_anova.add_argument('-e', '--effect', help='Specific effect or interaction to validate from ANOVA (e.g., Psilocybin or Psilocybin:Housing)', default=None, action=SM)
+    cstats_opts_anova.add_argument('-f', '--formula', help='ANOVA model formula (e.g., Psilocybin+Housing or Psilocybin*Housing). Required if using group_map', required=False, action=SM)
+
+    cstats_opts_validation = parser.add_argument_group('Optional args for validation criteria and output')
+    cstats_opts_validation.add_argument('-vc', '--val_crit', help="Validation criteria: 'all' (default), 'any', or a number of comparisons that must be significant for a cluster to be valid.", default='all', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -290,7 +300,7 @@ def main():
         if args.verbose:
             table_args.append('-v')
         run_script('cstats_table', table_args)
-        find_and_copy_files('*_valid_clusters_table.xlsx', subdir, Path().cwd() / 'valid_clusters_tables_and_legend')
+        find_and_copy_files('*_valid_clusters_table*.xlsx', subdir, Path().cwd() / 'valid_clusters_tables_and_legend')
     
         if Path('valid_clusters_tables_and_legend').exists():
 
