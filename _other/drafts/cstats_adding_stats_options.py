@@ -671,15 +671,15 @@ def main():
         output_dir = subdir / '_valid_clusters_stats'
         output_dir.mkdir(exist_ok=True)
 
-        # Skip processing if expected files are present
-        expected_files = [
+        # Skip processing if prior results exist and --overwrite is not set
+        prior_outputs = [
             output_dir.glob('*_results.csv'),
             output_dir.glob('valid_cluster_IDs_*.txt'),
             output_dir.glob('cluster_validation_info_*.csv'),
         ]
 
-        if not args.overwrite and all(any(files) for files in expected_files): # e.g., checks if tukey_results.csv, valid_cluster_IDs_tukey.txt, and cluster_validation_info_tukey.csv exist
-            print(f"[green]Skipping {subdir.name} – output already exists. Use --overwrite to force reprocessing.")
+        if not args.overwrite and all(any(files) for files in prior_outputs): # e.g., checks if tukey_results.csv, valid_cluster_IDs_tukey.txt, and cluster_validation_info_tukey.csv exist
+            print(f"[green]Skipping {subdir.name} - output already exists. Use --overwrite to force reprocessing.")
             continue
 
         # Load the first .csv file to check for data columns and set the appropriate column names
