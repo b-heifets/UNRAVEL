@@ -45,9 +45,6 @@ find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dir
 
 Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv).
 
-Next steps:
-    - ``cstats_summary``: Aggregate and analyze cluster validation data from cstats_validation.
-
 Usage if running directly after ``cstats_validation``:
 ------------------------------------------------------
     cstats_summary -c <path/config.ini> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> <args for cstats> [-d <list of paths>] [-v]

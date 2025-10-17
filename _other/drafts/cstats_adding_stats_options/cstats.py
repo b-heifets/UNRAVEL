@@ -89,8 +89,7 @@ from statsmodels.formula.api import ols
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from statsmodels.stats.multitest import multipletests
 
-# from unravel.cluster_stats.stats_table import cluster_summary
-from stats_table import cluster_summary # Temporary import during development
+from unravel.cluster_stats.stats_table import cluster_summary
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, initialize_progress_bar
