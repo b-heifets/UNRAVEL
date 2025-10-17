@@ -90,7 +90,7 @@ def parse_args():
 
     # Optional args for cstats
     cstats_opts_comparisons = parser.add_argument_group('Optional args for comparisons (Use this or ANOVA; cstats -h)')
-    cstats_opts_comparisons.add_argument('-comp', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=['all'], action=SM)
+    cstats_opts_comparisons.add_argument('-comp', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=None, action=SM)
 
     cstats_opts_anova = parser.add_argument_group('Optional args for ANOVA. (Use this or -c; cstats -h)')
     cstats_opts_anova.add_argument('-gm', '--group_map', help='CSV file mapping condition names to factor levels (required for ANOVA).', action=SM)
@@ -174,23 +174,24 @@ def main():
         run_script('utils_prepend', prepend_conditions_args)
 
     # Run cstats
-    if args.comparisons or (args.group_map and args.formula):
-        stats_args = [
-            '-pvt', cfg.org_data.p_val_txt,
-            '-vc', args.val_crit
-        ]
-        if args.comparisons:
-            stats_args += ['-comp', *args.comparisons]
-        if args.group_map:
-            stats_args += ['-gm', args.group_map]
-        if args.formula:
-            stats_args += ['-f', args.formula]
+    stats_args = [
+        '-pvt', cfg.org_data.p_val_txt,
+        '--val_crit', args.val_crit
+    ]
+
+    using_anova = bool(args.group_map and args.formula)
+    if using_anova:
+        stats_args += ['-gm', args.group_map, '-f', args.formula]
         if args.effect:
             stats_args += ['-e', args.effect]
-        if args.verbose:
-            stats_args.append('-v')
-        run_script('cstats', stats_args)
-    
+    else:
+        # only send comparisons when not doing ANOVA
+        if args.comparisons:
+            stats_args += ['-comp', *args.comparisons]
+
+    if args.verbose:
+        stats_args.append('-v')
+
     # Iterate over all subdirectories in the current working directory and run the following scripts
     for subdir in [d for d in Path.cwd().iterdir() if d.is_dir() and d.name not in ('3D_brains', 'valid_clusters_tables_and_legend')]:
 
