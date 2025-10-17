@@ -88,17 +88,9 @@ def parse_args():
     utils_prepend = parser.add_argument_group('Optional args for utils_prepend')
     utils_prepend.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for utils_prepend)', action=SM)
 
-    # cstats --groups <group1> <group2>
     # Optional args for cstats
-    cstats = parser.add_argument_group('Optional args for cstats (For help: cstats -h)')
-    cstats.add_argument('-comp', '--comparisons', help='List of pairwise comparisons (e.g., saline<MDMA MDMA,R-MDMA). Use "all" for Tukey.', nargs='*', action=SM)
-    cstats.add_argument('-gm', '--group_map', help='Path to group_map CSV for ANOVA', action=SM)
-    cstats.add_argument('-f', '--formula', help='ANOVA model formula (e.g., Psilocybin+Housing or Psilocybin*Housing)', action=SM)
-    cstats.add_argument('-e', '--effect', help='Effect or interaction to test from ANOVA model (e.g., Psilocybin or Psilocybin:Housing)', action=SM)
-    cstats.add_argument('-vc', '--val_crit', help='Validation criteria: all, any, or number of sig comparisons required. Default: all', default='all', action=SM)
-
     cstats_opts_comparisons = parser.add_argument_group('Optional args for comparisons (Use this or ANOVA; cstats -h)')
-    cstats_opts_comparisons.add_argument('-c', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=['all'], action=SM)
+    cstats_opts_comparisons.add_argument('-comp', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=['all'], action=SM)
 
     cstats_opts_anova = parser.add_argument_group('Optional args for ANOVA. (Use this or -c; cstats -h)')
     cstats_opts_anova.add_argument('-gm', '--group_map', help='CSV file mapping condition names to factor levels (required for ANOVA).', action=SM)
