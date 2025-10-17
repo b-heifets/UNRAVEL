@@ -91,7 +91,7 @@ def parse_args():
     # cstats --groups <group1> <group2>
     # Optional args for cstats
     cstats = parser.add_argument_group('Optional args for cstats (For help: cstats -h)')
-    cstats.add_argument('-c', '--comparisons', help='List of pairwise comparisons (e.g., saline<MDMA MDMA,R-MDMA). Use "all" for Tukey.', nargs='*', action=SM)
+    cstats.add_argument('-comp', '--comparisons', help='List of pairwise comparisons (e.g., saline<MDMA MDMA,R-MDMA). Use "all" for Tukey.', nargs='*', action=SM)
     cstats.add_argument('-gm', '--group_map', help='Path to group_map CSV for ANOVA', action=SM)
     cstats.add_argument('-f', '--formula', help='ANOVA model formula (e.g., Psilocybin+Housing or Psilocybin*Housing)', action=SM)
     cstats.add_argument('-e', '--effect', help='Effect or interaction to test from ANOVA model (e.g., Psilocybin or Psilocybin:Housing)', action=SM)

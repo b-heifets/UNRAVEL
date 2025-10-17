@@ -99,7 +99,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts_comparisons = parser.add_argument_group('Optional args for comparisons')
-    opts_comparisons.add_argument('-c', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=['all'], action=SM)
+    opts_comparisons.add_argument('-comp', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=['all'], action=SM)
 
     opts_anova = parser.add_argument_group('Optional args for ANOVA')
     opts_anova.add_argument('-gm', '--group_map', help='CSV file mapping condition names to factor levels (required for ANOVA).', action=SM)
