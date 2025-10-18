@@ -849,20 +849,19 @@ def main():
                     data_df[col] = data_df[col].astype('category')
 
 
-            # --- Ensure cell_density is numeric ---
-            if data_col in data_df.columns:
-                print(f"[yellow]Converting '{data_col}' to numeric...[/yellow]")
-                before_dtype = data_df[data_col].dtype
-                data_df[data_col] = pd.to_numeric(data_df[data_col], errors="coerce")
-                after_dtype = data_df[data_col].dtype
-                print(f"[green]{data_col} dtype: {before_dtype} → {after_dtype}[/green]")
-                num_nans = data_df[data_col].isna().sum()
-                if num_nans > 0:
-                    print(f"[red]Warning: {num_nans} NaN values created during conversion![/red]")
-                    print("These rows will be excluded from analysis.\n")
-            else:
-                print(f"[red]Error: '{data_col}' column not found![/red]")
-
+            # --- Ensure cell_density and pooled columns are numeric ---
+            for col in [density_col, data_col_pooled, "pooled_cluster_volume"]:
+                if col in data_df.columns:
+                    print(f"[yellow]Converting '{col}' to numeric...[/yellow]")
+                    before_dtype = data_df[col].dtype
+                    data_df[col] = pd.to_numeric(data_df[col], errors="coerce")
+                    after_dtype = data_df[col].dtype
+                    print(f"[green]{col} dtype: {before_dtype} → {after_dtype}[/green]")
+                    num_nans = data_df[col].isna().sum()
+                    if num_nans > 0:
+                        print(f"[red]Warning: {num_nans} NaN values created during conversion in '{col}'![/red]")
+                else:
+                    print(f"[red]Column '{col}' not found in data_df[/red]")
 
 
             ###############################
