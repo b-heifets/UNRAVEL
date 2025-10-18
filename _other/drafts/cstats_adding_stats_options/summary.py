@@ -192,8 +192,12 @@ def main():
     if args.verbose:
         stats_args.append('-v')
 
+    cstats = Path(__file__).parent / 'cstats.py'
+    run_script(str(cstats), stats_args)
+    # run_script('cstats', stats_args) ### Use this once the experimental cstats.py is merged into unravel/cluster_stats/cstats.py
+
     # Iterate over all subdirectories in the current working directory and run the following scripts
-    for subdir in [d for d in Path.cwd().iterdir() if d.is_dir() and d.name not in ('3D_brains', 'valid_clusters_tables_and_legend')]:
+    for subdir in [d for d in Path.cwd().iterdir() if d.is_dir() and d.name not in ('3D_brains', 'valid_clusters_tables_and_legend', 'stats')]:
 
         stats_output = subdir / '_valid_clusters_stats'
 
