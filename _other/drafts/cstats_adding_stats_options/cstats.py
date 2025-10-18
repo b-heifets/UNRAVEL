@@ -99,7 +99,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts_comparisons = parser.add_argument_group('Optional args for comparisons')
-    opts_comparisons.add_argument('-comp', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=['all'], action=SM)
+    opts_comparisons.add_argument('-comp', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=None, action=SM)
 
     opts_anova = parser.add_argument_group('Optional args for ANOVA')
     opts_anova.add_argument('-gm', '--group_map', help='CSV file mapping condition names to factor levels (required for ANOVA).', action=SM)
@@ -641,15 +641,14 @@ def main():
         return
     
     # Enforce mutually exclusive modes of validation: either comparisons OR ANOVA (group_map + formula)
-    using_anova = args.group_map is not None or args.formula is not None
-    using_comparisons = args.comparisons and args.comparisons != ['all']
-
+    using_anova = bool(args.group_map and args.formula)
+    using_comparisons = bool(args.comparisons)
     if using_anova and using_comparisons:
-        print("[red]Error: Use either --comparisons or both --group_map and --formula, not both.[/]")
-        return
-    elif using_anova and not (args.group_map and args.formula):
-        print("[red]Error: Both --group_map and --formula are required together.[/]")
-        return
+        raise ValueError("Cannot use both ANOVA (--group_map/--formula) and --comparisons in the same run.")
+    if using_anova and not (args.group_map and args.formula):
+        raise ValueError("Both --group_map and --formula are required for ANOVA.")
+    if not using_anova and not using_comparisons:
+        raise ValueError("You must provide either --comparisons or both --group_map and --formula for ANOVA.")
 
     cwd = Path.cwd()
     subdirs = [d for d in cwd.iterdir() if d.is_dir() and d.name != '_valid_clusters_stats']
@@ -700,19 +699,7 @@ def main():
 
         # Parse comparisons or main effect
         comparisons = None
-        if args.comparisons:
-            all_conditions = sorted(set(f.name.split('_')[0] for f in csv_files))
-            comparisons = parse_comparisons(args.comparisons, all_conditions)
-            groups = sorted(set(g for c in comparisons for g in c[:2]))
-            if args.comparisons == ['all']:
-                test_type = 'tukey'
-            elif len(comparisons) == 1:
-                test_type = 't-test'
-            elif all(g1 == comparisons[0][0] for g1, _, _ in comparisons):
-                test_type = 'dunnett'
-            else:
-                test_type = 'holm'
-        elif args.group_map and args.formula:
+        if args.group_map and args.formula:
             test_type = 'anova'
             group_map = pd.read_csv(args.group_map)
             if 'condition' not in group_map.columns:
@@ -725,6 +712,18 @@ def main():
                 print(f'[red]Missing factor columns in group_map: {missing_cols}[/]')
                 continue
             groups = group_map['condition'].unique().tolist()
+        elif args.comparisons:
+            all_conditions = sorted(set(f.name.split('_')[0] for f in csv_files))
+            comparisons = parse_comparisons(args.comparisons, all_conditions)
+            groups = sorted(set(g for c in comparisons for g in c[:2]))
+            if args.comparisons == ['all']:
+                test_type = 'tukey'
+            elif len(comparisons) == 1:
+                test_type = 't-test'
+            elif all(g1 == comparisons[0][0] for g1, _, _ in comparisons):  # All comparisons share the same control group (Group 1)
+                test_type = 'dunnett'
+            else:
+                test_type = 'holm'
         else:
             print('[red]You must provide either --comparisons or both --group_map and --formula for ANOVA.[/]')
             continue
@@ -795,7 +794,7 @@ def main():
         # Save results
         tag = test_type
         raw_prefix = output_dir / f'raw_data_for_{tag}'
-        raw_path = raw_prefix.with_suffix('_pooled.csv') if has_hemisphere else raw_prefix.with_suffix('.csv')
+        raw_path = raw_prefix.parent / f"{raw_prefix.name}_pooled.csv" if has_hemisphere else raw_prefix.with_suffix('.csv')
         stats_path = output_dir / f'{tag}_results.csv'
         ids_path = output_dir / f'valid_cluster_IDs_{tag}.txt'
         info_path = output_dir / f'cluster_validation_info_{tag}.csv'
