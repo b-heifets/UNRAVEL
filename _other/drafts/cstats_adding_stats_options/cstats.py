@@ -709,7 +709,10 @@ def main():
         raise ValueError("You must provide either --comparisons or both --group_map and --formula for ANOVA.")
 
     cwd = Path.cwd()
-    subdirs = [d for d in cwd.iterdir() if d.is_dir() and d.name != '_valid_clusters_stats']
+    skip_dirs = {'_valid_clusters_stats', 'valid_clusters_tables_and_legend', 'stats', '3D_brains'}
+
+    subdirs = [d for d in cwd.iterdir() if d.is_dir() and d.name not in skip_dirs]
+
     if not subdirs:
         print('[red]No subdirectories found to process.[/]')
         return
