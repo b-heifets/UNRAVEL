@@ -219,7 +219,8 @@ def match_effect(aov_term, effect_of_interest):
         return re.sub(r'^C\((.+)\)$', r'\1', term.strip(), flags=re.IGNORECASE).lower()
     return clean(aov_term) == clean(effect_of_interest)
 
-def valid_clusters_anova(df, density_col, formula, effect_of_interest=None):
+
+# def valid_clusters_anova(df, density_col, formula, effect_of_interest=None):
     """
     Run per-cluster ANOVA with a user-defined model formula.
 
@@ -302,6 +303,99 @@ def valid_clusters_anova(df, density_col, formula, effect_of_interest=None):
             })
 
     return pd.DataFrame(rows)
+
+def valid_clusters_anova(data_df, density_col, formula, effect_of_interest=None):
+    """Run per-cluster ANOVA with detailed printing and row-wise results aggregation."""
+    rows = []
+    clusters = sorted(data_df["cluster_ID"].unique())
+
+    print("\n[yellow bold]=== Running ANOVA validation for clusters ===[/yellow bold]")
+    print(f"Formula: [cyan]{formula}[/cyan]")
+    if effect_of_interest:
+        print(f"Effect of interest: [cyan]{effect_of_interest}[/cyan]")
+    print(f"Dependent variable: [magenta]{density_col}[/magenta]")
+    print(f"DataFrame shape: {data_df.shape}")
+    print(f"Columns: {list(data_df.columns)}\n")
+
+    # Check that dependent variable exists and is numeric
+    if density_col not in data_df.columns:
+        print(f"[red]Error: '{density_col}' not found in DataFrame![/red]")
+        return pd.DataFrame()
+    if not pd.api.types.is_numeric_dtype(data_df[density_col]):
+        print(f"[red]Error: '{density_col}' column is not numeric![/red]")
+        print(data_df[[density_col]].head())
+        return pd.DataFrame()
+
+    # Extract all factor terms from the formula (handles + and *)
+    factors = [f.strip() for f in formula.replace("*", "+").split("+") if f.strip()]
+    missing_factors = [f for f in factors if f not in data_df.columns]
+    if missing_factors:
+        print(f"[red]Error: Missing factors in DataFrame: {missing_factors}[/red]")
+        return pd.DataFrame()
+
+    # Show unique values for each factor
+    print("[green]Unique factor values:[/green]")
+    for f in factors:
+        print(f"  {f}: {data_df[f].unique()}")
+
+    print("\n[yellow]Preview of first few rows:[/yellow]")
+    print(data_df.head(), "\n")
+
+    # Loop through each cluster and run ANOVA
+    for cluster_id in clusters:
+        cluster_data = data_df[data_df["cluster_ID"] == cluster_id]
+
+        print(f"[blue]→ Processing cluster {cluster_id}[/blue]")
+        print(f"  Cluster data shape: {cluster_data.shape}")
+
+        try:
+            model = ols(f"{density_col} ~ {formula}", data=cluster_data).fit()
+            aov_table = sm.stats.anova_lm(model, typ=2)
+
+            print("  [green]ANOVA result table:[/green]")
+            print(aov_table, "\n")
+
+            # Iterate through ANOVA terms and collect results
+            for aov_term, row in aov_table.iterrows():
+                if aov_term == "Residual":
+                    continue
+
+                pval = row["PR(>F)"]
+                signif = (
+                    "****" if pval < 0.0001 else
+                    "***"  if pval < 0.001 else
+                    "**"   if pval < 0.01 else
+                    "*"    if pval < 0.05 else
+                    "n.s."
+                )
+
+                rows.append({
+                    "cluster_ID": cluster_id,
+                    "comparison": f"ANOVA: {aov_term}",
+                    "higher_mean_group": "",
+                    "p-value": pval,
+                    "significance": signif,
+                    "effect_of_interest": effect_of_interest or formula
+                })
+
+                print(f"    Term: {aov_term:15s}  p={pval:.4g}  →  {signif}")
+
+        except Exception as e:
+            print(f"[red]  Skipping cluster {cluster_id}: ANOVA failed — {e}[/red]")
+            print("  Possible causes: wide-format data, non-numeric values, or missing factor levels.\n")
+            continue
+
+    if not rows:
+        print("[yellow]No successful ANOVA results collected — all clusters failed.[/yellow]")
+        return pd.DataFrame()
+
+    stats_df = pd.DataFrame(rows)
+    print(f"\n[green bold]✓ Finished ANOVA validation. Generated results for {len(stats_df['cluster_ID'].unique())} clusters.[/green bold]")
+    print(f"Final table shape: {stats_df.shape}")
+    print(stats_df.head())
+
+    return stats_df
+
 
 def valid_clusters_dunnett_test(df, control_group, test_groups, density_col, direction='two-sided'):
     """
@@ -753,6 +847,48 @@ def main():
             for col in factor_cols:
                 if data_df[col].dtype == object or pd.api.types.is_string_dtype(data_df[col]):
                     data_df[col] = data_df[col].astype('category')
+
+
+            ###############################
+            print("\n[yellow bold]=== Data sanity check before ANOVA ===[/yellow bold]")
+            print(f"Input DataFrame shape: {data_df.shape}")
+            print(f"Columns: {list(data_df.columns)}")
+
+            # Identify numeric vs non-numeric columns
+            numeric_cols = data_df.select_dtypes(include='number').columns.tolist()
+            non_numeric_cols = [c for c in data_df.columns if c not in numeric_cols]
+
+            print(f"[cyan]Numeric columns ({len(numeric_cols)}):[/cyan] {numeric_cols}")
+            print(f"[magenta]Non-numeric columns ({len(non_numeric_cols)}):[/magenta] {non_numeric_cols}")
+
+            # Quick summary stats
+            print("\n[green]Preview of numeric columns:[/green]")
+            print(data_df[numeric_cols].describe().T)
+
+            # Check for wide-format structure (e.g. multiple density columns)
+            density_candidates = [col for col in data_df.columns if 'density' in col]
+            print(f"\n[blue]Potential density columns ({len(density_candidates)}):[/blue] {density_candidates}")
+
+            if len(density_candidates) > 1:
+                print("[red bold]⚠️  Multiple density-like columns detected — likely wide format![/red bold]")
+                print("You may need to melt these into one long-form 'cell_density' column:\n"
+                    "  data_df = data_df.melt(\n"
+                    "      id_vars=['sample', 'cluster_ID', 'Entactogen'],\n"
+                    "      value_vars=[...],\n"
+                    "      var_name='measure', value_name='cell_density'\n"
+                    "  )\n")
+
+            # Check for NaN values
+            nan_summary = data_df.isna().sum()
+            if nan_summary.any():
+                print("\n[yellow]NaN counts per column:[/yellow]")
+                print(nan_summary[nan_summary > 0])
+            else:
+                print("\n[green]No NaN values detected.[/green]")
+
+            print("[green bold]=== End of data sanity check ===[/green bold]\n")
+            ########################################
+
 
             stats_df = valid_clusters_anova(data_df, density_col, formula, effect_of_interest=args.effect)
 
