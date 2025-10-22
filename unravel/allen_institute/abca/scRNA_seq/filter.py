@@ -43,7 +43,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: mouse', default='mouse', action=SM)
     opts.add_argument('-o', '--output', help='Output path for the filtered cell metadata', default=None, action=SM)
-    opts.add_argument('-c', '--cell_type', help='Cell type to use (neurons or nonneurons). Default: None', default=None, action=SM)
+    opts.add_argument('-ct', '--cell_type', help='Cell type to use (neurons or nonneurons). Default: None', default=None, action=SM)
     opts.add_argument('-d', '--details', help='Add classification levels and colors to the filtered DataFrame.', default=False)
 
     general = parser.add_argument_group('General arguments')
