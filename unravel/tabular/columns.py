@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``tabular_columns`` (``cols``) from UNRAVEL to load a CSV and print the column(s).
+Use ``tabular_columns`` (``cols``) from UNRAVEL to load a CSV or xlsx file and print the column(s).
 
 Usage:
 ------
@@ -15,14 +15,13 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-from unravel.tabular.utils import load_tabular_file
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', required=True, help='Path to the input CSV file.', action=SM)
+    reqs.add_argument('-i', '--input', required=True, help='Path to the input CSV or xlsx file.', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-1', '--one-per-line', help='Print each column name on a separate line.', action='store_true', default=False)
@@ -42,16 +41,19 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    # Load the CSV file
-    df, _ = load_tabular_file(args.input)
+    # Load the CSV header
+    if str(args.input).endswith('.csv'):
+        cols = pd.read_csv(args.input, nrows=0).columns
+    elif str(args.input).endswith('.xlsx'):
+        cols = pd.read_excel(args.input, nrows=0).columns
 
     # Print column names
     if args.one_per_line:
-        for col in df.columns:
+        for col in cols:
             print(f'[default]{col}')
     else:
         print("Columns in the CSV file:")
-        print(f"[default]{args.delimiter}".join(df.columns))
+        print(f"[default]{args.delimiter}".join(cols))
 
     verbose_end_msg()
 
