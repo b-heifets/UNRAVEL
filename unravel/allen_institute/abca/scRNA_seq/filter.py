@@ -72,7 +72,7 @@ def main():
     print("Filtered cell metadata:")
     print(f'\n{filtered_df}\n')
 
-    if args.details:
+    if args.details: # This could be removed later to keep filtering simple (make sure details are consistently added upstream)
         print("\nAdding classification levels and colors to the filtered DataFrame...")
         # Add the classification levels and the corresponding color.
         filtered_df_joined = mf.join_cluster_details(filtered_df, download_base)
