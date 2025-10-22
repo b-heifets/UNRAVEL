@@ -37,8 +37,8 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
     reqs.add_argument('-i', '--input', help='Path to the scRNAseq CSV file', required=True, action=SM)
-    reqs.add_argument('-c', '--columns', help='Columns to filter scRNSseq cell metadata by (e.g., region_of_interest_acronym)', nargs='*', action=SM)
-    reqs.add_argument('-val', '--values', help='Values to filter scRNSseq cell metadata by (e.g., STRv).', nargs='*', action=SM)
+    reqs.add_argument('-c', '--columns', help='Columns to filter scRNAseq cell metadata by (e.g., region_of_interest_acronym)', nargs='*', action=SM)
+    reqs.add_argument('-val', '--values', help='Values to filter scRNAseq cell metadata by (e.g., STRv).', nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='Output path for the filtered cell metadata', default=None, action=SM)
