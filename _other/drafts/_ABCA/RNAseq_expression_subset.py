@@ -40,6 +40,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
+import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -211,8 +212,14 @@ def main():
     full_exp_df = pd.concat(exp_dfs, axis=0)
     print(f"\n    Full expression data:\n{full_exp_df}\n")
 
-    # Join with cell metadata
+    # Join with scRNAseq cell metadata
     cell_df_joined = cell_df.join(full_exp_df, how='inner')
+
+    # Add the classification levels and the corresponding color.
+    cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
+
+    # Add the cluster colors
+    cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base)
 
     # Filter by cell type for mice if specified
     if args.species == 'mouse' and ct == 'neurons':
@@ -220,8 +227,8 @@ def main():
     elif args.species == 'mouse' and ct == 'nonneurons':
         cell_df_joined = cell_df_joined[cell_df_joined['class'].str.split().str[0].astype(int) > 29]
 
-    print(f"\n    Joined cell metadata:\n{cell_df_joined}\n")
-
+    print(f"\n    Final expression data with metadata:\n{cell_df_joined}\n")
+          
     # Define output file path and save the DataFrame
     if args.output: 
         output_path = Path(args.output)
