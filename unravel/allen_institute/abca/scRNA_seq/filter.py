@@ -41,13 +41,34 @@ def parse_args():
     reqs.add_argument('-val', '--values', help='Values to filter scRNAseq cell metadata by (e.g., STRv).', nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: mouse', default='mouse', action=SM)
     opts.add_argument('-o', '--output', help='Output path for the filtered cell metadata', default=None, action=SM)
+    opts.add_argument('-c', '--cell_type', help='Cell type to use (neurons or nonneurons). Default: None', default=None, action=SM)
     opts.add_argument('-d', '--details', help='Add classification levels and colors to the filtered DataFrame.', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
+
+def filter_by_cell_type(cell_df: pd.DataFrame, species: str, cell_type: str | None) -> pd.DataFrame:
+    """Filter cells by species and cell type (neurons vs nonneurons)."""
+    if not cell_type:
+        return cell_df
+    ct = cell_type.lower()
+
+    if species == 'mouse' and 'class' in cell_df.columns:
+        is_neuron = cell_df['class'].str.split().str[0].astype(int) <= 29
+        return cell_df[is_neuron] if ct == 'neurons' else cell_df[~is_neuron]
+
+    elif species == 'human' and 'supercluster' in cell_df.columns:
+        nonneurons = {'Oligodendrocyte', 'Committed oligodendrocyte precursor', 'Oligodendrocyte precursor',
+                      'Astrocyte', 'Ependymal', 'Microglia', 'Vascular', 'Bergmann glia', 'Fibroblast', 'Choroid plexus'}
+        is_nonneuronal = cell_df['supercluster'].str.split().str[0].isin(nonneurons)
+        return cell_df[~is_nonneuronal] if ct == 'neurons' else cell_df[is_nonneuronal]
+
+    print(f"[yellow]Warning: Missing expected metadata columns for {species}, returning unfiltered data.[/yellow]")
+    return cell_df
 
 @log_command
 def main():
@@ -63,6 +84,9 @@ def main():
 
     print(f"\n    Initial cell metadata shape:\n    {cell_df.shape}")
     print(f'\n{cell_df}\n')
+
+    # Filter by cell type for mice if specified
+    cell_df = filter_by_cell_type(cell_df, species=args.species, cell_type=args.cell_type)
 
     # Filter the DataFrame
     filtered_df = filter_dataframe(cell_df, args.columns, args.values)
