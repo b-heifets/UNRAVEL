@@ -216,10 +216,10 @@ def main():
     cell_df_joined = cell_df.join(full_exp_df, how='inner')
 
     # Add the classification levels and the corresponding color.
-    cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
+    cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base, species=args.species)
 
     # Add the cluster colors
-    cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base)
+    cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base, species=args.species)
 
     # Filter by cell type for mice if specified
     if args.species == 'mouse' and ct == 'neurons':
