@@ -5,7 +5,9 @@ import anndata as ad
 import zarr
 import numpy as np
 
-# TODO: Also support uns data conversion or reading with load_dense_zarr_dask.py
+# TODO: Also support 'uns' metadata conversion or reading with load_dense_zarr_dask.py
+
+# Next script: abca_scRNAseq_expression_subset
 
 def h5ad_to_dense_zarr(h5ad_file_path):
     """Convert a .h5ad file to a dense .zarr file with one column (gene) per chunk."""
