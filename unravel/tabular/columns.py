@@ -25,7 +25,7 @@ def parse_args():
     reqs.add_argument('-i', '--input', required=True, help='Path to the input CSV file.', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-o', '--one-per-line', help='Print each column name on a separate line.', action='store_true', default=False)
+    opts.add_argument('-1', '--one-per-line', help='Print each column name on a separate line.', action='store_true', default=False)
     opts.add_argument('-d', '--delimiter', help='Delimiter used in the CSV file. Default: ", "', default=', ')
 
 
