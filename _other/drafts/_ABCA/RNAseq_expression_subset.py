@@ -135,6 +135,16 @@ def load_expression_from_zarr(file, gene_list):
     df.columns = gene_list
     return df  # locals (adata, df) freed automatically after return
 
+def normalize_gene_names(gene_list: List[str], species: str) -> List[str]:
+    """Normalize gene names based on species conventions."""
+    if species == 'mouse':
+        # Mouse gene symbols: capitalize only the first letter (Htr2a)
+        gene_list = [g.lower().capitalize() for g in gene_list]
+    elif species == 'human':
+        # Human gene symbols: all uppercase (HTR2A)
+        gene_list = [g.upper() for g in gene_list]
+    return gene_list
+
 @log_command
 def main():
     install()
@@ -154,13 +164,7 @@ def main():
     gene_df = load_RNAseq_gene_metadata(download_base, species=args.species)
     gene_list = [g for g in args.genes if g in gene_df["gene_symbol"].values]
 
-    # Normalize gene names based on species conventions
-    if args.species == 'mouse':
-        # Mouse gene symbols: capitalize only the first letter (Htr2a)
-        gene_list = [g.lower().capitalize() for g in gene_list]
-    elif args.species == 'human':
-        # Human gene symbols: all uppercase (HTR2A)
-        gene_list = [g.upper() for g in gene_list]
+    gene_list = normalize_gene_names(gene_list, species=args.species)
 
     if not gene_list:
         raise ValueError("None of the requested genes found in gene metadata.")
