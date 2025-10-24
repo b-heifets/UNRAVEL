@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Use ``marker_enrichment`` from UNRAVEL to load a scRNA-seq expression CSV file and calculate marker gene enrichment for specified genes.
+Use ``marker_enrichment`` from UNRAVEL to load a scRNA-seq expression CSV file and calculate marker gene enrichment.
+
+Prereqs:
+    - Cell metadata and expression data from the Allen Brain Cell Atlas (e.g., from 
 
 Note:
     - The enrichment is calculated for each gene and cell type (mean expression in cell type / mean expression overall).
-    - For combos of genes, use comma-separated values without spaces (e.g., GeneA,GeneB).
-    - Example: Gene1 Gene2,Gene3 Gene4
-    - With gene combos, the enrichment is calculated as the mean of the individual gene enrichments
-    - The selected cell type column is then sorted by the highest enrichment across all genes or gene combos.
+    - With multiple genes, the enrichment is calculated as the mean of the individual gene enrichments
+    - The selected cell type column is then sorted by the highest enrichment across all genes.
     - Markers for each mouse cell type are available in Supplementary Table 7 from Yao et al., (2023): 
     - https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-023-06812-z/MediaObjects/41586_2023_6812_MOESM8_ESM.xlsx
 """
@@ -29,7 +30,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='Path to the input CSV file.', required=True, action=SM)
-    reqs.add_argument('-g', '--genes', help='Single gene or comma-separated combo (e.g., CALB2 or CALB2,RBP4).', required=True, action=SM)
+    reqs.add_argument('-g', '--genes', help='Gene(s) to analyze (e.g., Drd1 or Drd1 Drd2).', required=True, nargs='*', action=SM)
     reqs.add_argument('-c', '--column', help='Cell type column to calculate enrichment for (neurotransmitter, class, subclass, supertype, cluster, supercluster, subcluster).', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -58,71 +59,70 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    # Load the CSV file
-    print(f"\nLoading key data from [bold]{args.input}[/bold]...\n")
+    # Load the CSV file")
     input_path = Path(args.input)
     cols = pd.read_csv(args.input, nrows=0).columns
     if args.column not in cols:
         raise ValueError(f"Selected column '{args.column}' not found in input data columns.")
-    gene_list = normalize_gene_names(args.genes.split(','), species=args.species)
-    for gene in gene_list:
+    genes = normalize_gene_names(args.genes, species=args.species)
+    for gene in genes:
         if gene not in cols:
             raise ValueError(f"Gene '{gene}' not found in input data columns.")
-    use = [args.column] + gene_list    
+    use = [args.column] + genes    
     df = pd.read_csv(input_path, usecols=use)
 
     # Make the args.column the first column
     cols = df.columns.tolist()
-    cols.insert(0, cols.pop(cols.index(args.column)))
-    df = df[cols]
+    cols.insert(0, cols.pop(cols.index(args.column))) # Move the cell type column to the front of the list
+    df = df[cols] # Reorder the dataframe columns
 
-    print(df)
-
-    if ',' in args.genes:
-        print(f"\nCalculating marker enrichment for gene combo: {gene_list}\n")
-    else:
-        print(f"\nCalculating marker enrichment for gene: {gene_list[0]}\n")
-
-    # Print all expression values for Drd1 for the '018 L2 IT PPP-APr Glut' subclass
-    gene_values = df[df[args.column] == '018 L2 IT PPP-APr Glut']
-    print(gene_values.head(100))
-    # import sys ; sys.exit()
-
-    # Calculate marker gene enrichment (mean for a cell type / mean for all cell types in the cell type column)
-    group_means = df.groupby(args.column).mean(numeric_only=True)
-
-    print(f"\nGroup means:\n{group_means}\n")
-
-    # Print this for the subclass: '018 L2 IT PPP-APr Glut'
-    print(f"\nMean expression for '018 L2 IT PPP-APr Glut':\n{group_means.loc['018 L2 IT PPP-APr Glut']}\n")
-
+    # Calculate mean expression per cell type
+    summary_df = df.groupby(args.column).mean(numeric_only=True)
     overall_means = df.mean(numeric_only=True)
 
-    print(f"\nOverall means:\n{overall_means}\n")
-    # import sys ; sys.exit()
+    # Calculate marker gene enrichment (mean for a cell type / mean across all cells)
+    # Compute enrichment for all genes at once (vectorized)
+    enrichment_df = summary_df[genes] / overall_means[genes]
 
-    enrichment_values = []
-    for cell_type, row in group_means.iterrows():
-        mean_in_type = row[gene_list].mean()
-        mean_overall = overall_means[gene_list].mean()
-        enrichment = mean_in_type / mean_overall if mean_overall != 0 else np.nan
-        enrichment_values.append({'cell_type': cell_type, 'enrichment': enrichment})
+    # Rename columns for clarity
+    enrichment_df.columns = [f"{g}_enrichment" for g in genes]
+    enrichment_df = enrichment_df.reset_index()
 
-    enrichment_df = pd.DataFrame(enrichment_values).sort_values('enrichment', ascending=False)
-
-    print(enrichment_df)
-    
-    if args.output:
-        output_path = Path(args.output)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
+    # Add a column for mean enrichment across markers only if multiple genes are given
+    enrichment_cols = [f"{g}_enrichment" for g in genes]
+    if len(genes) > 1:
+        enrichment_df["mean_enrichment"] = enrichment_df[enrichment_cols].mean(axis=1)
+        sort_col = "mean_enrichment"
     else:
-        gene_tag = args.gene.replace(',', '_')
-        output_filename = f"{input_path.stem}_{args.column}_marker_enrichment_{gene_tag}.csv"
-        output_path = input_path.parent / output_filename
-    enrichment_df.to_csv(output_path, index=False)
-    print(f"\nSaved enrichment table to [bold]{output_path}[/bold]\n")
+        sort_col = enrichment_cols[0]
+    
+    # Join group means with enrichment_df to get the cell type column in the same order
+    enrichment_df.set_index(args.column, inplace=True)
+    summary_df = summary_df.join(enrichment_df, on=args.column, how='inner')
 
-    print(enrichment_df)
+    # Ensure consistent column order
+    ordered_cols = genes + enrichment_cols
+    if "mean_enrichment" in enrichment_df.columns:
+        ordered_cols.append("mean_enrichment")
+    summary_df = summary_df[ordered_cols]
+
+    # Sort by appropriate enrichment column
+    print(f"\n[bold cyan]Mean expression and enrichment for each cell type sorted by {sort_col}:[/bold cyan]\n")
+    summary_df = summary_df.sort_values(by=sort_col, ascending=False)
+    print(summary_df)
+
+    # Print average values for all numeric columns
+    averages_df = summary_df.select_dtypes(include=[np.number]).mean().to_frame().T
+    print(f"\n[bold green]Average values for all numeric columns:[/bold green]\n")
+    print(averages_df)
+
+    # Optionally write output
+    if args.output:
+        output_path = Path(args.output) if args.output else input_path.parent / f"{input_path.stem}_{args.column}_marker_enrichment.csv"
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        enrichment_df.to_csv(output_path, index=False)
+        print(f"\n[green]Saved enrichment results to:[/green] {output_path}\n")
+
     verbose_end_msg()
 
 if __name__ == '__main__':
