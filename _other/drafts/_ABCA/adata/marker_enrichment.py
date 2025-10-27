@@ -3,13 +3,8 @@
 """
 Use ``marker_enrichment`` from UNRAVEL to load a scRNA-seq expression CSV file and calculate marker gene enrichment.
 
-Prereqs:
-    - Cell metadata and expression data from the Allen Brain Cell Atlas (e.g., from 
-
 Note:
     - The enrichment is calculated for each gene and cell type (mean expression in cell type / mean expression overall).
-    - With multiple genes, the enrichment is calculated as the mean of the individual gene enrichments
-    - The selected cell type column is then sorted by the highest enrichment across all genes.
     - Markers for each mouse cell type are available in Supplementary Table 7 from Yao et al., (2023): 
     - https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-023-06812-z/MediaObjects/41586_2023_6812_MOESM8_ESM.xlsx
 """
@@ -32,10 +27,12 @@ def parse_args():
     reqs.add_argument('-i', '--input', help='Path to the input CSV file.', required=True, action=SM)
     reqs.add_argument('-g', '--genes', help='Gene(s) to analyze (e.g., Drd1 or Drd1 Drd2).', required=True, nargs='*', action=SM)
     reqs.add_argument('-c', '--column', help='Cell type column to calculate enrichment for (neurotransmitter, class, subclass, supertype, cluster, supercluster, subcluster).', required=True, action=SM)
+    reqs.add_argument('-ct', '--cell_type', help="Cell type to analyze (e.g., '014 LA-BLA-BMA-PA Glut'). Default: None", default=None, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='Path to output CSV file.', default=None, action=SM)
     opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: mouse', default='mouse', action=SM)
+    opts.add_argument('-m', '--metric', help="Metric to save: 'mean' for mean expression, 'enrichment' for enrichment ratio. Default: mean", choices=['mean', 'enrichment'], default='mean', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -86,41 +83,39 @@ def main():
 
     # Rename columns for clarity
     enrichment_df.columns = [f"{g}_enrichment" for g in genes]
-    enrichment_df = enrichment_df.reset_index()
 
-    # Add a column for mean enrichment across markers only if multiple genes are given
-    enrichment_cols = [f"{g}_enrichment" for g in genes]
-    if len(genes) > 1:
-        enrichment_df["mean_enrichment"] = enrichment_df[enrichment_cols].mean(axis=1)
-        sort_col = "mean_enrichment"
-    else:
-        sort_col = enrichment_cols[0]
+    print(f'\n{summary_df=}\n')
+    print(f'\n{enrichment_df=}\n')
     
     # Join group means with enrichment_df to get the cell type column in the same order
-    enrichment_df.set_index(args.column, inplace=True)
-    summary_df = summary_df.join(enrichment_df, on=args.column, how='inner')
+    summary_df = summary_df.join(enrichment_df, how="inner")
+
+    print(f'\n{summary_df=}\n')
 
     # Ensure consistent column order
-    ordered_cols = genes + enrichment_cols
-    if "mean_enrichment" in enrichment_df.columns:
-        ordered_cols.append("mean_enrichment")
+    if args.metric == 'mean':
+        ordered_cols = genes
+    elif args.metric == 'enrichment':
+        ordered_cols = [f"{g}_enrichment" for g in genes]
+    else:
+        raise ValueError(f"Invalid metric: {args.metric}. Must be 'mean' or 'enrichment'.")
     summary_df = summary_df[ordered_cols]
 
+    print(f'\n{ordered_cols=}\n')
+    print(f'\n{summary_df=}\n')
+
     # Sort by appropriate enrichment column
-    print(f"\n[bold cyan]Mean expression and enrichment for each cell type sorted by {sort_col}:[/bold cyan]\n")
-    summary_df = summary_df.sort_values(by=sort_col, ascending=False)
-    print(summary_df)
+    print(f"\n[bold cyan]Mean expression and enrichment for the specified cell type {args.cell_type}:[/bold cyan]\n")
+    cell_type_summary_df = summary_df.loc[[args.cell_type]]
+    print(cell_type_summary_df)
 
-    # Print average values for all numeric columns
-    averages_df = summary_df.select_dtypes(include=[np.number]).mean().to_frame().T
-    print(f"\n[bold green]Average values for all numeric columns:[/bold green]\n")
-    print(averages_df)
-
-    # Optionally write output
+    # Save the results for the specified cell type
     if args.output:
-        output_path = Path(args.output) if args.output else input_path.parent / f"{input_path.stem}_{args.column}_marker_enrichment.csv"
+        default_output_path = input_path.parent / f"{input_path.stem}_{args.column}_{args.cell_type}_marker_enrichment.csv"
+        output_path = Path(args.output) if args.output else default_output_path
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        enrichment_df.to_csv(output_path, index=False)
+        cell_type_summary_df = cell_type_summary_df.round(6) # Only use 6 decimal places for saving
+        cell_type_summary_df.to_csv(output_path)
         print(f"\n[green]Saved enrichment results to:[/green] {output_path}\n")
 
     verbose_end_msg()
