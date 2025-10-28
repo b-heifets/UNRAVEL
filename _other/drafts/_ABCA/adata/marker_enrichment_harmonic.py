@@ -99,7 +99,7 @@ def main():
     if len(genes) > 1:
         eps = 1e-6  # avoid division by zero
         # Optional normalization step per gene (so dynamic ranges don’t dominate)
-        enrichment_norm = enrichment_df[enrichment_cols] / enrichment_df[enrichment_cols].max()
+        enrichment_norm = enrichment_df[enrichment_cols] / enrichment_df[enrichment_cols].max() # Normalize to [0,1]
 
         # Harmonic mean penalizes imbalance across genes
         enrichment_df["harmonic_mean_enrichment"] = len(genes) / (
