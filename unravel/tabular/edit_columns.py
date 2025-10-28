@@ -28,78 +28,102 @@ def parse_args():
     opts.add_argument('-d', '--drop_cols', help="Columns to drop (use either -d or -c, not both)", nargs='*', action=SM)
     opts.add_argument('-c', '--cols',  help="Keep and reorder columns.", nargs='*', action=SM)
     opts.add_argument('-r', '--rename', help="Rename columns using OLD=NEW syntax.", nargs='*', action=SM)
-    opts.add_argument('-o', '--output', help="Output directory path. Default: edit_cols.", default=None, action=SM)
+    opts.add_argument('-o', '--output', help="Output directory path for multiple inputs or output file path for single input.", default=None, action=SM)
     opts.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
 
-def edit_columns(file_path, drop_cols, cols, rename=None, output_dir=None, verbose=False):
+def edit_columns(input_pattern, drop_cols, cols, rename=None, output=None, verbose=False):
     """
     Load a CSV or XLSX file, process columns (drop/keep/reorder), and save the modified file.
 
     Parameters:
     -----------
-    file_path : str
-        Path to the input file (CSV or XLSX).
+    input_pattern : str
+        File path or glob pattern for input CSV/XLSX files.
     drop_cols : list or None
         List of column names to drop.
     cols : list or None
         List of column names to keep and reorder (all others will be dropped).
     rename : list or None
         List of strings in the format OLD=NEW to rename columns.
-    output_dir : str or None
-        Path to the output directory. If None, saves in ``edit_cols`` directory next to the input file.
+    output : str or None
+        Path to the output file or directory.
     verbose : bool
         If True, prints additional information during processing.
     """
-    df, file_extension = load_tabular_file(file_path)
+    file_paths = match_files(input_pattern)
 
-    existing_columns = df.columns.tolist()
+    for file_path in file_paths:
 
-    # Drop specified columns
-    if drop_cols:
-        drop_cols = [col for col in drop_cols if col in existing_columns]
+        # Skip temporary files that start with ~
+        if Path(file_path).name.startswith("~"):
+            continue
+
+        df, file_extension = load_tabular_file(file_path)
+
+        existing_columns = df.columns.tolist()
+
+        # Drop specified columns
         if drop_cols:
-            df.drop(columns=drop_cols, inplace=True)
+            drop_cols = [col for col in drop_cols if col in existing_columns]
+            if drop_cols:
+                df.drop(columns=drop_cols, inplace=True)
+            else:
+                print(f"[yellow]No matching columns found to drop in {file_path}. Skipping...")
+                print(f"[dim]Available columns: {existing_columns}")
+                return
+
+        # Keep only specified columns
+        if cols:
+            missing = [col for col in cols if col not in df.columns]
+            if missing:
+                print(f"[yellow]Missing columns: {missing}. Skipping...")
+                print(f"[dim]Available columns: {df.columns.tolist()}")
+                return
+            else:
+                df = df[cols]
+
+        # Rename columns if requested
+        if rename is not None:
+            rename_dict = {}
+            for r in rename:
+                if '=' in r:
+                    old, new = r.split('=', 1)
+                    if old in df.columns:
+                        rename_dict[old] = new
+            if rename_dict:
+                df.rename(columns=rename_dict, inplace=True)
+                if verbose:
+                    print(f"[dim]Renaming columns: {rename_dict}")
+            else:
+                print("[yellow]No valid columns to rename. Skipping...")
+
+        # Handle output path logic
+        if output is not None:
+            output_path = Path(output)
+            if len(file_paths) > 1:
+                # Multiple inputs → treat output as directory
+                output_path.mkdir(parents=True, exist_ok=True)
+                output_path = output_path / f"{Path(file_path).stem}_edit_cols{file_extension}"
+            else:
+                # Single input → treat output as file path
+                if output_path.is_dir():
+                    # If user mistakenly provides a directory, create file inside it
+                    output_path = output_path / f"{Path(file_path).stem}_edit_cols{file_extension}"
+                else:
+                    output_path.parent.mkdir(parents=True, exist_ok=True)
         else:
-            print(f"[yellow]No matching columns found to drop in {file_path}. Skipping...")
-            print(f"[dim]Available columns: {existing_columns}")
-            return
+            # No output specified
+            if len(file_paths) > 1:
+                output_path = Path(file_path).parent / "edit_cols" / f"{Path(file_path).stem}_edit_cols{file_extension}"
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+            else:
+                output_path = Path(file_path).parent / f"{Path(file_path).stem}_edit_cols{file_extension}"
 
-    # Keep only specified columns
-    if cols:
-        missing = [col for col in cols if col not in df.columns]
-        if missing:
-            print(f"[yellow]Missing columns: {missing}. Skipping...")
-            print(f"[dim]Available columns: {df.columns.tolist()}")
-            return
-        else:
-            df = df[cols]
 
-    # Rename columns if requested
-    if rename is not None:
-        rename_dict = {}
-        for r in rename:
-            if '=' in r:
-                old, new = r.split('=', 1)
-                if old in df.columns:
-                    rename_dict[old] = new
-        if rename_dict:
-            df.rename(columns=rename_dict, inplace=True)
-            if verbose:
-                print(f"[dim]Renaming columns: {rename_dict}")
-        else:
-            print("[yellow]No valid columns to rename. Skipping...")
-
-    if output_dir is not None:
-        output_dir.mkdir(parents=True, exist_ok=True)
-        output_path = output_dir / f"{Path(file_path).stem}_edit_cols{file_extension}"
-    else:
-        output_path = Path(file_path).parent / "edit_cols" / f"{Path(file_path).stem}_edit_cols{file_extension}"
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    save_tabular_file(df, output_path, index=False, verbose=verbose)
+        save_tabular_file(df, output_path, index=False, verbose=verbose)
 
 @log_command
 def main():
@@ -116,22 +140,14 @@ def main():
         print("[bold red]You cannot specify both -d (drop columns) and -c (columns). Please choose one.")
         return
 
-    file_paths = match_files(args.input)
-
-    for file_path in file_paths:
-
-        # Skip temporary files that start with ~
-        if Path(file_path).name.startswith("~"):
-            continue
-
-        edit_columns(
-            file_path=file_path,
-            drop_cols=args.drop_cols,
-            cols=args.cols,
-            rename=args.rename,
-            output_dir=Path(args.output) if args.output else None,
-            verbose=args.verbose
-        )
+    edit_columns(
+        input_pattern=args.input,
+        drop_cols=args.drop_cols,
+        cols=args.cols,
+        rename=args.rename,
+        output=args.output,
+        verbose=args.verbose
+    )
 
     verbose_end_msg()
 
