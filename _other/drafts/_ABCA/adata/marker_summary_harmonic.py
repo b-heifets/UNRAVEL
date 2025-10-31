@@ -6,6 +6,9 @@ Prereqs:
     - marker_summary.py to generate enrichment values for specified genes.
     - ``edit_cols`` to keep only desired marker gene columns for a given cell type.
 
+Note:
+    - Normalization occurs prior to optionally filtering by cell type.
+
 Inputs:
     - CSV output from marker_summary.py with columns representing marker genes for a given cell type.
 
@@ -73,11 +76,23 @@ def main():
     else:
         norm_df["harmonic_mean_enrichment"] = norm_df[genes[0]]
 
+
+    # Filter by cell type(s)
+    if args.cell_type == ['all']:
+        output_df = norm_df
+    else:
+        output_df = norm_df.loc[norm_df.index.isin(args.cell_type)]
+
+        # Reorder rows to match args.cell_type order
+        output_df = output_df.reindex(args.cell_type)
+
+
     output_df = norm_df[["harmonic_mean_enrichment"]]
     print(f"\nHarmonic Mean Enrichment DataFrame: {output_df}\n")
 
     # Save
-    default_output = input_path.parent / f"{input_path.stem}_harmonic_enrichment.csv"
+    cell_type_suffix = "all_cells" if args.cell_type == ['all'] else "selected_cells"
+    default_output = input_path.parent / f"{input_path.stem}_{cell_type_suffix}_harmonic_enrichment.csv"
     output_path = Path(args.output) if args.output else default_output
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_df.round(6).to_csv(output_path, index=True)
