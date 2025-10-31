@@ -76,18 +76,14 @@ def main():
     else:
         norm_df["harmonic_mean_enrichment"] = norm_df[genes[0]]
 
-
     # Filter by cell type(s)
     if args.cell_type == ['all']:
-        output_df = norm_df
+        output_df = norm_df[["harmonic_mean_enrichment"]]
     else:
-        output_df = norm_df.loc[norm_df.index.isin(args.cell_type)]
+        filtered_df = norm_df.loc[norm_df.index.isin(args.cell_type)]
+        # Preserve user order
+        output_df = filtered_df.reindex(args.cell_type)[["harmonic_mean_enrichment"]]
 
-        # Reorder rows to match args.cell_type order
-        output_df = output_df.reindex(args.cell_type)
-
-
-    output_df = norm_df[["harmonic_mean_enrichment"]]
     print(f"\nHarmonic Mean Enrichment DataFrame: {output_df}\n")
 
     # Save
