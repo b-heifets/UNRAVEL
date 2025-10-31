@@ -31,9 +31,9 @@ def parse_args():
     reqs.add_argument('-i', '--input', help='Path to the input CSV file.', required=True, action=SM)
     reqs.add_argument('-g', '--genes', help='Gene(s) to analyze (e.g., Drd1 or Drd1 Drd2).', required=True, nargs='*', action=SM)
     reqs.add_argument('-c', '--column', help='Cell type column to calculate enrichment for (neurotransmitter, class, subclass, supertype, cluster, supercluster, subcluster).', required=True, action=SM)
-    reqs.add_argument('-ct', '--cell_type', help="Cell type(s) to include. Default: all", nargs='*', default=['all'], action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-ct', '--cell_type', help="Cell type(s) to include. Default: all", nargs='*', default=['all'], action=SM)
     opts.add_argument('-o', '--output', help='Path to output CSV file.', default=None, action=SM)
     opts.add_argument('-s', '--species', help='Species (human or mouse). Default: mouse', default='mouse', action=SM)
     opts.add_argument('-m', '--metric', help="Metric to save: 'mean' or 'enrichment'. Default: mean", choices=['mean', 'enrichment'], default='mean', action=SM)
