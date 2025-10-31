@@ -34,6 +34,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='Path to output CSV file.', default=None, action=SM)
+    opts.add_argument('-ct', '--cell_type', help="Cell type(s) to include. Default: all", nargs='*', default=['all'], action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
