@@ -847,11 +847,11 @@ def main():
                 "common": False,
                 "alias": "uniq_vals"
             },
-            "tabular_join_csvs": {
-                "module": "unravel.tabular.join_csvs",
-                "description": "Join multiple CSV files into a single table using the first column as the key.",
+            "tabular_concat_csvs": {
+                "module": "unravel.tabular.concat_csvs",
+                "description": "Concatenate multiple CSV files into a single table.",
                 "common": False,
-                "alias": "join_csvs"
+                "alias": "concat_csvs"
             },
         },
     }
