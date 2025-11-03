@@ -387,15 +387,20 @@ def match_files(patterns, base_path=None):
     Parameters
     ----------
     patterns : str or list of str
-        Glob pattern(s) to match files. Supports wildcards like '*.nii.gz', '*.tif', etc.
-        Can include absolute paths with wildcards.
+        Glob pattern(s) or explicit file paths. Wildcards like '*.nii.gz' or '*.tif' are supported.
+        Both relative and absolute paths are accepted.
+        When multiple patterns are provided:
+            - Explicit paths preserve their order.
+            - Globs are expanded and sorted within that position.
     base_path : str or Path, optional
-        Base directory where relative patterns are applied. Defaults to the current working directory.
+        Base directory where relative patterns are applied.
+        Defaults to the current working directory.
 
     Returns
     -------
     list of Path
-        A sorted list of Path objects that match the provided glob patterns.
+        A list of Path objects matching the provided patterns,
+        preserving explicit input order and sorting only glob expansions.
 
     Raises
     ------
@@ -410,7 +415,7 @@ def match_files(patterns, base_path=None):
     elif isinstance(patterns, list) and all(isinstance(p, (str, Path)) for p in patterns):
         patterns = [str(p) for p in patterns]
     else:
-        raise TypeError("patterns must be a string, Path, or a list of those types.")
+        raise TypeError("patterns must be a string, Path, or list of those types.")
 
     if base_path is not None and not isinstance(base_path, (str, Path)):
         raise TypeError("base_path must be a string or Path object.")
@@ -420,15 +425,26 @@ def match_files(patterns, base_path=None):
 
     for pattern in patterns:
         pattern_path = Path(pattern)
-        if pattern_path.is_absolute():
-            paths.extend(Path(pattern_path.parent).glob(pattern_path.name))
+
+        # Determine if it's a glob (contains wildcard characters)
+        is_glob = any(ch in pattern for ch in "*?[]")
+
+        if is_glob:
+            # Absolute glob
+            if pattern_path.is_absolute():
+                matches = sorted(Path(pattern_path.parent).glob(pattern_path.name))
+            else:
+                matches = sorted(base_path.glob(pattern))
         else:
-            paths.extend(base_path.glob(pattern))
+            # Explicit file path — keep as-is, resolving relative paths
+            matches = [pattern_path if pattern_path.is_absolute() else base_path / pattern_path]
+
+        paths.extend(matches)
 
     if not paths:
         raise ValueError(f"No files found matching patterns: {patterns}")
 
-    return sorted(paths)
+    return paths
 
 def get_stem(file_path):
     """
