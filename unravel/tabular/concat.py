@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Use ``tabular_concat_csvs`` (``concat_csvs``) from UNRAVEL to load a CSV file and concatenate multiple CSV files into a single table.
+Use ``tabular_concat`` (``concat``) from UNRAVEL to load a CSV file and concatenate multiple CSV files into a single table.
 
 Usage:
 ------
-    tabular_concat_csvs --input path/input1.csv path/input2.csv [...] [-a 0|1] [-o path/output.csv] [-v]
+    tabular_concat --input path/input1.csv path/input2.csv [...] [-a 0|1] [-o path/output.csv] [-v]
 
 Usage in zsh to pass in files in order (e.g., prefix_1.csv, prefix_3.csv, prefix_2.csv):
 ----------------------------------------------------------------------------------------
-    array=(1 3 2) ; inputs=(${^array/#/prefix_}.csv) ; tabular_concat_csvs -i $inputs [-a 0|1] [-o path/output.csv] [-v]
+    array=(1 3 2) ; inputs=(${^array/#/prefix_}.csv) ; tabular_concat -i $inputs [-a 0|1] [-o path/output.csv] [-v]
 """
 
 from pathlib import Path

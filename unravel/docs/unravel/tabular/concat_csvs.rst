@@ -1,9 +1,9 @@
-.. _unravel.tabular.concat_csvs:
+.. _unravel.tabular.concat:
 
-unravel.tabular.concat_csvs module
-==================================
+unravel.tabular.concat module
+=============================
 
-.. automodule:: unravel.tabular.concat_csvs
+.. automodule:: unravel.tabular.concat
    :members:
    :undoc-members:
    :show-inheritance:
