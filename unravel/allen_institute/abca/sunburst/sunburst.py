@@ -4,7 +4,8 @@
 Use ``abca_sunburst`` or ``sb`` from UNRAVEL to generate a sunburst plot of cell type proportions across all ontological levels.
 
 Prereqs: 
-    - merfish_filter.py or RNAseq_expression.py + RNAseq_join_expression_data.py to generate the input cell metadata.
+    - ``abca_merfish_filter`` and optionally ``abca_merfish_join_gene``
+    - ``RNAseq_expression.py`` + ``RNAseq_join_expression_data.py`` to generate the input cell metadata.
     
 Outputs:
     - path/input_sunburst.csv and [WMB_sunburst_colors.csv or HMB_sunburst_colors.csv if --output_lut is provided]
