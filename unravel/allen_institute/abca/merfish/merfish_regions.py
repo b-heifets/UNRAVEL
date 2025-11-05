@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_merfish_regions`` or ``mfr`` from UNRAVEL to list unique region names from the Allen Brain Cell Atlas MERFISH parcellation annotations.
+Use ``abca_merfish_regions`` or ``mr`` from UNRAVEL to list unique region names from the Allen Brain Cell Atlas MERFISH parcellation annotations.
 
 Note:
     - This is useful for finding region acronyms that are relevant to MERFISH data analysis.

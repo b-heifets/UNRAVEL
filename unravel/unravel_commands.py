@@ -727,12 +727,17 @@ def main():
                 "common": False,
                 "alias": "mje"
             },
-            },
             "abca_merfish_check_genes": {
                 "module": "unravel.allen_institute.abca.merfish.merfish_check_genes",
-                "description": "Join ABCA MERFISH expression data with cell metadata.",
+                "description": "Check what genes are present in ABCA MERFISH expression data.",
                 "common": False,
                 "alias": "mcg"
+            },
+            "abca_merfish_regions": {
+                "module": "unravel.allen_institute.abca.merfish.merfish_regions",
+                "description": "Check what regions are present in given columns of ABCA MERFISH cell metadata.",
+                "common": False,
+                "alias": "mr"
             },
             "abca_sunburst": {
                 "module": "unravel.allen_institute.abca.sunburst.sunburst",

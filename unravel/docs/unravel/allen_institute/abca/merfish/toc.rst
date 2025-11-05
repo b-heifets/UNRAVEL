@@ -13,6 +13,7 @@ unravel.allen_institute.abca.merfish package
    merfish_expression_to_nii
    merfish_join_expression
    merfish_check_genes
+   merfish_regions
    
 .. automodule:: unravel.allen_institute.abca.merfish
    :members:
