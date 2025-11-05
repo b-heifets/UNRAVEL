@@ -267,73 +267,177 @@ def load_region_boundaries(download_base):
 
     return annotation_boundary_array, extent
 
-def load_expression_data(download_base, gene, imputed=False):
-    """
-    Load the expression data from the MERFISH data.
+# def load_expression_data(download_base, gene, imputed=False):
+#     """
+#     Load the expression data from the MERFISH data.
 
-    Parameters:
-    -----------
+#     Parameters:
+#     -----------
+#     download_base : Path
+#         The root directory of the MERFISH data.
+
+#     Returns:
+#     --------
+#     adata : anndata.AnnData object with n_obs x n_vars = 4334174 x 550
+#         The expression data. obs: 'brain_section_label', var: 'gene_symbol', 'transcript_identifier', uns: 'accessed_on', 'src'
+#     """
+#     genes_in_merfish = []
+#     genes_in_imputed_merfish = []
+#     if not imputed:
+#         genes_in_merfish = genes_in_merfish_data()
+#         if gene not in genes_in_merfish:
+#             print(f"    Gene [yellow]{gene}[/] not found in MERFISH data, using imputed data.")
+#             genes_in_imputed_merfish = genes_in_imputed_merfish_data()
+
+#             if gene not in genes_in_imputed_merfish:
+#                 print(f"    Gene [yellow]{gene}[/] not found in imputed MERFISH data.")
+#                 import sys ; sys.exit()
+#     else:
+#         genes_in_imputed_merfish = genes_in_imputed_merfish_data()
+#         if gene not in genes_in_imputed_merfish:
+#             print(f"    Gene [yellow]{gene}[/] not found in imputed MERFISH data.")
+#             import sys ; sys.exit()
+
+#     if genes_in_merfish:
+#         expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad'
+#     else:
+#         expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad'
+
+#     print(f"\n    Loading expression data from {expression_path}\n")
+#     adata = anndata.read_h5ad(expression_path, backed='r')
+#     return adata
+
+# def filter_expression_data(adata, gene):
+#     """
+#     Filter the expression data for a specific gene.
+
+#     Parameters:
+#     -----------
+#     adata : anndata.AnnData
+#         The expression data.
+#     gene : str
+#         The gene to filter for.
+
+#     Returns:
+#     --------
+#     asubset : anndata.AnnData
+#         The expression data subset for the specified gene. Columns: 'gene_symbol'
+#     gf : pd.DataFrame
+#         The gene metadata for the specified gene. Columns: 'gene_symbol', 'transcript_identifier'
+#     """
+#     print(f"\n    Filtering expression data for gene {gene}\n")
+#     genes = [gene]
+#     pred = [x in genes for x in adata.var.gene_symbol]  # Filter for the gene of interest
+#     gene_filtered = adata.var[pred]  # Get the gene metadata for the gene of interest
+#     asubset = adata[:, gene_filtered.index].to_memory()  # Get the expression data for the gene of interest
+#     pred = [x in genes for x in asubset.var.gene_symbol]  # Filter expression data for the gene of interest
+#     gf = asubset.var[pred]  # Get the gene metadata for the gene of interest
+
+#     return asubset, gf
+
+def load_expression_data(download_base, genes, imputed=False):
+    """
+    Load MERFISH expression data from the Allen Brain Cell Atlas.
+
+    Parameters
+    ----------
     download_base : Path
-        The root directory of the MERFISH data.
+        Root directory of the MERFISH data (e.g., /path/to/abc_download_root).
+    genes : str | list[str]
+        One or more gene symbols to load.
+    imputed : bool, optional
+        Whether to force loading the imputed MERFISH data. Default: False.
 
-    Returns:
-    --------
-    adata : anndata.AnnData object with n_obs x n_vars = 4334174 x 550
-        The expression data. obs: 'brain_section_label', var: 'gene_symbol', 'transcript_identifier', uns: 'accessed_on', 'src'
+    Returns
+    -------
+    adata : anndata.AnnData
+        Expression data (backed) object.
+        obs: 'brain_section_label'
+        var: 'gene_symbol', 'transcript_identifier'
     """
-    genes_in_merfish = []
-    genes_in_imputed_merfish = []
-    if not imputed:
-        genes_in_merfish = genes_in_merfish_data()
-        if gene not in genes_in_merfish:
-            print(f"    Gene [yellow]{gene}[/] not found in MERFISH data, using imputed data.")
-            genes_in_imputed_merfish = genes_in_imputed_merfish_data()
+    if isinstance(genes, str):
+        genes = [genes]
 
-            if gene not in genes_in_imputed_merfish:
-                print(f"    Gene [yellow]{gene}[/] not found in imputed MERFISH data.")
-                import sys ; sys.exit()
+    # Get gene lists
+    genes_regular = set(genes_in_merfish_data())
+    genes_imputed = set(genes_in_imputed_merfish_data())
+
+    # Decide which dataset to use
+    if not imputed and all(g in genes_regular for g in genes):
+        dataset_type = "regular"
+        expression_path = (
+            download_base /
+            "expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad"
+        )
     else:
-        genes_in_imputed_merfish = genes_in_imputed_merfish_data()
-        if gene not in genes_in_imputed_merfish:
-            print(f"    Gene [yellow]{gene}[/] not found in imputed MERFISH data.")
-            import sys ; sys.exit()
+        dataset_type = "imputed"
+        missing = [g for g in genes if g not in genes_imputed]
+        if missing:
+            print(f"    [red]Error:[/] Genes not found in imputed MERFISH data: {missing}")
+            import sys; sys.exit(1)
+        expression_path = (
+            download_base /
+            "expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad"
+        )
 
-    if genes_in_merfish:
-        expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad'
-    else:
-        expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad'
+    print(f"\n    Using {dataset_type} MERFISH dataset")
+    print(f"    Loading expression data from {expression_path}\n")
 
-    print(f"\n    Loading expression data from {expression_path}\n")
-    adata = anndata.read_h5ad(expression_path, backed='r')
+    adata = anndata.read_h5ad(expression_path, backed="r")
     return adata
 
-def filter_expression_data(adata, gene):
-    """
-    Filter the expression data for a specific gene.
 
-    Parameters:
-    -----------
+def filter_expression_data(adata, genes):
+    """
+    Filter expression data for one or more genes.
+
+    Parameters
+    ----------
     adata : anndata.AnnData
-        The expression data.
-    gene : str
-        The gene to filter for.
+        The MERFISH expression dataset (can be backed).
+    genes : list[str]
+        List of gene symbols to extract.
 
-    Returns:
-    --------
+    Returns
+    -------
     asubset : anndata.AnnData
-        The expression data subset for the specified gene. Columns: 'gene_symbol'
+        In-memory subset with columns for the selected genes.
     gf : pd.DataFrame
-        The gene metadata for the specified gene. Columns: 'gene_symbol', 'transcript_identifier'
+        Gene metadata for the selected genes.
     """
-    print(f"\n    Filtering expression data for gene {gene}\n")
-    genes = [gene]
-    pred = [x in genes for x in adata.var.gene_symbol]  # Filter for the gene of interest
-    gene_filtered = adata.var[pred]  # Get the gene metadata for the gene of interest
-    asubset = adata[:, gene_filtered.index].to_memory()  # Get the expression data for the gene of interest
-    pred = [x in genes for x in asubset.var.gene_symbol]  # Filter expression data for the gene of interest
-    gf = asubset.var[pred]  # Get the gene metadata for the gene of interest
+    if isinstance(genes, str):
+        genes = [genes]
 
-    return asubset, gf
+    print(f"\n    Filtering expression data for genes: {', '.join(genes)}\n")
+
+    pred = adata.var["gene_symbol"].isin(genes)
+    gene_filtered = adata.var[pred]
+
+    if gene_filtered.empty:
+        raise ValueError(f"None of the requested genes were found in adata.var['gene_symbol'].")
+
+    print(f"    Found {len(gene_filtered)} matches: {gene_filtered.gene_symbol.tolist()}\n")
+
+    # Convert labels to integer positions
+    gene_pos = [adata.var.index.get_loc(i) for i in gene_filtered.index]
+
+    # Load matrix into memory if backed
+    print("    Loading expression matrix into memory...\n")
+    adata_mem = adata.to_memory()
+
+    # Extract columns for the genes
+    x = adata_mem.X[:, gene_pos]
+    if hasattr(x, "toarray"):
+        x = x.toarray()
+
+    # Build small in-memory AnnData
+    asubset = anndata.AnnData(
+        X=np.array(x),
+        obs=adata_mem.obs.copy(),
+        var=gene_filtered.copy()
+    )
+
+    return asubset, gene_filtered
 
 def create_expression_dataframe(ad, gf, section):
     """
