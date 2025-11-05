@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_merfish_join_gene`` ``mjg`` from UNRAVEL to join [filtered] cell metadata with MERFISH expression data for a specified gene from the ABCA.
+Use ``abca_merfish_join_expression`` ``mje`` from UNRAVEL to join [filtered] cell metadata with MERFISH expression data for a specified gene from the ABCA.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/merfish_tutorial_part_2b.html
@@ -11,7 +11,7 @@ Output:
 
 Usage:
 ------
-    abca_merfish_join_gene -i path/filtered_cells.csv -b path/base_dir -g gene [-im] [-v]
+    abca_merfish_join_expression -i path/filtered_cells.csv -b path/base_dir -g gene [-im] [-v]
 
 """
 
@@ -36,16 +36,16 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
     reqs.add_argument('-i', '--input', help='path/filtered_cells.csv', required=True, action=SM)
-    reqs.add_argument('-g', '--gene', help='Gene to analyze', required=True, action=SM)
+    reqs.add_argument('-g', '--genes', help='Genes to analyze', required=True, nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
+    opts.add_argument('-o', '--output', help='Output path for the joined data. Default: None', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
-
 
 @log_command
 def main():
@@ -60,10 +60,10 @@ def main():
     cell_df = pd.read_csv(args.input, dtype={'cell_label': str})
 
     # Load the expression data for all genes (if the gene is in the dataset) 
-    adata = mf.load_expression_data(download_base, args.gene, imputed=args.imputed)
+    adata = mf.load_expression_data(download_base, args.genes, imputed=args.imputed)
 
-    # Filter expression data for the specified gene
-    asubset, gf = mf.filter_expression_data(adata, args.gene)
+    # Filter expression data for the specified genes
+    asubset, gf = mf.filter_expression_data(adata, args.genes)
 
     # Create a dataframe with the expression data for the specified gene
     gdata = asubset[:, gf.index].to_df()  # Extract expression data for the gene
@@ -74,12 +74,19 @@ def main():
     exp_df = cell_df.set_index('cell_label').join(gdata, how='left').reset_index()
 
     # Save the joined data
-    if args.imputed:
-        exp_df.to_csv(f"{Path(args.input).stem}_{args.gene}_imputed_expression.csv", index=False)
-        print(f"\n    Saved the joined data to {Path(args.input).stem}_{args.gene}_imputed_expression.csv\n")
+    output_path = Path(args.output) if args.output else None
+    if output_path:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
     else:
-        exp_df.to_csv(f"{Path(args.input).stem}_{args.gene}_expression.csv", index=False)
-        print(f"\n    Saved the joined data to {Path(args.input).stem}_{args.gene}_expression.csv\n")
+        first_gene = args.genes[0]
+        if args.imputed:
+            output_path = f"{Path(args.input).stem}_{first_gene}_imputed_expression.csv"
+        else:
+            output_path = f"{Path(args.input).stem}_{first_gene}_expression.csv"
+
+    # Save the csv
+    exp_df.to_csv(output_path, index=False)
+    print(f"\n    Saved the joined data to {output_path}\n")
 
     verbose_end_msg()
 

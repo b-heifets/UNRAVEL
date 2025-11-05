@@ -710,16 +710,29 @@ def main():
                 "alias": "mf_filter_mask"
             },
             "abca_merfish_expression_to_nii": {
-                "module": "unravel.allen_institute.abca.merfish.abca_merfish_expression_to_nii",
+                "module": "unravel.allen_institute.abca.merfish.merfish_expression_to_nii",
                 "description": "Make a 3D .nii.gz image of ABCA MERFISH expression data.",
                 "common": True,
                 "alias": "me"
             },
             "abca_merfish_cells_to_nii": {
-                "module": "unravel.allen_institute.abca.merfish.abca_merfish_cells_to_nii",
+                "module": "unravel.allen_institute.abca.merfish.merfish_cells_to_nii",
                 "description": "Convert ABCA MERFISH cells to a .nii.gz 3D image.",
                 "common": False,
                 "alias": "mc"
+            },
+            "abca_merfish_join_expression": {
+                "module": "unravel.allen_institute.abca.merfish.merfish_join_expression",
+                "description": "Join ABCA MERFISH expression data with cell metadata.",
+                "common": False,
+                "alias": "mje"
+            },
+            },
+            "abca_merfish_check_genes": {
+                "module": "unravel.allen_institute.abca.merfish.merfish_check_genes",
+                "description": "Join ABCA MERFISH expression data with cell metadata.",
+                "common": False,
+                "alias": "mcg"
             },
             "abca_sunburst": {
                 "module": "unravel.allen_institute.abca.sunburst.sunburst",
