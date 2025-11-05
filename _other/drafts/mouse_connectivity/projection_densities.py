@@ -30,7 +30,8 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-e', '--exp_type', help='Experiment type (e.g., cre, wt, all). Default: all', default='all', action=SM)
-    opts.add_argument('-d', '--descendants', help='Include descendants of target structures. Default: False', action='store_true', default=False)
+    opts.add_argument('-n', '--no_descendants', help='Do not include descendants of target structures. Default: False', action='store_true', default=False)
+    opts.add_argument('-ei', '--experiment_ids', help='List of specific experiment IDs to include. Default: None', nargs='*', default=None, action=SM)
     opts.add_argument('-o', '--output', help='Path to output dir for CSVs. Default: projection_densities', default='_projection_densities', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -77,7 +78,7 @@ def main():
         experiment_ids=experiment_ids, # List of experiment IDs.  Corresponds to section_data_set_id in the API.
         structure_ids=target_structure_ids,  # Filter with list of target structure IDs
         is_injection=False,  # Ensure projection data is retrieved, not injection site
-        include_descendants=args.descendants  # Include any subregions of ACB
+        include_descendants=args.no_descendants  # Include any subregions
     )
 
     # Sort by experiment ID and then hemisphere
@@ -130,10 +131,14 @@ def main():
     # Format injection_volume correctly (3 decimal places, no trailing zeros)
     projection_df.loc[:, 'injection_volume'] = projection_df['injection_volume'].apply(lambda x: f"{x:.3f}".rstrip('0').rstrip('.'))
 
+    # Keep only specified experiment IDs if provided
+    if args.experiment_ids is not None:
+        args.experiment_ids = [int(e) for e in args.experiment_ids]
+        projection_df = projection_df[projection_df['experiment_id'].isin(args.experiment_ids)]
+
     # Reset the index
     projection_df.reset_index(drop=True, inplace=True)
 
-    
     # Make a df for the right hemisphere (hemisphere_id = 2; ipsilateral to injection site)
     right_hemi_df = projection_df[projection_df['hemisphere_id'] == 2]
     right_hemi_df = right_hemi_df.drop(columns='hemisphere_id')
