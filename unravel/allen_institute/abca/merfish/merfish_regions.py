@@ -16,11 +16,7 @@ Usage with piping to grep:
     abca_merfish_regions -b path/base_dir | grep BLA
 """
 
-import anndata
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import SimpleITK as sitk
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -44,14 +40,6 @@ def parse_args():
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
-
-# TODO: Make base cwd by default. Consider intergrating with the cache tool from Allen. 
-# TODO: Offload the lists of genes to CSVs
-# TODO: Offload common functions to allen_utils.py
-# TODO: Add option to download the data if not present
-# TODO: Rename functions from cluster details to cell details etc
-
-
 
 @log_command
 def main():
