@@ -41,6 +41,7 @@ from rich import print
 from rich.traceback import install
 
 import unravel.allen_institute.abca.merfish.merfish as mf
+from unravel.allen_institute.abca.merfish.merfish_check_genes import normalize_gene_names
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -134,16 +135,6 @@ def load_expression_from_zarr(file, gene_list):
     df.index = adata.obs_names  # Set cell labels as the index
     df.columns = gene_list
     return df  # locals (adata, df) freed automatically after return
-
-def normalize_gene_names(gene_list: List[str], species: str) -> List[str]:
-    """Normalize gene names based on species conventions."""
-    if species == 'mouse':
-        # Mouse gene symbols: capitalize only the first letter (Htr2a)
-        gene_list = [g.lower().capitalize() for g in gene_list]
-    elif species == 'human':
-        # Human gene symbols: all uppercase (HTR2A)
-        gene_list = [g.upper() for g in gene_list]
-    return gene_list
 
 @log_command
 def main():

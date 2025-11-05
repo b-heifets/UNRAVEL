@@ -20,6 +20,7 @@ from rich import print
 from rich.traceback import install
 
 from unravel.allen_institute.abca.merfish.gene_catalog import genes
+from unravel.allen_institute.abca.merfish.merfish_check_genes import normalize_gene_names
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -43,15 +44,6 @@ def parse_args():
 
     return parser.parse_args()
 
-def normalize_gene_names(gene_list: List[str], species: str) -> List[str]: # This could be imported once integrated elsewhere
-    """Normalize gene names based on species conventions."""
-    if species == 'mouse':
-        # Mouse gene symbols: capitalize only the first letter (Htr2a)
-        return [g.lower().capitalize() for g in gene_list]
-    elif species == 'human':
-        # Human gene symbols: all uppercase (HTR2A)
-        return [g.upper() for g in gene_list]
-    return gene_list
 
 @log_command
 def main():
