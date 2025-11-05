@@ -53,17 +53,18 @@ def main():
     regular_genes = set(mf.genes_in_merfish_data())
     imputed_genes = set(mf.genes_in_imputed_merfish_data())
 
+    # Normalize and deduplicate user input
     gene_list = normalize_gene_names(args.genes, species='mouse')
+    gene_set = set(gene_list)  # remove duplicates here
 
-    # Categorize
-    in_regular = [g for g in gene_list if g in regular_genes]
-    not_in_regular = [g for g in gene_list if g not in regular_genes]
-    in_imputed_only = [g for g in not_in_regular if g in imputed_genes]
-    missing_both = [g for g in not_in_regular if g not in imputed_genes]
-    in_imputed = [g for g in gene_list if g in imputed_genes]
+    # Categorize using set logic
+    in_regular = gene_set & regular_genes
+    in_imputed = gene_set & imputed_genes
+    in_imputed_only = in_imputed - in_regular
+    missing_both = gene_set - (regular_genes | imputed_genes)
 
-    # Print summary (fmt is short for format)
-    def fmt(glist): return " ".join(sorted(glist)) if glist else "—"
+    # Print summary
+    fmt = lambda s: " ".join(sorted(s)) if s else "—"
 
     if in_regular:
         print(f"\n[magenta]Genes present in regular MERFISH data ({len(in_regular)}):[/] {fmt(in_regular)}")
@@ -73,7 +74,9 @@ def main():
         print(f"[green]All genes in imputed dataset ({len(in_imputed)}):[/] {fmt(in_imputed)}")
     if missing_both:
         print(f"\n[red]Genes missing from both regular and imputed datasets ({len(missing_both)}):[/] {fmt(missing_both)}")
+
     verbose_end_msg()
+
 
 if __name__ == '__main__':
     main()
