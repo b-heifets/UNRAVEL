@@ -24,9 +24,6 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-g', '--genes', help='Space-separated list of gene symbols', required=True, nargs='*', action=SM)
 
-    opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
-
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
