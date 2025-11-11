@@ -529,15 +529,22 @@ def resolve_output_paths(
     The `output_paths` argument can include an optional suffix using colon notation:
         - "results/:_filtered" → output dir = "results/", suffix = "_filtered"
         - ":_processed"        → no dir, just apply suffix "_processed" next to inputs
-        - "results/"           → output dir only (default suffix "_out")
+        - "results/"           → output dir only (adds '_out' if input/output names would match)
         - "results/file.csv"   → explicit file output
+
+    Suffix logic
+    -------------
+    - If input and output filenames (including extension) would match, '_out' is added automatically
+      to prevent overwriting.
+    - If filenames differ (e.g., due to directory, stem, or extension), no default suffix is used.
+    - User-specified suffixes (via colon notation or `stem_suffix`) always take precedence.
 
     General rules
     -------------
     - One input, output is a file → use it directly.
     - One input, output is a directory → save inside it.
     - Multiple inputs, output must be a directory (auto-created).
-    - No output → save next to each input file, adding a suffix to avoid overwriting.
+    - No output → save next to each input file, adding a suffix if needed to avoid overwriting.
     - All parent directories for outputs are created automatically.
 
     For multiple input files in nested directories, their relative structure under `base_dir`
@@ -552,21 +559,16 @@ def resolve_output_paths(
 
     Example usage
     -------------
-    >>> # Serial
-    >>> inputs = ["data/a.csv", "data/b.csv"]
-    >>> outputs = resolve_output_paths(inputs, "results/:_cleaned")
+    >>> inputs = ["data/a.nrrd", "data/b.nrrd"]
+    >>> outputs = resolve_output_paths(inputs, "results/:_aligned", ext=".nii.gz")
     >>> for i, o in zip(inputs, outputs):
     ...     print(f"{i} → {o}")
-    data/a.csv → results/a_cleaned.csv
-    data/b.csv → results/b_cleaned.csv
+    data/a.nrrd → results/a.nii.gz
+    data/b.nrrd → results/b.nii.gz
 
-    >>> # Parallel, skipping completed outputs
-    >>> from concurrent.futures import ProcessPoolExecutor
-    >>> inputs_f, outputs = resolve_output_paths(
-    ...     inputs, "results/:_converted", skip_existing=True, return_inputs=True
-    ... )
-    >>> with ProcessPoolExecutor() as ex:
-    ...     ex.map(process_file, inputs_f, outputs)
+    >>> # Same format and name → '_out' added
+    >>> outputs = resolve_output_paths(inputs, "results/")
+    data/a.nrrd → results/a_out.nrrd
 
     Parameters
     ----------
@@ -580,7 +582,6 @@ def resolve_output_paths(
         If None, keeps the input file's extension.
     stem_suffix : str | None, optional
         Manual suffix to append before the extension. Overrides any suffix in `output_paths`.
-        Default is '_out' if neither is provided.
     base_dir : str | Path | None, optional
         Base directory to preserve relative paths under.
         If None, inferred automatically (common parent or CWD).
@@ -607,13 +608,6 @@ def resolve_output_paths(
         output_paths = base_part.strip() or None
         parsed_suffix = parsed_suffix.strip() or None
 
-    # Determine final suffix priority: manual arg > colon > default
-    final_suffix = (
-        stem_suffix if stem_suffix is not None
-        else parsed_suffix if parsed_suffix is not None
-        else "_out"
-    )
-
     # --- Infer base_dir automatically ---
     if base_dir:
         base_dir = Path(base_dir).resolve()
@@ -624,6 +618,13 @@ def resolve_output_paths(
             base_dir = Path.cwd()
     else:
         base_dir = file_paths[0].parent.resolve()
+
+    # --- Determine suffix priority ---
+    final_suffix = (
+        stem_suffix if stem_suffix is not None
+        else parsed_suffix if parsed_suffix is not None
+        else ""  # decided below dynamically if needed
+    )
 
     # --- Main logic ---
     if output_paths:
@@ -639,22 +640,34 @@ def resolve_output_paths(
             output_paths.mkdir(parents=True, exist_ok=True)
             for f in file_paths:
                 stem = get_stem(f)
-                out_ext = ext or get_extension(f)
+                in_ext = get_extension(f)
+                out_ext = ext or in_ext
                 try:
                     rel = f.relative_to(base_dir)
                     rel_dir = rel.parent
                 except ValueError:
                     rel_dir = Path()
+
                 target_dir = output_paths / rel_dir
                 target_dir.mkdir(parents=True, exist_ok=True)
+
+                # Determine if name/extension match → add '_out'
+                candidate = target_dir / f"{stem}{final_suffix}{out_ext}"
+                if final_suffix == "" and candidate.name == f.name:
+                    final_suffix = "_out"
+
                 outputs.append(target_dir / f"{stem}{final_suffix}{out_ext}")
 
     else:
         # Case 3: No output path → save next to input
         for f in file_paths:
             stem = get_stem(f)
-            out_ext = ext or get_extension(f)
-            out_file = f.parent / f"{stem}{final_suffix}{out_ext}"
+            in_ext = get_extension(f)
+            out_ext = ext or in_ext
+            final_suffix_for_this = final_suffix
+            if final_suffix_for_this == "" and out_ext == in_ext:
+                final_suffix_for_this = "_out"
+            out_file = f.parent / f"{stem}{final_suffix_for_this}{out_ext}"
             out_file.parent.mkdir(parents=True, exist_ok=True)
             outputs.append(out_file)
 
