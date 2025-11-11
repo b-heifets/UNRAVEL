@@ -513,6 +513,143 @@ def get_extension(file_path):
     
     return file_path.suffix
 
+def resolve_output_paths(
+    file_paths,
+    output_path=None,
+    ext=None,
+    stem_suffix="_out",
+    base_dir=None,
+    *,
+    skip_existing=False,
+    return_inputs=False,
+):
+    """
+    Resolve and prepare output file path(s) based on input file(s) and an optional output path.
+
+    General rules
+    -------------
+    - One input, output is a file → use it directly.
+    - One input, output is a directory → save inside it.
+    - Multiple inputs, output must be a directory (auto-created).
+    - No output → save next to each input file, adding a stem suffix to avoid overwriting.
+    - All parent directories for outputs are created automatically.
+
+    For multiple input files in nested directories, their relative structure under `base_dir`
+    is preserved automatically. If `base_dir` is not provided, it is inferred as:
+        - The common parent directory of all inputs, if shared
+        - Otherwise, the current working directory
+
+    Parallel processing
+    -------------------
+    This function is safe and efficient for parallel processing.
+    It ensures parent directories exist so worker processes can write immediately.
+
+    Example usage
+    -------------
+    >>> # Serial processing
+    >>> inputs = ["data/sample01/a.csv", "data/sample02/b.csv"]
+    >>> outputs = resolve_output_paths(inputs, "results/", stem_suffix="_cleaned")
+    >>> for in_f, out_f in zip(inputs, outputs):
+    ...     print(f"Processing {in_f} → {out_f}")
+    Processing data/sample01/a.csv → results/sample01/a_cleaned.csv
+    Processing data/sample02/b.csv → results/sample02/b_cleaned.csv
+
+    >>> # Parallel processing with skip_existing
+    >>> from concurrent.futures import ProcessPoolExecutor
+    >>> inputs = ["data/a.csv", "data/b.csv"]
+    >>> inputs_f, outputs = resolve_output_paths(
+    ...     inputs, "results/", skip_existing=True, return_inputs=True
+    ... )
+    >>> with ProcessPoolExecutor() as ex:
+    ...     ex.map(process_file, inputs_f, outputs)
+
+    Parameters
+    ----------
+    file_paths : list[str | Path]
+        One or more input file paths.
+    output_path : str | Path | None, optional
+        Desired output location. Can be:
+          - A file path (if one input file)
+          - A directory (for one or more inputs)
+          - None → output saved next to input(s)
+    ext : str | None, optional
+        Optional override for file extension (e.g., ".csv", ".nii.gz").
+        If None, keeps the input file’s extension.
+    stem_suffix : str, optional
+        String appended to the stem before the extension (default "_out").
+        Use "" to allow overwriting the input files.
+    base_dir : str | Path | None, optional
+        Base directory to preserve relative paths under.
+        If None, inferred automatically (common parent or CWD).
+    skip_existing : bool, optional (default False)
+        If True, outputs that already exist are skipped.
+    return_inputs : bool, optional (default False)
+        If True, returns a tuple (filtered_inputs, outputs).
+        Otherwise, returns only outputs.
+
+    Returns
+    -------
+    list[Path]  or  (list[Path], list[Path])
+        List of resolved output paths (always Path objects).
+        If `return_inputs=True`, returns (filtered_inputs, outputs).
+    """
+    file_paths = [Path(p).resolve() for p in file_paths]
+    n = len(file_paths)
+    outputs = []
+
+    # --- Infer base_dir automatically ---
+    if base_dir:
+        base_dir = Path(base_dir).resolve()
+    elif n > 1:
+        try:
+            base_dir = Path(os.path.commonpath([str(f) for f in file_paths]))
+        except ValueError:
+            base_dir = Path.cwd()
+    else:
+        base_dir = file_paths[0].parent.resolve()
+
+    # --- Main logic ---
+    if output_path:
+        output_path = Path(output_path).resolve()
+
+        # Case 1: Single input, explicit output file
+        if n == 1 and output_path.suffix:
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            outputs = [output_path]
+
+        # Case 2: Treat as directory (preserve structure relative to base_dir)
+        else:
+            output_path.mkdir(parents=True, exist_ok=True)
+            for f in file_paths:
+                stem = get_stem(f)
+                out_ext = ext or get_extension(f)
+                try:
+                    rel = f.relative_to(base_dir)
+                    rel_dir = rel.parent
+                except ValueError:
+                    rel_dir = Path()
+                target_dir = output_path / rel_dir
+                target_dir.mkdir(parents=True, exist_ok=True)
+                outputs.append(target_dir / f"{stem}{stem_suffix}{out_ext}")
+
+    else:
+        # Case 3: No output specified → same dir, add suffix
+        for f in file_paths:
+            stem = get_stem(f)
+            out_ext = ext or get_extension(f)
+            out_file = f.parent / f"{stem}{stem_suffix}{out_ext}"
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            outputs.append(out_file)
+
+    # --- Optional: skip outputs that already exist (keep pairs aligned) ---
+    if skip_existing:
+        keep_idx = [i for i, p in enumerate(outputs) if not p.exists()]
+        outputs = [outputs[i] for i in keep_idx]
+        filtered_inputs = [file_paths[i] for i in keep_idx]
+        return (filtered_inputs, outputs) if return_inputs else outputs
+
+    return outputs
+
 @print_func_name_args_times()
 def get_pad_percent(reg_outputs_path, pad_percent):
     # TODO: Could change this from reg_outputs_path to relative path to pad_percent.txt
