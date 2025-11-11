@@ -805,7 +805,7 @@ def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=None, refere
     nii = nib.Nifti1Image(ndarray, affine, header)
     nii.header.set_data_dtype(data_type or np.float32)
     
-    nib.save(nii, output)    
+    nib.save(nii, output)
     print(f"\n    Output: [default bold]{output}")
 
 @print_func_name_args_times()
