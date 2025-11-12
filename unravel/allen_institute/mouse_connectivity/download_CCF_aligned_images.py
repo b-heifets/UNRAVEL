@@ -28,7 +28,7 @@ def parse_args():
     reqs.add_argument('-i', '--input', help='Experiment ID(s) to download data for (e.g., 113144533)', required=True, nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-r', '--resolution', help='Resolution for images in micrometers (10, 25, 50). Default: 25', type=int, default=25, choices=[10, 25, 50], action=SM)
+    opts.add_argument('-res', '--resolution', help='Resolution for images in micrometers (10, 25, 50). Default: 25', type=int, default=25, choices=[10, 25, 50], action=SM)
     opts.add_argument('-o', '--output', help='Path to output dir for images. Default: connectivity', default='connectivity', action=SM)
 
     general = parser.add_argument_group('General arguments')
