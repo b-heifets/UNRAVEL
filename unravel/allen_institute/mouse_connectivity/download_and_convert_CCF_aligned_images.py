@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 
 """
-Use ``download_and_convert_CCF_aligned_images.py`` from UNRAVEL to download connectivity images from the Allen Brain Atlas Mouse Connectivity API and convert them to NIfTI format.
+Use ``download_and_convert_CCF_aligned_images.py`` from UNRAVEL to download/convert CCF-aligned images from the Allen Brain Atlas Mouse Connectivity API.
+
+Outputs:
+    - Output dir: connectivity/<id>_<resolution>um/
+    - Reference-aligned images: resampled_<red|green|blue>.nii.gz
+    - <id>_projection_density_<resolution>um.nii.gz
 
 Usage:
 ------
