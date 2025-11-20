@@ -142,6 +142,16 @@ def main():
         output_path = output_dir / "experiment_info.csv"
         experiments_df.to_csv(output_path, index=False)
         print(f"Saved experiment info to: {output_path}\n")
+
+    # Print experiment IDs as a space-separated list
+    exp_ids = experiments_df['id'].tolist()
+    print(f"Experiment IDs:\n{' '.join(map(str, exp_ids))}\n")
+
+    # Print message about scripts for downloading/converting data
+    print("Use the following UNRAVEL scripts to download and process data for these experiments:")
+    print("  - download_and_convert_CCF_aligned_images.py")
+    print("  - download_and_convert_CCF_aligned_injection_density.py")
+
     verbose_end_msg()
 
 if __name__ == '__main__':
