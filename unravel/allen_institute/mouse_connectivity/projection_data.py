@@ -4,6 +4,7 @@
 Use ``projection_data.py`` from UNRAVEL to summarize connectivity data from the Allen Brain Atlas Mouse Connectivity API.
 
 Notes:
+    - Use experiment_info.py to find valid source/target structure acronyms.
     - https://allensdk.readthedocs.io/en/latest/connectivity.html
     - https://allensdk.readthedocs.io/en/stable/_static/examples/nb/mouse_connectivity.html
     - https://alleninstitute.github.io/AllenSDK/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi
@@ -31,7 +32,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-e', '--exp_type', help='Experiment type (e.g., cre, wt, all). Default: all', default='all', action=SM)
     opts.add_argument('-n', '--no_descendants', help='Do not include descendants of target structures. Default: False', action='store_true', default=False)
-    opts.add_argument('-ei', '--experiment_ids', help='List of specific experiment IDs to include. Default: None', nargs='*', default=None, action=SM)
+    opts.add_argument('-ei', '--experiment_ids', help='List of specific experiment IDs to include. Default: Use all experiments found.', default=None, nargs='*', action=SM)
     opts.add_argument('-o', '--output', help='Path to output dir for CSVs. Default: projection_densities', default='_projection_densities', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -131,7 +132,7 @@ def main():
     # Format injection_volume correctly (3 decimal places, no trailing zeros)
     projection_df.loc[:, 'injection_volume'] = projection_df['injection_volume'].apply(lambda x: f"{x:.3f}".rstrip('0').rstrip('.'))
 
-    # Keep only specified experiment IDs if provided
+    # Keep only specified experiment IDs if provided, otherwise keep all
     if args.experiment_ids is not None:
         args.experiment_ids = [int(e) for e in args.experiment_ids]
         projection_df = projection_df[projection_df['experiment_id'].isin(args.experiment_ids)]
