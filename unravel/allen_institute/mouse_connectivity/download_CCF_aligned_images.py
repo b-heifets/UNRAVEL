@@ -30,17 +30,18 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='Experiment ID(s) to download data for (e.g., 113144533)', required=True, nargs='*', action=SM)
+    reqs.add_argument('-i', '--input', help='Experiment ID(s) to download data for (e.g., 113144533)', required=True, nargs='*', type=int, action=SM)
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-o', '--output', help='Output dir base path. Default: current working directory (saves to ./<experiment_id>)', default=None, action=SM)
+    opts.add_argument('-id', '--injection_density', help='Download injection density volume. Default: False', action='store_true', default=False)
+    opts.add_argument('-dm', '--data_mask', help='Download data mask volume. Default: False', action='store_true', default=False)
     opts.add_argument('-10', '--download_10um', help='Also download 10 µm projection density images. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
-
 
 def download_CCF_aligned_connectivity_data(experiment_id: int, outdir: str | Path = None):
 
@@ -58,6 +59,17 @@ def download_CCF_aligned_connectivity_data(experiment_id: int, outdir: str | Pat
     print(f"⬇️  Downloading projection density volume → {proj_path}")
     mca.download_projection_density(str(proj_path), experiment_id, 25)
     print(f"✅ Finished downloading experiment {experiment_id}")
+
+def download_CCF_aligned_injection_density(experiment_id: int, outdir: str | Path = None):
+    mca = MouseConnectivityApi()
+
+    # Injection density volume
+    outdir = Path(outdir) if outdir else Path().cwd() / str(experiment_id)
+    Path(outdir).mkdir(parents=True, exist_ok=True)
+    inj_path = Path(outdir) / f"{experiment_id}_injection_density_25um.nrrd"
+    print(f"⬇️  Downloading injection density volume → {inj_path}")
+    mca.download_injection_density(str(inj_path), experiment_id, 25)
+    print(f"✅ Finished downloading injection density for experiment {experiment_id}")
 
 def download_CCF_aligned_10um_projection_density(experiment_id: int, outdir: str | Path = None):
     mca = MouseConnectivityApi()
@@ -80,10 +92,13 @@ def main():
     output_dir = Path(args.output) if args.output else None
 
     for exp_id in args.input:
+
         download_CCF_aligned_connectivity_data(exp_id, output_dir)
 
-    if args.download_10um:
-        for exp_id in args.input:
+        if args.injection_density:
+            download_CCF_aligned_injection_density(exp_id, output_dir, resolution=25)
+
+        if args.download_10um:
             download_CCF_aligned_10um_projection_density(exp_id, output_dir)
 
     verbose_end_msg()
