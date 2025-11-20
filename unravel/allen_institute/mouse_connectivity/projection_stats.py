@@ -21,7 +21,7 @@ from rich.traceback import install
 from unravel.core.img_io import load_nii
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, match_files, resolve_output_paths, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -31,18 +31,16 @@ def parse_args():
     reqs.add_argument('-a', '--atlas', help='Path to atlas .nii.gz (e.g., atlas_CCFv3_2020_25um_split.nii.gz) or a mask .nii.gz file.', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help="Input dir(s) to process or pattern(s). Default: '*_25um'", default="*_25um", nargs="*", action=SM)
+    opts.add_argument('-i', '--input', help="Input dir(s) to process or pattern(s). Default: current working directory", default=None, nargs="*", action=SM)
     opts.add_argument('-r', '--region_ids', help='Region IDs to compute stats for. Default: all regions in atlas.', default=None, type=int, nargs="*", action=SM)
     opts.add_argument('-c', '--criteria', help='Criteria to filter regions (e.g., "< 20000" for right hemisphere regions only with a split atlas). Default: None', default=None, action=SM)
     opts.add_argument('-ch', '--channel', help='Color channel to compute stats for (red, green, blue). Default: green', default='green', choices=['red', 'green', 'blue'], action=SM)
-    opts.add_argument('-t', '--threshold', help='Intensity threshold to consider a voxel as "detected" in the projection density map. Default: 0.0', default=0.0, type=float, action=SM)
+    opts.add_argument('-t', '--threshold', help='Intensity threshold to consider a voxel as "detected" in the projection density map. Default: 0.15', default=0.15, type=float, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help="Increase verbosity. Default: False", action="store_true", default=False)
     return parser.parse_args()
 
-# TODO: Add a threshold option to ignore low-intensity segmentation voxels.
-# TODO: Assemble a DataFrame and save as CSV (perhaps one for each input dir and a combined one).
 
 @log_command
 def main():
@@ -54,6 +52,7 @@ def main():
     atlas_img = load_nii(args.atlas)
 
     region_ids = set(args.region_ids) if args.region_ids else set(np.unique(atlas_img))
+    region_ids.discard(0)  # Skip background region ID 0
 
     if args.criteria:
         filtered_region_ids = set()
@@ -68,21 +67,20 @@ def main():
     if args.verbose:
         print(f"Computing projection stats for region IDs: {sorted(region_ids)}")
 
-    dir_paths = match_files(args.input)
+    dir_paths = match_files(args.input) if args.input else [Path().cwd()]
     for dir_path in dir_paths:
 
         id = dir_path.name.split('_')[0]
-        resolution = dir_path.name.split('_')[-1].replace('um', '')
 
-        projection_path = dir_path / f"{id}_projection_density_{resolution}um.nii.gz"
+        projection_path = dir_path / f"{id}_projection_density_25um.nii.gz"
         projection_img = load_nii(projection_path)
-        img_path = dir_path / f"resampled_{args.channel}.nii.gz"
+        img_path = dir_path / f"{id}_resampled_{args.channel}.nii.gz"
         img = load_nii(img_path)
 
         for region_id in region_ids:
             region_mask = atlas_img == int(region_id)
 
-            print(f"Processing region ID {region_id} with mask shape {region_mask.shape}")
+            print(f"Processing region ID {region_id}...")
 
             # Extract voxel values for the region and confirm voxel count
             region_img_vals = img[region_mask]            
