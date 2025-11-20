@@ -91,9 +91,7 @@ def download_and_convert_connectivity_data(exp_ids: list[int], ref_nii: str | Pa
                 nrrd_to_nii(in_path, out_path, ref_nii_path=ref_nii_10um, dtype='float32')
 
         # Clean up ".mhd", ".raw", ".zip", ".nrrd" files after conversion
-        print(f'\n{exp_dir=}\n')
         for file_path in exp_dir.glob("*"):
-            print(f'Checking {file_path=} for cleanup...')
             if file_path.suffix in ['.mhd', '.raw', '.zip', '.nrrd']:
                 file_path.unlink()
 
