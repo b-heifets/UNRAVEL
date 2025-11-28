@@ -7,9 +7,9 @@ Prereqs:
 
 Note:
     - https://community.brain-map.org/t/api-allen-brain-connectivity/2988
-    - projection density = sum of detected pixels / sum of all pixels in division
+    - projection density = sum of detected pixels / count of all pixels in the region
     - The projection density image in CCF space is not binary due to linear interpolation during the warping process.
-    - projection energy = sum of detected pixel intensity / sum of all pixels in division
+    - projection energy = sum of detected pixel intensity / count of all pixels in the region
 
 """
 
@@ -96,7 +96,7 @@ def main():
                 print(f"[yellow]Warning: No voxels found for region ID {region_id} in atlas.[/yellow]")
                 continue
 
-            # projection density = sum of detected pixels / sum of all pixels in division
+            # projection density = sum of detected pixels / count of all pixels in the region
             region_proj_vals = projection_img[region_mask]  # Projection intensities within the region (0-1 range)
             if np.sum(region_proj_vals) == 0:
                 print(f"[yellow]Warning: No projection detected for region ID {region_id} in file {projection_path.name}.[/yellow]")
@@ -104,7 +104,7 @@ def main():
             sum_val = np.sum(region_proj_vals)
             projection_density = sum_val / region_voxel_count
 
-            # projection energy = sum of detected pixel intensity / sum of all pixels in division
+            # projection energy = sum of detected pixel intensity / count of all pixels in the region
             projection_energy = np.sum(region_img_vals[region_proj_vals >= args.threshold]) / region_voxel_count
 
             # projection intensity = mean of detected pixel intensity within the segmented voxels
