@@ -140,7 +140,7 @@ def main():
 
     cfg = load_config(args.config)
     
-    # Run cstats_org_data
+    # Run cstats_org_data to aggregate data from cstats_validation (i.e., copy files from sample??/clusters/<cluster_val_dir>/ to .)
     if args.dirs and args.cluster_val_dirs and args.vstats_path:
         org_data_args = [
             '-d', *args.dirs,
