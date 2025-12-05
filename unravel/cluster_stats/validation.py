@@ -250,12 +250,10 @@ def main():
             # Use lower bit-depth possible for cluster index
             rev_cluster_index = load_3D_img(args.moving_img, verbose=args.verbose)
 
-            # Check if any clusters are present
+            # Check if any clusters are present and raise exception if not
             if np.count_nonzero(rev_cluster_index) == 0:
-                print(f"\n    [yellow]No clusters detected in {args.moving_img}. Skipping {sample_path.name}.[/]")
-                progress.update(task_id, advance=1)
-                continue
-
+                raise ValueError(f"No clusters detected in {args.moving_img}.")
+                
             # Define paths relative to sample?? folder 
             native_idx_path = resolve_path(sample_path, args.native_idx) if args.native_idx else None
             
