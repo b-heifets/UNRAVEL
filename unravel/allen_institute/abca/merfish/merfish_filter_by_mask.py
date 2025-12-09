@@ -21,10 +21,10 @@ Outputs:
 
 Next steps:
     - Use the filtered cell metadata to examine cell type prevalence or gene expression
-    - To quantify/organize cell type proportions like in the MapMySections data challenge, use ``abca_cell_type_proportions`` to calculate proportions for a given ontological level (e.g., subclass)
-    - Then use ``abca_cell_type_proportions_concat`` to concatenate multiple CSVs into one file (one row per input file)
+    - For cell type proportions like in the MapMySections data challenge, use ``mms_cell_type_proportions`` to calculate proportions for a given ontological level (e.g., subclass)
+    - Then use ``mms_cell_type_proportions_concat`` to concatenate multiple CSVs into one file (one row per input file)
     - To visualize cell type proportions, use ``abca_sunburst`` to make a CSV for sunburst plotting
-    - For looking at gene expression, load the filtered cell metadata and join it with the expression data for the gene(s) of interest
+    - For looking at gene expression, load the filtered cell metadata and join it with the expression data for the gene(s) of interest (``abca_merfish_join_expression``)
 
 Usage:
 ------
