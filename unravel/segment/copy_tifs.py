@@ -5,6 +5,7 @@ Use ``seg_copy_tifs`` (``sct``) from UNRAVEL to copy or save specified slices fr
 
 Note:
     - reg_inputs/autofl_50um_tifs is from ``reg_prep`` and is used to make a brain mask using ``seg_brain_mask``.
+    - 
 
 Next command: 
     ``seg_brain_mask`` for ``reg`` or ``seg_ilastik`` for pixel classification.   
@@ -39,7 +40,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='Path to dir with the source TIFFs or a rel_path/pattern for a 3D image (1st match processed)', required=True, action=SM)
-    reqs.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, required=True, action=SM)
+    reqs.add_argument('-s', '--slices', help='Space-separated list of slice indices (e.g., 250 or 0250, extracts slice 250 and saves it as *_0250.tif)', nargs='*', type=str, required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-td', '--target_dir', help='path/target_dir to copy TIF files to. Default: current dir', action=SM)
