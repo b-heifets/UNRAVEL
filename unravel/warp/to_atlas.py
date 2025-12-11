@@ -16,17 +16,18 @@ Usage:
 
 import nibabel as nib
 import numpy as np
+from glob import glob
 from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.image_io.io_nii import convert_dtype
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt
 from unravel.core.img_tools import pad
 from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
+from unravel.image_io.io_nii import convert_dtype
 from unravel.register.reg_prep import reg_prep
 from unravel.warp.warp import warp
 
@@ -141,15 +142,20 @@ def main():
                 import sys ; sys.exit()
 
             # Load full res image [and xy and z voxel size in microns], to be resampled [and reoriented], padded, and warped
-            img_path = sample_path / args.input
-            img = load_3D_img(img_path, args.channel, verbose=args.verbose)
+            img_path = next(sample_path.glob(args.input), None)
+            if img_path is None:
+                raise ValueError(f"\n    [red bold]No files match the pattern {args.input} in {sample_path}\n")
+
+            if args.verbose:
+                print(f"    Loading image {img_path} for warping to atlas space...")
+            img = load_3D_img(img_path=img_path, channel=args.channel, verbose=args.verbose)
 
             # Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)
-            img = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
+            img = reg_prep(img, xy_res=xy_res, z_res=z_res, reg_res=args.reg_res, zoom_order=args.zoom_order, miracl=args.miracl)
 
             # Warp native image to atlas space
-            pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
-            to_atlas(sample_path, img, args.fixed_reg_in, args.atlas, output, args.interpol, dtype='uint16', pad_percent=pad_percent)
+            pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, pad_percent=args.pad_percent)
+            to_atlas(sample_path=sample_path, img=img, fixed_reg_in=args.fixed_reg_in, atlas=args.atlas, output=output, interpol=args.interpol, dtype='uint16', pad_percent=pad_percent)
 
             progress.update(task_id, advance=1)
 
