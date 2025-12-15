@@ -147,7 +147,7 @@ def main():
                 raise ValueError(f"\n    [red bold]No files match the pattern {args.input} in {sample_path}\n")
 
             if args.verbose:
-                print(f"    Loading image {img_path} for warping to atlas space...")
+                print(f"  Loading image {img_path} for warping to atlas space...")
             img = load_3D_img(img_path=img_path, channel=args.channel, verbose=args.verbose)
 
             # Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)
