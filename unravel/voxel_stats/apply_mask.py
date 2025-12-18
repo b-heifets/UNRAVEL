@@ -92,12 +92,6 @@ def mean_intensity_in_brain(img, tissue_mask):
     return mean_intensity    
 
 @print_func_name_args_times()
-def dilate_mask(mask, iterations):
-    """Dilate the given mask (ndarray) by a specified number of iterations."""
-    dilated_mask = binary_dilation(mask, iterations=iterations)
-    return dilated_mask
-
-@print_func_name_args_times()
 def scale_bool_to_full_res(ndarray, full_res_dims):
     """Scale ndarray to match x, y, z dimensions provided. Uses nearest-neighbor interpolation by default to preserve a binary data type."""
     zoom_factors = (full_res_dims[0] / ndarray.shape[0], full_res_dims[1] / ndarray.shape[1], full_res_dims[2] / ndarray.shape[2])
@@ -175,7 +169,7 @@ def main():
 
             # Dilate the primary mask
             if args.dilation > 0: 
-                mask = dilate_mask(mask, args.dilation)
+                mask = binary_dilation(mask, args.dilation)
 
             # Load the other mask and scale to full resolution
             if args.other_mask:
