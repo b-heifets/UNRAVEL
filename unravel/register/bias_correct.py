@@ -28,12 +28,12 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group("Required arguments")
-    reqs.add_argument("-i", "--input", required=True, help="Input template .nii.gz", action=SM)
-    reqs.add_argument("-o", "--output", required=True, help="Output bias-corrected .nii.gz", action=SM)
+    reqs.add_argument("-i", "--input", required=True, help="Input image.nii.gz", action=SM)
+    reqs.add_argument("-o", "--output", required=True, help="Output bias-corrected image.nii.gz", action=SM)
 
     opts = parser.add_argument_group("Optional arguments")
-    opts.add_argument( "-mas", "--mask", help="Optional brain mask for bias correction. Use 'None' for no mask.", default=None, action=SM)
-    opts.add_argument( "-sf", "--shrink_factor", help="Shrink factor for N4 bias correction (default: 2).", type=int, default=2, action=SM )
+    opts.add_argument( "-mas", "--mask", help="Optional brain mask for bias correction. Default: None", default=None, action=SM)
+    opts.add_argument( "-sf", "--shrink_factor", help="Shrink factor for N4 bias correction. Default: 2", type=int, default=2, action=SM )
 
     general = parser.add_argument_group("General arguments")
     general.add_argument("-v", "--verbose", action="store_true", default=False)
@@ -63,7 +63,7 @@ def main():
 
     # Convert back to NIfTI
     output_path = Path(args.output)
-    save_as_nii(img_bias_corrected, output_path, reference_nii=input_path)
+    save_as_nii(img_bias_corrected, output_path, reference=input_path)
 
 if __name__ == "__main__":
     main()
