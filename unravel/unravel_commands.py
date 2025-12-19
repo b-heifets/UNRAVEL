@@ -126,6 +126,12 @@ def main():
                 "common": False,
                 "alias": "rai"
             },
+            "reg_bias_correct": {
+                "module": "unravel.register.bias_correct",
+                "description": "Apply N4 bias field correction to an .nii.gz image.",
+                "common": False,
+                "alias": "bias_corr"
+            },
         },
         "Warping": {
             "warp_to_atlas": {

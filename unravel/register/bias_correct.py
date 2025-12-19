@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Use ``bias_correct.py`` from UNRAVEL to apply N4 bias field correction to an .nii.gz image.
+Use ``reg_bias_correct`` or ``bias_corr`` from UNRAVEL to apply N4 bias field correction to an .nii.gz image.
 
 Note:
     - No padding or registration is performed.
 
 Usage:
 ------
-./bias_correct.py -i <template.nii.gz> -o <output.nii.gz> [-mas <mask.nii.gz>] [-v]
+bias_corr -i <template.nii.gz> -o <output.nii.gz> [-mas <mask.nii.gz>] [-v]
 """
 
 import ants

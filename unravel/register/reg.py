@@ -59,7 +59,7 @@ from scipy.ndimage import gaussian_filter, binary_dilation
 from unravel.image_io.reorient_nii import reorient_nii
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.img_io import load_3D_img, resolve_path, save_as_nii
+from unravel.core.img_io import load_3D_img, resolve_path
 from unravel.core.img_tools import pad
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
 from unravel.register.affine_initializer_check import affine_initializer_check
