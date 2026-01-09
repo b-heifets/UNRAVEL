@@ -6,13 +6,7 @@ Use ``vstats_prep`` (``vp``) from UNRAVEL to load an immunofluo image, subtract 
 Prereqs: 
     - ``reg``
 
-Input examples (path is relative to ./sample??; 1st glob match processed): 
-    - `*`.czi, ochann/`*`.tif, ochann, `*`.tif, `*`.h5, or `*`.zarr
-
-Output example:
-    - ./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz
-
-Next commands for voxel-wise stats: 
+Next steps for voxel-wise stats: 
     Preprocess atlas space IF images with ``vstats_z_score`` (recommended for c-Fos-IF) or aggregate them with ``utils_agg_files``.
 
 Usage:
@@ -41,10 +35,11 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path to full res image', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="Path to full res image (relative to ./sample??/) or glob pattern (e.g., '*.czi'). First match used.", required=True, action=SM)
     reqs.add_argument('-o', '--output', help='Output file name w/o "sample??_" (added automatically). E.g., cfos_rb4_30um_CCF_space.nii.gz', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-od', '--output_dir', help='Output directory for processed files. Default: atlas_space', default='atlas_space', action=SM)
     opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz (e.g., atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     opts.add_argument('-sa', '--spatial_avg', help='Spatial averaging in 2D or 3D (2 or 3). Default: None', default=None, type=int, action=SM)
     opts.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels (Default: None)', default=None, type=int, action=SM)
@@ -69,6 +64,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: [default] is not showing in the help message for -inp
+# TODO: Could deprecate auto adding "sample??_" to output name (this can be done when aggregating files later)
 
 @log_command
 def main():
@@ -84,7 +80,7 @@ def main():
         for sample_path in sample_paths:
 
             output_name = f"{sample_path.name}_{Path(args.output).name}"
-            output = sample_path / "atlas_space" / output_name
+            output = sample_path / args.output_dir / output_name
             output.parent.mkdir(exist_ok=True, parents=True)
             if output.exists():
                 print(f"\n    {output} already exists. Skipping.")
@@ -125,10 +121,8 @@ def main():
             pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
             to_atlas(sample_path, img, fixed_reg_input, args.atlas, output, args.interpol, dtype='uint16', pad_percent=pad_percent)
 
-            # Copy the atlas to atlas_space
-            atlas_space = sample_path / "atlas_space"
-            shutil.copy(args.atlas, atlas_space)
-
+            # Copy the atlas to the output dir
+            shutil.copy(args.atlas, sample_path / args.output_dir)
             progress.update(task_id, advance=1)
 
     verbose_end_msg()
