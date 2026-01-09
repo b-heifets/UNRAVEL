@@ -117,7 +117,7 @@ def main():
     verbose_start_msg()
 
     if args.spatial_avg not in (2, 3):
-        raise ValueError("--spatial_avg must be 2 or 3")
+        raise ValueError("--spatial_avg must be 2 or 3 for 2D or 3D averaging.")
     
     sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
@@ -144,12 +144,12 @@ def main():
                 xy_res, z_res = args.xy_res, args.z_res
 
             # Apply spatial averaging
-            if args.dimensions == 3:
+            if args.spatial_avg == 3:
                 img = spatial_average_3D(img, kernel_size=args.kernel_size)
-            elif args.dimensions == 2:
+            elif args.spatial_avg == 2:
                 img = spatial_average_2D(img, apply_2D_mean_filter, kernel_size=(args.kernel_size, args.kernel_size))
             else:
-                raise ValueError("Dimensions must be 2 or 3.")
+                raise ValueError("Spatial averaging must be 2 or 3 for 2D or 3D averaging.")
 
             # Set the data type for the output
             if args.dtype == 'uint8':
