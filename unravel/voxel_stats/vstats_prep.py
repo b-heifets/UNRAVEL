@@ -6,6 +6,12 @@ Use ``vstats_prep`` (``vp``) from UNRAVEL to load an immunofluo image, subtract 
 Prereqs: 
     - ``reg``
 
+Inputs:
+    - 3D image: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
+
+Outputs:
+    - Image warped to atlas space: .nii.gz
+
 Next steps for voxel-wise stats: 
     Preprocess atlas space IF images with ``vstats_z_score`` (recommended for c-Fos-IF) or aggregate them with ``utils_agg_files``.
 
@@ -44,7 +50,7 @@ def parse_args():
     opts.add_argument('-sa', '--spatial_avg', help='Spatial averaging in 2D or 3D (2 or 3). Default: None', default=None, type=int, action=SM)
     opts.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels (Default: None)', default=None, type=int, action=SM)
     opts.add_argument('-c', '--channel', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
-    opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
+    opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default=50, type=int, action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: uint16', default="uint16", action=SM)
     opts.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image. Default: 1', default=1, type=int, action=SM)
@@ -99,7 +105,7 @@ def main():
                 print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ io_metadata")
                 import sys ; sys.exit()
 
-            img = load_3D_img(img_path, args.channel, "xyz", verbose=args.verbose)
+            img = load_3D_img(img_path, channel=args.channel, desired_axis_order="xyz", verbose=args.verbose)
 
             # Apply spatial averaging
             if args.spatial_avg == 3:
@@ -112,14 +118,14 @@ def main():
                 img = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)  
 
             # Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)
-            img = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
+            img = reg_prep(img, xy_res=xy_res, z_res=z_res, reg_res=args.reg_res, zoom_order=args.zoom_order, miracl=args.miracl)
 
             # Warp the image to atlas space
             fixed_reg_input = Path(sample_path, args.fixed_reg_in)    
             if not fixed_reg_input.exists():
                 fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
-            pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
-            to_atlas(sample_path, img, fixed_reg_input, args.atlas, output, args.interpol, dtype='uint16', pad_percent=pad_percent)
+            pad_percent = get_pad_percent(reg_outputs_path=sample_path / Path(args.fixed_reg_in).parent, pad_percent=args.pad_percent)
+            to_atlas(sample_path, img=img, fixed_reg_in=fixed_reg_input, atlas=args.atlas, output=output, interpol=args.interpol, dtype=args.dtype, pad_percent=pad_percent)
 
             # Copy the atlas to the output dir
             shutil.copy(args.atlas, sample_path / args.output_dir)
