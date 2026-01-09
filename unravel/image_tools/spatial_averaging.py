@@ -18,7 +18,7 @@ Note:
 
 Usage:
 ------
-    img_spatial_avg -i <tif_dir> -o spatial_avg.zarr -d 2 [-k 3] [-c 0] [-x 3.5232] [-z 6] [-dt uint16] [-r metadata_referenece.nii.gz] [-ao xyz] [-v]
+    img_spatial_avg -i <tif_dir> -o spatial_avg.zarr -sa 2 [-k 3] [-c 0] [-x 3.5232] [-z 6] [-dt uint16] [-r metadata_referenece.nii.gz] [-ao xyz] [-v]
 """
 
 from pathlib import Path
@@ -91,7 +91,7 @@ def spatial_average_2D(volume, filter_func, kernel_size=(3, 3), threads=8):
     Parameters:
     - volume (np.ndarray): The input 3D array.
     - filter_func (callable): The filter function to apply to each slice.
-    - kernel_size (tuple): The dimensions of the kernel to be used in the filter.
+    - kernel_size (tuple): The dimensions of the kernel to be used in the filter: (height, width).
     - threads (int): The number of parallel threads to use.
 
     Returns:
