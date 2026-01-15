@@ -37,7 +37,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-inp', '--interpol', help='Interpolator warping with ants.apply_transforms (nearestNeighbor, multiLabel \[default], linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
-    opts.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``) w/ padding in <reg_outputs>. E.g., autofl_50um_masked_fixed_reg_input.nii.gz', required=True, action=SM)
+    opts.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``) w/ padding in <reg_outputs>. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.25 (25%%).', default=0.25, type=float, action=SM)
 
     general = parser.add_argument_group('General arguments')
