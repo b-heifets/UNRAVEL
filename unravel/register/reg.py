@@ -339,6 +339,14 @@ def main():
                 print(f'\n    Warping the atlas to padded fixed image space for checking reg: reg_outputs/<atlas>_in_tissue_space.nii.gz\n')
                 warp(reg_outputs_path, args.moving_img2, fixed_img_for_reg_path, warped_atlas, inverse=False, interpol=args.interpol)
 
+            # Save the orientation (from args.ort_code) to a text file in reg_outputs
+            orient_txt = reg_outputs_path / "orientation_code.txt"
+            with open(orient_txt, 'w') as f:
+                if args.ort_code:
+                    f.write(args.ort_code)
+                else:
+                    f.write("Not specified")
+
             progress.update(task_id, advance=1)
 
     verbose_end_msg()
