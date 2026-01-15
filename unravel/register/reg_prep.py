@@ -136,6 +136,9 @@ def main():
             # Save the prepped autofl image (for ``reg`` if skipping ``seg_brain_mask`` and for applying the brain mask)
             save_as_nii(img_resampled, output, args.reg_res, args.reg_res, np.uint16)
 
+            if args.verbose:
+                print(f"\n    Next: run seg_copy_tifs for seg_brain_mask or reg\n")
+
             progress.update(task_id, advance=1)
 
     verbose_end_msg()
