@@ -33,6 +33,7 @@ Usage for directories:
 import pandas as pd
 from glob import glob
 from pathlib import Path
+from rich import print
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
