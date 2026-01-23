@@ -136,7 +136,7 @@ def main():
         "Warping": {
             "warp_to_atlas": {
                 "module": "unravel.warp.to_atlas",
-                "description": "Warp images to atlas space.",
+                "description": "Warp native images (full res tissue space) to atlas space.",
                 "common": True,
                 "alias": "w2a"
             },
@@ -148,7 +148,7 @@ def main():
             },
             "warp_to_native": {
                 "module": "unravel.warp.to_native",
-                "description": "Warp images to native space.",
+                "description": "Warp images to native image space (full res tissue space).",
                 "common": True,
                 "alias": "w2n"
             },
@@ -160,7 +160,7 @@ def main():
             },
             "warp": {
                 "module": "unravel.warp.warp",
-                "description": "Warp between moving and fixed images.",
+                "description": "Warp to/from atlas space and registration input space.",
                 "common": False
             }
         },
