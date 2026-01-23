@@ -59,6 +59,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Make a script that can just do smoothing of images with a kernel and optionally apply a mask.
 
 @print_func_name_args_times()
 def whole_to_LR_avg(file, kernel=0, axis=0, shift=2, atlas_mask=None):
