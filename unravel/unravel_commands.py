@@ -142,7 +142,7 @@ def main():
             },
             "warp_to_fixed": {
                 "module": "unravel.warp.to_fixed",
-                "description": "Warp images to native space.",
+                "description": "Warp images to fixed image space.",
                 "common": False,
                 "alias": "w2f"
             },
