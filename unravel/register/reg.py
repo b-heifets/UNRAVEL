@@ -145,6 +145,13 @@ def main():
             reg_outputs_path = resolve_path(sample_path, args.reg_outputs)
             reg_outputs_path.mkdir(parents=True, exist_ok=True)
  
+            # Define final output and skip processing if it exists
+            output = Path(reg_outputs_path, str(Path(args.moving_img).name).replace(".nii.gz", "__warped_to_fixed_image.nii.gz"))
+            if output.exists():
+                print(f"\n    [green]Registration complete for {sample_path} (found {output.name}). Skipping.[/green]\n")
+                progress.update(task_id, advance=1)
+                continue
+
             # Define inputs and outputs for the fixed image
             fixed_img_nii_path = resolve_path(sample_path, args.fixed_img)
             if not fixed_img_nii_path.exists():
@@ -304,34 +311,30 @@ def main():
                     direction=fixed_image.direction
                 )
 
-            # Define final output and skip processing if it exists
-            output = str(Path(reg_outputs_path, str(Path(args.moving_img).name).replace(".nii.gz", "__warped_to_fixed_image.nii.gz")))
-            if not Path(output).exists():
+            # Perform registration (reg is a dict with multiple outputs)
+            print(f'\n    Running registration \n')
+            output_prefix = str(Path(reg_outputs_path, "ANTsPy_"))
+            reg = ants.registration(
+                fixed=fixed_image,  # e.g., fixed autofluo image
+                moving=transformed_image,  # e.g., the initially aligned moving image (e.g., template)
+                type_of_transform='SyN',  # SyN = symmetric normalization
+                grad_step=0.1,  # Gradient step size
+                syn_metric='CC',  # Cross-correlation
+                syn_sampling=2,  # Corresponds to CC radius
+                reg_iterations=(100, 70, 50, 20),  # Convergence criteria
+                outprefix=output_prefix,
+                mask=reg_mask_ants, # Restrict registration metric to union of tissue mask and initially aligned template
+                verbose=args.verbose
+            )
 
-                # Perform registration (reg is a dict with multiple outputs)
-                print(f'\n    Running registration \n')
-                output_prefix = str(Path(reg_outputs_path, "ANTsPy_"))
-                reg = ants.registration(
-                    fixed=fixed_image,  # e.g., fixed autofluo image
-                    moving=transformed_image,  # e.g., the initially aligned moving image (e.g., template)
-                    type_of_transform='SyN',  # SyN = symmetric normalization
-                    grad_step=0.1,  # Gradient step size
-                    syn_metric='CC',  # Cross-correlation
-                    syn_sampling=2,  # Corresponds to CC radius
-                    reg_iterations=(100, 70, 50, 20),  # Convergence criteria
-                    outprefix=output_prefix,
-                    mask=reg_mask_ants, # Restrict registration metric to union of tissue mask and initially aligned template
-                    verbose=args.verbose
-                )
+            # Save the warped moving image output
+            ants.image_write(reg['warpedmovout'], str(output))  # The interpolation method is not NN or multiLabel
+            print(f"\nTransformed moving image saved to: \n{str(output)}")
 
-                # Save the warped moving image output
-                ants.image_write(reg['warpedmovout'], output)  # The interpolation method is not NN or multiLabel
-                print(f"\nTransformed moving image saved to: \n{output}")
-
-                # Save the warped fixed image output (optional)
-                # warpedfixout = str(Path(reg_outputs_path, str(Path(args.fixed_img).name).replace(".nii.gz", "__warped_to_moving_image.nii.gz")))
-                # ants.image_write(reg['warpedfixout'], warpedfixout)
-                # print(f"\nTransformed fixed image saved to: \n{warpedfixout}")
+            # Save the warped fixed image output (optional)
+            # warpedfixout = str(Path(reg_outputs_path, str(Path(args.fixed_img).name).replace(".nii.gz", "__warped_to_moving_image.nii.gz")))
+            # ants.image_write(reg['warpedfixout'], warpedfixout)
+            # print(f"\nTransformed fixed image saved to: \n{warpedfixout}")
 
             # Warp the atlas image to the tissue image for checking reg (naming prioritizes the common usage)
             warped_atlas = str(Path(reg_outputs_path, str(Path(args.moving_img2).name).replace(".nii.gz", "_in_tissue_space.nii.gz")))
