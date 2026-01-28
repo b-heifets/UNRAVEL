@@ -45,7 +45,7 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Consider redundancy with reg_check_fsleyes.py (perhaps deprecate reg_check_fsleyes in favor of this more general tool after testing and including missing features)
+# TODO: Consider redundancy with reg_check_fsleyes.py (perhaps deprecate reg_check_fsleyes in favor of this more general tool after testing, including missing features, and maybe simplifying)
 
 def _glob_sorted(dir_path: Path, pattern: str) -> list[Path]:
     return sorted(dir_path.glob(pattern))
