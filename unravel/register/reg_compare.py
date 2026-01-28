@@ -21,6 +21,10 @@ Note:
 Usage:
 ------
     reg_compare [-td <path/target_output_dir>] [-afd <autofl_dir>] [-afn <autofl_name>] [-as folder:file ...] [--suffix_map folder=suffix ...] [-d list of paths] [-p sample??] [-v]
+
+Usage for aggregating registration outputs:
+--------------
+    rcmp -td reg_compare -ro 'reg_outputs<asterisk>' -afd reg_outputs [-d list of paths] [-p sample??] [-v]
 """
 
 from pathlib import Path
@@ -31,7 +35,7 @@ from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, copy_files
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, copy_files
 
 
 def parse_args():
@@ -41,7 +45,7 @@ def parse_args():
     opts.add_argument('-td', '--target_dir', help='Path/name of target directory for aggregating outputs. Default: reg_compare', default='reg_compare', action=SM)
     opts.add_argument('-afd', '--autofl_dir', help='Folder (relative to sample dir) containing the single autofluo/fixed-reg-input file. Default: reg_outputs', default='reg_outputs', action=SM)
     opts.add_argument('-afn', '--autofl_name', help='Filename (within --autofl_dir) to copy once per sample. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default='autofl_50um_masked_fixed_reg_input.nii.gz', action=SM)
-    opts.add_argument('-ro', '--reg_outputs', help='Name(s) of folder w/ outputs from ``reg`` to copy atlas files from. Default: reg_outputs', default='reg_outputs', nargs='*', action=SM)
+    opts.add_argument('-ro', '--reg_outputs', help='Space-separated list of reg_outputs folder names or globs (relative to sample dir) to copy atlas files from. Default: reg_outputs', default=['reg_outputs'], nargs='*', action=SM)
     opts.add_argument('-an', '--atlas_name', help='Warped atlas filename (within each reg_outputs dir). Default: atlas_CCFv3_2020_30um_in_tissue_space.nii.gz', default='atlas_CCFv3_2020_30um_in_tissue_space.nii.gz', action=SM)
     opts.add_argument('-sm', '--suffix_map', help="Optional: overrides suffixes based on -ro. Provide as folder=suffix pairs.", nargs='*', default=[], action=SM)
 
@@ -52,7 +56,7 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Consider redundancy with reg_check.py (perhaps deprecate reg_check in favor of this more general tool after testing and including missing features)
+# TODO: Consider redundancy with reg_check.py (perhaps deprecate reg_check in favor of this more general tool after testing, including missing features, and maybe simplifying)
 
 def _parse_suffix_map(items: list[str]) -> dict[str, str]:
     m: dict[str, str] = {}
@@ -94,9 +98,6 @@ def main():
 
     sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-    # Normalize reg_outputs list
-    reg_outputs_dirs = args.reg_outputs if args.reg_outputs else ['reg_outputs']
-
     # Build suffix map (overrides) + derive defaults
     try:
         suffix_overrides = _parse_suffix_map(args.suffix_map)
@@ -108,6 +109,10 @@ def main():
     with Live(progress):
         for sample_path in sample_paths:
             sample_id = sample_path.name
+
+            # Expand reg_outputs globs per sample
+            reg_output_paths = match_files(args.reg_outputs, base_path=sample_path)
+            reg_outputs_dirs = [p.name for p in reg_output_paths if p.is_dir()]
 
             # 1) Copy the single autofl/fixed-reg-input file (optional)
             source_path = sample_path / args.autofl_dir
