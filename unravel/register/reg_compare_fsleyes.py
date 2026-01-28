@@ -1,0 +1,161 @@
+#!/usr/bin/env python3
+
+"""
+Use ``reg_compare_fsleyes`` (``rcmpf``) from UNRAVEL to compare registration in fsleyes for multiple samples in one fsleyes instance.
+
+Assumes you aggregated per-sample files into a single folder (e.g. reg_compare/) with filenames like:
+    sample01_autofl_50um_masked_fixed_reg_input.nii.gz
+    sample01_atlas_CCFv3_2020_30um_in_tissue_space__UNRAVEL.nii.gz
+    sample01_atlas_CCFv3_2020_30um_in_tissue_space__OG.nii.gz
+    sample01_atlas_CCFv3_2020_30um_in_tissue_space__autofl_bc.nii.gz
+    ...
+
+Behavior:
+    - Groups files by sample prefix (sample??_).
+    - Files must start with 'sample' and have an underscore after the sample ID.
+    - Loads one autofluo/underlay per sample (if present)
+    - Loads all matching atlas overlays per sample (label overlays)
+    - One fsleyes instance with first sample visible
+"""
+
+import subprocess
+from pathlib import Path
+
+from rich import print
+from rich.traceback import install
+
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.utils import log_command
+
+
+def parse_args():
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-d', '--dir', help='Directory containing aggregated files. Default: working directory', default=None, action=SM)
+    opts.add_argument('-af', '--autofl_img', help='Glob for the single autofluo/underlay per sample (within -d). Default: *_autofl_50um_masked_fixed_reg_input.nii.gz', default='*_autofl_50um_masked_fixed_reg_input.nii.gz', action=SM)
+    opts.add_argument('-a', '--atlas', help='One or more globs for warped atlas overlays (within -d). Default: *atlas*_in_tissue_space*.nii.gz', default=['*atlas*_in_tissue_space*.nii.gz'], nargs='*', action=SM)
+    opts.add_argument('-min', '--min', help='Minimum intensity value for fsleyes display (grayscale underlay). Default: 0', type=float, default=0.0)
+    opts.add_argument('-max', '--max', help='Maximum intensity value for fsleyes display (grayscale underlay). Default: 2000', type=float, default=2000.0)
+    opts.add_argument('-l', '--lut', help='FSLeyes label LUT name. Default: ccfv3_2020', default='ccfv3_2020', action=SM)
+    opts.add_argument('-al', '--alpha', help='Atlas overlay alpha (0-100). Default: 100', type=float, default=100.0)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-p', '--pattern', help='Pattern for filename prefix. Default: sample??', default='sample??', action=SM)
+
+    return parser.parse_args()
+
+# TODO: Consider redundancy with reg_check_fsleyes.py (perhaps deprecate reg_check_fsleyes in favor of this more general tool after testing and including missing features)
+
+def _glob_sorted(dir_path: Path, pattern: str) -> list[Path]:
+    return sorted(dir_path.glob(pattern))
+
+
+def _sample_prefix(path: Path) -> str | None:
+    # expects filenames like "sample01_....nii.gz"
+    name = path.name
+    if name.startswith('sample') and '_' in name:
+        pref = name.split('_', 1)[0] + '_'
+        if pref.startswith('sample'):
+            return pref
+    return None
+
+
+def _add_underlay(cmd: list[str], path: Path, args, visible: bool) -> None:
+    cmd.extend([str(path), '-dr', str(args.min), str(args.max)])
+    if not visible:
+        cmd.append('-d')
+
+
+def _add_atlas_overlay(cmd: list[str], path: Path, args, visible: bool) -> None:
+    cmd.extend([str(path), '-ot', 'label', '-l', str(args.lut), '-o', '-a', str(args.alpha)])
+    if not visible:
+        cmd.append('-d')
+
+
+@log_command
+def main():
+    install()
+    args = parse_args()
+
+    base = Path(args.dir) if args.dir else Path.cwd()
+    if not base.exists():
+        print(f'[red]Error:[/red] directory not found: {base}')
+        return
+
+    # Pattern is only used to find candidate prefixes (e.g., sample??_ or sample???_)
+    # We do NOT try to validate/construct "allowed prefixes" beyond what exists in filenames.
+    prefix_glob = f'{args.pattern}_*'
+
+    pref_files = sorted(base.glob(prefix_glob))
+    prefixes = sorted({(_sample_prefix(p) or '') for p in pref_files})
+    prefixes = [p for p in prefixes if p]
+
+    if not prefixes:
+        print(f'[red]Error:[/red] No files matched prefix glob: {prefix_glob}')
+        print("[red]Error:[/red] Expected filenames like sample01_*.nii.gz")
+        return
+
+    # Map: prefix -> autofl (list) and atlases (list)
+    autofl_by_prefix: dict[str, list[Path]] = {p: [] for p in prefixes}
+    atlas_by_prefix: dict[str, list[Path]] = {p: [] for p in prefixes}
+
+    # Autofl
+    for f in _glob_sorted(base, args.autofl_img):
+        pref = _sample_prefix(f)
+        if pref in autofl_by_prefix:
+            autofl_by_prefix[pref].append(f)
+
+    # Atlases (preserve pattern order, then sorted within each pattern)
+    for pat in args.atlas:
+        for f in _glob_sorted(base, pat):
+            pref = _sample_prefix(f)
+            if pref in atlas_by_prefix:
+                atlas_by_prefix[pref].append(f)
+
+    # Sanity + warnings
+    n_samples_with_any = 0
+    for pref in prefixes:
+        afl = autofl_by_prefix.get(pref, [])
+        atl = atlas_by_prefix.get(pref, [])
+
+        if len(afl) > 1:
+            print(
+                f'[yellow]Warning:[/yellow] {pref} matched multiple autofl files; using the first:\n  '
+                + '\n  '.join(map(str, afl))
+            )
+
+        if afl or atl:
+            n_samples_with_any += 1
+
+    if n_samples_with_any == 0:
+        print('[red]Error:[/red] No matching autofl or atlas files found with the provided patterns.')
+        return
+
+    # Build one fsleyes command: first sample visible, rest hidden (-d)
+    fsleyes_command: list[str] = ['fsleyes']
+    first = True
+
+    for pref in prefixes:
+        afl_list = autofl_by_prefix.get(pref, [])
+        atl_list = atlas_by_prefix.get(pref, [])
+
+        if not afl_list and not atl_list:
+            continue
+
+        visible = first
+        if afl_list:
+            _add_underlay(fsleyes_command, afl_list[0], args, visible=visible)
+
+        for atlas_path in atl_list:
+            _add_atlas_overlay(fsleyes_command, atlas_path, args, visible=visible)
+
+        first = False
+
+    print(f'[green]Launching[/green] one FSLeyes instance with {n_samples_with_any} samples '
+          f'(first sample visible; others hidden).')
+    subprocess.run(fsleyes_command)
+
+
+if __name__ == '__main__':
+    main()
