@@ -14,6 +14,10 @@ This is a generalized version of reg_check which can:
     - reg_outputs_1 -> __1
     - reg_outputs_2 -> __2
 
+Note:
+    - Existing files in the target directory are overwritten when recopied
+    - Files no longer produced are left untouched.
+
 Usage:
 ------
     reg_compare [-td <path/target_output_dir>] [-afd <autofl_dir>] [-afn <autofl_name>] [-as folder:file ...] [--suffix_map folder=suffix ...] [-d list of paths] [-p sample??] [-v]
