@@ -114,9 +114,35 @@ def main():
             reg_output_paths = match_files(args.reg_outputs, base_path=sample_path)
             reg_outputs_dirs = [p.name for p in reg_output_paths if p.is_dir()]
 
-            # 1) Copy the single autofl/fixed-reg-input file (optional)
-            source_path = sample_path / args.autofl_dir
-            copy_files(source_path, target_dir, args.autofl_name, sample_path, args.verbose)
+            # 1) Copy the single autofl/fixed-reg-input file
+            autofl_copied = False
+
+            # First: try --autofl_dir explicitly
+            primary_source = sample_path / args.autofl_dir
+            src_file = primary_source / args.autofl_name
+            if src_file.exists():
+                copy_files(primary_source, target_dir, args.autofl_name, sample_path, args.verbose)
+                autofl_copied = True
+            else:
+                # Fallback: search reg_outputs folders (in order)
+                for folder in reg_outputs_dirs:
+                    fallback_source = sample_path / folder
+                    fallback_file = fallback_source / args.autofl_name
+                    if fallback_file.exists():
+                        if args.verbose:
+                            print(
+                                f'[yellow]Autofl fallback:[/yellow] '
+                                f'using {fallback_file} instead of {src_file}'
+                            )
+                        copy_files(fallback_source, target_dir, args.autofl_name, sample_path, args.verbose)
+                        autofl_copied = True
+                        break
+
+            if not autofl_copied and args.verbose:
+                print(
+                    f'[yellow]Autofl not found:[/yellow] '
+                    f'{args.autofl_name} not found in {args.autofl_dir} or any reg_outputs folders'
+                )
 
             # 2) Copy atlas outputs from each reg_outputs* folder, with suffix to avoid collisions
             for folder in reg_outputs_dirs:
