@@ -132,6 +132,18 @@ def main():
                 "common": False,
                 "alias": "bias_corr"
             },
+            "reg_compare": {
+                "module": "unravel.register.reg_compare",
+                "description": "Compare registration results.",
+                "common": True,
+                "alias": "rcmp"
+            },
+            "reg_compare_fsleyes": {
+                "module": "unravel.register.reg_compare_fsleyes",
+                "description": "Compare registration results using FSLeyes.",
+                "common": True,
+                "alias": "rcmpf"
+            }
         },
         "Warping": {
             "warp_to_atlas": {

@@ -10,6 +10,8 @@ unravel.register package
    affine_initializer_check
    reg_check
    reg_check_fsleyes
+   reg_compare
+   reg_compare_fsleyes
    reg_check_brain_mask
    bias_correct
 
