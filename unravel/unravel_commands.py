@@ -619,6 +619,12 @@ def main():
                 "common": False,
                 "alias": "filter_objects"
             },
+            "img_smooth": {
+                "module": "unravel.image_tools.smooth",
+                "description": "Smooth .nii.gz images.",
+                "common": False,
+                "alias": "smooth"
+            }
         },
         "Atlas tools": {
             "atlas_relabel": {

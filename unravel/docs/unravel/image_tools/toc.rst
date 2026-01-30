@@ -19,6 +19,7 @@ unravel.image_tools package
    resample_points
    modify_labels
    filter_objects_by_size
+   smooth
    atlas/toc
 
 .. automodule:: unravel.image_tools
