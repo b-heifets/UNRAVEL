@@ -3,6 +3,12 @@
 """
 Use ``img_smooth`` (``smooth``) from UNRAVEL to smooth an image.nii.gz and save it.
 
+Inputs:
+    - path/img.nii.gz or glob pattern(s)
+
+Outputs:
+    - path/img_s<sigma_value>.nii.gz
+
 Usage:
 ------
     img_smooth -sm <sigma_value> [-i path/img.nii.gz or glob pattern(s)] [-r path/ref_img.nii.gz] [-o path/img_smoothed.nii.gz] [-v]
@@ -51,7 +57,7 @@ def main():
         print(f'\n    Smoothing the input image\n')
         img = gaussian_filter(img, sigma=args.smooth)
 
-        output_path = str(Path(img_path).parent / (str(Path(img_path).name).replace('.nii.gz', '_smoothed.nii.gz')))
+        output_path = str(Path(img_path).parent / (str(Path(img_path).name).replace('.nii.gz', f'_s{args.smooth}.nii.gz')))
         save_3D_img(img, output_path, reference_img=args.ref_nii, verbose=args.verbose)
     
     verbose_end_msg()
