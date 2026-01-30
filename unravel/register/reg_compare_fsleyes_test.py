@@ -41,7 +41,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-d', '--dir', help='Directory containing aggregated files. Default: working directory', default=None, action=SM)
-    opts.add_argument('-af', '--autofl_img', help='Glob for the single autofluo/underlay per sample (within -d). Default: *_autofl_50um_masked_fixed_reg_input.nii.gz', default='*_autofl_50um_masked_fixed_reg_input.nii.gz', action=SM)
+    opts.add_argument('-af', '--autofl_img', help='Glob for the single autofluo/underlay per sample (within -d). Default: *autofl_50um_masked_fixed_reg_input.nii.gz', default='*autofl_50um_masked_fixed_reg_input.nii.gz', action=SM)
     opts.add_argument('-a', '--atlas', help='One or more globs for warped atlas overlays (within -d). Default: *atlas*_in_tissue_space*.nii.gz', default=['*atlas*_in_tissue_space*.nii.gz'], nargs='*', action=SM)
     opts.add_argument('-min', '--min', help='Minimum intensity value for fsleyes display (grayscale underlay). Default: 0', type=float, default=0.0)
     opts.add_argument('-max', '--max', help='Maximum intensity value for fsleyes display (grayscale underlay). Default: 2000', type=float, default=2000.0)
@@ -120,14 +120,17 @@ def main():
             sample_dir = base
             search_dirs = sorted([d for d in sample_dir.glob('reg_outputs*') if d.is_dir()])
 
+            if args.verbose:
+                print(f'[cyan]Single-sample mode:[/cyan] {sample_dir.name} (searching {len(search_dirs)} dir(s))')
+
         # Case 2: running inside sampleXX/reg_outputs*
         elif base.name.startswith('reg_outputs') and base.parent.name.startswith('sample'):
             sample_dir = base.parent
             # Search just this reg_outputs folder (most specific)
             search_dirs = [base]
 
-            # Optional: if you *also* want siblings, use:
-            # search_dirs = [base] + sorted([d for d in sample_dir.glob('reg_outputs*') if d.is_dir() and d != base])
+            if args.verbose:
+                print(f'[cyan]Single-sample mode:[/cyan] {sample_dir.name} (searching 1 dir)')
 
         else:
             print(f'[red]Error:[/red] No files matched prefix glob: {prefix_glob}')
