@@ -199,8 +199,23 @@ def main():
     if n_samples_with_any == 0:
         print('[red]Error:[/red] No matching autofl or atlas files found.')
         print(f'  Autofl pattern: {args.autofl_img}')
-        print(f'  Atlas patterns: {", ".join(args.atlas)}')
-        print(f'  Search directory: {base}')
+        print(f'  Atlas patterns: {" ".join(args.atlas)}')
+
+        if single_sample_mode:
+            print(f'  Sample dir: {sample_dir}')
+            print('  Search dirs:')
+            for d in search_dirs:
+                print(f'    - {d}')
+
+            underlay_pat = _strip_aggregated_prefix_glob(args.autofl_img)
+            print(f'  Underlay tried (single-sample): {underlay_pat}')
+
+            print('  Atlas tried (single-sample):')
+            for pat in args.atlas:
+                print(f'    - {_strip_aggregated_prefix_glob(pat)}')
+        else:
+            print(f'  Search directory: {base}')
+
         return
 
     # Build one fsleyes command: first sample visible, rest hidden (-d)
