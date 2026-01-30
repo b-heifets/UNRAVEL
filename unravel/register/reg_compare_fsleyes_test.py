@@ -1,21 +1,29 @@
 #!/usr/bin/env python3
 
 """
-Use ``reg_compare_fsleyes`` (``rcmpf``) from UNRAVEL to compare registration in fsleyes for multiple samples in one fsleyes instance.
+Use ``reg_compare_fsleyes`` (``rcmpf``) from UNRAVEL to visualize registration
+results in FSLeyes for multiple samples in a single session.
 
-Assumes you aggregated per-sample files into a single folder (e.g. reg_compare/) with filenames like:
-    sample01_autofl_50um_masked_fixed_reg_input.nii.gz
-    sample01_atlas_CCFv3_2020_30um_in_tissue_space__UNRAVEL.nii.gz
-    sample01_atlas_CCFv3_2020_30um_in_tissue_space__OG.nii.gz
-    sample01_atlas_CCFv3_2020_30um_in_tissue_space__autofl_bc.nii.gz
-    ...
+Two usage modes:
+
+1. Aggregated mode (default):
+   Run inside a directory containing files named like:
+       sample01_autofl_50um_masked_fixed_reg_input.nii.gz
+       sample01_atlas_*_in_tissue_space*.nii.gz
+   Files are grouped by sample prefix (sample??_).
+
+2. Single-sample mode:
+   Run inside a sample directory or inside a reg_outputs* directory.
+   Registration outputs are loaded directly from reg_outputs* folders.
 
 Behavior:
-    - Groups files by sample prefix (sample??_).
-    - Files must start with 'sample' and have an underscore after the sample ID.
     - Loads one autofluo/underlay per sample (if present)
-    - Loads all matching atlas overlays per sample (label overlays)
-    - One fsleyes instance with first sample visible
+    - Loads all matching atlas overlays per sample
+    - Opens one FSLeyes instance with the first sample visible
+
+Usage:
+------
+    reg_compare_fsleyes [-d dir] [-af autofl_img] [-a atlas ...] [-min min_val] [-max max_val] [-l lut_name] [-al alpha_value] [-p pattern] [-v]
 """
 
 import subprocess
@@ -133,6 +141,8 @@ def main():
         if not search_dirs:
             print("[red]Error:[/red] No reg_outputs* directories found for this sample.")
             return
+        else:
+            print(f'  Search dirs: {", ".join(map(str, search_dirs))}')
 
         if args.verbose:
             print(f'[cyan]Single-sample mode:[/cyan] {sample_dir.name} (searching {len(search_dirs)} dir(s))')
@@ -187,7 +197,10 @@ def main():
             n_samples_with_any += 1
 
     if n_samples_with_any == 0:
-        print('[red]Error:[/red] No matching autofl or atlas files found with the provided patterns.')
+        print('[red]Error:[/red] No matching autofl or atlas files found.')
+        print(f'  Autofl pattern: {args.autofl_img}')
+        print(f'  Atlas patterns: {", ".join(args.atlas)}')
+        print(f'  Search directory: {base}')
         return
 
     # Build one fsleyes command: first sample visible, rest hidden (-d)
