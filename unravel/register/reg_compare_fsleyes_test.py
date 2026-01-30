@@ -111,6 +111,12 @@ def main():
     prefixes = sorted({(_sample_prefix(p) or '') for p in pref_files})
     prefixes = [p for p in prefixes if p]
 
+    # Sanity check: do we have any files here at all?
+    has_underlay_here = any(base.glob(args.autofl_img))
+    has_atlas_here = any(any(base.glob(pat)) for pat in args.atlas)
+    if prefixes and not (has_underlay_here or has_atlas_here):
+        prefixes = []
+
     single_sample_mode = False
 
     # ---- Mode B: single-sample directory fallback ----
