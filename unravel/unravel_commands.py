@@ -142,7 +142,7 @@ def main():
                 "module": "unravel.register.reg_compare_fsleyes",
                 "description": "Compare registration results using FSLeyes.",
                 "common": True,
-                "alias": "rcmpf"
+                "alias": "rcmpf or rf"
             }
         },
         "Warping": {
