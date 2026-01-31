@@ -26,14 +26,16 @@ Usage:
     reg_compare_fsleyes [-d dir] [-af autofl_img] [-a atlas ...] [-min min_val] [-max max_val] [-l lut_name] [-al alpha_value] [-p pattern] [-v]
 """
 
+import shutil
 import subprocess
+import tempfile
 from pathlib import Path
-
 from rich import print
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import log_command
+from unravel.core.utils import log_command, get_stem, get_extension
+from unravel.register.reg_compare import _default_suffix_from_folder
 
 
 def parse_args():
@@ -92,11 +94,27 @@ def _glob_sorted_many(dirs: list[Path], pattern: str) -> list[Path]:
         out.extend(sorted(d.glob(pattern)))
     return out
 
+def _copy_with_suffix(src: Path, dst_dir: Path, sample_id: str) -> Path:
+    """
+    Copy src -> dst_dir with a name that includes sample_id and a suffix derived from the parent folder.
+    Example:
+      reg_outputs_no_bc/atlas...nii.gz -> <tmp>/sample75_atlas...__no_bc.nii.gz
+    """
+    suffix = _default_suffix_from_folder(src.parent.name)
+
+    stem = get_stem(src)          # handles .nii.gz, .ome.tif, etc.
+    ext  = get_extension(src)
+
+    dst = dst_dir / f"{sample_id}_{stem}{suffix}{ext}"
+    shutil.copy2(src, dst)
+    return dst
 
 @log_command
 def main():
     install()
     args = parse_args()
+
+    tmp = None
 
     base = Path(args.dir) if args.dir else Path.cwd()
     if not base.exists():
@@ -176,19 +194,27 @@ def main():
     else:
         # ---- Mode B collection (sample dir) ----
         pref = prefixes[0]
+        tmp = tempfile.TemporaryDirectory(prefix=f"rcmpf_{sample_dir.name}_")
+        view_dir = Path(tmp.name)
 
-        # Underlay: use the "tail" of aggregated glob if needed
+        # underlay
         underlay_pat = _strip_aggregated_prefix_glob(args.autofl_img)
         autofl_hits = _glob_sorted_many(search_dirs, underlay_pat)
         if autofl_hits:
-            autofl_by_prefix[pref].append(autofl_hits[0])  # keep ONE underlay
-        elif args.verbose:
-            print(f'[yellow]Warning:[/yellow] No underlay matched: {underlay_pat}')
+            chosen = autofl_hits[0]
+            chosen_view = _copy_with_suffix(chosen, view_dir, sample_dir.name)
+            autofl_by_prefix[pref].append(chosen_view)
+            if args.verbose:
+                print(f"[green]Underlay:[/green] {chosen} -> {chosen_view}")
 
-        # Atlases: preserve pattern order, but strip "*_" if present
+        # atlases
         for pat in args.atlas:
             pat2 = _strip_aggregated_prefix_glob(pat)
-            atlas_by_prefix[pref].extend(_glob_sorted_many(search_dirs, pat2))
+            for h in _glob_sorted_many(search_dirs, pat2):
+                h_view = _copy_with_suffix(h, view_dir, sample_dir.name)
+                atlas_by_prefix[pref].append(h_view)
+                if args.verbose:
+                    print(f"[green]Atlas:[/green] {h} -> {h_view}")
 
     # Sanity + warnings
     n_samples_with_any = 0
@@ -251,6 +277,9 @@ def main():
           f'(first sample visible; others hidden).')
     subprocess.run(fsleyes_command)
 
+    # optional explicit cleanup after fsleyes exits
+    if tmp is not None:
+        tmp.cleanup()
 
 if __name__ == '__main__':
     main()
