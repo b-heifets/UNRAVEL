@@ -143,7 +143,13 @@ def main():
                 "description": "Compare registration results using FSLeyes.",
                 "common": True,
                 "alias": "rcmpf or rf"
-            }
+            },
+            "reg_background": {
+                "module": "unravel.register.reg_background",
+                "description": "Approximate autofluorescence by estimating and saving the background of a 3D image using a rolling-ball-like method.",
+                "common": False,
+                "alias": "rbg"
+            },
         },
         "Warping": {
             "warp_to_atlas": {

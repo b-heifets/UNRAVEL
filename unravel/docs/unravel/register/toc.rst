@@ -14,6 +14,7 @@ unravel.register package
    reg_compare_fsleyes
    reg_check_brain_mask
    bias_correct
+   reg_background
 
 .. automodule:: unravel.register
    :members:
