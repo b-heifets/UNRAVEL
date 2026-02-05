@@ -30,6 +30,9 @@ Usage to binarize an image and set to 8 bit:
 --------------------------------------------
     img_math -i A.nii.gz -t 0.5 -b -o binarized.nii.gz -d uint8
 
+Usage to save as a series of TIFFs after applying upper and lower thresholds:
+-----------------------------------------------------------------------------
+    img_math -i A.nii.gz -t 100 -ut 2000 -o result.tif # Save as TIFF series in result/
 """
 
 import numpy as np
@@ -205,7 +208,8 @@ def main():
         ref_path = next((p for p in img_paths if str(p).endswith('.nii.gz')), None)
         save_as_nii(result, args.output, reference=ref_path, data_type=args.dtype)
     elif args.output.endswith('.tif'):
-        save_as_tifs(result, args.output)
+        output_path = str(Path(args.output).parent / Path(args.output).stem)
+        save_as_tifs(result, output_path)
     elif args.output.endswith('.zarr'):
         save_as_zarr(result, args.output)
 
