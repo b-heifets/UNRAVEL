@@ -148,7 +148,7 @@ def main():
                 "module": "unravel.register.reg_background",
                 "description": "Approximate autofluorescence by estimating and saving the background of a 3D image using a rolling-ball-like method.",
                 "common": False,
-                "alias": "rbg"
+                "alias": "background or rbg"
             },
         },
         "Warping": {

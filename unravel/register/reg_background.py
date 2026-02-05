@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``reg_background`` (``rbg``) from UNRAVEL to estimate and save the background of a 3D image using a rolling-ball-like method.
+Use ``reg_background`` (``background or rbg``) from UNRAVEL to estimate and save the background of a 3D image using a rolling-ball-like method.
 
 Notes:
     - Provides a background image for registration when no autofluorescence channel is available (e.g., c-Fos IF).
@@ -16,7 +16,7 @@ Outputs:
 
 Usage:
 ------
-    reg_background [-i input] [-o output] [-rb radius] [-c channel] [-dt dtype] [-v]
+    background [-i input] [-o output] [-rb radius] [-c channel] [-dt dtype] [-v]
 """
 
 
