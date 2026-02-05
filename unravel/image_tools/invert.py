@@ -14,7 +14,7 @@ Note:
 
 Usage:
 ------
-    img_invert [-i path/img<.nii.gz|.tif|.czi|.zarr> or glob pattern(s)] [-c channel] [-dt dtype] [-v]
+    invert [-i path/img<.nii.gz|.tif|.czi|.zarr> or glob pattern(s)] [-c channel] [-dt dtype] [-v]
 """
 
 from pathlib import Path
