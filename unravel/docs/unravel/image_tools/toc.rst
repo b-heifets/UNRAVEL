@@ -20,6 +20,7 @@ unravel.image_tools package
    modify_labels
    filter_objects_by_size
    smooth
+   invert
    atlas/toc
 
 .. automodule:: unravel.image_tools

@@ -630,6 +630,12 @@ def main():
                 "description": "Smooth .nii.gz images.",
                 "common": False,
                 "alias": "smooth"
+            },
+            "img_invert": {
+                "module": "unravel.image_tools.invert",
+                "description": "Invert image intensities (for uint8 and uint16 images).",
+                "common": False,
+                "alias": "invert"
             }
         },
         "Atlas tools": {
