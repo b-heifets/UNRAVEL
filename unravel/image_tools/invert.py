@@ -10,7 +10,8 @@ Outputs:
     - path/img_inv.<ext>
 
 Note:
-    - Only uint8 and uint16 images are supported.
+    - Inversion is performed as max(image) - x, independent of data type.
+    - A warning is issued if the input contains negative values.
 
 Usage:
 ------
@@ -18,6 +19,7 @@ Usage:
 """
 
 from pathlib import Path
+import warnings
 import numpy as np
 from rich import print
 from rich.traceback import install
@@ -42,49 +44,43 @@ def parse_args():
     return parser.parse_args()
 
 
-def _promote_dtype_for_invert_img(ndarray_dtype: np.dtype) -> np.dtype:
-    """
-    Promote uint8 to int16 and uint16 to int32 for intermediate calculations in invert_img() to prevent overflow/underflow.
-    """
-    if ndarray_dtype == np.uint8:
-        return np.int16
-    if ndarray_dtype == np.uint16:
-        return np.int32
-    raise TypeError(f"Expected uint8 or uint16, got {ndarray_dtype}.")
-
-
 @print_func_name_args_times()
 def invert_img(ndarray, dtype=None):
     """
-    Invert a uint8/uint16 image using the full input dtype range.
+    Invert an image using data-range inversion.
 
     Behavior:
-        inv = max(input_dtype) - x
+        inv = max(image) - x
 
     Notes:
-        - Supports only uint8 and uint16 (deterministic, unambiguous).
-        - Float images are intentionally disallowed.
+        - Inversion is based on the image maximum, not the data type range.
+        - If the input contains negative values, a warning is issued.
     """
-    if ndarray.dtype not in (np.uint8, np.uint16):
-        raise TypeError(f"invert_img() expects uint8 or uint16. Got {ndarray.dtype}.")
+    if not np.issubdtype(ndarray.dtype, np.number):
+        raise TypeError(f"invert_img() expects a numeric array. Got {ndarray.dtype}")
 
-    out_dtype = np.dtype(dtype) if dtype is not None else ndarray.dtype
-    if out_dtype not in (np.uint8, np.uint16):
-        raise TypeError(f"Output dtype must be uint8 or uint16. Got {out_dtype}.")
+    work = ndarray.astype(np.float64, copy=False)
 
-    in_max = np.iinfo(ndarray.dtype).max
+    img_min = float(work.min())
+    img_max = float(work.max())
 
-    img_dtype = _promote_dtype_for_invert_img(ndarray.dtype)
-    img = ndarray.astype(img_dtype, copy=False)
+    if img_min < 0:
+        warnings.warn(
+            f"Input image contains negative values (min={img_min:.3g}); "
+            "inversion uses max(image) - x.",
+            RuntimeWarning
+        )
 
-    img_inv = in_max - img
+    inv = img_max - work
 
-    # Clip only matters when converting uint16 -> uint8
-    out_info = np.iinfo(out_dtype)
-    img_inv = np.clip(img_inv, out_info.min, out_info.max)
+    if dtype is not None:
+        out_dtype = np.dtype(dtype)
+        if np.issubdtype(out_dtype, np.integer):
+            info = np.iinfo(out_dtype)
+            inv = np.clip(inv, info.min, info.max)
+        inv = inv.astype(out_dtype, copy=False)
 
-    return img_inv.astype(out_dtype, copy=False)
-
+    return inv
 
 @log_command
 def main():
