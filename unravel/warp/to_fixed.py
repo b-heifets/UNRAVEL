@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 """
-Use ``warp_to_fixed`` (``w2f``) from UNRAVEL to forward warp a moving image (e.g., from atlas space) to fixed image space (e.g., tissue space). The input/output do not need padding.
+Use ``warp_to_fixed`` (``w2f``) from UNRAVEL to forward warp a moving image (e.g., from atlas space) to fixed image space (e.g., tissue space) and remove padding from the warped image.
 
 Note: 
     - Run this from the folder containing reg_outputs.
-    - This script is for warping between different atlas spaces. For warping from atlas space to tissue space, use ``to_native``.
+    - This script is for warping between different atlas spaces and removing padding from warped images. 
+    - For warping to/from atlas space and registration input space and maintaining padding in registration space, use ``warp``.
+    - For warping from atlas space to full resolution tissue space, use ``to_native``.
 
 Usage:
 ------
@@ -64,7 +66,15 @@ def calculate_padded_dimensions(original_dimensions, pad_percent=0.25):
 
 @print_func_name_args_times()
 def forward_warp(fixed_img_path, reg_outputs_path, fixed_reg_in, moving_img_path, interpol, output=None, pad_percent=0.25):
-    """Warp image from atlas space to tissue space and scale to full resolution"""
+    """
+    Warp image from atlas space to tissue space (fixed image space).
+
+    Steps:
+        1. Warp the moving image to fixed image space using the transformations from reg_outputs.
+        2. Crop the warped image to remove padding based on the original dimensions of the fixed image and the padding percentage used during registration.
+        3. Save the cropped image as .nii.gz with the same data type as the moving image.
+
+    """
 
     # Warp the moving image to tissue space
     warp_outputs_dir = Path(reg_outputs_path) / "warp_outputs" 
