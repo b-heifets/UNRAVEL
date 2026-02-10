@@ -150,6 +150,12 @@ def main():
                 "common": False,
                 "alias": "background or rbg"
             },
+            "reg_adjust_template": {
+                "module": "unravel.register.adjust_template",
+                "description": "Adjust the template image (e.g., to modify specific regions for better registration).",
+                "common": False,
+                "alias": "adjust_template or rat"
+            },
         },
         "Warping": {
             "warp_to_atlas": {
