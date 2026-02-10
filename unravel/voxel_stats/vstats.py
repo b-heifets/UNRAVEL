@@ -8,11 +8,18 @@ Prereqs:
 
 Inputs:
     - `*`.nii.gz files in the current directory with conditions as prefixes (e.g., saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz)
+    - Files are merged in the order returned by Python's `sorted()` function, and this order determines group assignment in the design matrix.
+    - Sorting is case-sensitive and follows Unicode code-point order: A < Z < a < z
+    - Examples: 
+    - saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz → drug_1.nii.gz, drug_2.nii.gz, saline_1.nii.gz, saline_2.nii.gz
+    - SALINE_1.nii.gz, SALINE_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz → SALINE_1.nii.gz, SALINE_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz
+    - Saline_1.nii.gz, Saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz → Saline_1.nii.gz, Saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz
+    - Use ``match_files`` to print the order of the matched files.
 
 Outputs:
     - stats/ directory with randomise_parallel outputs (e.g., uncorrected 1-p value maps [vox_p]).
     - The name of the current directory is used as the prefix for the output files.
-    - The input image order is saved in stats/merged_image_order.csv for reference (use ``match_files`` to print the order of the matched files).
+    - The input image order is saved in stats/merged_image_order.csv for reference.
 
 Next commands:
     - Run ``cstats_fdr_range`` and ``cstats_fdr`` to correct for multiple comparisons.
