@@ -268,6 +268,12 @@ def main():
                 "description": "Flip and optionally shift content of images in atlas space.",
                 "common": False,
                 "alias": "mirror"
+            },
+            "vstats_match_files": {
+                "module": "unravel.voxel_stats.match_files",
+                "description": "Match files and print the order (e.g., to check the order of images for voxel-wise stats).",
+                "common": False,
+                "alias": "match_files"
             }
         },
         "Cluster-wise stats": {

@@ -13,6 +13,7 @@ unravel.voxel_stats package
    vstats
    mirror
    vstats_check_fsleyes
+   match_files
    other/toc
 
 .. automodule:: unravel.voxel_stats

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Use ``match_files`` from UNRAVEL to match files and print the order.
+Use ``vstats_match_files`` or ``match_files`` from UNRAVEL to match files and print the order.
 
 Note:
     - This is useful for noting group order in ``vstats``.
 
 Usage:
 ------
-    match_files [-i path/<asterisk>.nii.gz or glob pattern(s) to match] [-idx] [-v]
+    vstats_match_files [-i path/<asterisk>.nii.gz or glob pattern(s) to match] [-idx] [-v]
 """
 
 from pathlib import Path
