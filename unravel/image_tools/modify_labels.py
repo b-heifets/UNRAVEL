@@ -6,6 +6,10 @@ Use ``img_modify_labels`` (``ml``) from UNRAVEL to modify specified label IDs in
 Usage: 
 ------
     img_modify_labels -i path/image.nii.gz -ids 1 2 3 -o path/image.nii.gz [-val 0] [--retain_IDs] [--binarize] [-v]
+
+Usage to mask a region w/ multiple labels:
+------------------------------------------
+    img_modify_labels -i atlas.nii.gz -o mask.nii.gz --retain_IDs -ids <ID1> <ID2> -val 0 -b
 """
 
 import numpy as np
