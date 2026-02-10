@@ -12,6 +12,7 @@ Inputs:
 Outputs:
     - stats/ directory with randomise_parallel outputs (e.g., uncorrected 1-p value maps [vox_p]).
     - The name of the current directory is used as the prefix for the output files.
+    - The input image order is saved in stats/merged_image_order.csv for reference (use ``match_files`` to print the order of the matched files).
 
 Next commands:
     - Run ``cstats_fdr_range`` and ``cstats_fdr`` to correct for multiple comparisons.
