@@ -170,9 +170,15 @@ def main():
     else:
         print(f"\n    [yellow]{args.atlas} does not exist. Skipping copying to stats/\n")
 
+    # Get the input images and save the order of the images being merged for reference
+    images = match_files('*.nii.gz')
+    with open(stats_dir / 'merged_image_order.csv', 'w') as f:
+        f.write("index,group,filename\n")
+        for i, image in enumerate(images):
+            group = image.stem.split('_')[0]
+            f.write(f"{i},{group},{image.name}\n")
 
     # Merge and smooth the input images
-    images = match_files('*.nii.gz')
     merged_file = stats_dir / 'all.nii.gz'
     if not merged_file.exists():
         print('\n    Merging *.nii.gz into ./stats/all.nii.gz with this order of files:')
