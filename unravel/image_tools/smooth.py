@@ -14,13 +14,14 @@ Inputs:
     - path/img.nii.gz or glob pattern(s)
 
 Outputs:
-    - path/img_s<sigma><.mm|.vx>.nii.gz
+    - path/img_s<sigma><mm|vx>.nii.gz
 
 Usage:
 ------
     img_smooth [-i path/img.nii.gz or glob pattern(s)] [-s sigma] [-m] [-v]
 """
 
+from concurrent.futures import ThreadPoolExecutor
 from fsl.wrappers import fslmaths
 from pathlib import Path
 from rich import print
@@ -40,13 +41,66 @@ def parse_args():
     reqs.add_argument('-s', '--sigma', help='Gaussian sigma (standard deviation). Default units: voxels; with --mm: millimeters.', required=True, type=float, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='path/img.nii.gz or glob pattern(s). Default: *.nii.gz', default='*.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help="path/img.nii.gz or glob pattern(s). Default: '*.nii.gz'", default='*.nii.gz', action=SM)
     opts.add_argument('-m', '--mm', help='Interpret --sigma in millimeters (uses FSL fslmaths -s).', default=False, action='store_true')
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
+
+
+def smooth_w_sigma_in_mm(img_path, sigma_mm, output_path):
+    """
+    Smooth an image with a Gaussian kernel using FSL's fslmaths -s, which expects sigma in millimeters.
+
+    Parameters:
+    -----------
+    img_path : str or Path
+        Path to the input image (e.g., .nii.gz).
+    sigma_mm : float
+        Standard deviation of the Gaussian kernel in millimeters.
+    output_path : str or Path
+        Path to save the smoothed image (e.g., .nii.gz).
+    """
+    fslmaths(str(img_path)).s(sigma_mm).run(output=str(output_path))
+
+def smooth_w_sigma_in_voxels(img_path, sigma_vx, output_path):
+    """
+    Smooth an image with a Gaussian kernel using scipy.ndimage.gaussian_filter, which expects sigma in voxels.
+
+    Parameters:
+    -----------
+    img_path : str or Path
+        Path to the input image (e.g., .nii.gz).
+    sigma_vx : float
+        Standard deviation of the Gaussian kernel in voxels.
+    output_path : str or Path
+        Path to save the smoothed image (e.g., .nii.gz).
+    """
+    img = load_nii(img_path)
+    smoothed_img = gaussian_filter(img, sigma=sigma_vx)
+    save_3D_img(smoothed_img, output_path, reference_img=img_path, verbose=Configuration.verbose)
+
+def smooth_image(img_path, sigma, mm=False):
+    """
+    Smooth an image with a Gaussian kernel, interpreting sigma in either millimeters or voxels.
+
+    Parameters:
+    -----------
+    img_path : str or Path
+        Path to the input image (e.g., .nii.gz).
+    sigma : float
+        Standard deviation of the Gaussian kernel.
+    mm : bool, optional
+        If True, interpret sigma in millimeters and use FSL's fslmaths -s. If False, interpret sigma in voxels and use scipy.ndimage.gaussian_filter. Default is False.
+    """
+    output_path = str(Path(img_path).parent / (str(Path(img_path).name).replace('.nii.gz', f'_s{sigma:g}{"mm" if mm else "vx"}.nii.gz')))
+
+    if mm:
+        smooth_w_sigma_in_mm(img_path, sigma, output_path)
+    else:
+        smooth_w_sigma_in_voxels(img_path, sigma, output_path)
 
 
 @log_command
@@ -58,21 +112,8 @@ def main():
 
     img_paths = match_files(args.input)
 
-    for img_path in img_paths:
-        print(f'\n    Processing image: {img_path}\n')
-
-        units = 'mm' if args.mm else 'vx'
-        sigma_str = f"{args.sigma:g}"  # Remove trailing zeros and decimal point if not needed
-        output_path = str(Path(img_path).parent / (str(Path(img_path).name).replace('.nii.gz', f'_s{sigma_str}.{units}.nii.gz')))
-
-        print(f'\n    Smoothing the input image\n')
-        if args.mm:
-            # FSL -s expects sigma in mm and writes the output file itself
-            fslmaths(str(img_path)).s(args.sigma).run(output=output_path)
-        else:
-            img = load_nii(img_path)
-            img = gaussian_filter(img, sigma=args.sigma)
-            save_3D_img(img, output_path, reference_img=img_path, verbose=args.verbose)
+    with ThreadPoolExecutor() as executor:
+        executor.map(lambda img_path: smooth_image(img_path, args.sigma, mm=args.mm), img_paths)
     
     verbose_end_msg()
 
