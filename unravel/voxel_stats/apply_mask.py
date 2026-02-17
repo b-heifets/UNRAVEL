@@ -172,6 +172,7 @@ def main():
                 mask = binary_dilation(mask, args.dilation)
 
             # Load the other mask and scale to full resolution
+            other_mask_img = None
             if args.other_mask:
                 other_mask_img = load_mask(sample_path / args.other_mask)
 
