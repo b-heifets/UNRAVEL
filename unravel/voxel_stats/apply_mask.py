@@ -44,12 +44,12 @@ def parse_args():
     reqs.add_argument('-mas', '--seg_mask', help='rel_path/mask_to_apply.nii.gz (in full res tissue space)', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on full res seg_mask (slow but precise). Default: 0", default=0, type=int, action=SM)
+    opts.add_argument('-dil', '--dilation', help='Number of dilation iterations to perform on full res seg_mask (slow but precise). Default: 0', default=0, type=int, action=SM)
     opts.add_argument('-m', '--mean', help='If provided, conditionally replace values w/ the mean intensity in the brain', action='store_true', default=False)
     opts.add_argument('-tmas', '--tissue_mask', help='For the mean itensity. rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
     opts.add_argument('-omas', '--other_mask', help='For restricting application of -mas. E.g., reg_inputs/autofl_50um_brain_mask_outline.nii.gz (from ./UNRAVEL/_other/uncommon_scripts/brain_mask_outline.py)', default=None, action=SM)
     opts.add_argument('-di', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 1', default='less', choices=['greater', 'less'], action=SM)
-    opts.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', action=SM)
+    opts.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/ (.zarr, .nii.gz, or dir of tifs). Default: ./sample??/masked_image', default="masked_image", action=SM)
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts.add_argument('-r', '--reg_res', help='Resample input to this res in microns for ``reg``. Default: 50', default=50, type=int, action=SM)
 
