@@ -6,6 +6,10 @@ Use ``utils_get_samples`` (``s``) from UNRAVEL to test the get_samples() functio
 Usage:
 ------
 ``utils_get_samples`` [-d dirs] [-p pattern]
+
+Usage for sample???:
+--------------------
+    utils_get_samples -p 'sample???'
 """
 
 from rich import print
@@ -20,7 +24,7 @@ def parse_args():
     
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
-    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-p', '--pattern', help="Pattern for directories to process (use quotes for patterns with special characters). Default: 'sample??'", default='sample??', action=SM)
 
     return parser.parse_args()
 
