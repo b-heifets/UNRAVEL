@@ -72,8 +72,8 @@ def main():
             seg_img = load_3D_img(img_path, verbose=args.verbose)
             
             # Convert each label to a binary mask and save as .nii.gz
-            if isinstance(args.labels, int):
-                labels = [args.labels]
+            labels = args.labels if isinstance(args.labels, list) else [args.labels]
+
             if len(labels) == 1:
                 save_labels_as_masks(seg_img, int(labels[0]), img_path.parent, args.output, verbose=args.verbose)
             else: 
