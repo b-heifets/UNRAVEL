@@ -340,7 +340,7 @@ def main():
             warped_atlas = str(Path(reg_outputs_path, str(Path(args.moving_img2).name).replace(".nii.gz", "_in_tissue_space.nii.gz")))
             if not Path(warped_atlas).exists():
                 print(f'\n    Warping the atlas to padded fixed image space for checking reg: reg_outputs/<atlas>_in_tissue_space.nii.gz\n')
-                warp(reg_outputs_path, args.moving_img2, fixed_img_for_reg_path, warped_atlas, inverse=False, interpol=args.interpol)
+                warp(reg_outputs_path=reg_outputs_path, moving_img_path=args.moving_img2, fixed_img_path=fixed_img_for_reg_path, output_path=warped_atlas, inverse=False, interpol=args.interpol)
 
             # Save the orientation (from args.ort_code) to a text file in reg_outputs
             orient_txt = reg_outputs_path / "orientation_code.txt"
