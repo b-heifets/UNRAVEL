@@ -229,7 +229,7 @@ def main():
     with Live(progress):
         for sample_path in sample_paths:
             
-            # Define final output and check if it exists
+            # Define output path
             cluster_index_dir = str(Path(args.moving_img).name).replace(".nii.gz", "").replace("_rev_cluster_index_", "_")
 
             # Check if output CSV already exists
@@ -243,8 +243,11 @@ def main():
                 output_path = resolve_path(sample_path, args.output)
             else: 
                 output_path = resolve_path(sample_path, Path("clusters", cluster_index_dir, f"{args.density}_data.csv"), make_parents=True)
-            if output_path and output_path.exists():
-                print(f"\n\n    {output_path} already exists. Skipping.\n")
+
+            # Skip if the chosen output exists
+            if output_path.exists():
+                print(f"\n    {output_path} already exists. Skipping {sample_path.name}.\n")
+                progress.update(task_id, advance=1)
                 continue
             
             # Use lower bit-depth possible for cluster index
