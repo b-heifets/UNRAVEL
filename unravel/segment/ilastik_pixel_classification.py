@@ -117,6 +117,12 @@ def main():
                     progress.update(task_id, advance=1)
                     continue
 
+            # Also check if there are already segmented TIFFs (intermediate output) and skip (to avoid redundant processing with parallel runs)
+            if output_tif_dir.exists() and any(output_tif_dir.glob("*.tif")):
+                print(f"\n\n    {output_tif_dir} already contains segmented TIFFs. Skipping.\n")
+                progress.update(task_id, advance=1)
+                continue
+
             # Check if input TIFF series exists
             if input_path.is_dir() and any(input_path.glob("*.tif")):
                 input_tif_dir = input_path
