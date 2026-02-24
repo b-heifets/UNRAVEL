@@ -22,8 +22,9 @@ Note:
     - For -s, if a dir name is provided, the command will load ./sample??/seg_dir/sample??_seg_dir.nii.gz. 
     - If a relative path is provided, the command will load the image at the specified path.
 
-Next command:
-    ``cstats_summary``
+Next steps:
+    - ``cstats_summary_config``: Copy the cluster_summary.ini file to the current working directory for editing and use with ``cstats_summary``.
+    - ``cstats_summary``: Aggregate and analyze cluster validation data from cstats_validation.    
 
 Usage:
 ------
