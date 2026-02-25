@@ -33,6 +33,7 @@ Outputs:
 
 Note:
     - cstats_table saves valid_clusters_dir/valid_cluster_IDs_sorted_by_anatomy.txt
+    - Hemisphere suffix usage must be consistent across files (all _LH/_RH or none).
 
 Usage:
 ------
@@ -77,73 +78,95 @@ def generate_summary_table(csv_files, data_column_name):
     data_by_condition = {}
 
     # Check if any files contain hemisphere indicators
-    has_hemisphere = any('_LH.csv' in str(file) or '_RH.csv' in str(file) for file in csv_files)
+    # has_hemisphere = any('_LH.csv' in str(file) or '_RH.csv' in str(file) for file in csv_files)
+    has_hemisphere = any(str(f).endswith('_LH.csv') or str(f).endswith('_RH.csv') for f in csv_files)
 
-    # Loop through each file in the working directory
-    for file in csv_files:
+    if has_hemisphere:
+        # key = filename without _LH/_RH suffix (so one key per sample)
+        by_key = {}
+        for f in csv_files:
+            name = Path(f).name
+            if str(name).endswith('_LH.csv') or str(name).endswith('_RH.csv'):
+                key = str(name).replace('_LH.csv', '').replace('_RH.csv', '')
+                by_key.setdefault(key, []).append(f) # Group files, ignoring hemisphere suffixes
 
-        # Extract the condition and sample name
-        parts = str(Path(file).name).split('_')
-        condition = parts[0]
-        sample = parts[1] 
 
-        if has_hemisphere:
-        # if has_hemisphere, pool data from LH and RH files
-            if str(file).endswith('_RH.csv'):
-                continue  # Skip RH files
+        for key, files in by_key.items():
+            lh = next((f for f in files if str(f).endswith('_LH.csv')), None)
+            rh = next((f for f in files if str(f).endswith('_RH.csv')), None)
 
-            if str(file).endswith('_LH.csv'):
-                LH_df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
-                RH_file = str(file).replace('_LH.csv', '_RH.csv')
-                if not Path(RH_file).exists():
-                    print(f"[red]    {RH_file} is missing")
-                    with open(file.parent / "missing_csv_files.txt", 'a') as f:
-                        f.write(f"{RH_file} is missing\n")
-                    import sys ; sys.exit()
+            parts = key.split('_')
+            condition = parts[0]
+            sample = parts[1]
 
-                RH_df = pd.read_csv(str(file).replace('_LH.csv', '_RH.csv'), usecols=['sample', 'cluster_ID', data_column_name])
+            dfs = []
+            if lh is not None:
+                dfs.append(pd.read_csv(lh, usecols=['sample', 'cluster_ID', data_column_name]))
+            if rh is not None:
+                dfs.append(pd.read_csv(rh, usecols=['sample', 'cluster_ID', data_column_name]))
 
-                # Sum the data_col of the LH and RH dataframes
-                if data_column_name == 'cell_count' or data_column_name == 'label_volume' or data_column_name == 'cluster_volume':
-                    df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
-                        **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='sum')} # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method
-                    ).reset_index() # Reset the index to avoid a multi-index dataframe
-                elif data_column_name == 'mean_IF_intensity':
-                    df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
-                        **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='mean')} # Mean of mean_IF_intensity, unpacking the dict into keyword arguments for the .agg() method
-                    ).reset_index()
+            if not dfs:
+                continue
 
-        else:
-            # Load the CSV file into a pandas dataframe if no hemisphere distinction
+            if lh is None or rh is None:
+                missing = "_LH" if lh is None else "_RH"
+                print(f"[yellow]    Missing {missing} for {condition}_{sample}. Pooling uses available side only.[/yellow]")
+
+            if data_column_name in ('cell_count', 'label_volume', 'cluster_volume'):
+                df = (pd.concat(dfs, ignore_index=True)
+                        .groupby(['sample', 'cluster_ID']) # Group by sample and cluster_ID
+                        .agg(**{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='sum')}) # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method
+                        .reset_index()) # Reset the index to avoid a multi-index dataframe
+            elif data_column_name == 'mean_IF_intensity':
+                df = (pd.concat(dfs, ignore_index=True)
+                        .groupby(['sample', 'cluster_ID'])
+                        .agg(**{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='mean')})
+                        .reset_index())
+            else:
+                df = pd.concat(dfs, ignore_index=True)
+
+            if df.empty:
+                continue
+
+            df.set_index('cluster_ID', inplace=True)
+            df = df[[data_column_name]]
+            df.rename(columns={data_column_name: sample}, inplace=True)
+
+            if condition not in data_by_condition:
+                data_by_condition[condition] = df
+            else:
+                data_by_condition[condition] = pd.concat([data_by_condition[condition], df], axis=1)
+
+    else:
+        for file in csv_files:
+            parts = Path(file).name.split('_')
+            condition = parts[0]
+            sample = parts[1]
+
             df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
 
-        # Ensure df exists and has data before proceeding
-        if df is None or df.empty:
-            print(f"[yellow]    Skipping {file} due to missing or empty data.")
-            continue
+            # Ensure df exists and has data before proceeding
+            if df is None or df.empty:
+                print(f"[yellow]    Skipping {file} due to missing or empty data.")
+                continue
 
-        # Set the cluster_ID as index and select the density column
-        df.set_index('cluster_ID', inplace=True)
-        df = df[[data_column_name]]
+            # Set the cluster_ID as index and select the density column
+            df.set_index('cluster_ID', inplace=True)
+            df = df[[data_column_name]]
 
-        # Rename the density column with the sample name to avoid column name collision during concat
-        df.rename(columns={data_column_name: sample}, inplace=True)
+            # Rename the density column with the sample name to avoid column name collision during concat
+            df.rename(columns={data_column_name: sample}, inplace=True)
 
-        # If the condition is not already in the dictionary, initialize it with the dataframe
-        if condition not in data_by_condition:
-            data_by_condition[condition] = df
-        else:
-            # Concatenate the new dataframe with the existing one for the same condition
-            data_by_condition[condition] = pd.concat([data_by_condition[condition], df], axis=1)
+            # If the condition is not already in the dictionary, initialize it with the dataframe
+            if condition not in data_by_condition:
+                data_by_condition[condition] = df
+            else:
+                # Concatenate the new dataframe with the existing one for the same condition
+                data_by_condition[condition] = pd.concat([data_by_condition[condition], df], axis=1)
 
     # Loop through each condition and sort the columns by sample number
     for condition in data_by_condition:
-        # Get current columns for the condition
-        current_columns = data_by_condition[condition].columns
-        # Sort the columns
-        sorted_columns = sort_samples(current_columns)
-        # Reindex the DataFrame with the sorted columns
-        data_by_condition[condition] = data_by_condition[condition][sorted_columns]
+        data_by_condition[condition] = data_by_condition[condition][sort_samples(data_by_condition[condition].columns)]
 
     # Concatenate all condition dataframes side by side
     all_conditions_df = pd.concat(data_by_condition.values(), axis=1, keys=data_by_condition.keys())
