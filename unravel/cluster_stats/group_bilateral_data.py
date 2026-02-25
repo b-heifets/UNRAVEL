@@ -80,6 +80,23 @@ def group_hemisphere_data(base_path):
             shutil.rmtree(lh_dir)
             shutil.rmtree(rh_dir)
 
+    # Handle unpaired hemisphere dirs: rename/move into base dir without suffix
+    leftover = [d for d in base_path.iterdir()
+                if d.is_dir() and (d.name.endswith('_LH') or d.name.endswith('_RH'))]
+
+    for d in leftover:
+        common_name = d.name[:-3]
+        new_dir_path = base_path / common_name
+        new_dir_path.mkdir(exist_ok=True)
+
+        # Move files into the canonical dir
+        for file in d.iterdir():
+            dest_file = new_dir_path / file.name
+            if not dest_file.exists():
+                shutil.move(str(file), dest_file)
+
+        shutil.rmtree(d)
+
 @log_command
 def main():
     install()
