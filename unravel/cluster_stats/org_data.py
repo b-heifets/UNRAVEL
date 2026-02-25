@@ -42,7 +42,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/)', required=True, action=SM)
+    reqs.add_argument('-cvd', '--cluster_val_dirs', help='One or more glob patterns matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/)', nargs='*', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-dt', '--density_type', help='Type of density data to aggregate (cell \[default] or label).', default='cell', action=SM)
@@ -196,7 +196,13 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
         - p_val_txt (str): the name of the file with the corrected p value threshold
         - cluster_idx (str): the name of the rev_cluster_index file"""
 
-    validation_dirs = match_files(validation_dir_pattern, clusters_path)
+    validation_dirs = []
+    for pat in validation_dir_pattern:
+        validation_dirs.extend(match_files(pat, clusters_path))
+
+    # De-dupe while preserving order
+    seen = set()
+    validation_dirs = [d for d in validation_dirs if not (d in seen or seen.add(d))]
 
     for validation_dir in validation_dirs:
         if validation_dir.is_dir():
