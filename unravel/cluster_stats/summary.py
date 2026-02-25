@@ -4,7 +4,7 @@
 Use ``cstats_summary`` (``css``) from UNRAVEL to aggregate and analyze cluster validation data from ``cstats_validation``.
 
 Prereqs:
-    - ``cstats_validation``
+    - ``cstats_validation`` (skip hemispheres that should be excluded or remove corresponding dirs in sample??/clusters/)
     - The name of the rev_cluster_index file should relate to the name of the cluster validation directory.
     - cluster_index_dir = Path(args.moving_img from cstats_validation).name w/o "_rev_cluster_index" and ".nii.gz" 
     - _cluster_info.txt should be named like: cluster_index_dir + "_cluster_info.txt"
