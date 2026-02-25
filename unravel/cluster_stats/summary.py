@@ -141,7 +141,7 @@ def main():
         org_data_args = [
             '-d', *args.dirs,
             '-p', cfg.org_data.pattern,
-            '-cvd', args.cluster_val_dirs,
+            '-cvd', *args.cluster_val_dirs,
             '-vd', args.vstats_path,
             '-dt', cfg.org_data.density_type,
             '-pvt', cfg.org_data.p_val_txt
