@@ -91,7 +91,7 @@ def prepend_conditions(base_path, csv_file, rename_files, rename_dirs, recursive
             missing.append(row['dir_name'])
 
     if missing:
-        print(f"[yellow]No matching files/dirs found for: {', '.join(missing)}[/yellow]")
+        print(f"[yellow]Conditions could not be prepended. No matching files/dirs found for: {', '.join(missing)} in {base_path}.")
 
 
 @log_command
