@@ -375,21 +375,21 @@ def main():
 
     # Make output directories
     if args.output:
-        if args.hemi == 'both': 
+        if args.side == 'both': 
             out_dirs = {side: f"{args.output}_{side}{suffix}" for side in ["L", "R", "pooled"]}
-        elif args.hemi == 'r': 
+        elif args.side == 'r': 
             out_dirs = {side: f"{args.output}_{side}{suffix}" for side in ["R"]}
-        elif args.hemi == 'l': 
+        elif args.side == 'l': 
             out_dirs = {side: f"{args.output}_{side}{suffix}" for side in ["L"]}
         else: 
             print("--side should be l, r, or both")
             import sys ; sys.exit()
     else:
-        if args.hemi == 'both': 
+        if args.side == 'both': 
             out_dirs = {side: f"{test_type}_plots_{side}{suffix}" for side in ["L", "R", "pooled"]}
-        elif args.hemi == 'r': 
+        elif args.side == 'r': 
             out_dirs = {side: f"{test_type}_plots_{side}{suffix}" for side in ["R"]}
-        elif args.hemi == 'l': 
+        elif args.side == 'l': 
             out_dirs = {side: f"{test_type}_plots_{side}{suffix}" for side in ["L"]}
         else: 
             print("--side should be l, r, or both")
@@ -402,7 +402,7 @@ def main():
     for prefix in args.groups:
         group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_")] 
 
-    if args.hemi == 'both': 
+    if args.side == 'both': 
         # Averaging data across hemispheres and plotting pooled data (DR)
         print(f"\nPlotting and summarizing pooled data for each region...\n")
         rh_df = df[df['Region_ID'] < 20000]
@@ -448,9 +448,9 @@ def main():
         final_summary_pooled.to_csv(Path(out_dir) / '__significance_summary_pooled.csv', index=False)
 
     # Perform analysis and plotting for each hemisphere
-    if args.hemi == 'r':
+    if args.side == 'r':
         sides_to_process = ["R"]
-    elif args.hemi == 'l': 
+    elif args.side == 'l': 
         sides_to_process = ["L"]
     else:
         sides_to_process = ["L", "R"]
