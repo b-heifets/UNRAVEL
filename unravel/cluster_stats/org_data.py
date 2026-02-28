@@ -35,7 +35,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration 
-from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, get_samples
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, get_samples, print_func_name_args_times
 
 
 def parse_args():
@@ -82,6 +82,7 @@ def cp(src, dest):
         Path(dest).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src, dest)
 
+@print_func_name_args_times()
 def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
     """Copy the cluster info, p value threshold, and rev_cluster_index files to the target directory.
     
@@ -183,6 +184,7 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             print(f'\n    [red]The rev_cluster_index.nii.gz ({rev_cluster_index_path}) does not exist\n')
             import sys; sys.exit()
 
+@print_func_name_args_times()
 def organize_validation_data(sample_path, clusters_path, validation_dir_pattern, density_type, target_dir, vstats_path, p_val_txt):
     """Copy the cluster validation, p value, cluster info, and rev_cluster_index files to the target directory.
     
@@ -217,7 +219,7 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
                     cp(src=src_csv, dest=dest_csv)
 
             if vstats_path is not None:
-                copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt)
+                copy_stats_files(validation_dir=validation_dir, dest_path=dest_path, vstats_path=vstats_path, p_val_txt=p_val_txt)
 
 @log_command
 def main():
@@ -235,7 +237,7 @@ def main():
 
         clusters_path = sample_path / 'clusters'
         if clusters_path.exists():
-            organize_validation_data(sample_path, clusters_path, args.cluster_val_dirs, args.density_type, target_dir, args.vstats_path, args.p_val_txt)
+            organize_validation_data(sample_path=sample_path, clusters_path=clusters_path, validation_dir_pattern=args.cluster_val_dirs, density_type=args.density_type, target_dir=target_dir, vstats_path=args.vstats_path, p_val_txt=args.p_val_txt)
 
     verbose_end_msg()
 
