@@ -134,7 +134,7 @@ def run_randomise_parallel(input_image_path, permutations, output_name, design_f
     command_line = " ".join(command)
     print(f"\n[bold]{command_line}\n")
 
-    if verbose is not None:
+    if verbose:
         # Execute the command and stream output
         try:
             with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1) as proc:
@@ -168,12 +168,12 @@ def main():
     stats_dir.mkdir(exist_ok=True)
 
     # Copy the mask and the atlas to the stats directory using shutil
-    if args.mask and Path(args.mask).exists():
+    if args.mask and Path(args.mask).exists() and not (stats_dir / Path(args.mask).name).exists():
         shutil.copy(args.mask, stats_dir)
     elif args.mask and not Path(args.mask).exists():
         print(f"\n    [yellow]{args.mask} does not exist. Please provide a valid mask file. Skipping masking and copying to stats/\n")
 
-    if Path(args.atlas).exists():
+    if Path(args.atlas).exists() and not (stats_dir / Path(args.atlas).name).exists():
         shutil.copy(args.atlas, stats_dir)
     else:
         print(f"\n    [yellow]{args.atlas} does not exist. Skipping copying to stats/\n")
