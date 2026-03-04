@@ -238,7 +238,6 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     # Check which test to perform
     if test_type == 't-test':
         # Perform t-test for each group against the control group
-        # control_data = df[group_columns[args.ctrl_group]].values.ravel()
         control_data = pd.to_numeric(df[group_columns[args.ctrl_group]].values.ravel(), errors="coerce") # Convert to numeric and coerce errors to NaN (in case there are any non-numeric values)
         control_data = control_data[~np.isnan(control_data)] # Remove NaN values that may have been introduced by hemisphere exclusions
 
@@ -294,8 +293,6 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     elif test_type == 'tukey':
 
         # Conduct Tukey's HSD test
-        # densities = np.array([value for prefix in args.groups for value in df[group_columns[prefix]].values.ravel()]) # Flatten the data
-        # groups = np.array([prefix for prefix in args.groups for _ in range(len(df[group_columns[prefix]].values.ravel()))])
         densities_list = []
         groups_list = []
         for prefix in args.groups:
@@ -440,6 +437,19 @@ def main():
 
     # Save the aggregated data as a CSV
     df.to_csv('regional_cell_densities_all.csv', index=False)
+
+    # Also save a masked version with hemisphere exclusions applied (analysis-ready)
+    df_masked = df.copy()
+    if exclude_map:
+        # Mask RH rows
+        rh_rows = df_masked["Side"].astype(str).str.upper().eq("R")
+        df_masked.loc[rh_rows] = mask_excluded_side(df_masked.loc[rh_rows], "R", exclude_map)
+
+        # Mask LH rows
+        lh_rows = df_masked["Side"].astype(str).str.upper().eq("L")
+        df_masked.loc[lh_rows] = mask_excluded_side(df_masked.loc[lh_rows], "L", exclude_map)
+
+    df_masked.to_csv("regional_cell_densities_all_w_hemi_exclusions.csv", index=False)
 
     # Normalization if needed
     if args.divide:
