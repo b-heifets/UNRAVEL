@@ -238,11 +238,17 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     # Check which test to perform
     if test_type == 't-test':
         # Perform t-test for each group against the control group
-        control_data = df[group_columns[args.ctrl_group]].values.ravel()
+        # control_data = df[group_columns[args.ctrl_group]].values.ravel()
+        control_data = pd.to_numeric(df[group_columns[args.ctrl_group]].values.ravel(), errors="coerce") # Convert to numeric and coerce errors to NaN (in case there are any non-numeric values)
+        control_data = control_data[~np.isnan(control_data)] # Remove NaN values that may have been introduced by hemisphere exclusions
+
         test_results = []
         for prefix in args.groups:
             if prefix != args.ctrl_group:
-                other_group_data = df[group_columns[prefix]].values.ravel()
+                # other_group_data = df[group_columns[prefix]].values.ravel()
+                other_group_data = pd.to_numeric(df[group_columns[prefix]].values.ravel(), errors="coerce")
+                other_group_data = other_group_data[~np.isnan(other_group_data)]
+
                 t_stat, p_value = ttest_ind(other_group_data, control_data, equal_var=True, alternative=args.alternate) # Switched to equal_var=True and alternative=args.alternate
                 meandiff = np.mean(other_group_data) - np.mean(control_data)
                 # if args.alternate == 'less' and meandiff < 0:
@@ -288,8 +294,19 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     elif test_type == 'tukey':
 
         # Conduct Tukey's HSD test
-        densities = np.array([value for prefix in args.groups for value in df[group_columns[prefix]].values.ravel()]) # Flatten the data
-        groups = np.array([prefix for prefix in args.groups for _ in range(len(df[group_columns[prefix]].values.ravel()))])
+        # densities = np.array([value for prefix in args.groups for value in df[group_columns[prefix]].values.ravel()]) # Flatten the data
+        # groups = np.array([prefix for prefix in args.groups for _ in range(len(df[group_columns[prefix]].values.ravel()))])
+        densities_list = []
+        groups_list = []
+        for prefix in args.groups:
+            vals = pd.to_numeric(df[group_columns[prefix]].values.ravel(), errors="coerce")
+            vals = vals[~np.isnan(vals)]
+            densities_list.extend(vals.tolist())
+            groups_list.extend([prefix] * len(vals))
+
+        densities = np.array(densities_list, dtype=float)
+        groups = np.array(groups_list, dtype=object)
+
         tukey_results = pairwise_tukeyhsd(densities, groups, alpha=0.05)
 
         # Extract significant comparisons from Tukey's results
