@@ -82,7 +82,6 @@ def cp(src, dest):
         Path(dest).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src, dest)
 
-@print_func_name_args_times()
 def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
     """Copy the cluster info, p value threshold, and rev_cluster_index files to the target directory.
     
@@ -217,6 +216,9 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
                 
                 if not dest_csv.exists(): 
                     cp(src=src_csv, dest=dest_csv)
+
+            else: 
+                print(f'\n    [red]The expected csv ({src_csv}) does not exist\n')
 
             if vstats_path is not None:
                 copy_stats_files(validation_dir=validation_dir, dest_path=dest_path, vstats_path=vstats_path, p_val_txt=p_val_txt)
