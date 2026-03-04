@@ -6,7 +6,8 @@ Use ``rstats_summary`` (``rss``) from UNRAVEL to plot cell densensities for each
 Inputs:
     - CSVs with cell densities for each region (e.g., regional_stats/<condition>_sample??_cell_densities.csv)
     - Input CSV columns: Region_ID, Side, ID_Path, Region, Abbr, <OneWordCondition>_sample??
-    - The <OneWordCondition>_sample?? column has the cell densities for each region.
+    - The <OneWordCondition>_sample?? column has the cell densities for each region
+    - sample?? should be one word too (e.g., sample07 not sample_07)
 
 Outputs:
     - Saved to ./<test_type>_plots_<side>
@@ -68,6 +69,7 @@ def parse_args():
     opts.add_argument('-sc', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups", default='light:white', action=SM)
     opts.add_argument('-o', '--output', help='Output directory for plots (Default: <t-test or tukey>_plots)', action=SM)
     opts.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
+    opts.add_argument('-eh', '--exclude_hemi', help="Exclude one hemisphere for specific samples. Example: --exclude_hemi sample07:R sample12:L", nargs='*', default=[], action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -114,6 +116,57 @@ def parse_color_argument(color_arg, num_groups, region_id, csv_path):
     else:
         # It's already a list (this would be the case for default values or if the input method changes)
         return color_arg    
+
+def _sample_from_col(col: str) -> str | None:
+    """Extract the sample name (e.g., "sample07") from a column name like "Saline_sample07".
+    
+    Args:
+        - col (str): the column name from which to extract the sample name
+
+    Returns:
+        - str or None: the extracted sample name in lowercase (e.g., "sample07") or None if no sample name is found
+    """
+    m = col.split('_')[-1] if '_' in col else None
+    return m.lower() if m else None
+
+def parse_exclude_hemi(exclude_args: list[str]) -> dict[str, str]:
+    """Parse the --exclude_hemi arguments to determine which hemisphere to exclude for specific samples.
+
+    Args:
+        - exclude_args (list of str): List of strings in the format "sampleNN:R" or "sampleNN:L" indicating which hemisphere to exclude for each sample.
+
+    Returns: 
+        - dict mapping sample names (e.g., "sample07") to the hemisphere to exclude ("R" or "L"). For example, {"sample07": "R", "sample12": "L"}.
+    """
+    exclude_hemi_dict: dict[str, str] = {}
+    for item in exclude_args or []:
+        if ':' not in item:
+            raise ValueError(f"--exclude_hemi must be like sampleNN:R (got {item})")
+        samp, side = item.split(':', 1)
+        samp = samp.strip().lower()
+        side = side.strip().upper()
+        if side not in {"L", "R"}:
+            raise ValueError(f"Invalid side in --exclude_hemi '{item}'. Use L or R.")
+        exclude_hemi_dict[samp] = side
+    return exclude_hemi_dict
+
+def mask_excluded_side(side_df: pd.DataFrame, side_letter: str, exclude_map: dict[str, str]) -> pd.DataFrame:
+    """Mask the data for the specified side if it is marked for exclusion in the exclude_map.
+    Args:
+        - side_df (DataFrame): the DataFrame containing the data for the current side (columns: Region_ID, Side, ID_Path, Region, Abbr, <group_sample??>, ...)
+        - side_letter (str): the letter representing the current side ("L" or "R")
+        - exclude_map (dict): a dictionary mapping sample names to the hemisphere to exclude (e.g., {"sample07": "R", "sample12": "L"})
+    Returns:
+        - DataFrame: the modified DataFrame with the specified side masked (set to NaN) for the samples that are marked for exclusion in the exclude_map
+    """
+    if not exclude_map:
+        return side_df
+    side_df = side_df.copy()
+    for col in side_df.columns[5:]: # Only check columns with sample data, not the first 5 metadata columns
+        samp = _sample_from_col(col)
+        if samp and exclude_map.get(samp) == side_letter:
+            side_df[col] = np.nan
+    return side_df
 
 def summarize_significance(test_df, id):
     """Summarize the results of the statistical tests.
@@ -317,6 +370,13 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
     
+    exclude_map = parse_exclude_hemi(args.exclude_hemi)
+    if exclude_map and args.verbose:
+        print("\nHemisphere exclusions:")
+        for samp, side in sorted(exclude_map.items()):
+            print(f"  {samp}: {side}")
+        print()
+
     if len(args.groups) == 2:
         test_type = 't-test'
     elif len(args.groups) > 2:
@@ -423,9 +483,17 @@ def main():
         pooled_df = df[['Region_ID', 'Side', 'ID_Path', 'Region', 'Abbr']][df['Region_ID'] < 20000].reset_index(drop=True)
         pooled_df['Side'] = 'Pooled'  # Set the 'Side' to 'Pooled'
 
-        # Average the cell densities for left and right hemispheres
+        # Average the cell densities for L and R sides and handle hemisphere exclusions
         for col in lh_df.columns:
-            pooled_df[col] = (lh_df[col] + rh_df[col]) / 2
+            samp = _sample_from_col(col)
+            ex = exclude_map.get(samp) if samp else None
+
+            if ex == "R":        # RH excluded -> pooled = LH
+                pooled_df[col] = lh_df[col]
+            elif ex == "L":      # LH excluded -> pooled = RH
+                pooled_df[col] = rh_df[col]
+            else:                # neither excluded -> average
+                pooled_df[col] = (lh_df[col] + rh_df[col]) / 2
 
         # Averaging data across hemispheres and plotting pooled data
         unique_region_ids = df[df["Side"] == "R"]["Region_ID"].unique()
@@ -461,6 +529,7 @@ def main():
         # Initialize an empty dataframe to store all summaries
         all_summaries = pd.DataFrame()
         side_df = df[df['Side'] == side]
+        side_df = mask_excluded_side(side_df, side, exclude_map)
         unique_region_ids = side_df["Region_ID"].unique() # Get unique region IDs for the current side
         progress, task_id = initialize_progress_bar(len(unique_region_ids), f"[red]Processing regions ({side})...")
         with Live(progress):
