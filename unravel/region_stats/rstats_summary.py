@@ -35,6 +35,7 @@ import os
 from pathlib import Path
 import re
 import matplotlib as mpl
+mpl.use("Agg")  # Must be before importing pyplot to suppress error about session managment (not relevant here since we're saving plots, not showing them)
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
