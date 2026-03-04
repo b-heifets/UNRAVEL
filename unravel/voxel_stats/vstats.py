@@ -175,7 +175,7 @@ def main():
 
     if Path(args.atlas).exists() and not (stats_dir / Path(args.atlas).name).exists():
         shutil.copy(args.atlas, stats_dir)
-    else:
+    elif args.atlas and not Path(args.atlas).exists():
         print(f"\n    [yellow]{args.atlas} does not exist. Skipping copying to stats/\n")
 
     # Get the input images and save the order of the images being merged for reference
@@ -194,7 +194,7 @@ def main():
             print(f'    {image}')
         avwutils.fslmerge('t', str(merged_file), *images)
     else: 
-        print('\n    ./stats/all.nii.gz exists. Skipping...\n')
+        print('\n    ./stats/all.nii.gz exists. Skipping merge of 3D images...\n')
  
     # Smooth the image with a kernel
     if args.kernel > 0:
