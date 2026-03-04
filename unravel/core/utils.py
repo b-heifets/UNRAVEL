@@ -443,7 +443,7 @@ def match_files(patterns, base_path=None):
         paths.extend(matches)
 
     if not paths:
-        raise ValueError(f"No files found matching patterns: {patterns}")
+        raise ValueError(f"No files found in {base_path} matching the pattern(s): {patterns}")
 
     return paths
 
