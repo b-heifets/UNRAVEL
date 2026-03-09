@@ -271,7 +271,7 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
     # Ensure the y-axis starts from the minimum value, allowing for negative values
     plt.ylim(y_min - 2 * height_diff, y_pos + 2 * height_diff)
 
-    ax.set_xlabel(None)
+    ax.set_xlabel('') ### was None
 
     # Save the plot
     output_folder = Path('regional_mean_IF_summary')

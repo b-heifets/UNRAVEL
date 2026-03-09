@@ -350,7 +350,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     ax.spines['bottom'].set_linewidth(2)
     ax.spines['left'].set_linewidth(2)
     plt.ylim(0, y_pos) # Adjust y-axis limit to accommodate comparison bars
-    ax.set_xlabel('group') ### was None
+    ax.set_xlabel('') ### was None
 
     # Check if there are any significant comparisons (for prepending '_sig__' to the filename)
     has_significant_results = True if significant_comparisons.shape[0] > 0 else False

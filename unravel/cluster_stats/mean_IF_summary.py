@@ -228,7 +228,7 @@ def plot_data(cluster_id, order=None, labels=None, test_type='tukey', alt='two-s
     plt.ylim(y_min - 2 * height_diff, y_pos + 2 * height_diff)
 
     # plt.ylim(0, y_pos + 2*height_diff)
-    ax.set_xlabel(None)
+    ax.set_xlabel('') ### was None
 
     # Save the plot
     output_folder = Path('cluster_mean_IF_summary')
