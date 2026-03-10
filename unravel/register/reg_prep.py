@@ -49,7 +49,7 @@ def parse_args():
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts.add_argument('-x', '--xy_res', help='xy resolution in um (to manually set if metadata cannot be extracted from image)', type=float, default=None, action=SM)
     opts.add_argument('-z', '--z_res', help='z resolution in um (to manually set if metadata cannot be extracted from image)', type=float, default=None, action=SM)
-    opts.add_argument('-c', '--channel', help='Channel number. Default: 0', default=0, type=int, action=SM)
+    opts.add_argument('-c', '--channel', help='Channel number for .czi images. Default: 0', default=0, type=int, action=SM)
     opts.add_argument('-o', '--output', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     opts.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg. Default: 50', default=50, type=int, action=SM)
     opts.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
