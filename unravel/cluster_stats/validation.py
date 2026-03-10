@@ -359,15 +359,31 @@ def main():
             data_list = []
             for result in cluster_data_results:
                 cluster_ID, primary_value, cluster_volume_in_cubic_mm, metric_value, xmin, xmax, ymin, ymax, zmin, zmax = result
-
+                
                 if args.metric == "cell_density":
                     primary_header, metric_header = "cell_count", "cell_density"
+                    value_type = "density"
+                    support_type = "cell_count"
+                    aggregation_method = "recompute_from_support_and_volume"
+
                 elif args.metric == "label_density":
                     primary_header, metric_header = "label_volume", "label_density"
+                    value_type = "density"
+                    support_type = "label_volume"
+                    aggregation_method = "recompute_from_support_and_volume"
+
                 elif args.metric == "mean_in_cluster":
                     primary_header, metric_header = "cluster_voxel_count", "mean_intensity"
+                    value_type = "mean_intensity"
+                    support_type = "cluster_voxel_count"
+                    aggregation_method = "weighted_mean_by_support"
+
                 elif args.metric == "mean_in_seg_in_cluster":
                     primary_header, metric_header = "seg_voxel_count", "mean_intensity"
+                    value_type = "mean_intensity"
+                    support_type = "seg_voxel_count"
+                    aggregation_method = "weighted_mean_by_support"
+
                 else:
                     raise ValueError(f"Unsupported metric: {args.metric}")
 
@@ -375,8 +391,13 @@ def main():
                     "sample": sample_path.name,
                     "cluster_ID": cluster_ID,
                     "metric": args.metric,
-                    primary_header: primary_value,
+                    "value": metric_value,
+                    "value_type": value_type,
+                    "support": primary_value,
+                    "support_type": support_type,
+                    "aggregation_method": aggregation_method,
                     "cluster_volume": cluster_volume_in_cubic_mm,
+                    primary_header: primary_value,
                     metric_header: metric_value,
                     "xmin": xmin, "xmax": xmax,
                     "ymin": ymin, "ymax": ymax,
