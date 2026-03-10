@@ -8,12 +8,11 @@ Prereqs:
 
 Inputs: 
     - clusters/cluster_validation_results_`*` (glob pattern matching ``cstats_validation`` output dirs)
-    - CSVs with the density data (e.g., cell_density_data.csv or label_density_data.csv from ``cstats_validation``)
+    - CSVs with validation metric data (e.g., cell_density_data.csv, label_density_data.csv, mean_in_cluster_data.csv, or mean_in_seg_in_cluster_data.csv from ``cstats_validation``)
     - Optional: path/vstats to copy p val, info, and index files
 
 Outputs:
-    - target_dir/sample??__cell_density_data__<cluster_validation_results_`*`>.csv
-    - target_dir/sample??__label_density_data__<cluster_validation_results_`*`>.csv
+    - target_dir/sample??__<metric>_data__<cluster_validation_results_`*`>.csv
 
 Notes:
     - If the cluster_validation_results_`*` directory name contains "_gt_" or "_lt_", the script will attempt to replace it with "_v_" to match the vstats directory.
@@ -22,14 +21,13 @@ Notes:
 
 Usage
 -----
-    cstats_org_data -cvd '<asterisk>' [-dt cell | label] [-vd path/vstats_dir] [-td target_dir] [-pvt p_value_threshold.txt] [-d list of paths] [-p sample??] [-v]
+    cstats_org_data -cvd '<asterisk>' -me <metric> [-vd path/vstats_dir] [-td target_dir] [-pvt p_value_threshold.txt] [-d list of paths] [-p sample??] [-v]
 """
 
 import re
 import shutil
 from pathlib import Path
 from rich import print
-from rich.live import Live
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -45,7 +43,7 @@ def parse_args():
     reqs.add_argument('-cvd', '--cluster_val_dirs', help='One or more glob patterns matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/)', nargs='*', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-dt', '--density_type', help='Type of density data to aggregate (cell \[default] or label).', default='cell', action=SM)
+    opts.add_argument('-me', '--metric',help='Metric output from cstats_validation to aggregate (e.g., cell_density, label_density, mean_in_cluster, mean_in_seg_in_cluster)',required=True,action=SM)
     opts.add_argument('-vd', '--vstats_path', help='path/vstats_dir (the dir ``vstats`` was run from) to copy p val, info, and index files if provided', default=None, action=SM)
     opts.add_argument('-td', '--target_dir', help='path/dir to copy results. If omitted, copy data to the cwd', default=None, action=SM)
     opts.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from ``cstats_fdr``). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
@@ -172,7 +170,13 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
         if not rev_cluster_index_path.exists():
             rev_cluster_index_path = Path(f"{cluster_correction_path}{suffix}") / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"
 
-        if not rev_cluster_index_path.exists() and str(cluster_correction_path).endswith('_LH') or str(cluster_correction_path).endswith('_RH'):
+        if (
+            not rev_cluster_index_path.exists()
+            and (
+                str(cluster_correction_path).endswith('_LH')
+                or str(cluster_correction_path).endswith('_RH')
+            )
+        ):
             rev_cluster_index_path = Path(f"{cluster_correction_path}{str(suffix)[:-3]}") / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"
 
         if rev_cluster_index_path.exists():
@@ -184,14 +188,14 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             import sys; sys.exit()
 
 @print_func_name_args_times()
-def organize_validation_data(sample_path, clusters_path, validation_dir_pattern, density_type, target_dir, vstats_path, p_val_txt):
+def organize_validation_data(sample_path, clusters_path, validation_dir_pattern, metric, target_dir, vstats_path, p_val_txt):
     """Copy the cluster validation, p value, cluster info, and rev_cluster_index files to the target directory.
     
     Args:
         - sample_path (Path): the path to the sample directory
         - clusters_path (Path): the path to the clusters directory
         - validation_dir_pattern (str): the pattern to match the validation directories
-        - density_type (str): the type of density data to aggregate (cell or label)
+        - metric (str): the type of metric data to aggregate (e.g., cell_density, label_density, mean_in_cluster, mean_in_seg_in_cluster)
         - target_dir (Path): the path to the target directory
         - vstats_path (Path): the path to the vstats directory
         - p_val_txt (str): the name of the file with the corrected p value threshold
@@ -209,10 +213,10 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
         if validation_dir.is_dir():
             dest_path = target_dir / validation_dir.name
             dest_path.mkdir(parents=True, exist_ok=True)
-            src_csv = validation_dir / f'{density_type}_density_data.csv'
+            src_csv = validation_dir / f'{metric}_data.csv'
 
             if src_csv.exists():
-                dest_csv = dest_path / f'{sample_path.name}__{density_type}_density_data__{validation_dir.name}.csv'
+                dest_csv = dest_path / f'{sample_path.name}__{metric}_data__{validation_dir.name}.csv'
                 
                 if not dest_csv.exists(): 
                     cp(src=src_csv, dest=dest_csv)
@@ -239,7 +243,7 @@ def main():
 
         clusters_path = sample_path / 'clusters'
         if clusters_path.exists():
-            organize_validation_data(sample_path=sample_path, clusters_path=clusters_path, validation_dir_pattern=args.cluster_val_dirs, density_type=args.density_type, target_dir=target_dir, vstats_path=args.vstats_path, p_val_txt=args.p_val_txt)
+            organize_validation_data(sample_path=sample_path, clusters_path=clusters_path, validation_dir_pattern=args.cluster_val_dirs, metric=args.metric, target_dir=target_dir, vstats_path=args.vstats_path, p_val_txt=args.p_val_txt)
 
     verbose_end_msg()
 
