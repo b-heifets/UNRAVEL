@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_validation`` (``cv``) from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify cell/label densities.
+Use ``cstats_validation`` (``cv``) from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify validation metrics (e.g., cell density, label density, and mean intensity) in each cluster.
 
 Prereqs:
     - Optional: ``cstats_fdr_range`` to determine the q value thresholds yielding significant clusters
@@ -15,7 +15,7 @@ Inputs:
 
 Outputs:
     - ./sample??/clusters/<cluster_index_dir>/outer_bounds.txt
-    - ./sample??/clusters/<cluster_index_dir>/<args.density>_data.csv
+    - ./sample??/clusters/<cluster_index_dir>/<args.metric>_data.csv
     - cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
 
 Note:
@@ -28,7 +28,7 @@ Next steps:
 
 Usage:
 ------
-    cstats_validation -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s <rel_path/seg_img.nii.gz> [-de cell_density | label_density] [-o rel_path/cluster_data.csv] [-c 1 3 4] [optional output: -n rel_path/native_cluster_index.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md parameters/metadata.txt] [-zo 0] [-mi] [-cc 6] [-d list of paths] [-p sample??] [-v]
+    cstats_validation -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s <rel_path/seg_img.nii.gz> [-me cell_density | label_density | mean_in_cluster | mean_in_seg_in_cluster] [-o <rel_path/output.csv>] [-c all or list of clusters (e.g., 1 3 4)] [-n <rel_path/native_image.zarr or .nii.gz>] [-fri <fixed_reg_input_for_reg>] [-inp nearestNeighbor or multiLabel] [-ro <reg_outputs_dir>] [-r <reg_res_in_microns>] [-md <metadata.txt>] [-zo <zoom_order>] [-pad <pad_percent_from_reg>] [--miracl] [-cc <connectivity_for_cell_counts>] [-d <dirs>] [-p <pattern>] [-v]
 """
 
 
@@ -59,8 +59,10 @@ def parse_args():
     reqs.add_argument('-s', '--seg', help='rel_path/seg_img.nii.gz. 1st glob match processed', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-de', '--density', help='Density to measure: cell_density (default) or label_density', default='cell_density', choices=['cell_density', 'label_density'], action=SM)
-    opts.add_argument('-o', '--output', help='rel_path/clusters_info.csv. Default: clusters/<cluster_index_dir>/cluster_data.csv', default=None, action=SM)
+    opts.add_argument('-me', '--metric', help='Metric to measure: cell_density (default), label_density, mean_in_cluster, or mean_in_seg_in_cluster', default='cell_density', choices=['cell_density', 'label_density', 'mean_in_cluster', 'mean_in_seg_in_cluster'], action=SM)
+    opts.add_argument('-i', '--intensity_img', help='rel_path/intensity image used for mean_in_cluster or mean_in_seg_in_cluster (e.g., .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr, or dir of tifs)', default=None, action=SM)
+    opts.add_argument('-ch', '--channel', help='Channel number for .czi images. Default: 0', default=0, type=int, action=SM)
+    opts.add_argument('-o', '--output', help='rel_path/clusters_info.csv. Default: clusters/<cluster_index_dir>/<metric>_data.csv', default=None, action=SM)
     opts.add_argument('-c', '--clusters', help='Clusters to process: all or list of clusters (e.g., 1 3 4). Default: Processes all clusters', nargs='*', default='all', action=SM)
 
     # Optional to_native() args
@@ -91,7 +93,6 @@ def parse_args():
 
 # TODO: QC. Aggregate .csv results for all samples if args.dirs, script to load image subset.
 # TODO: Make config file for defaults or a command_generator.py script
-# TODO: Consider adding an option to quantify mean IF intensity in each cluster in segmented voxels. Also make a script for mean IF intensity in clusters in atlas space.
 # TODO: Use glob for -s to load the first match. If no match, print a message and continue to the next sample. Afterwards, update in help: "For -s, if a dir name is provided, the command will load ./sample??/seg_dir/sample??_seg_dir.nii.gz."
 # TODO: Consider removing the -o option. Have I used this so far? If not, remove it.
 # TODO: Like in ``rstats``, add this option: '-2p', '--stpt', help='For serial-2 photon data, use this flag to interleave blank slices (prevents cells from fusing across slices during counting)'
@@ -170,43 +171,77 @@ def count_cells(seg_in_cluster, connectivity=6):
 
     return n
 
-def density_in_cluster(cluster_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity=6, density='cell_count'):
-    """Measure cell count or volume of segmented voxels in the current cluster.
-    For cell densities, return: cluster_ID, cell_count, cluster_volume_in_cubic_mm, cell_density, xmin, xmax, ymin, ymax, zmin, zmax
-    For label densities, return: cluster_ID, seg_volume_in_cubic_mm, cluster_volume_in_cubic_mm, label_density, xmin, xmax, ymin, ymax, zmin, zmax.
+def metric_in_cluster(cluster_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res,
+                      connectivity=6, metric='cell_density', intensity_cropped=None):
+    """Measure a validation metric in the current cluster.
+
+    Supported metrics:
+        - cell_density
+        - label_density
+        - mean_in_cluster
+        - mean_in_seg_in_cluster
+
+    Returns:
+        cluster_ID, primary_value, cluster_volume_in_cubic_mm, metric_value,
+        xmin, xmax, ymin, ymax, zmin, zmax
     """
     cluster_ID, xmin, xmax, ymin, ymax, zmin, zmax = cluster_data
 
     # Crop the cluster from the native cluster index
     cropped_cluster = native_cluster_index_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
 
-    # Crop the segmentation image for the current cluster
-    seg_in_cluster = seg_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
+    # Crop segmentation image for the current cluster bbox
+    seg_in_cluster = seg_cropped[xmin:xmax, ymin:ymax, zmin:zmax].copy()
 
-    # Zero out segmented voxels outside of the current cluster
+    # Zero out segmented voxels outside the current cluster
     seg_in_cluster[cropped_cluster == 0] = 0
 
-    # Measure cluster volume
-    cluster_volume_in_cubic_mm = ((xy_res**2) * z_res) * np.count_nonzero(cropped_cluster) / 1e9
+    # Cluster mask and volume
+    cluster_mask = cropped_cluster > 0
+    cluster_voxel_count = np.count_nonzero(cluster_mask)
+    cluster_volume_in_cubic_mm = ((xy_res**2) * z_res) * cluster_voxel_count / 1e9
 
-    # Count cells or measure the volume of segmented voxels
-    if density == "cell_density":
+    if metric == "cell_density":
         cell_count = count_cells(seg_in_cluster, connectivity=connectivity)
-        cell_density = cell_count / cluster_volume_in_cubic_mm
+        cell_density = cell_count / cluster_volume_in_cubic_mm if cluster_volume_in_cubic_mm > 0 else np.nan
         return cluster_ID, cell_count, cluster_volume_in_cubic_mm, cell_density, xmin, xmax, ymin, ymax, zmin, zmax
-    else: 
-        seg_volume_in_cubic_mm = ((xy_res**2) * z_res) * np.count_nonzero(seg_in_cluster) / 1e9
-        label_density = seg_volume_in_cubic_mm / cluster_volume_in_cubic_mm * 100
+
+    elif metric == "label_density":
+        seg_voxel_count = np.count_nonzero(seg_in_cluster)
+        seg_volume_in_cubic_mm = ((xy_res**2) * z_res) * seg_voxel_count / 1e9
+        label_density = (seg_volume_in_cubic_mm / cluster_volume_in_cubic_mm * 100) if cluster_volume_in_cubic_mm > 0 else np.nan
         return cluster_ID, seg_volume_in_cubic_mm, cluster_volume_in_cubic_mm, label_density, xmin, xmax, ymin, ymax, zmin, zmax
-    
+
+    elif metric == "mean_in_cluster":
+        if intensity_cropped is None:
+            raise ValueError("intensity_cropped is required for mean_in_cluster")
+
+        intensity_in_cluster = intensity_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
+        voxel_count = cluster_voxel_count
+        mean_intensity = float(intensity_in_cluster[cluster_mask].mean()) if voxel_count > 0 else np.nan
+        return cluster_ID, voxel_count, cluster_volume_in_cubic_mm, mean_intensity, xmin, xmax, ymin, ymax, zmin, zmax
+
+    elif metric == "mean_in_seg_in_cluster":
+        if intensity_cropped is None:
+            raise ValueError("intensity_cropped is required for mean_in_seg_in_cluster")
+
+        intensity_in_cluster = intensity_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
+        seg_mask = seg_in_cluster > 0
+        voxel_count = np.count_nonzero(seg_mask)
+        mean_intensity = float(intensity_in_cluster[seg_mask].mean()) if voxel_count > 0 else np.nan
+        return cluster_ID, voxel_count, cluster_volume_in_cubic_mm, mean_intensity, xmin, xmax, ymin, ymax, zmin, zmax
+
+    else:
+        raise ValueError(f"Unsupported metric: {metric} (Use -me with 'cell_density', 'label_density', 'mean_in_cluster', or 'mean_in_seg_in_cluster')")
+
 @print_func_name_args_times()
-def density_in_cluster_parallel(cluster_bbox_results, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity=6, density='cell_count'):
-    """Measure cell count or volume of segmented voxels in each cluster in parallel. Return list of results."""
+def metric_in_cluster_parallel(cluster_bbox_results, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity=6, metric='cell_density', intensity_cropped=None):
+    """Measure a validation metric in each cluster in parallel. Return list of results."""
     results = []
     num_cores = os.cpu_count()
     workers = min(num_cores, len(cluster_bbox_results)) 
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
-        future_to_cluster = {executor.submit(density_in_cluster, cluster_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity, density): cluster_data[0] for cluster_data in cluster_bbox_results} # cluster_data[0] is the cluster_ID
+        future_to_cluster = {executor.submit(metric_in_cluster, cluster_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity, metric, intensity_cropped): cluster_data[0] for cluster_data in cluster_bbox_results} # cluster_data[0] is the cluster_ID
         for future in concurrent.futures.as_completed(future_to_cluster):
             cluster_ID = future_to_cluster[future]
             try:
@@ -235,7 +270,7 @@ def main():
             if args.output:
                 output_path = resolve_path(sample_path, args.output)
             else: 
-                output_path = resolve_path(sample_path, Path("clusters", cluster_index_dir, f"{args.density}_data.csv"), make_parents=True)
+                output_path = resolve_path(sample_path, Path("clusters", cluster_index_dir, f"{args.metric}_data.csv"), make_parents=True)
 
             # Skip if the chosen output exists
             if output_path.exists():
@@ -254,8 +289,8 @@ def main():
             native_idx_path = resolve_path(sample_path, args.native_idx) if args.native_idx else None
             
             # Load cluster index and convert to ndarray 
-            if args.native_idx and Path(args.native_idx).exists():
-                native_cluster_index = load_3D_img(Path(args.native_idx), verbose=args.verbose)
+            if native_idx_path and native_idx_path.exists():
+                native_cluster_index = load_3D_img(native_idx_path, verbose=args.verbose)
             else:
                 fixed_reg_input = Path(sample_path, args.reg_outputs, args.fixed_reg_in) 
                 if not fixed_reg_input.exists():
@@ -264,11 +299,10 @@ def main():
                 native_cluster_index = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_idx_path, pad_percent=pad_percent)
 
             # Get clusters to process
-            if args.clusters == "all":
+            if args.clusters == "all" or args.clusters == ["all"] or args.clusters is None:
                 clusters = label_IDs(rev_cluster_index)
             else:
-                clusters = args.clusters
-            clusters = [int(cluster) for cluster in clusters]
+                clusters = [int(cluster) for cluster in args.clusters]
 
             # Crop outer space around all clusters 
             native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax = crop_outer_space(native_cluster_index, output_path)
@@ -278,6 +312,8 @@ def main():
             xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
             if xy_res is None or z_res is None: 
                 print("    [red bold]./sample??/parameters/metadata.txt missing. cd to sample?? dir and run: io_metadata")
+                progress.update(task_id, advance=1)
+                continue
 
             # Get bounding boxes for each cluster in parallel
             cluster_bbox_data = cluster_bbox_parallel(native_cluster_index_cropped, clusters)
@@ -286,31 +322,65 @@ def main():
             seg_path = next(sample_path.glob(str(args.seg)), None)
             if seg_path is None:
                 print(f"\n    [red bold]No files match the pattern {args.seg} in {sample_path}\n")
+                progress.update(task_id, advance=1)
                 continue
             seg_cropped = load_nii_subset(seg_path, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax)
 
+            # Load the intensity image and crop it to the outer bounds of all clusters if needed for the chosen metric
+            intensity_cropped = None
+            if args.metric in ["mean_in_cluster", "mean_in_seg_in_cluster"]:
+                if args.intensity_img is None:
+                    raise ValueError("--intensity_img is required for mean_in_cluster or mean_in_seg_in_cluster.")
+
+                intensity_path = next(sample_path.glob(str(args.intensity_img)), None)
+                if intensity_path is None:
+                    print(f"\n    [red bold]No files match the pattern {args.intensity_img} in {sample_path}\n")
+                    progress.update(task_id, advance=1)
+                    continue
+
+                intensity_img = load_3D_img(intensity_path, channel=args.channel, verbose=args.verbose)
+                intensity_cropped = intensity_img[
+                    outer_xmin:outer_xmax,
+                    outer_ymin:outer_ymax,
+                    outer_zmin:outer_zmax
+                ]
+                del intensity_img
+
+                if intensity_cropped.shape != seg_cropped.shape:
+                    raise ValueError(
+                        f"Intensity image shape {intensity_cropped.shape} does not match segmentation shape {seg_cropped.shape} "
+                        f"after cropping for {sample_path.name}."
+                    )
+
             # Process each cluster to count cells or measure volume, in parallel
-            cluster_data_results = density_in_cluster_parallel(cluster_bbox_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, args.connect, args.density)
+            cluster_data_results = metric_in_cluster_parallel(cluster_bbox_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, args.connect, args.metric, intensity_cropped)
 
             # Process cluster_data_results to save to CSV or perform further analysis
             data_list = []
             for result in cluster_data_results:
-                cluster_ID, cell_count_or_seg_vol, cluster_volume_in_cubic_mm, density_measure, xmin, xmax, ymin, ymax, zmin, zmax = result
+                cluster_ID, primary_value, cluster_volume_in_cubic_mm, metric_value, xmin, xmax, ymin, ymax, zmin, zmax = result
 
-                # Determine the appropriate headers based on the density measure type
-                if args.density == "cell_density":
-                    count_or_vol_header, density_header = "cell_count", "cell_density"
-                else: 
-                    count_or_vol_header, density_header = "label_volume", "label_density"
+                if args.metric == "cell_density":
+                    primary_header, metric_header = "cell_count", "cell_density"
+                elif args.metric == "label_density":
+                    primary_header, metric_header = "label_volume", "label_density"
+                elif args.metric == "mean_in_cluster":
+                    primary_header, metric_header = "cluster_voxel_count", "mean_intensity"
+                elif args.metric == "mean_in_seg_in_cluster":
+                    primary_header, metric_header = "seg_voxel_count", "mean_intensity"
+                else:
+                    raise ValueError(f"Unsupported metric: {args.metric}")
 
-                # Prepare the data dictionary
                 data = {
-                    "sample": sample_path.name, 
-                    "cluster_ID": cluster_ID, 
-                    count_or_vol_header: cell_count_or_seg_vol,  
-                    "cluster_volume": cluster_volume_in_cubic_mm, 
-                    density_header: density_measure, 
-                    "xmin": xmin, "xmax": xmax, "ymin": ymin, "ymax": ymax, "zmin": zmin, "zmax": zmax
+                    "sample": sample_path.name,
+                    "cluster_ID": cluster_ID,
+                    "metric": args.metric,
+                    primary_header: primary_value,
+                    "cluster_volume": cluster_volume_in_cubic_mm,
+                    metric_header: metric_value,
+                    "xmin": xmin, "xmax": xmax,
+                    "ymin": ymin, "ymax": ymax,
+                    "zmin": zmin, "zmax": zmax
                 }
 
                 data_list.append(data)
