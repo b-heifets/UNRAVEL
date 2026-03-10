@@ -23,11 +23,11 @@ Note:
 
 Usage for Tukey tests:
 ----------------------
-    rstats_summary --groups Saline MDMA Meth --side both [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]
+    rstats_summary --groups Saline MDMA Meth --side both [-i <input_pattern>] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-eh sample07:R sample12:L] [-v]
 
 Usage for t-tests:
 ------------------
-    rstats_summary --groups Saline MDMA --side both -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]
+    rstats_summary --groups Saline MDMA --side both -c Saline [-i <input_pattern>] [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-eh sample07:R sample12:L] [-v]
 """
 
 import ast
@@ -50,7 +50,7 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, initialize_progress_bar
 
 
 def parse_args():
@@ -61,6 +61,7 @@ def parse_args():
     reqs.add_argument('-s', '--side', help="Side of brain to process (r, l or both)", choices=['r', 'l', 'both'], required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-i', '--input', help='Glob pattern for input CSV files relative to regional_stats/ (Default: "*_cell_densities.csv")', default='*_cell_densities.csv', action=SM)
     opts.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", action=SM)  # Does the control need to be specified for a t-test? First group could be the control.
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' \[default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
     opts.add_argument('-d', '--divide', type=float, help='Divide the cell densities by the specified value for plotting (default is None)', default=None, action=SM)
@@ -71,6 +72,7 @@ def parse_args():
     opts.add_argument('-o', '--output', help='Output directory for plots (Default: <t-test or tukey>_plots)', action=SM)
     opts.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
     opts.add_argument('-eh', '--exclude_hemi', help="Exclude one hemisphere for specific samples. Example: --exclude_hemi sample07:R sample12:L", nargs='*', default=[], action=SM)
+
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -397,13 +399,9 @@ def main():
     elif len(args.groups) > 2:
         test_type = 'tukey'
 
-    # Find all CSV files in the current directory matching *cell_densities.csv
-    file_list = [file for file in os.listdir('.') if file.endswith('cell_densities.csv')]
-    print(f"\nAggregating data from *cell_densities.csv: {file_list}\n")
-
-    # Check if files are found
+    file_list = match_files(args.input)
     if not file_list:
-        print("    [red1]No files found matching the pattern '*cell_densities.csv'.")
+        print(f"\n[red1]No files found matching the pattern '{args.input}'.\n")
         return
 
     # Aggregate the data for each sample
