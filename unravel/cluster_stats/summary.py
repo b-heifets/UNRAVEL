@@ -12,7 +12,7 @@ Prereqs:
     - <cluster_index_dir>_rev_cluster_index[_LH | _RH].nii.gz, <cluster_index_dir>_cluster_info.txt, and p_value_threshold.txt
 
 Inputs:
-    - Cell/label density CSVs from from ``cstats_validation``
+    - Output CSVs from from ``cstats_validation``
     - The current directory should not have other folders when running this script for the first time. 
     - Directories from ``cstats_summary`` or ``cstats_org_data`` are ok though.
     - The sample_key.csv file should have the following format:
@@ -42,7 +42,7 @@ find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summ
 If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:
 find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})' \;
 
-Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv).
+Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (..._summary_for_valid_clusters.csv).
 
 Usage if running directly after ``cstats_validation``:
 ------------------------------------------------------
@@ -81,6 +81,7 @@ def parse_args():
     # cstats_org_data -d <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
     cstats_org_data = parser.add_argument_group('Optional args for cstats_org_data')
     cstats_org_data.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
+    cstats_org_data.add_argument('-me', '--metric',help='Metric output from cstats_validation to aggregate (e.g., cell_density, label_density, mean_in_cluster, mean_in_seg_in_cluster)',required=True,action=SM)
     cstats_org_data.add_argument('-cvd', '--cluster_val_dirs', help='One or more glob patterns matching cluster validation output dirs (relative to ./sample??/clusters/) for cstats_org_data', nargs='*', default=None, action=SM)
     cstats_org_data.add_argument('-vd', '--vstats_path', help='path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cstats_org_data)', action=SM)
 
@@ -143,7 +144,7 @@ def main():
             '-p', cfg.org_data.pattern,
             '-cvd', *args.cluster_val_dirs,
             '-vd', args.vstats_path,
-            '-dt', cfg.org_data.density_type,
+            '-me', cfg.org_data.metric,
             '-pvt', cfg.org_data.p_val_txt
         ]
         if args.verbose:
@@ -176,7 +177,7 @@ def main():
             '-hg', args.higher_group
         ]
         if args.condition_prefixes:
-            stats_args.append(['-cp', *args.condition_prefixes])
+            stats_args.extend(['-cp', *args.condition_prefixes])
         if args.verbose:
             stats_args.append('-v')
         run_script('cstats', stats_args)
