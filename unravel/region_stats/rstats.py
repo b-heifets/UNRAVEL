@@ -23,12 +23,13 @@ Inputs:
     - rel_path/native_atlas_split.nii.gz (use this -a if this exists from ``warp_to_native``; otherwise, use -m to warp atlas to native space)
 
 Outputs:
-    - CSV files in ./sample??/regional_stats/ (example naming: <condition>_sample??_cell_densities.csv or <condition>_sample??_mean_in_region.csv)
+    - CSV files in ./sample??/<output_dir>/ (default: regional_stats)
+    - Example CSV naming: <condition>_sample??_cell_densities.csv or <condition>_sample??_mean_in_region.csv
     - For mean-based metrics, CSVs include both a support column and the mean value column
 
 Note: 
     - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv
-    - Columns in region info CSV: Region_ID, Side, ID_path, Region, Abbr
+    - Columns in region info CSV: Region_ID, Side, ID_Path, Region, Abbr
     - If using serial-2 photon data, use the --stpt flag to interleave blank slices to prevent cells from fusing across slices during counting
 
 Next steps:
@@ -79,6 +80,7 @@ def parse_args():
     key_opts.add_argument('-2p', '--stpt', help='For serial-2 photon data, use this flag to interleave blank slices (prevents cells from fusing across slices during counting). Only use with -t <counts or cell_densities>.', action='store_true', default=False)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-o', '--output_dir', help='Output subdirectory within each sample directory. Default: regional_stats', default='regional_stats', action=SM)
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
@@ -108,7 +110,7 @@ def get_atlas_region_at_coords(atlas, x, y, z):
     return atlas[int(x), int(y), int(z)]
 
 @print_func_name_args_times()
-def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition, region_info_df, stpt=False, min_voxels=1):
+def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition, region_info_df, stpt=False, min_voxels=1, output_dir_name='regional_stats'):
     """Count the number of cells in each region based on atlas region intensities
     
     Parameters:
@@ -169,13 +171,13 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     centroids_df = pd.DataFrame(centroids, columns=['x', 'y', 'z'])
     
     # Get the region ID for each cell
-    os.makedirs(sample_path / "regional_stats", exist_ok=True)
+    os.makedirs(sample_path / output_dir_name, exist_ok=True)
     centroids_df['Region_ID'] = centroids_df.apply(lambda row: get_atlas_region_at_coords(atlas_img, row['x'], row['y'], row['z']), axis=1)
 
     # Save the centroids as a CSV file
     sample_name = sample_path.name
     centroid_output_filename = f"{condition}_{sample_name}_cell_centroids.csv" if condition else f"{sample_name}_cell_centroids.csv"
-    centroids_df.to_csv(sample_path / "regional_stats" / centroid_output_filename, index=False)
+    centroids_df.to_csv(sample_path / output_dir_name / centroid_output_filename, index=False)
 
     # Count how many centroids are in each region
     print("    Counting cells in each region")
@@ -193,7 +195,7 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
 
     # Save the region counts as a CSV file
     output_filename = f"{condition}_{sample_name}_regional_cell_counts.csv" if condition else f"{sample_name}_regional_cell_counts.csv"
-    output_path = sample_path / "regional_stats" / output_filename
+    output_path = sample_path / output_dir_name / output_filename
     region_counts_df.to_csv(output_path, index=False)
 
     # Sort the dataframe by counts and print the top 10 with count > 0
@@ -207,7 +209,7 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     return region_counts_df, region_ids
 
 
-def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, condition, region_info_df, output_suffix='volumes'):
+def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, condition, region_info_df, output_suffix='volumes', output_dir_name='regional_stats'):
     """Calculate volumes for given regions in an atlas image.
     
     Parameters:
@@ -219,6 +221,8 @@ def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, co
     - z_res (float): Resolution in the z plane in microns.
     - condition (str): Name of the group.
     - region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_path, Region, Abbr).
+    - output_suffix (str): Suffix for the output CSV file name (default: 'volumes').
+    - output_dir_name (str): Name of the subdirectory within each sample directory to save the output CSV (default: 'regional_stats').
 
     Returns:
     --------
@@ -226,7 +230,7 @@ def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, co
 
     Output:
     -------
-    - Saves the regional volumes as a CSV file in the sample directory (./sample??/regional_stats/)
+    - Saves the regional volumes as a CSV file in the specified subdirectory within each sample directory.
     """
 
     print("\n    Calculating regional volumes\n")
@@ -251,14 +255,14 @@ def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, co
     # Save regional volumes as a CSV file
     output_filename = f"{condition}_{sample_name}_regional_{output_suffix}.csv" if condition else f"{sample_name}_regional_{output_suffix}.csv"
 
-    output_path = sample_path / "regional_stats" / output_filename
+    output_path = sample_path / output_dir_name / output_filename
     regional_volumes_df.to_csv(output_path, index=False)
     print(f"    Saving regional {output_suffix} to {output_path}\n")
 
 
     return regional_volumes_df
 
-def calculate_regional_densities(sample_path, regional_data_df, regional_volumes_df, condition, density_type='cell_densities'):
+def calculate_regional_densities(sample_path, regional_data_df, regional_volumes_df, condition, density_type='cell_densities', output_dir_name='regional_stats'):
     """Calculate cell or label densities for each region in the atlas.
     
     Parameters:
@@ -271,7 +275,7 @@ def calculate_regional_densities(sample_path, regional_data_df, regional_volumes
     
     Output:
     -------
-    - Saves the regional densities as a CSV file in the sample directory (./sample??/regional_stats/)
+    - Saves the regional densities as a CSV file in the specified subdirectory within each sample directory.
     - Columns: Region_ID, Side, ID_path, Region, Abbr, <condition>_<sample>_numerator, <condition>_<sample>_denominator, <condition>_<sample>
     - The numerator column contains the original counts or label volumes
     - The denominator column contains the regional volumes
@@ -303,11 +307,10 @@ def calculate_regional_densities(sample_path, regional_data_df, regional_volumes
     regional_densities_df.sort_values(by='Region_ID', ascending=True, inplace=True)
 
     output_filename = f"{condition}_{sample_name}_regional_{density_type}.csv" if condition else f"{sample_name}_regional_{density_type}.csv"
-    output_path = sample_path / "regional_stats" / output_filename
+    output_path = sample_path / output_dir_name / output_filename
     regional_densities_df.to_csv(output_path, index=False)
 
     print(f"    Saving regional {density_type} to {output_path}\n")
-
 
 
 def interleave_blank_slices(img):
@@ -323,7 +326,7 @@ def interleave_blank_slices(img):
     img_interleaved[:, :, ::2] = img  # ::2 means every second slice
     return img_interleaved
 
-def calculate_regional_means(sample_path, intensity_img, atlas_img, condition, region_info_df, mean_type='mean_in_region', seg_img=None):
+def calculate_regional_means(sample_path, intensity_img, atlas_img, condition, region_info_df, mean_type='mean_in_region', seg_img=None, output_dir_name='regional_stats'):
     """Calculate region-wise mean intensity for each region or in segmentation mask within each region based on atlas region intensities.
 
     Parameters:
@@ -335,10 +338,12 @@ def calculate_regional_means(sample_path, intensity_img, atlas_img, condition, r
         - region_info_df (DataFrame): Region metadata.
         - mean_type (str): 'mean_in_region' or 'mean_in_seg_in_region'
         - seg_img (ndarray or None): Segmentation mask required for mean_in_seg_in_region
+        - output_dir_name (str): Name of the subdirectory within each sample directory to save the output CSV (default: 'regional_stats').
 
     Returns:
     --------
         - regional_means_df (DataFrame) with columns: Region_ID, Side, ID_path, Region, Abbr, <condition>_<sample_name>, <condition>_<sample_name>_support
+        - Saves the regional means as a CSV file in the specified subdirectory within each sample directory. The CSV includes both the mean intensity values and the support (voxel counts) for each region.
     """
 
     if intensity_img.shape != atlas_img.shape:
@@ -381,7 +386,7 @@ def calculate_regional_means(sample_path, intensity_img, atlas_img, condition, r
     regional_means_df[value_col] = regional_means_df['Region_ID'].map(regional_means)
 
     output_filename = f"{condition}_{sample_name}_regional_{mean_type}.csv" if condition else f"{sample_name}_regional_{mean_type}.csv"
-    output_path = sample_path / "regional_stats" / output_filename
+    output_path = sample_path / output_dir_name / output_filename
     regional_means_df.to_csv(output_path, index=False)
 
     print(f"    Saving regional {mean_type} to {output_path}\n")
@@ -412,7 +417,7 @@ def main():
                 import sys ; sys.exit()
 
             # Define output
-            output_dir = sample_path / "regional_stats"
+            output_dir = sample_path / args.output_dir
             output_dir.mkdir(exist_ok=True, parents=True)
             if args.type == 'counts':
                 output_filename = f"{args.condition}_{sample_path.name}_regional_cell_counts.csv" if args.condition else f"{sample_path.name}_regional_cell_counts.csv"
@@ -480,7 +485,7 @@ def main():
 
             # Count cells in regions
             if args.type == 'counts' or args.type == 'cell_densities':
-                regional_counts_df, region_ids = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df, stpt=args.stpt, min_voxels=args.min_voxels)
+                regional_counts_df, region_ids = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df, stpt=args.stpt, min_voxels=args.min_voxels, output_dir_name=args.output_dir)
 
             # Calculate volumes of segmented voxels in regions
             if args.type == 'label_densities' or args.type == 'label_volumes':
@@ -495,30 +500,30 @@ def main():
 
                 # Calculate the volume of each segmented region (z_res not changed by interleaving)
                 region_ids = region_info_df['Region_ID']
-                regional_volumes_in_seg_df = calculate_regional_volumes(sample_path, segmented_regions, region_ids, xy_res, z_res, args.condition, region_info_df, output_suffix='label_volumes')
+                regional_volumes_in_seg_df = calculate_regional_volumes(sample_path, segmented_regions, region_ids, xy_res, z_res, args.condition, region_info_df, output_suffix='label_volumes', output_dir_name=args.output_dir)
 
             # Calculate regional volumes
             if args.type == 'region_volumes' or args.type == 'cell_densities' or args.type == 'label_densities':
 
                 # Calculate regional volumes (z_res not changed by interleaving)
                 region_ids = region_info_df['Region_ID']
-                regional_volumes_df = calculate_regional_volumes(sample_path, atlas_img, region_ids, xy_res, z_res, args.condition, region_info_df)
+                regional_volumes_df = calculate_regional_volumes(sample_path, atlas_img, region_ids, xy_res, z_res, args.condition, region_info_df, output_suffix='volumes', output_dir_name=args.output_dir)
 
             # Calculate regional cell densities
             if args.type == 'cell_densities':
-                calculate_regional_densities(sample_path, regional_counts_df, regional_volumes_df, args.condition, density_type=args.type)
+                calculate_regional_densities(sample_path, regional_counts_df, regional_volumes_df, args.condition, density_type=args.type, output_dir_name=args.output_dir)
             
             # Calculate regional label densities
             if args.type == 'label_densities':
-                calculate_regional_densities(sample_path, regional_volumes_in_seg_df, regional_volumes_df, args.condition, density_type=args.type)
+                calculate_regional_densities(sample_path, regional_volumes_in_seg_df, regional_volumes_df, args.condition, density_type=args.type, output_dir_name=args.output_dir)
 
             # Calculate regional means
             if args.type == 'mean_in_region':
-                calculate_regional_means(sample_path, intensity_img, atlas_img, args.condition, region_info_df, mean_type='mean_in_region', seg_img=None)
+                calculate_regional_means(sample_path, intensity_img, atlas_img, args.condition, region_info_df, mean_type='mean_in_region', seg_img=None, output_dir_name=args.output_dir)
 
             # Calculate regional means in segmentation mask within each region
             if args.type == 'mean_in_seg_in_region':
-                calculate_regional_means(sample_path, intensity_img, atlas_img, args.condition, region_info_df, mean_type='mean_in_seg_in_region', seg_img=seg_img)
+                calculate_regional_means(sample_path, intensity_img, atlas_img, args.condition, region_info_df, mean_type='mean_in_seg_in_region', seg_img=seg_img, output_dir_name=args.output_dir)
 
             progress.update(task_id, advance=1)
     
