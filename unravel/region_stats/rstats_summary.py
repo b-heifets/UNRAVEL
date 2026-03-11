@@ -3,8 +3,11 @@
 """
 Use ``rstats_summary`` (``rss``) from UNRAVEL to plot and summarize region-wise results.
 
+Prereqs:
+    - ``rstats`` and ``agg`` to calculate regional stats and aggregate them to a single directory for analysis and plotting.
+
 Inputs:
-    - CSV files in ./sample??/regional_stats/ (example naming: <condition>_sample??_cell_densities.csv or <condition>_sample??_mean_in_region.csv)
+    - CSV files from rstats (example naming: <condition>_sample??_cell_densities.csv or <condition>_sample??_mean_in_region.csv)
     - Input CSV columns: Region_ID, Side, ID_Path, Region, Abbr, <OneWordCondition>_sample??
     - The <OneWordCondition>_sample?? column has the values for each region
     - sample?? should be one word too (e.g., sample07 not sample_07)
@@ -65,8 +68,8 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-g', '--groups', nargs='*', help='Group prefixes (e.g., saline meth mdma)', required=True, action=SM)
-    reqs.add_argument('-s', '--side', help="Side of brain to process (r, l or both)", choices=['r', 'l', 'both'], required=True, action=SM)
-    reqs.add_argument('-i', '--input', help='Glob pattern for input CSV files relative to sample??/regional_stats/ (e.g. "*cell_densities.csv")', required=True, action=SM)
+    reqs.add_argument('-s', '--side', help='Side of brain to process (r, l or both)', choices=['r', 'l', 'both'], required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="Glob pattern for input CSV files (e.g. '*cell_densities.csv')", required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", action=SM)  # Does the control need to be specified for a t-test? First group could be the control.
@@ -77,9 +80,8 @@ def parse_args():
     opts.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', action=SM)
     opts.add_argument('-sc', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups", default='light:white', action=SM)
     opts.add_argument('-o', '--output', help='Output directory for plots (Default: <t-test or tukey>_plots)', action=SM)
-    opts.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
-    opts.add_argument('-eh', '--exclude_hemi', help="Exclude one hemisphere for specific samples. Example: --exclude_hemi sample07:R sample12:L", nargs='*', default=[], action=SM)
-
+    opts.add_argument('-e', '--extension', help='File extension for plots. Choices: pdf (default), svg, eps, tiff, png)', default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
+    opts.add_argument('-eh', '--exclude_hemi', help='Exclude one hemisphere for specific samples. Example: --exclude_hemi sample07:R sample12:L', nargs='*', default=[], action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -214,7 +216,7 @@ def summarize_significance(test_df, id):
     return pd.DataFrame(summary_rows)
 
 def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir, group_columns, test_type, args):
-
+    """Process the data for a specific region and create a bar plot with statistical comparisons."""
 
     # Reshaping the data for plotting
     reshaped_data = []
@@ -411,6 +413,7 @@ def main():
         test_type = 'tukey'
 
     file_list = match_files(args.input)
+
     if not file_list:
         print(f"\n[red1]No files found matching the pattern '{args.input}'.\n")
         return
