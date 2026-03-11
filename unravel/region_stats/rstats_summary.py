@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_summary`` (``rss``) from UNRAVEL to plot cell/label densities for each region and summarize results.
+Use ``rstats_summary`` (``rss``) from UNRAVEL to plot and summarize region-wise results.
 
 Inputs:
-    - CSVs with cell/label densities for each region (e.g., regional_stats/<condition>_sample??_cell_densities.csv)
+    - CSV files in ./sample??/regional_stats/ (example naming: <condition>_sample??_cell_densities.csv or <condition>_sample??_mean_in_region.csv)
     - Input CSV columns: Region_ID, Side, ID_Path, Region, Abbr, <OneWordCondition>_sample??
-    - The <OneWordCondition>_sample?? column has the cell/label densities for each region
+    - The <OneWordCondition>_sample?? column has the values for each region
     - sample?? should be one word too (e.g., sample07 not sample_07)
 
 Outputs:
     - Saved to ./<test_type>_plots_<side>
-    - Plots for each region with cell densities for each group (e.g., Saline, MDMA, Meth)
+    - Plots for each region with values for each group (e.g., Saline, MDMA, Meth)
     - Summary of significant differences between groups
-    - regional_densities_all.csv (Columns: columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...)
+    - regional_values_all.csv (Columns: columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...)
+    - Optionally: regional_values_all_w_hemi_exclusions.csv (same as above but with hemispheres excluded based on --exclude_hemi)
 
 Note: 
     - Example hex code list (flank arg w/ double quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']
@@ -23,11 +24,17 @@ Note:
 
 Usage for Tukey tests:
 ----------------------
-    rstats_summary --groups Saline MDMA Meth --side both [-i <input_pattern>] [-div 10000] [-y cell_density | y axis name] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-eh sample07:R sample12:L] [-v]
+    rstats_summary --groups Saline MDMA Meth --side both [-i <input_pattern>] [-y cell_density | label_density | y axis name] [-div 10000] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-eh sample07:R sample12:L] [-v]
 
 Usage for t-tests:
 ------------------
-    rstats_summary --groups Saline MDMA --side both -c Saline [-i <input_pattern>] [-alt two-sided] [-div 10000] [-y cell_density | y axis name] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-eh sample07:R sample12:L] [-v]
+    rstats_summary --groups Saline MDMA --side both -c Saline [-i <input_pattern>] [-alt two-sided] [-y cell_density | label_density | y axis name] [-div 10000] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-eh sample07:R sample12:L] [-v]
+
+
+Usage for mean intensity in segmentation mask within each region:
+-----------------------------------------------------------------
+    rstats_summary --groups Saline LPS --side both -i '*mean_in_seg_in_region.csv' -y 'Mean Iba1-IF in segmentation mask'
+
 """
 
 import ast
@@ -59,13 +66,13 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-g', '--groups', nargs='*', help='Group prefixes (e.g., saline meth mdma)', required=True, action=SM)
     reqs.add_argument('-s', '--side', help="Side of brain to process (r, l or both)", choices=['r', 'l', 'both'], required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Glob pattern for input CSV files relative to sample??/regional_stats/ (e.g. "*cell_densities.csv")', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='Glob pattern for input CSV files relative to regional_stats/ (Default: "*_densities.csv")', default='*_densities.csv', action=SM)
     opts.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", action=SM)  # Does the control need to be specified for a t-test? First group could be the control.
-    opts.add_argument('-alt', "--alternate", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' \[default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
+    opts.add_argument('-alt', '--alternate', help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' \[default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
+    opts.add_argument('-y', '--ylabel', help='Y-axis label (Default: value). cell_density --> Cells*10^4/mm^3 (if -d 10000), label_density --> Label volume (%), or use custom text', default='value', action=SM)
     opts.add_argument('-d', '--divide', type=float, help='Divide the cell densities by the specified value for plotting (default is None)', default=None, action=SM)
-    opts.add_argument('-y', '--ylabel', help='Y-axis label (Default: cell_density for Cells*10^4/mm^3)', default='cell_density', action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', action=SM)
     opts.add_argument('-sc', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups", default='light:white', action=SM)
@@ -208,11 +215,12 @@ def summarize_significance(test_df, id):
 
 def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir, group_columns, test_type, args):
 
+
     # Reshaping the data for plotting
     reshaped_data = []
     for prefix in args.groups:
         for value in df[group_columns[prefix]].values.ravel():
-            reshaped_data.append({'group': prefix, 'density': value})
+            reshaped_data.append({'group': prefix, 'value': value})
     reshaped_df = pd.DataFrame(reshaped_data)
 
     # Plotting
@@ -227,9 +235,9 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     symbol_color = parse_color_argument(args.symbol_color, num_groups, region_id, args.csv_path)
 
     # Coloring the bars and symbols
-    # ax = sns.barplot(x='group', y='density', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black')
-    ax = sns.barplot(x='group', y='density', hue='group', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black', legend=False)
-    sns.stripplot(x='group', y='density', hue='group', data=reshaped_df, palette=symbol_color, alpha=0.5, size=8, linewidth=0.75, edgecolor='black')
+    # ax = sns.barplot(x='group', y='value', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black')
+    ax = sns.barplot(x='group', y='value', hue='group', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black', legend=False)
+    sns.stripplot(x='group', y='value', hue='group', data=reshaped_df, palette=symbol_color, alpha=0.5, size=8, linewidth=0.75, edgecolor='black')
 
     # Calculate y_max and y_min based on the actual plot
     y_max = ax.get_ylim()[1]
@@ -295,18 +303,18 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     elif test_type == 'tukey':
 
         # Conduct Tukey's HSD test
-        densities_list = []
+        values_list = []
         groups_list = []
         for prefix in args.groups:
             vals = pd.to_numeric(df[group_columns[prefix]].values.ravel(), errors="coerce")
             vals = vals[~np.isnan(vals)]
-            densities_list.extend(vals.tolist())
+            values_list.extend(vals.tolist())
             groups_list.extend([prefix] * len(vals))
 
-        densities = np.array(densities_list, dtype=float)
+        values = np.array(values_list, dtype=float)
         groups = np.array(groups_list, dtype=object)
 
-        tukey_results = pairwise_tukeyhsd(densities, groups, alpha=0.05)
+        tukey_results = pairwise_tukeyhsd(values, groups, alpha=0.05)
 
         # Extract significant comparisons from Tukey's results
         test_results_df = pd.DataFrame(data=tukey_results.summary().data[1:], columns=tukey_results.summary().data[0])
@@ -340,10 +348,13 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         ax.get_legend().remove()
 
     # Format the plot
-    if args.ylabel == 'cell_density':
+    if args.ylabel == 'cell_density' and args.divide == 10000:
         ax.set_ylabel(r'Cells*10$^{4} $/mm$^{3}$', weight='bold')
+    elif args.ylabel == 'label_density':
+        ax.set_ylabel(r'Label volume (%)', weight='bold')
     else:
         ax.set_ylabel(args.ylabel, weight='bold')
+
     ax.set_xticks(range(len(ax.get_xticklabels())))  # Set ticks based on current tick labels
     ax.set_xticklabels(ax.get_xticklabels(), weight='bold')
     ax.tick_params(axis='both', which='major', width=2)
@@ -403,38 +414,71 @@ def main():
     if not file_list:
         print(f"\n[red1]No files found matching the pattern '{args.input}'.\n")
         return
+    is_label_density_input = any('label_densities' in str(f) for f in file_list)
 
-    # Aggregate the data for each sample
-    aggregated_df = pd.read_csv(file_list[0]).iloc[:, 0:5]
+    # Aggregate the data for each sample into a single DataFrame. Start with the first file to get the metadata columns, then add the sample columns from each subsequent file.
+    aggregated_df = pd.read_csv(file_list[0]).iloc[:, 0:5].copy()
+
     for file_name in file_list:
-        df = pd.read_csv(file_name).iloc[:, -1:]
-        # Rename the column prefix to match the --groups argument
-        for prefix in args.groups:
-            if prefix.lower() in df.columns[0].lower():
-                old_prefix = df.columns[0].split("_")[0]
-                new_column_name = df.columns[0].replace(old_prefix, prefix)
-                df.rename(columns={df.columns[0]: new_column_name}, inplace=True)
-                
-                # Append the aggregated data to the dataframe
-                aggregated_df = pd.concat([aggregated_df, df], axis=1)
+        file_df = pd.read_csv(file_name)
+
+        data_cols = [c for c in file_df.columns[5:]]
+
+        rename_map = {}
+        for col in data_cols:
+            for prefix in args.groups:
+                if prefix.lower() in col.lower():
+                    old_prefix = col.split("_")[0]
+                    rename_map[col] = col.replace(old_prefix, prefix)
+                    break
+
+        file_df = file_df.rename(columns=rename_map)
+
+        cols_to_add = [c for c in file_df.columns if c not in aggregated_df.columns[:5]]
+        aggregated_df = pd.concat([aggregated_df, file_df[cols_to_add]], axis=1)
+
 
     # Sort all columns that are not part of the first five by group prefix
-    group_columns = sorted(aggregated_df.columns[5:], key=lambda x: args.groups.index(x.split('_')[0]))
+    all_data_columns = aggregated_df.columns[5:].tolist()
+    support_columns = [c for c in all_data_columns if c.endswith('_support')]
+    numerator_columns = [c for c in all_data_columns if c.endswith('_numerator')]
+    denominator_columns = [c for c in all_data_columns if c.endswith('_denominator')]
+    value_columns = [
+        c for c in all_data_columns
+        if not c.endswith('_support')
+        and not c.endswith('_numerator')
+        and not c.endswith('_denominator')
+    ]
 
-    # Sort each group's columns numerically and combine them
-    sorted_group_columns = []
+    sorted_value_columns = []
+    sorted_support_columns = []
+    sorted_numerator_columns = []
+    sorted_denominator_columns = []
+
     for prefix in args.groups:
-        prefixed_group_columns = [col for col in group_columns if col.startswith(f"{prefix}_")]
-        sorted_group_columns += sorted(prefixed_group_columns, key=lambda x: int(re.search(r'\d+', x).group()))
+        prefixed_value_cols = [col for col in value_columns if col.startswith(f"{prefix}_")]
+        prefixed_support_cols = [col for col in support_columns if col.startswith(f"{prefix}_")]
+        prefixed_numerator_cols = [col for col in numerator_columns if col.startswith(f"{prefix}_")]
+        prefixed_denominator_cols = [col for col in denominator_columns if col.startswith(f"{prefix}_")]
 
-    # Combine the first five columns with the sorted group columns
-    sorted_columns = aggregated_df.columns[:5].tolist() + sorted_group_columns
+        sorted_value_columns += sorted(prefixed_value_cols, key=lambda x: int(re.search(r'\d+', x).group()))
+        sorted_support_columns += sorted(prefixed_support_cols, key=lambda x: int(re.search(r'\d+', x).group()))
+        sorted_numerator_columns += sorted(prefixed_numerator_cols, key=lambda x: int(re.search(r'\d+', x).group()))
+        sorted_denominator_columns += sorted(prefixed_denominator_cols, key=lambda x: int(re.search(r'\d+', x).group()))
 
-    # Now sorted_columns contains all columns, sorted by group and numerically within each group
+    sorted_columns = (
+        aggregated_df.columns[:5].tolist()
+        + sorted_support_columns
+        + sorted_numerator_columns
+        + sorted_denominator_columns
+        + sorted_value_columns
+    )
+
     df = aggregated_df[sorted_columns]
 
     # Save the aggregated data as a CSV
-    df.to_csv('regional_densities_all.csv', index=False)
+    df.to_csv('regional_values_all.csv', index=False)
+
 
     # Also save a masked version with hemisphere exclusions applied (analysis-ready)
     df_masked = df.copy()
@@ -447,11 +491,8 @@ def main():
         lh_rows = df_masked["Side"].astype(str).str.upper().eq("L")
         df_masked.loc[lh_rows] = mask_excluded_side(df_masked.loc[lh_rows], "L", exclude_map)
 
-    df_masked.to_csv("regional_densities_all_w_hemi_exclusions.csv", index=False)
+    df_masked.to_csv("regional_values_all_w_hemi_exclusions.csv", index=False)
 
-    # Normalization if needed
-    if args.divide:
-        df.iloc[:, 5:] = df.iloc[:, 5:].div(args.divide)
 
     # Prepare output directories
     if args.alternate == 'two-sided':
@@ -485,8 +526,20 @@ def main():
         os.makedirs(out_dir, exist_ok=True)
     
     group_columns = {}
+    support_group_columns = {}
+    numerator_group_columns = {}
+    denominator_group_columns = {}
+
     for prefix in args.groups:
-        group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_")] 
+        group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_") and not col.endswith('_support') and not col.endswith('_numerator') and not col.endswith('_denominator')]
+        support_group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_") and col.endswith('_support')]
+        numerator_group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_") and col.endswith('_numerator')]
+        denominator_group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_") and col.endswith('_denominator')]
+
+    # Normalization if needed
+    if args.divide:
+        value_cols_only = [col for cols in group_columns.values() for col in cols]
+        df[value_cols_only] = df[value_cols_only].div(args.divide)
 
     if args.side == 'both': 
         # Averaging data across hemispheres and plotting pooled data (DR)
@@ -497,29 +550,82 @@ def main():
         # Initialize an empty dataframe to store all summaries
         all_summaries_pooled = pd.DataFrame() 
 
-        # Drop first 4 columns
-        rh_df = rh_df.iloc[:, 5:]
-        lh_df = lh_df.iloc[:, 5:]
+        rh_df = rh_df.reset_index(drop=True)
+        lh_df = lh_df.reset_index(drop=True)
 
-        # Reset indices to ensure alignment
-        rh_df.reset_index(drop=True, inplace=True)
-        lh_df.reset_index(drop=True, inplace=True)
-
-        # Initialize pooled_df with common columns
         pooled_df = df[['Region_ID', 'Side', 'ID_Path', 'Region', 'Abbr']][df['Region_ID'] < 20000].reset_index(drop=True)
-        pooled_df['Side'] = 'Pooled'  # Set the 'Side' to 'Pooled'
+        pooled_df['Side'] = 'Pooled'
 
-        # Average the cell/label densities for L and R sides and handle hemisphere exclusions
-        for col in lh_df.columns:
-            samp = _sample_from_col(col)
-            ex = exclude_map.get(samp) if samp else None
+        for prefix in args.groups:
+            for value_col in group_columns[prefix]:
+                samp = _sample_from_col(value_col)
+                ex = exclude_map.get(samp) if samp else None
 
-            if ex == "R":        # RH excluded -> pooled = LH
-                pooled_df[col] = lh_df[col]
-            elif ex == "L":      # LH excluded -> pooled = RH
-                pooled_df[col] = rh_df[col]
-            else:                # neither excluded -> average
-                pooled_df[col] = (lh_df[col] + rh_df[col]) / 2
+                lh_value = lh_df[value_col].reset_index(drop=True)
+                rh_value = rh_df[value_col].reset_index(drop=True)
+
+                support_col = f"{value_col}_support"
+                numerator_col = f"{value_col}_numerator"
+                denominator_col = f"{value_col}_denominator"
+
+                # Case 1: mean metrics -> weighted mean by support
+                if support_col in lh_df.columns and support_col in rh_df.columns:
+                    lh_support = lh_df[support_col].reset_index(drop=True)
+                    rh_support = rh_df[support_col].reset_index(drop=True)
+
+                    if ex == "R":
+                        pooled_df[support_col] = lh_support
+                        pooled_df[value_col] = lh_value
+                    elif ex == "L":
+                        pooled_df[support_col] = rh_support
+                        pooled_df[value_col] = rh_value
+                    else:
+                        total_support = lh_support + rh_support
+                        pooled_df[support_col] = total_support
+                        pooled_df[value_col] = np.where(
+                            total_support > 0,
+                            (lh_value * lh_support + rh_value * rh_support) / total_support,
+                            np.nan
+                        )
+
+                # Case 2: density metrics -> recompute from summed numerator and denominator
+                elif numerator_col in lh_df.columns and numerator_col in rh_df.columns and denominator_col in lh_df.columns and denominator_col in rh_df.columns:
+                    lh_num = lh_df[numerator_col].reset_index(drop=True)
+                    rh_num = rh_df[numerator_col].reset_index(drop=True)
+                    lh_den = lh_df[denominator_col].reset_index(drop=True)
+                    rh_den = rh_df[denominator_col].reset_index(drop=True)
+
+                    if ex == "R":
+                        pooled_df[numerator_col] = lh_num
+                        pooled_df[denominator_col] = lh_den
+                    elif ex == "L":
+                        pooled_df[numerator_col] = rh_num
+                        pooled_df[denominator_col] = rh_den
+                    else:
+                        pooled_df[numerator_col] = lh_num + rh_num
+                        pooled_df[denominator_col] = lh_den + rh_den
+
+                    if is_label_density_input:
+                        pooled_df[value_col] = np.where(
+                            pooled_df[denominator_col] > 0,
+                            pooled_df[numerator_col] / pooled_df[denominator_col] * 100,
+                            np.nan
+                        )
+                    else:
+                        pooled_df[value_col] = np.where(
+                            pooled_df[denominator_col] > 0,
+                            pooled_df[numerator_col] / pooled_df[denominator_col],
+                            np.nan
+                        )
+
+                # Fallback
+                else:
+                    if ex == "R":
+                        pooled_df[value_col] = lh_value
+                    elif ex == "L":
+                        pooled_df[value_col] = rh_value
+                    else:
+                        pooled_df[value_col] = (lh_value + rh_value) / 2
 
         # Averaging data across hemispheres and plotting pooled data
         unique_region_ids = df[df["Side"] == "R"]["Region_ID"].unique()
