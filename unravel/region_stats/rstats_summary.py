@@ -7,7 +7,8 @@ Prereqs:
     - ``rstats`` and ``agg`` to calculate regional stats and aggregate them to a single directory for analysis and plotting.
 
 Inputs:
-    - CSV files from rstats (example naming: <condition>_sample??_cell_densities.csv or <condition>_sample??_mean_in_region.csv)
+    - CSV files from rstats (example naming: <condition>_sample??_regional_<cell or label>_densities.csv or <condition>_sample??_regional_mean_in_seg.csv)
+    - CSV files from rstats (example naming: <condition>_sample??_regional_cell_densities.csv or <condition>_sample??_regional_mean_in_seg.csv)
     - Input CSV columns: Region_ID, Side, ID_Path, Region, Abbr, <OneWordCondition>_sample??
     - The <OneWordCondition>_sample?? column has the values for each region
     - sample?? should be one word too (e.g., sample07 not sample_07)
@@ -36,7 +37,7 @@ Usage for t-tests:
 
 Usage for mean intensity in segmentation mask within each region:
 -----------------------------------------------------------------
-    rstats_summary --groups Saline LPS --side both -i '*mean_in_seg_in_region.csv' -y 'Mean Iba1-IF in segmentation mask'
+    rstats_summary --groups Saline LPS --side both -i '*mean_in_seg.csv' -y 'Mean Iba1-IF in segmentation mask'
 
 """
 
