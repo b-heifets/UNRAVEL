@@ -9,8 +9,8 @@ Supported metrics:
     - cell_densities
     - label_volumes
     - label_densities
-    - mean_in_region
-    - mean_in_seg_in_region
+    - mean
+    - mean_in_seg
 
 Prereqs: 
     - ``reg_prep``, ``reg``, and optionally ``seg_ilastik``
@@ -18,14 +18,14 @@ Prereqs:
 Inputs:
     - For counts / cell_densities / label_volumes / label_densities:
         - rel_path/segmentation_image.nii.gz (can be glob pattern)
-    - For mean_in_region / mean_in_seg_in_region:
+    - For mean / mean_in_seg:
         - rel_path/intensity_image (e.g., .nii.gz, .tif, .ome.tif, .czi, .zarr, .h5, or dir of tifs)
     - rel_path/native_atlas_split.nii.gz (use this -a if this exists from ``warp_to_native``; otherwise, use -m to warp atlas to native space)
 
 Outputs:
     - CSV files in ./sample??/<output_dir>/ (default: regional_stats)
-    - Example CSV naming: <condition>_sample??_cell_densities.csv or <condition>_sample??_mean_in_region.csv
-    - For mean-based metrics, CSVs include both a support column and the mean value column
+    - Example CSV naming: <condition>_sample??_regional_cell_densities.csv, <condition>_sample??_regional_label_densities.csv, <condition>_sample??_regional_mean.csv, or <condition>_sample??_regional_mean_in_seg.csv
+    - For mean-based metrics, CSVs include both a support column (voxel count in region or regional segmentation) and the mean intensity column (e.g., mean intensity in the region or mean intensity in the segmentation mask within the region)
 
 Note: 
     - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv
@@ -46,7 +46,7 @@ Usage if the native atlas is not available; it is not saved (faster):
 
 Usage for mean intensity only within segmented voxels in each region:
 ---------------------------------------------------------------------
-    rstats -t mean_in_seg_in_region -s iba1_seg/iba1_seg_1.nii.gz -i iba1_rb20 -m path/atlas_split.nii.gz -c Saline -d <Path to dir with Saline samples>
+    rstats -t mean_in_seg -s iba1_seg/iba1_seg_1.nii.gz -i iba1_rb20 -m path/atlas_split.nii.gz -c Saline -d <Path to dir with Saline samples>
 """
 
 import cc3d
@@ -76,7 +76,7 @@ def parse_args():
     key_opts.add_argument('-s', '--seg_img_path', help='rel_path/segmentation_image.nii.gz (can be glob pattern) for counts, label volumes/densities, or mean in the segmentation mask', action=SM)
     key_opts.add_argument('-a', '--atlas_path', help='rel_path/native_atlas_split.nii.gz (use this -a if this exists from ``warp_to_native``, otherwise use -m ; "split" == left label IDs increased by 20,000)', default=None, action=SM)
     key_opts.add_argument('-m', '--moving_img', help='path/atlas_image.nii.gz to warp from atlas space', default=None, action=SM)
-    key_opts.add_argument('-t', '--type', help='Type of measurement (counts, region_volumes, cell_densities \[default], label_volumes, label_densities, mean_in_region, or mean_in_seg_in_region)', default='cell_densities', choices=['counts', 'region_volumes', 'cell_densities', 'label_volumes', 'label_densities', 'mean_in_region', 'mean_in_seg_in_region'], action=SM)
+    key_opts.add_argument('-t', '--type', help='Type of measurement (counts, region_volumes, cell_densities \[default], label_volumes, label_densities, mean, or mean_in_seg)', default='cell_densities', choices=['counts', 'region_volumes', 'cell_densities', 'label_volumes', 'label_densities', 'mean', 'mean_in_seg'], action=SM)
     key_opts.add_argument('-2p', '--stpt', help='For serial-2 photon data, use this flag to interleave blank slices (prevents cells from fusing across slices during counting). Only use with -t <counts or cell_densities>.', action='store_true', default=False)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -89,7 +89,7 @@ def parse_args():
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default='CCFv3-2020__regionID_side_IDpath_region_abbr.csv', action=SM)
     opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
     opts.add_argument('-min', '--min_voxels', help='Minimum voxel count per connected component to keep (default: 1 keeps all)', type=int, default=1, action=SM)
-    opts.add_argument('-i', '--intensity_img', help='rel_path/intensity image used for mean_in_region or mean_in_seg_in_region', default=None, action=SM)
+    opts.add_argument('-i', '--intensity_img', help='rel_path/intensity image used for mean or mean_in_seg', default=None, action=SM)
     opts.add_argument('-ch', '--channel', help='Channel number for .czi images. Default: 0', default=0, type=int, action=SM)
 
     compatibility = parser.add_argument_group('Compatibility options')
@@ -120,13 +120,13 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     - atlas_img (ndarray): 3D numpy array with the atlas image.
     - connectivity (int): Connectivity for connected components. Options: 6, 18, or 26.
     - condition (str): Name of the group.
-    - region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_path, Region, Abbr).
+    - region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_Path, Region, Abbr).
     - stpt (bool): Whether to account for interleaved blank slices (adjustment for serial-2 photon data).
     - min_voxels (int): Minimum voxel count per connected component to keep (default: 1 keeps all).
 
     Returns:
     --------
-    - region_counts_df (DataFrame): DataFrame with regional cell counts in the last column (Region_ID, Side, ID_path, Region, Abbr, <condition>_<sample_name>).
+    - region_counts_df (DataFrame): DataFrame with regional cell counts in the last column (Region_ID, Side, ID_Path, Region, Abbr, <condition>_<sample_name>).
     - region_ids (list): List of region IDs in the atlas.
 
     Output:
@@ -220,13 +220,13 @@ def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, co
     - xy_res (float): Resolution in the xy plane in microns.
     - z_res (float): Resolution in the z plane in microns.
     - condition (str): Name of the group.
-    - region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_path, Region, Abbr).
+    - region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_Path, Region, Abbr).
     - output_suffix (str): Suffix for the output CSV file name (default: 'volumes').
     - output_dir_name (str): Name of the subdirectory within each sample directory to save the output CSV (default: 'regional_stats').
 
     Returns:
     --------
-    - regional_volumes_df (DataFrame): DataFrame with regional volumes in the last column (Region_ID, Side, ID_path, Region, Abbr, <condition>_<sample_name>).
+    - regional_volumes_df (DataFrame): DataFrame with regional volumes in the last column (Region_ID, Side, ID_Path, Region, Abbr, <condition>_<sample_name>).
 
     Output:
     -------
@@ -326,7 +326,7 @@ def interleave_blank_slices(img):
     img_interleaved[:, :, ::2] = img  # ::2 means every second slice
     return img_interleaved
 
-def calculate_regional_means(sample_path, intensity_img, atlas_img, condition, region_info_df, mean_type='mean_in_region', seg_img=None, output_dir_name='regional_stats'):
+def calculate_regional_means(sample_path, intensity_img, atlas_img, condition, region_info_df, mean_type='mean', seg_img=None, output_dir_name='regional_stats'):
     """Calculate region-wise mean intensity for each region or in segmentation mask within each region based on atlas region intensities.
 
     Parameters:
@@ -336,8 +336,8 @@ def calculate_regional_means(sample_path, intensity_img, atlas_img, condition, r
         - atlas_img (ndarray): 3D atlas image in native space.
         - condition (str): Group name.
         - region_info_df (DataFrame): Region metadata.
-        - mean_type (str): 'mean_in_region' or 'mean_in_seg_in_region'
-        - seg_img (ndarray or None): Segmentation mask required for mean_in_seg_in_region
+        - mean_type (str): 'mean' or 'mean_in_seg'
+        - seg_img (ndarray or None): Segmentation mask required for mean_in_seg
         - output_dir_name (str): Name of the subdirectory within each sample directory to save the output CSV (default: 'regional_stats').
 
     Returns:
@@ -349,16 +349,16 @@ def calculate_regional_means(sample_path, intensity_img, atlas_img, condition, r
     if intensity_img.shape != atlas_img.shape:
         raise ValueError(f"    [red1]Intensity image and atlas have different shapes: {intensity_img.shape} != {atlas_img.shape}")
 
-    if mean_type == 'mean_in_seg_in_region':
+    if mean_type == 'mean_in_seg':
         if seg_img is None:
-            raise ValueError("seg_img is required for mean_in_seg_in_region")
+            raise ValueError("seg_img is required for mean_in_seg")
         if seg_img.shape != atlas_img.shape:
             raise ValueError(f"    [red1]Segmentation image and atlas have different shapes: {seg_img.shape} != {atlas_img.shape}")
 
     atlas_flat = atlas_img.ravel().astype(np.int64)
     intensity_flat = intensity_img.ravel().astype(np.float64)
 
-    if mean_type == 'mean_in_seg_in_region':
+    if mean_type == 'mean_in_seg':
         seg_mask = seg_img.ravel() > 0
         atlas_flat = atlas_flat[seg_mask]
         intensity_flat = intensity_flat[seg_mask]
@@ -400,7 +400,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    if args.type in ['counts', 'cell_densities', 'label_volumes', 'label_densities', 'mean_in_seg_in_region'] and args.seg_img_path is None:
+    if args.type in ['counts', 'cell_densities', 'label_volumes', 'label_densities', 'mean_in_seg'] and args.seg_img_path is None:
         raise ValueError(f"--seg_img_path is required for --type {args.type}")
 
     sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
@@ -431,7 +431,7 @@ def main():
 
             # Load the segmentation image
             seg_img = None
-            if args.type in ['counts', 'cell_densities', 'label_densities', 'label_volumes', 'mean_in_seg_in_region']:
+            if args.type in ['counts', 'cell_densities', 'label_densities', 'label_volumes', 'mean_in_seg']:
 
                 seg_img_path = next(sample_path.glob(str(args.seg_img_path)), None)
                 if seg_img_path is None:
@@ -462,13 +462,13 @@ def main():
                 atlas_img = interleave_blank_slices(atlas_img)
 
             intensity_img = None
-            if args.type in ['mean_in_region', 'mean_in_seg_in_region']:
+            if args.type in ['mean', 'mean_in_seg']:
                 if args.intensity_img is None:
-                    raise ValueError("--intensity_img is required for mean_in_region or mean_in_seg_in_region.")
+                    raise ValueError("--intensity_img is required for mean or mean_in_seg.")
 
                 if args.stpt:
-                    # --stpt is not needed for mean_in_region or mean_in_seg_in_region.
-                    raise ValueError("--stpt is not compatible with mean_in_region or mean_in_seg_in_region. This is because interleaving blank slices is only relevant for counting cells in segmentation masks, and does not apply to calculating mean intensities in regions. Please remove the --stpt flag when using mean-based metrics.")
+                    # --stpt is not needed for mean or mean_in_seg.
+                    raise ValueError("--stpt is not compatible with mean or mean_in_seg. This is because interleaving blank slices is only relevant for counting cells in segmentation masks, and does not apply to calculating mean intensities in regions. Please remove the --stpt flag when using mean-based metrics.")
 
                 intensity_img_path = next(sample_path.glob(str(args.intensity_img)), None)
                 if intensity_img_path is None:
@@ -518,12 +518,12 @@ def main():
                 calculate_regional_densities(sample_path, regional_volumes_in_seg_df, regional_volumes_df, args.condition, density_type=args.type, output_dir_name=args.output_dir)
 
             # Calculate regional means
-            if args.type == 'mean_in_region':
-                calculate_regional_means(sample_path, intensity_img, atlas_img, args.condition, region_info_df, mean_type='mean_in_region', seg_img=None, output_dir_name=args.output_dir)
+            if args.type == 'mean':
+                calculate_regional_means(sample_path, intensity_img, atlas_img, args.condition, region_info_df, mean_type='mean', seg_img=None, output_dir_name=args.output_dir)
 
             # Calculate regional means in segmentation mask within each region
-            if args.type == 'mean_in_seg_in_region':
-                calculate_regional_means(sample_path, intensity_img, atlas_img, args.condition, region_info_df, mean_type='mean_in_seg_in_region', seg_img=seg_img, output_dir_name=args.output_dir)
+            if args.type == 'mean_in_seg':
+                calculate_regional_means(sample_path, intensity_img, atlas_img, args.condition, region_info_df, mean_type='mean_in_seg', seg_img=seg_img, output_dir_name=args.output_dir)
 
             progress.update(task_id, advance=1)
     
