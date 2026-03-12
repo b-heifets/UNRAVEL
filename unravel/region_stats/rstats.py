@@ -102,7 +102,7 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Using the sample_key.csv would be better for batch processing than using -c for the condition.
+# TODO: Using the sample_key.csv would be better for batch processing than using -c for the condition. Then `agg` and `prepend` can be used.
 # TODO: Check other parameters of cc3d.connected_components to see if processing can be sped up (e.g., binary_image=True; may need to update cc3d first)
 
 def get_atlas_region_at_coords(atlas, x, y, z):
