@@ -111,7 +111,7 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
     if not Path(warped_nii_path).exists():
         print(f'\n    Warping the moving image to tissue space\n')
         fixed_img_for_reg_path = str(reg_outputs_path / fixed_reg_in)
-        warp(reg_outputs_path, moving_img_path, fixed_img_for_reg_path, warped_nii_path, inverse=False, interpol=interpol)
+        warp(reg_outputs_path=reg_outputs_path, moving_img_path=moving_img_path, fixed_img_path=fixed_img_for_reg_path, output_path=warped_nii_path, inverse=False, interpol=interpol)
 
     # Lower bit depth to match atlas space image
     warped_nii = nib.load(warped_nii_path)
