@@ -296,7 +296,7 @@ def main():
                 if not fixed_reg_input.exists():
                     fixed_reg_input = sample_path / args.reg_outputs / "autofl_50um_fixed_reg_input.nii.gz"
                 pad_percent = get_pad_percent(sample_path / args.reg_outputs, args.pad_percent)
-                native_cluster_index = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_idx_path, pad_percent=pad_percent)
+                native_cluster_index = to_native(sample_path=sample_path, reg_outputs=args.reg_outputs, fixed_reg_in=fixed_reg_input, moving_img_path=args.moving_img, metadata_rel_path=args.metadata, reg_res=args.reg_res, miracl=args.miracl, zoom_order=args.zoom_order, interpol=args.interpol, output=native_idx_path, pad_percent=pad_percent)
 
             # Get clusters to process
             if args.clusters == "all" or args.clusters == ["all"] or args.clusters is None:
