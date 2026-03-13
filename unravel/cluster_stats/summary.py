@@ -81,7 +81,7 @@ def parse_args():
     # cstats_org_data -d <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
     cstats_org_data = parser.add_argument_group('Optional args for cstats_org_data')
     cstats_org_data.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
-    cstats_org_data.add_argument('-me', '--metric',help='Metric output from cstats_validation to aggregate (e.g., cell_density, label_density, mean_in_cluster, mean_in_seg_in_cluster)',required=True,action=SM)
+    cstats_org_data.add_argument('-me', '--metric',help='Metric output from cstats_validation to aggregate (e.g., cell_density, label_density, mean, mean_in_seg)',required=True,action=SM)
     cstats_org_data.add_argument('-cvd', '--cluster_val_dirs', help='One or more glob patterns matching cluster validation output dirs (relative to ./sample??/clusters/) for cstats_org_data', nargs='*', default=None, action=SM)
     cstats_org_data.add_argument('-vd', '--vstats_path', help='path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cstats_org_data)', action=SM)
 
