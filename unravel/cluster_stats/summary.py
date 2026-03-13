@@ -114,6 +114,7 @@ def parse_args():
 # TODO: Given that the cluster_index_dir and cluster_info.txt names should be related, could add a check for this (perhaps also simplify logic for finding the cluster_info.txt file)
 # TODO: cluster_mean_IF_summary_ttest.csv has the p-value column named as p-adj even for t-tests. Could change this to p_val
 # TODO: Include some form of logging regarding the segmentation that was used in sample??/clusters/output_dir (in the dir name, output file names, or in a .txt file). Currently if a new segmentation is used, old outputs must be moved to a new directory to avoid confusion.
+# TODO: Currently to exclude hemispheres I am moving the sample??/clusters/<cluster_val_dir>/ directories that correspond to hemispheres I want to exclude. Could instead add an arg to specify hemispheres to exclude and have the script ignore the corresponding directories. This would be more user-friendly and less prone to error than having the user move directories around. 
 
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""
