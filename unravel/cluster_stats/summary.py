@@ -144,7 +144,7 @@ def main():
             '-p', cfg.org_data.pattern,
             '-cvd', *args.cluster_val_dirs,
             '-vd', args.vstats_path,
-            '-me', cfg.org_data.metric,
+            '-me', args.metric,
             '-pvt', cfg.org_data.p_val_txt
         ]
         if args.verbose:
