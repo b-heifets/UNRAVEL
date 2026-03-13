@@ -75,7 +75,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", action=SM)  # Does the control need to be specified for a t-test? First group could be the control.
     opts.add_argument('-alt', '--alternate', help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' \[default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
-    opts.add_argument('-y', '--ylabel', help='Y-axis label (Default: value). cell_density --> Cells*10^4/mm^3 (if -d 10000), label_density --> Label volume (%), or use custom text', default='value', action=SM)
+    opts.add_argument('-y', '--ylabel', help='Y-axis label (Default: value). cell_density --> Cells*10^4/mm^3 (if -d 10000), label_density --> Label volume (\%), or use custom text', default='value', action=SM)
     opts.add_argument('-d', '--divide', type=float, help='Divide the cell densities by the specified value for plotting (default is None)', default=None, action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', action=SM)
