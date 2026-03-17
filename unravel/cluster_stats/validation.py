@@ -96,6 +96,7 @@ def parse_args():
 # TODO: Use glob for -s to load the first match. If no match, print a message and continue to the next sample. Afterwards, update in help: "For -s, if a dir name is provided, the command will load ./sample??/seg_dir/sample??_seg_dir.nii.gz."
 # TODO: Consider removing the -o option. Have I used this so far? If not, remove it.
 # TODO: Like in ``rstats``, add this option: '-2p', '--stpt', help='For serial-2 photon data, use this flag to interleave blank slices (prevents cells from fusing across slices during counting)'
+# TODO: Minimize columns in outputs (e.g., remove redundancy in new schema colums: sample,cluster_ID,metric,value,value_type,support,support_type,aggregation_method,cluster_volume,cell_count,cell_density,xmin,xmax,ymin,ymax,zmin,zmax)
 
 @print_func_name_args_times()
 def crop_outer_space(native_cluster_index, output_path):
