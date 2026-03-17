@@ -50,7 +50,7 @@ def parse_args():
 
 # TODO: Look into consolidating csvs 
 # TODO: make default for -ids all clusters. Perhaps make this less specific to valid cluster and more general.
-
+# TODO: Run `legend` in the output dir
 
 def generate_sunburst(cluster, img, atlas, xyz_res_in_um, data_type, output_dir, sunburst_csv_path, info_csv_path, output_rgb_lut):
     """Generate a sunburst plot for a given cluster.
