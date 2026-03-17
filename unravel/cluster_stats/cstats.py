@@ -52,6 +52,8 @@ Usage for Tukey's tests:
     cstats --groups <group1> <group2> <group3> <group4> ... -hg <group1|group2> [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
 """
 
+import re
+
 import numpy as np
 import pandas as pd
 from glob import glob
@@ -544,7 +546,9 @@ def main():
         # Extract the FDR q value from the first csv file (float after 'FDR' or 'q' in the file name)
         first_csv_name = csv_files[0]
         if 'FDR' in first_csv_name.name or 'q' in first_csv_name.name:
-            fdr_q = float(str(first_csv_name).split('FDR')[-1].split('q')[-1].split('_')[0])
+            stem = first_csv_name.stem  # removes .csv
+            match = re.search(r'(?:FDR|q)(\d*\.?\d+)', stem)
+            fdr_q = float(match.group(1)) if match else None
         else:
             fdr_q = None  # No FDR/q value found
         
