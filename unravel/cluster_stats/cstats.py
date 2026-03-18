@@ -15,7 +15,8 @@ Note:
     - This script loops through all subdirectories in the current working directory.
     - Each subdir should contain CSV files with cluster-level validation metric data.
     - The first 2 groups reflect the main comparison for validation rates.
-    - Clusters are not considered valid if the effect direction does not match the expected direction.
+    - If ``--higher_group`` is provided, clusters are not considered valid if the effect direction does not match the expected direction.
+    - If ``--higher_group`` is omitted, validation is non-directional and significant clusters are kept regardless of effect direction.
 
 Columns in .csv files from ``cstats_validation``:
     sample, cluster_ID, metric, value, value_type, support, support_type, aggregation_method, cluster_volume, ...
@@ -45,11 +46,11 @@ Examples:
 
 Usage for t-tests:
 ------------------
-    cstats --groups <group1> <group2> -hg <group1|group2> [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
+    cstats --groups <group1> <group2> [-hg <group> ] [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
 
 Usage for Tukey's tests:
 ------------------------
-    cstats --groups <group1> <group2> <group3> <group4> ... -hg <group1|group2> [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
+    cstats --groups <group1> <group2> <group3> <group4> ... [-hg <group>] [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
 """
 
 import re
@@ -75,10 +76,10 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates)', nargs='*', required=True, action=SM)
-    reqs.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
+    reqs.add_argument('-g', '--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates)', nargs='*', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-hg', '--higher_group', help='Optional. Expected higher-mean group. If omitted, validation is non-directional. For >2 groups, clusters are valid if this group is higher in ≥1 significant comparison.', default=None, action=SM)
     opts.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group data (e.g., see info for examples)',  nargs='*', default=None, action=SM)
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction ('two-sided' \[default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
     opts.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from cstats_fdr). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
@@ -422,6 +423,8 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
+    directional_validation = args.higher_group is not None
+
     current_dir = Path.cwd()
 
     # Check for subdirectories in the current working directory
@@ -508,32 +511,73 @@ def main():
             print(f"Running [gold1 bold]Tukey's tests")
             stats_df = perform_tukey_test(data_df, value_col='value')
 
-        # Validate the clusters based on the expected direction of the effect
-        if args.higher_group not in args.groups:
-            print(f"    [red1]Error: The specified higher group '{args.higher_group}' is not one of the groups.")
-            return
-        expected_direction = '>' if args.higher_group == args.groups[0] else '<'
-        incongruent_clusters = stats_df[(stats_df['higher_mean_group'] != args.higher_group) & (stats_df['significance'] != 'n.s.')]['cluster_ID'].tolist()
-        with open(output_dir / 'incongruent_clusters.txt', 'w') as f:
-            f.write('\n'.join(map(str, incongruent_clusters)))
-        print(f"Expected effect direction: [green bold]{args.groups[0]} {expected_direction} {args.groups[1]}")
+        if directional_validation:
+            if args.higher_group not in args.groups:
+                print(f"    [red1]Error: The specified higher group '{args.higher_group}' is not one of the groups.")
+                return
 
-        pre_invalid_significant_clusters = stats_df[stats_df['significance'] != 'n.s.']['cluster_ID']
+            if len(args.groups) == 2:
+                incongruent_clusters = stats_df[
+                    (stats_df['higher_mean_group'] != args.higher_group) &
+                    (stats_df['significance'] != 'n.s.')
+                ]['cluster_ID'].unique().tolist()
 
-        if not incongruent_clusters and len(pre_invalid_significant_clusters) > 0:
-            print("All significant clusters are congruent with the expected direction")
-        elif not incongruent_clusters and len(pre_invalid_significant_clusters) == 0:
-            print("[red1 bold]No significant clusters found.")
+                expected_direction = '>' if args.higher_group == args.groups[0] else '<'
+                direction_label = f"{args.groups[0]} {expected_direction} {args.groups[1]}"
+                print(f"Expected effect direction: [green bold]{direction_label}")
+
+            else:
+                congruent_clusters = stats_df[
+                    (stats_df['higher_mean_group'] == args.higher_group) &
+                    (stats_df['significance'] != 'n.s.')
+                ]['cluster_ID'].unique().tolist()
+
+                significant_clusters = stats_df[
+                    stats_df['significance'] != 'n.s.'
+                ]['cluster_ID'].unique().tolist()
+
+                incongruent_clusters = [
+                    cid for cid in significant_clusters
+                    if cid not in congruent_clusters
+                ]
+
+                direction_label = f"{args.higher_group} higher in at least one significant comparison"
+                print(f"Expected effect direction: [green bold]{direction_label}")
+
+            if incongruent_clusters:
+                with open(output_dir / 'incongruent_clusters.txt', 'w') as f:
+                    f.write('\n'.join(map(str, incongruent_clusters)))
         else:
-            print(f"{len(incongruent_clusters)} of {total_clusters} clusters are incongruent with the expected direction.")
-            print("Although they had a significant difference, they are not considered valid.")
-            print("'incongruent_clusters.txt' lists cluster IDs for incongruent clusters.")
+            incongruent_clusters = []
+            direction_label = "non-directional"
+            print("Validation mode: [cyan bold]non-directional[/]")
+            print("Significant clusters will be kept regardless of which group has the higher mean.")
+
+        pre_invalid_significant_clusters = stats_df[stats_df['significance'] != 'n.s.']['cluster_ID'].unique()
+
+        if directional_validation:
+            if not incongruent_clusters and len(pre_invalid_significant_clusters) > 0:
+                print("All significant clusters are congruent with the expected direction")
+            elif not incongruent_clusters and len(pre_invalid_significant_clusters) == 0:
+                print("[red1 bold]No significant clusters found.")
+            else:
+                if len(args.groups) == 2:
+                    print(f"{len(incongruent_clusters)} of {total_clusters} clusters are incongruent with the expected direction.")
+                else:
+                    print(f"{len(incongruent_clusters)} of {total_clusters} clusters never show '{args.higher_group}' as the higher-mean group in a significant comparison.")
+
+                print("Although they had a significant difference, they are not considered valid.")
+                print("'incongruent_clusters.txt' lists cluster IDs for incongruent clusters.")
+        else:
+            if len(pre_invalid_significant_clusters) == 0:
+                print("[red1 bold]No significant clusters found.")
 
         # Invalidate incongruent clusters
-        stats_df['significance'] = stats_df.apply(
-            lambda row: 'n.s.' if row['cluster_ID'] in incongruent_clusters else row['significance'],
-            axis=1
-        )
+        if directional_validation:
+            stats_df['significance'] = stats_df.apply(
+                lambda row: 'n.s.' if row['cluster_ID'] in incongruent_clusters else row['significance'],
+                axis=1
+            )
 
         # Recompute significant clusters after invalidation
         significant_cluster_ids = stats_df[stats_df['significance'] != 'n.s.']['cluster_ID'].unique().tolist()
@@ -587,7 +631,7 @@ def main():
         # Save the # of sig. clusters, total clusters, and cluster validation rate to a .txt file
         validation_inf_txt = output_dir / 'cluster_validation_info_t-test.txt' if len(args.groups) == 2 else output_dir / 'cluster_validation_info_tukey.txt'
         with open(validation_inf_txt, 'w') as f:
-            f.write(f"Direction: {args.groups[0]} {expected_direction} {args.groups[1]}\n")
+            f.write(f"Direction: {direction_label}\n")
             if fdr_q is not None:
                 f.write(f"FDR q: {fdr_q} == p-value threshold {p_value_thresh}\n")
             else:
@@ -603,7 +647,7 @@ def main():
         
         # Save cluster validation info for ``cstats_summary`` 
         data_df = pd.DataFrame({
-            'Direction': [f"{args.groups[0]} {expected_direction} {args.groups[1]}"],
+            'Direction': [direction_label],
             'P value thresh': [p_value_thresh],
             'Valid clusters': [significant_cluster_ids_str],
             '# of valid clusters': [len(significant_cluster_ids)],
