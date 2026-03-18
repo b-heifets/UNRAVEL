@@ -597,24 +597,28 @@ def main():
             fdr_q = None  # No FDR/q value found
         
         # Extract the p-value threshold from the specified .txt file
-        try:
-            p_val_txt = next(Path(subdir).glob('**/*' + args.p_val_txt), None)
-            if p_val_txt is None:
-                # If no file is found, print an error message and skip further processing for this directory
-                print(f"    [red1]No p-value file found matching '{args.p_val_txt}' in directory {subdir}. Please check the file name and path.")
-                import sys ; sys.exit()
-            with open(p_val_txt, 'r') as f:
-                p_value_thresh = float(f.read())
-        except Exception as e:
-            # Handle other exceptions that may occur during file opening or reading
-            print(f"An error occurred while processing the p-value file: {e}")
-            import sys ; sys.exit()
+        p_val_txt = next(Path(subdir).glob('**/*' + args.p_val_txt), None)
+
+        if p_val_txt is not None:
+            try:
+                with open(p_val_txt, 'r') as f:
+                    p_value_thresh = float(f.read())
+            except Exception as e:
+                print(f"[yellow]Warning: could not read p-value file ({e}).")
+                p_value_thresh = None
+        else:
+            p_value_thresh = None
 
         # Print validation info
-        if fdr_q is not None:
-            print(f"FDR q: [cyan bold]{fdr_q}[/] == p-value threshold: [cyan bold]{p_value_thresh}")
+        if p_value_thresh is not None:
+            if fdr_q is not None:
+                print(f"FDR q: [cyan bold]{fdr_q}[/] == p-value threshold: [cyan bold]{p_value_thresh}")
+            else:
+                print(f"P-value threshold: [cyan bold]{p_value_thresh}")
+        elif fdr_q is not None:
+            print(f"FDR q: [cyan bold]{fdr_q}")
         else:
-            print(f"P-value threshold: [cyan bold]{p_value_thresh}")
+            print("[yellow]No p-value threshold file found; continuing without it.")
         print(f"Valid cluster IDs: {significant_cluster_ids_str}")
         print(f"[default]# of valid / total #: [bright_magenta]{len(significant_cluster_ids)} / {total_clusters}")
         validation_rate = len(significant_cluster_ids) / total_clusters * 100
@@ -633,8 +637,8 @@ def main():
         with open(validation_inf_txt, 'w') as f:
             f.write(f"Direction: {direction_label}\n")
             if fdr_q is not None:
-                f.write(f"FDR q: {fdr_q} == p-value threshold {p_value_thresh}\n")
-            else:
+                f.write(f"FDR q: {fdr_q}\n")
+            if p_value_thresh is not None:
                 f.write(f"P-value threshold: {p_value_thresh}\n")
             f.write(f"Valid cluster IDs: {significant_cluster_ids_str}\n")
             f.write(f"# of valid / total #: {len(significant_cluster_ids)} / {total_clusters}\n")
@@ -648,7 +652,7 @@ def main():
         # Save cluster validation info for ``cstats_summary`` 
         data_df = pd.DataFrame({
             'Direction': [direction_label],
-            'P value thresh': [p_value_thresh],
+            'P value thresh': [p_value_thresh if p_value_thresh is not None else 'NA'],
             'Valid clusters': [significant_cluster_ids_str],
             '# of valid clusters': [len(significant_cluster_ids)],
             '# of clusters': [total_clusters],
