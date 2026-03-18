@@ -47,29 +47,57 @@ Note:
 import configparser
 import re
 
+
 class AttrDict(dict):
     """A dictionary that allows attribute access."""
     def __getattr__(self, name):
         return self[name]
 
+
 class Config:
-    """A class to read configuration from a file and allow attribute access using RawConfigParser."""
+    """Read configuration and allow attribute-style access."""
     def __init__(self, config_file):
         self.parser = configparser.RawConfigParser()
         self.parser.read(config_file)
 
     def __getattr__(self, section):
         if section in self.parser:
-            section_dict = {k: self._strip_comments(v) for k, v in self.parser[section].items()}
+            section_dict = {
+                k: self._convert(self._strip_comments(v))
+                for k, v in self.parser[section].items()
+            }
             return AttrDict(section_dict)
         else:
             raise AttributeError(f"No such section: {section}")
 
     @staticmethod
     def _strip_comments(value):
-        """Strip inline comments from configuration values."""
-        return re.sub(r"\s*#.*$", "", value, flags=re.M)
-    
+        """Strip inline comments."""
+        return re.sub(r"\s*#.*$", "", value).strip()
+
+    @staticmethod
+    def _convert(value):
+        """Convert config values to bool, int, or float when appropriate."""
+        v = value.strip().lower()
+
+        try:
+            return int(value)
+        except ValueError:
+            pass
+
+        try:
+            return float(value)
+        except ValueError:
+            pass
+
+        if v in {"true", "yes", "y", "on"}:
+            return True
+        if v in {"false", "no", "n", "off"}:
+            return False
+
+        return value
+
+
 class Configuration:
-    """A class to hold configuration settings."""
+    """Global configuration settings."""
     verbose = False
