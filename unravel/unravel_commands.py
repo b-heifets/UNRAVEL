@@ -186,7 +186,13 @@ def main():
                 "module": "unravel.warp.warp",
                 "description": "Warp to/from atlas space and registration input space.",
                 "common": False
-            }
+            },
+            "warp_ccf30_to_merfish": {
+                "module": "unravel.warp.ccf30_to_merfish",
+                "description": "Warp CCFv3.0 to MERFISH space.",
+                "common": False,
+                "alias": "c2m"
+            },
         },
         "Segmentation": {
             "seg_copy_tifs": {
