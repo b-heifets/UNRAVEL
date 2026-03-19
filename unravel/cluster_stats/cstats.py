@@ -46,18 +46,17 @@ Examples:
 
 Usage for t-tests:
 ------------------
-    cstats --groups <group1> <group2> [-hg <group> ] [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
+    cstats --groups <group1> <group2> [-hg <group> ] [-dp <dir_pattern>] [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
 
 Usage for Tukey's tests:
 ------------------------
-    cstats --groups <group1> <group2> <group3> <group4> ... [-hg <group>] [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
+    cstats --groups <group1> <group2> <group3> ... [-hg <group>] [-dp <dir_pattern>] [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
 """
 
 import re
 
 import numpy as np
 import pandas as pd
-from glob import glob
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -68,7 +67,7 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, initialize_progress_bar
 
 from unravel.cluster_stats.stats_table import cluster_summary
 
@@ -79,6 +78,7 @@ def parse_args():
     reqs.add_argument('-g', '--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates)', nargs='*', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-dp', '--dir_pattern', help='Glob pattern(s) for subdirectories to process when the current directory does not have input CSVs. Default: *', default='*', nargs='*', action=SM)
     opts.add_argument('-hg', '--higher_group', help='Optional. Expected higher-mean group. If omitted, validation is non-directional. For >2 groups, clusters are valid if this group is higher in ≥1 significant comparison.', default=None, action=SM)
     opts.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group data (e.g., see info for examples)',  nargs='*', default=None, action=SM)
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction ('two-sided' \[default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
@@ -90,6 +90,13 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Test grouping of conditions. Test w/ label densities data. Could set up dunnett's tests and/or holm sidak tests.
+
+def get_matching_input_csvs(input_dir, groups):
+    csv_files = sorted(input_dir.glob('*.csv'))
+    return [
+        f for f in csv_files
+        if any(f.name.startswith(f'{group}_') for group in groups)
+    ]
 
 def detect_metric_schema(first_df):
     """Detect whether input CSVs use the new generic metric schema or the older density schema.
@@ -427,27 +434,37 @@ def main():
 
     current_dir = Path.cwd()
 
-    # Check for subdirectories in the current working directory
-    subdirs = [d for d in current_dir.iterdir() if d.is_dir()]
-    if not subdirs:
-        print(f"    [red1]No directories found in the current working directory: {current_dir}")
-        return
-    if len(subdirs) == 1 and subdirs[0].name == '_valid_clusters_stats':
-        print(f"    [red1]Only the '_valid_clusters_stats' directory found in the current working directory: {current_dir}")
-        print("    [red1]The script was likely run from a subdirectory instead of a directory containing subdirectories.")
+    cwd_csv_files = get_matching_input_csvs(current_dir, args.groups)
+
+    if cwd_csv_files:
+        dirs_to_process = [current_dir]
+    else:
+        try:
+            candidate_paths = match_files(args.dir_pattern, base_path=current_dir)
+        except ValueError:
+            candidate_paths = []
+
+        dirs_to_process = [
+            p for p in candidate_paths
+            if p.is_dir() and p.name != '_valid_clusters_stats'
+        ]
+
+    if not dirs_to_process:
+        print(f"    [red1]No matching input CSVs found in {current_dir} or matching subdirectories.")
         return
 
     # Iterate over all subdirectories in the current working directory
-    for subdir in subdirs:
-        print(f"\nProcessing directory: [default bold]{subdir.name}[/]")
+    processed_any = False
+    for input_dir in dirs_to_process:
+        print(f"\nProcessing directory: [default bold]{input_dir.name}[/]")
 
         # Load all .csv files in the current subdirectory
-        csv_files = list(subdir.glob('*.csv'))
+        csv_files = get_matching_input_csvs(input_dir, args.groups)
         if not csv_files:
             continue  # Skip directories with no CSV files
 
         # Make output dir
-        output_dir = Path(subdir) / '_valid_clusters_stats'
+        output_dir = Path(input_dir) / '_valid_clusters_stats'
         output_dir.mkdir(exist_ok=True)
         validation_info_csv = output_dir / 'cluster_validation_info_t-test.csv' if len(args.groups) == 2 else output_dir / 'cluster_validation_info_tukey.csv'
         if validation_info_csv.exists():
@@ -597,7 +614,7 @@ def main():
             fdr_q = None  # No FDR/q value found
         
         # Extract the p-value threshold from the specified .txt file
-        p_val_txt = next(Path(subdir).glob('**/*' + args.p_val_txt), None)
+        p_val_txt = next(input_dir.glob('**/*' + args.p_val_txt), None)
 
         if p_val_txt is not None:
             try:
@@ -663,11 +680,16 @@ def main():
 
         data_df.to_csv(validation_info_csv, index=False)
 
+        processed_any = True
+
     # Concat all cluster_validation_info.csv files
-    if len(args.groups) == 2:
-        cluster_summary('cluster_validation_info_t-test.csv', 'cluster_validation_summary_t-test.csv')
+    if processed_any:
+        if len(args.groups) == 2:
+            cluster_summary('cluster_validation_info_t-test.csv', 'cluster_validation_summary_t-test.csv')
+        else:
+            cluster_summary('cluster_validation_info_tukey.csv', 'cluster_validation_summary_tukey.csv')
     else:
-        cluster_summary('cluster_validation_info_tukey.csv', 'cluster_validation_summary_tukey.csv')
+        print("[yellow]No validation outputs found to summarize.")
 
     verbose_end_msg()
 
