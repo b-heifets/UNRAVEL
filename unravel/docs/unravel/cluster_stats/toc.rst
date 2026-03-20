@@ -21,6 +21,7 @@ unravel.cluster_stats package
    cstats
    stats_table
    sunburst
+   sunburst_sort
    table
    crop
    mean_IF

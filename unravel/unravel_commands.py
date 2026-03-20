@@ -380,6 +380,12 @@ def main():
                 "common": False,
                 "alias": "sunburst"
             },
+            "cstats_sunburst_sort": {
+                "module": "unravel.cluster_stats.sunburst_sort",
+                "description": "Sort sunburst CSVs by hierarchy and value.",
+                "common": False,
+                "alias": "sunburst_sort"
+            },
             "cstats_find_incongruent": {
                 "module": "unravel.cluster_stats.find_incongruent_clusters",
                 "description": "Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).",
