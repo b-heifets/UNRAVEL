@@ -17,7 +17,8 @@ Next steps:
     - Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (https://app.flourish.studio/)
     - It can be pasted into the Data tab (categories columns = cell type columns, Size by = percent column)
     - Preview tab: Hierarchy -> Depth to 5, Colors -> paste hex codes from ..._sunburst_colors.csv into Custom overrides
-
+    - Sort hierarchically using ``sunburst_sort`` to groups related cell types together based on their aggregate value (e.g., proportion) across all depth levels.
+    
 Usage:
 ------ 
     abca_sunburst -i path/cell_metadata_filtered.csv [-n] [-l] [-v]
