@@ -50,11 +50,10 @@ from openpyxl.styles import Border, Side, Font, Alignment
 from rich import print
 from rich.traceback import install
 
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-
 from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-
+from unravel.cluster_stats.sunburst_sort import sunburst_sort
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -78,57 +77,6 @@ def parse_args():
 # TODO: Fix the font in the volumes column to be white if the fill color is dark and black if the fill color is light
 # TODO: CA3slm is not filled with the color of the region.
 
-def fill_na_with_last_known(df):
-    depth_columns = [col for col in df.columns if 'Depth' in col]
-
-    # Fill NaN with the last known non-NaN value within each row for depth columns
-    df_filled = df.copy()
-    df_filled[depth_columns] = df_filled[depth_columns].fillna(method='ffill', axis=1)
-
-    return df_filled
-
-def sort_sunburst_hierarchy(df):
-    """Sort the DataFrame by hierarchy and volume."""
-
-    depth_columns = [col for col in df.columns if 'Depth' in col]
-    volume_column = 'Volume_(mm^3)'
-
-    # For each depth, process groups and sort
-    for i, depth in enumerate(depth_columns):
-        # Temporary DataFrame to hold sorting results for each depth
-        sorted_partial = pd.DataFrame()
-        
-        # Identify unique groups (rows) up to the current depth (e.g, if Depth_2, then root, grey, CH)
-        unique_groups = df[depth_columns[:i + 1]].drop_duplicates()
-        
-        for _, group_values in unique_groups.iterrows():
-            # Filter rows belonging to the current group
-            mask = (df[depth_columns[:i + 1]] == group_values).all(axis=1) # Boolean series to check which rows == group_values
-            group_df = df[mask].copy() # Apply mask to df to get a df for each group (copy to avoid SettingWithCopyWarning)
-            
-            # Calculate aggregate volume for the group and add it as a new column
-            group_df.loc[:, 'aggregate_volume'] = group_df[volume_column].sum()
-
-            # Sort the group by individual volume
-            group_df = group_df.sort_values(by=[volume_column], ascending=False)
-            
-            # Append sorted group to the partial result
-            sorted_partial = pd.concat([sorted_partial, group_df], axis=0)
-
-        # Replace df with the sorted_partial for the next iteration
-        df = sorted_partial.drop(columns=['aggregate_volume'])
-
-    return df
-
-def undo_fill_with_original(df_sorted, df_original):
-    # Ensure the original DataFrame has not been altered; otherwise, use a saved copy before any modifications
-    depth_columns = [col for col in df_original.columns if 'Depth' in col]
-    
-    # Use the index to replace filled values with original ones where NaN existed
-    for column in depth_columns:
-        df_sorted[column] = df_original.loc[df_sorted.index, column] # Use the index to replace filled values with original ones where NaN existed
-    
-    return df_sorted
 
 def can_collapse(df, depth_col):
     """
@@ -220,31 +168,28 @@ def get_top_regions_and_percent_vols(sunburst_csv_path, top_regions, percent_vol
         print(f'\n{sunburst_csv_path} is empty. Exiting...')
         import sys ; sys.exit()
 
-    # Fill NaN values in the original DataFrame
-    df_filled_na = fill_na_with_last_known(df.copy())
-
     # Sort the DataFrame by hierarchy and volume
-    df_filled_sorted = sort_sunburst_hierarchy(df_filled_na)
-
-    # Undo the fill with the original values
-    df_final = undo_fill_with_original(df_filled_sorted, df)
+    df_sorted = sunburst_sort(df)
 
     # Save the sorted DataFrame to a new CSV file
     sorted_parent_path = sunburst_csv_path.parent / '_sorted_sunburst_CSVs'
     sorted_parent_path.mkdir(parents=True, exist_ok=True)
-    sorted_csv_name = str(sunburst_csv_path.name).replace('sunburst.csv', 'sunburst_sorted.csv')
-    df_final.to_csv(sorted_parent_path / sorted_csv_name, index=False)
+    if sunburst_csv_path.name.endswith('sunburst.csv'):
+        sorted_csv_name = str(sunburst_csv_path.name).replace('sunburst.csv', 'sunburst_sorted.csv')
+    else:
+        sorted_csv_name = sunburst_csv_path.stem + '_sorted.csv'
+    df_sorted.to_csv(sorted_parent_path / sorted_csv_name, index=False)
 
     # Attempt to calculate top regions, collapsing as necessary
     criteria_met = False
     while not criteria_met:
-        top_regions_df = calculate_top_regions(df_final, top_regions, percent_vol, verbose)
+        top_regions_df = calculate_top_regions(df_sorted, top_regions, percent_vol, verbose)
 
         if top_regions_df is not None and not top_regions_df.empty: # If top regions are found
             criteria_met = True
 
             # If a top region contributes to less than 1% of the total volume, remove it
-            total_volume = df_final['Volume_(mm^3)'].sum()
+            total_volume = df_sorted['Volume_(mm^3)'].sum()
             top_regions_df = top_regions_df[top_regions_df['Volume_(mm^3)'] / total_volume > 0.01]
 
             # Initialize lists to hold the top region names and their aggregate volumes
@@ -271,8 +216,8 @@ def get_top_regions_and_percent_vols(sunburst_csv_path, top_regions, percent_vol
             top_regions_df.to_csv(top_regions_parent_path / top_regions_csv_name, index=False)
         else:
             # Attempt to collapse the hierarchy further
-            df_final = collapse_hierarchy(df_final, verbose)
-            if df_final.empty:
+            df_sorted = collapse_hierarchy(df_sorted, verbose)
+            if df_sorted.empty:
                 break  # Exit if no further collapsing is possible
 
     return top_region_names_and_percent_vols, total_volume
