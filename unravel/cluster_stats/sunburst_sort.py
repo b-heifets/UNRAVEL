@@ -129,7 +129,7 @@ def main():
 
         sunburst_csv_path = Path(csv_path)
 
-        df = pd.read_csv(sunburst_csv_path)
+        df = pd.read_csv(sunburst_csv_path, keep_default_na=False)
 
         # Sort the DataFrame by hierarchy and volume
         df_sorted = sunburst_sort(df)
