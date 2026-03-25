@@ -93,7 +93,7 @@ def parse_args():
     cstats_opts_comparisons.add_argument('-comp', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=None, action=SM)
 
     cstats_opts_anova = parser.add_argument_group('Optional args for ANOVA. (Use this or -c; cstats -h)')
-    cstats_opts_anova.add_argument('-gm', '--group_map', help='CSV file mapping condition names to factor levels (required for ANOVA).', action=SM)
+    cstats_opts_anova.add_argument('-gm', '--group_map', help='CSV file mapping condition names to factor levels (required for ANOVA; see _other/drafts/cstats_adding_stats_options/cstats.py).', action=SM)
     cstats_opts_anova.add_argument('-e', '--effect', help='Specific effect or interaction to validate from ANOVA (e.g., Psilocybin or Psilocybin:Housing)', default=None, action=SM)
     cstats_opts_anova.add_argument('-f', '--formula', help='ANOVA model formula (e.g., Psilocybin+Housing or Psilocybin*Housing). Required if using group_map', required=False, action=SM)
 
