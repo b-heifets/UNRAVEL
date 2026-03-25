@@ -46,6 +46,11 @@ SalineEE,Saline,EE
 PsilocybinHC,Psilocybin,HC
 PsilocybinEE,Psilocybin,EE
 
+Note:
+    When --effect is provided, only that ANOVA term is used to determine cluster validity.
+    Other model terms are ignored during validation.
+    If --effect is not provided, all ANOVA terms are considered.
+
 Usage for a one-tailed t-test
 -----------------------------
     cs -c saline<MDMA
@@ -828,6 +833,13 @@ def main():
                     print(f"[red]Column '{col}' not found in data_df[/red]")
 
             stats_df = valid_clusters_anova(data_df, density_col, formula, effect_of_interest=args.effect)
+
+            if args.effect:
+                stats_df = stats_df[
+                    stats_df["comparison"].str.replace("ANOVA: ", "", regex=False).apply(
+                        lambda term: match_effect(term, args.effect)
+                    )
+                ].copy()
 
         elif test_type == 'tukey':
             print("[bold gold1]Running Tukey's HSD[/] across all groups")
