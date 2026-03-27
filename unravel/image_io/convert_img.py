@@ -55,7 +55,7 @@ def parse_args():
     opts.add_argument('-z', '--z_res', help='z resolution in µm', type=float, action=SM)
     opts.add_argument('-c', '--channel', help='Channel number. Default: 0', default=0, type=int, action=SM)
     opts.add_argument('-o', '--output', help='Output directory path. Default: None (saves in the same directory as input).', default=None, action=SM)
-    opts.add_argument('-d', '--dtype', help='Data type for .nii.gz. Options: np.uint8, np.uint16, np.float32.', default=None, action=SM)
+    opts.add_argument('-d', '--dtype', help='Data type for .nii.gz. Options: uint8, uint16, float32 (numpy conventions).', default=None, action=SM)
     opts.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata. Default: None', default=None, action=SM)
     opts.add_argument('-f', '--force', help='Force overwrite existing output files. Default: False', action='store_true', default=False)
     opts.add_argument('-w', '--workers', help='Number of parallel conversions. Default: 8', type=int, default=8, action=SM)
