@@ -74,14 +74,14 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='path/img.nii.gz', required=True, nargs='*', action=SM)
     reqs.add_argument('-t', '--target_ort', help='Target orientation axis codes (e.g., RAS)', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
@@ -234,17 +234,20 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    nii = nib.load(args.input)
-    new_nii = reorient_nii(nii, args.target_ort, zero_origin=args.zero_origin, apply=args.apply, form_code=args.form_code)
+    input_paths = match_files(args.input)
+    for input_path in input_paths:
 
-    # Save the new .nii.gz file
-    if args.output: 
-        nib.save(new_nii, args.output)
-    else:
-        if args.apply:
-            nib.save(new_nii, args.input.replace('.nii.gz', f'_{args.target_ort}_applied.nii.gz'))
+        nii = nib.load(input_path)
+        new_nii = reorient_nii(nii, args.target_ort, zero_origin=args.zero_origin, apply=args.apply, form_code=args.form_code)
+
+        # Save the new .nii.gz file
+        if args.output: 
+            nib.save(new_nii, args.output)
         else:
-            nib.save(new_nii, args.input.replace('.nii.gz', f'_{args.target_ort}.nii.gz'))
+            if args.apply:
+                nib.save(new_nii, input_path.replace('.nii.gz', f'_{args.target_ort}_applied.nii.gz'))
+            else:
+                nib.save(new_nii, input_path.replace('.nii.gz', f'_{args.target_ort}.nii.gz'))
 
     verbose_end_msg()
 
