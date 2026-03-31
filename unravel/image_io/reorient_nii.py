@@ -81,7 +81,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path/img.nii.gz', required=True, nargs='*', action=SM)
+    reqs.add_argument('-i', '--input', help='Path(s) to input NIfTI files or glob pattern(s) in quotes', required=True, nargs='*', action=SM)
     reqs.add_argument('-t', '--target_ort', help='Target orientation axis codes (e.g., RAS)', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
