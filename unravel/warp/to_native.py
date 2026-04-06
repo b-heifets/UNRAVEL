@@ -177,6 +177,12 @@ def main():
             else:
                 output = None
 
+            # Skip if output already exists
+            if output is not None and output.exists():
+                print(f"    [yellow]Output {output} already exists. Skipping sample {sample_path.name}.[/yellow]")
+                progress.update(task_id, advance=1)
+                continue
+
             pad_percent = get_pad_percent(sample_path / args.reg_outputs, args.pad_percent)
             to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=output, pad_percent=pad_percent)
 
