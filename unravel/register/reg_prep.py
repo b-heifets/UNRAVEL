@@ -35,7 +35,7 @@ from rich.traceback import install
 
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.img_io import load_3D_img_and_save_metadata, resolve_path, save_as_tifs, save_as_nii
+from unravel.core.img_io import load_3D_img, load_3D_img_and_save_metadata, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii
 from unravel.core.img_tools import resample, reorient_axes
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, print_func_name_args_times
 
@@ -115,15 +115,19 @@ def main():
 
             # Load full res autofluo image and save metadata (if missing)
             metadata_path = sample_path / args.metadata
-            img, xy_res, z_res, _, _, _ = load_3D_img_and_save_metadata(
-                img_path,
-                metadata_path=metadata_path,
-                channel=args.channel,
-                desired_axis_order="xyz",
-                xy_res=args.xy_res,
-                z_res=args.z_res,
-                verbose=args.verbose,
-            )
+            if metadata_path.exists():
+                img = load_3D_img(img_path, channel=args.channel, verbose=args.verbose)
+                xy_res, z_res, _, _, _ = load_image_metadata_from_txt(args.metadata)
+            else:
+                img, xy_res, z_res, _, _, _ = load_3D_img_and_save_metadata(
+                    img_path,
+                    metadata_path=metadata_path,
+                    channel=args.channel,
+                    desired_axis_order="xyz",
+                    xy_res=args.xy_res,
+                    z_res=args.z_res,
+                    verbose=args.verbose,
+                )
 
             # Prepare the autofluo image for registration
             img_resampled = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
