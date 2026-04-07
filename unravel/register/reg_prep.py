@@ -117,7 +117,7 @@ def main():
             metadata_path = sample_path / args.metadata
             if metadata_path.exists():
                 img = load_3D_img(img_path, channel=args.channel, verbose=args.verbose)
-                xy_res, z_res, _, _, _ = load_image_metadata_from_txt(args.metadata)
+                xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
             else:
                 img, xy_res, z_res, _, _, _ = load_3D_img_and_save_metadata(
                     img_path,
