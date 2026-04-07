@@ -46,7 +46,7 @@ from rich.traceback import install
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img, save_3D_img
-from unravel.core.utils import initialize_progress_bar, log_command, match_files, print_func_name_args_times, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import get_stem, initialize_progress_bar, log_command, match_files, print_func_name_args_times, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -105,20 +105,8 @@ def convert_img(img_file, save_as=None, output=None, force=False, channel=0, xy_
     if save_as not in ['.nii.gz', '.tif', '.zarr', '.h5']:
         raise ValueError(f"Unsupported output format: {save_as}")
     
-    # img_path = Path(img_file)
-    # if img_path.suffix == '.tif':
-    #     img_path = img_path.parent  # If it's a .tif series, use the directory containing the .tif files
-
-    # img_file_basename = str(img_path.name).replace('.nii.gz', '') if str(img_path).endswith('.nii.gz') else img_path.stem
-
     img_path = Path(img_file)
-
-    if img_path.is_dir():
-        img_file_basename = img_path.name
-    elif str(img_path).endswith('.nii.gz'):
-        img_file_basename = img_path.name[:-7]
-    else:
-        img_file_basename = img_path.stem
+    img_file_basename = get_stem(img_path.name)
 
     # Define output path based on the input file name and specified output format
     if save_as == '.tif':
