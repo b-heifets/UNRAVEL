@@ -849,11 +849,11 @@ def main():
                 "common": False,
                 "alias": "gta_dl"
             },
-            "gta_metadata": {
-                "module": "unravel.allen_institute.genetic_tools_atlas.metadata",
+            "gta_simplify_metadata": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.simplify_metadata",
                 "description": "Simplify metadata from the GTA.",
                 "common": False,
-                "alias": "gta_m"
+                "alias": "gta_sm"
             },
             "gta_org_samples": {
                 "module": "unravel.allen_institute.genetic_tools_atlas.org_samples",
