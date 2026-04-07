@@ -464,6 +464,7 @@ def get_stem(file_path):
     """
     file_path = Path(file_path)
     name = file_path.name
+    lower_name = name.lower()
 
     compound_extensions = [
         '.nii.gz',
@@ -476,7 +477,7 @@ def get_stem(file_path):
     ]
 
     for ext in compound_extensions:
-        if str(name).endswith(ext):
+        if str(lower_name).endswith(ext):
             return name[: -len(ext)]
     
     return file_path.stem
