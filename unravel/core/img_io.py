@@ -108,10 +108,16 @@ def metadata(file_path, ndarray, return_res=False, return_metadata=False, xy_res
     """
     x_dim, y_dim, z_dim = None, None, None
     if return_res or return_metadata:
-        if xy_res is None and z_res is None:
-            xy_res, z_res = extract_resolution(file_path)
+        if xy_res is None or z_res is None:
+            ext_xy_res, ext_z_res = extract_resolution(file_path)
+            if xy_res is None:
+                xy_res = ext_xy_res
+            if z_res is None:
+                z_res = ext_z_res
         x_dim, y_dim, z_dim = ndarray.shape
         if save_metadata:
+            if xy_res is None or z_res is None:
+                raise ValueError("xy_res and z_res are required to save metadata.")
             save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata=save_metadata)
     return xy_res, z_res, x_dim, y_dim, z_dim
 
@@ -555,34 +561,30 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
         ndarray = da.from_zarr(str(level_path)).compute()
 
     else:
-        # New fallback:
-        # 1) try root as array
-        # 2) if root is a group, auto-detect a single child array/group level
-        try:
-            root_obj = zarr.open(str(zarr_path), mode="r")
-        except Exception as e:
-            raise ValueError(f"Could not open zarr root: {e}")
+        # Fallback for zarrs without compatible root metadata.
+        # First inspect the filesystem instead of calling zarr.open() on the root,
+        # because some v3 stores are groups at the root and `zarr.open(path)` fails.
+        child_names = sorted([p.name for p in zarr_path.iterdir() if p.is_dir()])
+        candidate_levels = [name for name in child_names if name.isdigit()]
 
-        if hasattr(root_obj, "shape"):
-            log("        Root zarr is an array. Loading root array.")
-            ndarray = np.array(root_obj)
+        if level is not None:
+            candidate_levels = [str(level)]
+
+        if len(candidate_levels) == 1:
+            level_str = candidate_levels[0]
+            level_path = zarr_path / level_str
+            log(f"        Root zarr is a group. Auto-detected level {level_str}")
+            ndarray = da.from_zarr(str(level_path)).compute()
 
         else:
-            child_names = sorted([p.name for p in zarr_path.iterdir() if p.is_dir()])
-            candidate_levels = [name for name in child_names if name.isdigit()]
-
-            if level is not None:
-                candidate_levels = [str(level)]
-
-            if len(candidate_levels) == 1:
-                level_str = candidate_levels[0]
-                level_path = zarr_path / level_str
-                log(f"        Root zarr is a group. Auto-detected level {level_str}")
-                ndarray = da.from_zarr(str(level_path)).compute()
-            else:
+            # If no numeric child level was found, try loading the root as an array.
+            try:
+                log("        Trying to load root zarr array directly.")
+                ndarray = da.from_zarr(str(zarr_path)).compute()
+            except Exception as e:
                 raise ValueError(
-                    f"Zarr root is a group, not an array. "
-                    f"Please specify a level. Candidate levels: {candidate_levels or child_names}"
+                    f"Could not load zarr root or infer a child level. "
+                    f"Candidate levels: {candidate_levels or child_names}. Error: {e}"
                 )
 
     log(f"        Array shape ([C], Z, Y, X): {ndarray.shape}")
