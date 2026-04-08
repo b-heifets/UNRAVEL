@@ -38,7 +38,7 @@ dependencies = [
     "statsmodels>=0.14.0,<1.0.0",
     "termcolor>=2.4.0,<3.0.0",
     "tifffile>=2023.8.30,<2024.0.0",
-    "zarr>=2.14.2,<3.0.0"
+    "zarr>=3.0.0"
 ]
 
 keywords = ["neuroscience", "image analysis", "light sheet microscopy", "brain mapping", "data analysis", "voxel-wise analysis", "cell density quantification"]
