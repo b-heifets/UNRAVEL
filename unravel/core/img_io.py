@@ -34,6 +34,7 @@ from glob import glob
 from lxml import etree
 from pathlib import Path
 from rich import print
+from zarr.storage import LocalStore
 
 from unravel.core.utils import match_files, print_func_name_args_times
 
@@ -470,6 +471,14 @@ def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metada
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
 @print_func_name_args_times()
+def open_zarr_node(root_path, node_path=None):
+    store = LocalStore(str(root_path))
+    try:
+        return zarr.open_array(store=store, path=node_path, mode="r")
+    except Exception:
+        return zarr.open_group(store=store, path=node_path, mode="r")
+
+@print_func_name_args_times()
 def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False,  return_metadata=False, save_metadata=None, xy_res=None, z_res=None, level=None, verbose=False):
     """
     Load a channel and level of a Zarr image, optionally returning voxel resolution.
@@ -554,16 +563,12 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
     ndarray = None
 
     if level_str is not None:
-        level_path = zarr_path if level_str == "." else zarr_path / level_str
-        if not level_path.exists():
+        if level_str != "." and not (zarr_path / level_str).exists():
             raise ValueError(f"Specified level {level_str} does not exist in {zarr_path}")
         log(f"        Loading level {level_str}")
-        try:
-            z = zarr.open_array(str(level_path), mode="r")
-        except Exception:
-            z = zarr.open(str(level_path), mode="r")
+        node_path = None if level_str == "." else level_str
+        z = open_zarr_node(zarr_path, node_path=node_path)
         ndarray = np.asarray(z)
-
     else:
         # Fallback for zarrs without compatible root metadata.
         # First inspect the filesystem instead of calling zarr.open() on the root,
@@ -576,31 +581,16 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
 
         if len(candidate_levels) == 1:
             level_str = candidate_levels[0]
-            level_path = zarr_path / level_str
             log(f"        Root zarr is a group. Auto-detected level {level_str}")
-            try:
-                z = zarr.open_array(str(level_path), mode="r")
-            except Exception:
-                z = zarr.open(str(level_path), mode="r")
+            z = open_zarr_node(zarr_path, node_path=level_str)
             ndarray = np.asarray(z)
 
         else:
             # If no numeric child level was found, try loading the root as an array.
-            try:
-                log("        Trying to load root zarr array directly.")                
-                try:
-                    z = zarr.open_array(str(zarr_path), mode="r")
-                except Exception:
-                    z = zarr.open(str(zarr_path), mode="r")
-                ndarray = np.asarray(z)
-
-            except Exception as e:
-                raise ValueError(
-                    f"Could not load zarr root or infer a child level. "
-                    f"Candidate levels: {candidate_levels or child_names}. Error: {e}"
-                )
-
-    log(f"        Array shape ([C], Z, Y, X): {ndarray.shape}")
+            log("        Trying to load root zarr array/group directly.")
+            z = open_zarr_node(zarr_path, node_path=None)
+            ndarray = np.asarray(z)
+            log(f"        Array shape ([C], Z, Y, X): {ndarray.shape}")
 
     if ndarray.ndim == 4:
         if channel is None:
