@@ -4,6 +4,7 @@
 Use ``gta_download`` (``gta_dl``) from UNRAVEL to download STPT Zarr images from the Allen Genetic Tools Atlas (GTA) at a specified resolution level.
 
 Prereqs:
+    - Install UNRAVEL, cd to its root, run ``pip install -e . ; pip install git+https://github.com/AllenInstitute/abc_atlas_access.git ; pip install aiobotocore==2.4.2``
     - Visit the Genetic Tools Atlas (GTA): https://portal.brain-map.org/genetic-tools/genetic-tools-atlas
     - Filter by 'Data Modality' = 'STPT'
     - Optional: Apply other filters of interest
