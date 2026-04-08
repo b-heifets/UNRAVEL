@@ -150,9 +150,15 @@ def gta_download(exp_id, level, output_dir, force=False, full=False, verbose=Fal
             elif fs.exists(alternate_level_path):
                 zarr_root = alternate_root
             else:
+                # For experiments with missing level, append to CSV: ID, requested_level, available_levels
+                log_file = output_dir / "missing_levels_log.csv"
+                if not log_file.exists():
+                    with open(log_file, "w") as log_file_handle:
+                        log_file_handle.write("experiment_id,requested_level,available_levels\n")
+
                 # List available levels from each root if the level is missing
-                available_primary_levels = []
-                available_alt_levels = []
+                available_primary_levels = []  # Primary levels = subdirectories of primary_root that are digits
+                available_alt_levels = []    # Alternate levels = subdirectories of alternate_root that are digits
                 if fs.exists(primary_root):
                     available_primary_levels = fs.ls(primary_root, detail=False)
                     available_primary_levels = [Path(p).name for p in available_primary_levels if Path(p).name.isdigit()]
@@ -167,8 +173,13 @@ def gta_download(exp_id, level, output_dir, force=False, full=False, verbose=Fal
                     print(f"   ✅ Available levels:")
                     if available_primary_levels:
                         print(f"     • [primary]  {sorted(available_primary_levels)}")
+                        with open(log_file, "a") as log_file_handle:
+                            log_file_handle.write(f"{exp_id},{level},\"{sorted(available_primary_levels)}\"\n")
+    
                     if available_alt_levels:
                         print(f"     • [alternate] {sorted(available_alt_levels)}")
+                        with open(log_file, "a") as log_file_handle:
+                            log_file_handle.write(f"{exp_id},{level},\"{sorted(available_alt_levels)}\"\n")
                 else:
                     print("   ❌ No zarr root found at either path.")
                 return
