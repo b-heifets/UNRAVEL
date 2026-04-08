@@ -558,7 +558,11 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
         if not level_path.exists():
             raise ValueError(f"Specified level {level_str} does not exist in {zarr_path}")
         log(f"        Loading level {level_str}")
-        ndarray = da.from_zarr(str(level_path)).compute()
+        try:
+            z = zarr.open_array(str(level_path), mode="r")
+        except Exception:
+            z = zarr.open(str(level_path), mode="r")
+        ndarray = np.asarray(z)
 
     else:
         # Fallback for zarrs without compatible root metadata.
@@ -574,13 +578,22 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
             level_str = candidate_levels[0]
             level_path = zarr_path / level_str
             log(f"        Root zarr is a group. Auto-detected level {level_str}")
-            ndarray = da.from_zarr(str(level_path)).compute()
+            try:
+                z = zarr.open_array(str(level_path), mode="r")
+            except Exception:
+                z = zarr.open(str(level_path), mode="r")
+            ndarray = np.asarray(z)
 
         else:
             # If no numeric child level was found, try loading the root as an array.
             try:
-                log("        Trying to load root zarr array directly.")
-                ndarray = da.from_zarr(str(zarr_path)).compute()
+                log("        Trying to load root zarr array directly.")                
+                try:
+                    z = zarr.open_array(str(zarr_path), mode="r")
+                except Exception:
+                    z = zarr.open(str(zarr_path), mode="r")
+                ndarray = np.asarray(z)
+
             except Exception as e:
                 raise ValueError(
                     f"Could not load zarr root or infer a child level. "
