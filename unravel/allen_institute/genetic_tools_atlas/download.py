@@ -18,6 +18,11 @@ Note:
     - 4a) Content from the MapMySections submission sheet (link below) can be copied to a CSV (use -c <path/to/csv> -col 'STPT Data File Path').
     - 4b) https://github.com/AllenInstitute/MapMySections/raw/refs/heads/main/MapMySections_EntrantData.xlsx
 
+Notes on missing levels:
+    - Some samples do not have levels 6 or higher. Check the sample count like: ``cat missing_levels_log.csv | wc -l``
+    - Get IDs that have level 7:  ``cat missing_levels_log.csv | grep \'7\' | cut -d ',' -f1 | paste -sd ' ' -``
+    - Download these IDs: gta_dl -l 7 -col 'Image Series ID' -w 40 -v -e <IDs>
+
 Next steps:
     - Convert to TIFFs (one channel per series) using ``io_img_convert`` (``conv``).
     - ``cd GTA_level_3``
