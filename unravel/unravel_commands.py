@@ -923,7 +923,7 @@ def main():
                 "module": "unravel.tabular.unique_values",
                 "description": "Print unique values in specified column(s) of a tabular dataset.",
                 "common": False,
-                "alias": "uniq_vals"
+                "alias": "uniq_vals or vals"
             },
             "tabular_concat": {
                 "module": "unravel.tabular.concat",
