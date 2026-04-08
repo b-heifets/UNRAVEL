@@ -25,7 +25,8 @@ dependencies = [
     "lxml>=4.9.3,<5.0.0",
     "matplotlib>=3.7.1,<4.0.0",
     "nibabel>=5.2.1,<6.0.0",
-    "numpy==1.24.4",  # was "numpy>=1.25.2,<2.0.0" and 1.26.4 would be installed, but 1.25 or 1.26 causes a warning in WSL
+    # "numpy==1.24.4",  # was "numpy>=1.25.2,<2.0.0" and 1.26.4 would be installed, but 1.25 or 1.26 causes a warning in WSL
+    "numpy>=2.4,<2.5",
     "opencv_python>=4.7.0.72,<5.0.0",
     "openpyxl>=3.1.2,<4.0.0",
     "pandas>=1.5.3,<2.0.0",
@@ -38,7 +39,8 @@ dependencies = [
     "statsmodels>=0.14.0,<1.0.0",
     "termcolor>=2.4.0,<3.0.0",
     "tifffile>=2023.8.30,<2024.0.0",
-    "zarr>=3.0.8,<=3.1.6"
+    # "zarr>=2.14.2,<3.0.0" # Was using v2, but needed v3 for loading zarr levels and also needed numpy v2 for that
+    "zarr>=3.1.6,<3.2"
 ]
 
 keywords = ["neuroscience", "image analysis", "light sheet microscopy", "brain mapping", "data analysis", "voxel-wise analysis", "cell density quantification"]
