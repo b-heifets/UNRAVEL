@@ -506,7 +506,7 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
         if verbose:
             print(msg)
 
-    # Load .zattrs
+    # Load .zattrs to extract metadata if available
     zattrs = {}
     zattrs_path = zarr_path / ".zattrs"
     if zattrs_path.exists():
@@ -514,22 +514,23 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
             zattrs = json.load(f)
 
     level_str = str(level) if level is not None else None
-    xy_res = z_res = None
+    extracted_xy_res = xy_res
+    extracted_z_res = z_res
+
     if "multiscales" in zattrs:
         multiscale = zattrs["multiscales"][0]
         axes = multiscale.get("axes", [])
         datasets = multiscale.get("datasets", [])
 
         # Infer highest-res level available on disk
-        level_str = str(level) if level is not None else None
         if level_str is None and datasets:
-            dataset_dirs = [ds["path"] for ds in datasets if ds["path"] == "." or str(ds["path"]).isdigit()]
-            existing_dirs = [p for p in dataset_dirs if (zarr_path / p).exists()]
-            if not level_str and existing_dirs:
+            dataset_dirs = [str(ds["path"]) for ds in datasets]
+            existing_dirs = [p for p in dataset_dirs if (zarr_path / p).exists() or p == "."]
+            if existing_dirs:
                 if "." in existing_dirs:
                     level_str = "."
-                elif existing_dirs:
-                    level_str = str(min(map(int, existing_dirs)))
+                else:
+                    level_str = str(min(existing_dirs, key=lambda x: int(x) if str(x).isdigit() else float("inf")))
 
         # Extract resolution for this level
         dataset = next((d for d in datasets if str(d["path"]) == level_str), None)
@@ -539,34 +540,58 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
                 scale = transforms[0].get("scale", [])
                 if len(scale) == len(axes):
                     res_dict = {axis["name"]: s for axis, s in zip(axes, scale)}
-                    xy_res = res_dict.get("x", None)
-                    z_res = res_dict.get("z", None)
-                    # Convert to micrometers
-                    xy_res = xy_res * 1e3 if xy_res is not None else None
-                    z_res = z_res * 1e3 if z_res is not None else None
+                    if extracted_xy_res is None and res_dict.get("x") is not None:
+                        extracted_xy_res = res_dict["x"] * 1e3
+                    if extracted_z_res is None and res_dict.get("z") is not None:
+                        extracted_z_res = res_dict["z"] * 1e3
 
-    # Load image data
     ndarray = None
-    if level_str: # If a level is specified or found, load that level
-        level_path = zarr_path / level_str
-        if level_path.exists():
-            log(f"        Multi-resolution structure detected: loading level {level_str}")
-            ndarray = da.from_zarr(level_path).compute() # convert dask array to numpy array
-        else:
-            raise ValueError(f"Specified level {level_str} does not exist in {zarr_path}")
-    else: # Load flat format (.zattrs is missing or it does not match expected metadata structure)
-        log("        No compatible .zattrs metadata found. Loading flat zarr format.")
-        zarr_dataset = zarr.open(zarr_path, mode='r')
-        ndarray = np.array(zarr_dataset)
 
-    # Extract channel if specified (e.g., 0 for the first channel, 1 for the second, etc.)
-    log(f"        Array shape ([C], Z, Y, X): {ndarray.shape}")
-    if ndarray.ndim == 4:
-        if channel is not None:
-            log(f"        Extracted channel: {channel}")
-            ndarray = ndarray[channel]
+    if level_str is not None:
+        level_path = zarr_path if level_str == "." else zarr_path / level_str
+        if not level_path.exists():
+            raise ValueError(f"Specified level {level_str} does not exist in {zarr_path}")
+        log(f"        Loading level {level_str}")
+        ndarray = da.from_zarr(str(level_path)).compute()
+
+    else:
+        # New fallback:
+        # 1) try root as array
+        # 2) if root is a group, auto-detect a single child array/group level
+        try:
+            root_obj = zarr.open(str(zarr_path), mode="r")
+        except Exception as e:
+            raise ValueError(f"Could not open zarr root: {e}")
+
+        if hasattr(root_obj, "shape"):
+            log("        Root zarr is an array. Loading root array.")
+            ndarray = np.array(root_obj)
+
         else:
+            child_names = sorted([p.name for p in zarr_path.iterdir() if p.is_dir()])
+            candidate_levels = [name for name in child_names if name.isdigit()]
+
+            if level is not None:
+                candidate_levels = [str(level)]
+
+            if len(candidate_levels) == 1:
+                level_str = candidate_levels[0]
+                level_path = zarr_path / level_str
+                log(f"        Root zarr is a group. Auto-detected level {level_str}")
+                ndarray = da.from_zarr(str(level_path)).compute()
+            else:
+                raise ValueError(
+                    f"Zarr root is a group, not an array. "
+                    f"Please specify a level. Candidate levels: {candidate_levels or child_names}"
+                )
+
+    log(f"        Array shape ([C], Z, Y, X): {ndarray.shape}")
+
+    if ndarray.ndim == 4:
+        if channel is None:
             raise ValueError(f"Multiple channels found: {ndarray.shape[0]} channels. Please specify a channel index.")
+        log(f"        Extracted channel: {channel}")
+        ndarray = ndarray[channel]
 
     if ndarray.ndim != 3:
         raise ValueError(f"Expected 3D array, but got shape {ndarray.shape}")
@@ -576,8 +601,21 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
         ndarray = np.transpose(ndarray, (2, 1, 0))
         log(f"        Array shape after transposing to (X, Y, Z): {ndarray.shape}")
 
-    xy_res, z_res, x_dim, y_dim, z_dim = metadata(zarr_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
-    return return_3D_img(ndarray, return_metadata=return_metadata, return_res=return_res, xy_res=xy_res, z_res=z_res, x_dim=x_dim, y_dim=y_dim, z_dim=z_dim)
+    final_xy_res, final_z_res, x_dim, y_dim, z_dim = metadata(
+        zarr_path, ndarray, return_res, return_metadata,
+        extracted_xy_res, extracted_z_res, save_metadata
+    )
+
+    return return_3D_img(
+        ndarray,
+        return_metadata=return_metadata,
+        return_res=return_res,
+        xy_res=final_xy_res,
+        z_res=final_z_res,
+        x_dim=x_dim,
+        y_dim=y_dim,
+        z_dim=z_dim
+    )
 
 def resolve_path(upstream_path, path_or_pattern, make_parents=True, is_file=True):
     """
