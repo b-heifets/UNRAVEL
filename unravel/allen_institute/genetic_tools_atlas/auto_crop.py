@@ -161,13 +161,12 @@ def main():
             largest_component_bbox_sagittal = stats_sagittal['bounding_boxes'][largest_label_sagittal]
 
             # bbox is (x_slice, y_slice, z_slice)
-            # y_slice, x_slice, _ = largest_component_bbox_coronal
             y_slice, x_slice = largest_component_bbox_coronal
             xmin, xmax = x_slice.start, x_slice.stop
             ymin, ymax = y_slice.start, y_slice.stop
 
             # Extract the sagittal bounding box coordinates
-            y_slice, _, _ = largest_component_bbox_sagittal
+            y_slice, _ = largest_component_bbox_sagittal
             zmin, zmax = y_slice.start, y_slice.stop
 
             # Save the bounding box to a file
