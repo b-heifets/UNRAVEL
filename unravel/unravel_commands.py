@@ -861,6 +861,24 @@ def main():
                 "common": False,
                 "alias": "gta_os"
             },
+            "gta_auto_crop": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.auto_crop",
+                "description": "Automatically crop GTA images to a bounding box around the brain.",
+                "common": False,
+                "alias": "gta_ac"
+            },
+            "gta_bbox_crop": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.bbox_crop",
+                "description": "Crop GTA images to a bounding box (e.g., from gta_auto_crop).",
+                "common": False,
+                "alias": "gta_bc"
+            },
+            "gta_zarr_metadata_summary": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.zarr_metadata_summary",
+                "description": "Summarize metadata from GTA Zarr files.",
+                "common": False,
+                "alias": "gta_z"
+            },
         },
         "MapMySections (MMS)": {
             "mms_soma_ratio": {
