@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Use ``gta_metadata_summary`` (``gta_ms``) from UNRAVEL to download and summarize STPT OME-Zarr multiscale metadata for Allen Genetic Tools Atlas.
+Use ``gta_zarr_metadata_summary`` (``gta_z``) from UNRAVEL to download and summarize STPT OME-Zarr multiscale metadata for Allen Genetic Tools Atlas.
 
 This script supports both metadata layouts seen in GTA STPT data:
     1) Zarr v2-style root metadata in .zattrs
@@ -18,8 +18,7 @@ Example columns:
 
 Usage:
 ------
-    gta_ms [-e <exp_id1> <exp_id2> ...] [-f <file_with_exp_ids>] [-a] [-o <output_csv>] [-w <num_workers>] [--metadata-dir <dir_to_cache_metadata>] [--force] [-v]
-    
+    gta_z [-e <exp_id1> <exp_id2> ...] [-f <file_with_exp_ids>] [-a] [-o <output_csv>] [-w <num_workers>] [--metadata-dir <dir_to_cache_metadata>] [--force] [-v]
 """
 
 import argparse
