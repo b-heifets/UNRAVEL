@@ -120,7 +120,7 @@ def cluster_index(adj_p_val_img_path, min_size, threshold, output_index):
         '-t', str(threshold),
         '--oindex=' + str(output_index),
         '--minextent=' + str(min_size),
-        'connectivity=6'
+        '--connectivity=6'
     ]
     result = subprocess.run(command, capture_output=True, text=True)
     if result.returncode != 0:
