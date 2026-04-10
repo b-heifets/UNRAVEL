@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_validation`` (``cv``) from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify validation metrics (e.g., cell density, label density, and mean intensity) in each cluster.
+Use ``cstats_validation`` (``cv``) from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify validation metrics (e.g., cell density, label density, and mean intensity) in each cluster (and optionally in atlas subregions within each cluster).
 
 Prereqs:
     - Create cluster maps using ``clusters`` or ``cstats_fdr`` (note, the cluster index is reversed so that the largest cluster is 1)
@@ -28,7 +28,7 @@ Next steps:
 
 Usage:
 ------
-    cstats_validation -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s <rel_path/seg_img.nii.gz> [-me cell_density | label_density | mean_in_cluster | mean_in_seg_in_cluster] [-o <rel_path/output.csv>] [-c all or list of clusters (e.g., 1 3 4)] [-n <rel_path/native_image.zarr or .nii.gz>] [-fri <fixed_reg_input_for_reg>] [-inp nearestNeighbor or multiLabel] [-ro <reg_outputs_dir>] [-r <reg_res_in_microns>] [-md <metadata.txt>] [-zo <zoom_order>] [-pad <pad_percent_from_reg>] [--miracl] [-cc <connectivity_for_cell_counts>] [-d <dirs>] [-p <pattern>] [-v]
+    cstats_validation -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s <rel_path/seg_img.nii.gz> [-me cell_density | label_density | mean_in_cluster | mean_in_seg_in_cluster] [-o <rel_path/output.csv>] [-c all or list of clusters (e.g., 1 3 4)] [-n <rel_path/native_image.zarr or .nii.gz>] [-fri <fixed_reg_input_for_reg>] [-inp nearestNeighbor or multiLabel] [-ro <reg_outputs_dir>] [-r <reg_res_in_microns>] [-md <metadata.txt>] [-zo <zoom_order>] [-pad <pad_percent_from_reg>] [-at <rel_path/native_atlas_in_tissue_space.nii.gz>] [-csv CCFv3-2020_info.csv] [-cc <connected_component_connectivity>] [-mi] [-d list of paths] [-p sample??] [-v]    
 """
 
 
@@ -62,8 +62,10 @@ def parse_args():
     opts.add_argument('-me', '--metric', help='Metric to measure: cell_density (default), label_density, mean_in_cluster, or mean_in_seg_in_cluster', default='cell_density', choices=['cell_density', 'label_density', 'mean_in_cluster', 'mean_in_seg_in_cluster'], action=SM)
     opts.add_argument('-i', '--intensity_img', help='rel_path/intensity image used for mean_in_cluster or mean_in_seg_in_cluster (e.g., .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr, or dir of tifs)', default=None, action=SM)
     opts.add_argument('-ch', '--channel', help='Channel number for .czi images. Default: 0', default=0, type=int, action=SM)
-    opts.add_argument('-o', '--output', help='rel_path/clusters_info.csv. Default: clusters/<cluster_index_dir>/<metric>_data.csv', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='rel_path/clusters_info.csv. Default: clusters/<cluster_index_dir>/<metric>_data.csv or <metric>_by_subregion_data.csv when --atlas_tissue is used', default=None, action=SM)
     opts.add_argument('-c', '--clusters', help='Clusters to process: all or list of clusters (e.g., 1 3 4). Default: Processes all clusters', nargs='*', default='all', action=SM)
+    opts.add_argument('-at', '--atlas_tissue', help='rel_path/native atlas in tissue space (e.g., native/native_atlas_CCFv3_2020_30um.nii.gz from to_native). When provided, metrics are measured per atlas subregion within each cluster.', default=None, action=SM)
+    opts.add_argument('-csv', '--info_csv_path', help='CSV name or path/name.csv for regional info with -at. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
 
     # Optional to_native() args
     opts_to_native = parser.add_argument_group('Optional args for to_native()')
@@ -172,6 +174,54 @@ def count_cells(seg_in_cluster, connectivity=6):
 
     return n
 
+def load_ccfv3_lookup(info_csv_path):
+    """Load region lookup from a built-in or user-provided CCFv3 info CSV.
+
+    Returns:
+        dict mapping region ID -> {'abbreviation': ..., 'region_name': ...}
+
+    Notes:
+        - Tries both structure_ID and lowered_ID.
+        - structure_ID takes precedence if both exist.
+    """
+    columns_to_load = ['structure_ID', 'lowered_ID', 'abbreviation', 'full_structure_name']
+
+    if info_csv_path in ['CCFv3-2017_info.csv', 'CCFv3-2020_info.csv']:
+        info_df = pd.read_csv(
+            Path(__file__).parent.parent / 'core' / 'csvs' / info_csv_path,
+            usecols=columns_to_load
+        )
+    else:
+        info_df = pd.read_csv(info_csv_path, usecols=columns_to_load)
+
+    info_df['structure_ID'] = pd.to_numeric(info_df['structure_ID'], errors='coerce')
+    info_df['lowered_ID'] = pd.to_numeric(info_df['lowered_ID'], errors='coerce')
+
+    lookup = {}
+
+    # Prefer structure_ID
+    for _, row in info_df.iterrows():
+        entry = {
+            'abbreviation': row['abbreviation'] if pd.notna(row['abbreviation']) else np.nan,
+            'region_name': row['full_structure_name'] if pd.notna(row['full_structure_name']) else np.nan,
+        }
+
+        if pd.notna(row['structure_ID']):
+            lookup[int(row['structure_ID'])] = entry
+
+    # Add lowered_ID only if that ID is not already present
+    for _, row in info_df.iterrows():
+        if pd.notna(row['lowered_ID']):
+            lookup.setdefault(
+                int(row['lowered_ID']),
+                {
+                    'abbreviation': row['abbreviation'] if pd.notna(row['abbreviation']) else np.nan,
+                    'region_name': row['full_structure_name'] if pd.notna(row['full_structure_name']) else np.nan,
+                }
+            )
+
+    return lookup
+
 def metric_in_cluster(cluster_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res,
                       connectivity=6, metric='cell_density', intensity_cropped=None):
     """Measure a validation metric in the current cluster.
@@ -194,11 +244,11 @@ def metric_in_cluster(cluster_data, native_cluster_index_cropped, seg_cropped, x
     # Crop segmentation image for the current cluster bbox
     seg_in_cluster = seg_cropped[xmin:xmax, ymin:ymax, zmin:zmax].copy()
 
-    # Zero out segmented voxels outside the current cluster
-    seg_in_cluster[cropped_cluster == 0] = 0
+    # Restrict to the current cluster only
+    cluster_mask = cropped_cluster == cluster_ID
+    seg_in_cluster[~cluster_mask] = 0
 
-    # Cluster mask and volume
-    cluster_mask = cropped_cluster > 0
+    # Cluster volume
     cluster_voxel_count = np.count_nonzero(cluster_mask)
     cluster_volume_in_cubic_mm = ((xy_res**2) * z_res) * cluster_voxel_count / 1e9
 
@@ -233,8 +283,11 @@ def metric_in_cluster(cluster_data, native_cluster_index_cropped, seg_cropped, x
         return cluster_ID, voxel_count, cluster_volume_in_cubic_mm, mean_intensity, xmin, xmax, ymin, ymax, zmin, zmax
 
     else:
-        raise ValueError(f"Unsupported metric: {metric} (Use -me with 'cell_density', 'label_density', 'mean_in_cluster', or 'mean_in_seg_in_cluster')")
-
+        raise ValueError(
+            f"Unsupported metric: {metric} "
+            f"(Use -me with 'cell_density', 'label_density', 'mean_in_cluster', or 'mean_in_seg_in_cluster')"
+        )
+    
 @print_func_name_args_times()
 def metric_in_cluster_parallel(cluster_bbox_results, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity=6, metric='cell_density', intensity_cropped=None):
     """Measure a validation metric in each cluster in parallel. Return list of results."""
@@ -252,6 +305,154 @@ def metric_in_cluster_parallel(cluster_bbox_results, native_cluster_index_croppe
                 print(f'Cluster {cluster_ID} generated an exception: {exc}')
     return results
 
+def metric_in_subregions_of_cluster(cluster_data, native_cluster_index_cropped, atlas_cropped, seg_cropped,
+                                    xy_res, z_res, connectivity=6, metric='cell_density',
+                                    intensity_cropped=None, region_lookup=None):
+    """Measure a metric in each atlas subregion within the current cluster.
+
+    Returns:
+        list of dicts, one row per (cluster_ID, region_ID)
+    """
+    cluster_ID, xmin, xmax, ymin, ymax, zmin, zmax = cluster_data
+
+    cropped_cluster = native_cluster_index_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
+    cluster_mask = cropped_cluster == cluster_ID
+
+    seg_in_cluster = seg_cropped[xmin:xmax, ymin:ymax, zmin:zmax].copy()
+    seg_in_cluster[~cluster_mask] = 0
+
+    atlas_in_cluster = atlas_cropped[xmin:xmax, ymin:ymax, zmin:zmax].copy()
+    atlas_in_cluster[~cluster_mask] = 0
+
+    intensity_in_cluster = None
+    if metric in ["mean_in_cluster", "mean_in_seg_in_cluster"]:
+        if intensity_cropped is None:
+            raise ValueError("intensity_cropped is required for mean-based metrics")
+        intensity_in_cluster = intensity_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
+
+    cluster_voxel_count = np.count_nonzero(cluster_mask)
+    cluster_volume_in_cubic_mm = ((xy_res**2) * z_res) * cluster_voxel_count / 1e9
+
+    region_IDs = np.unique(atlas_in_cluster)
+    region_IDs = region_IDs[region_IDs > 0]
+
+    rows = []
+
+    for region_ID in region_IDs:
+        region_mask = atlas_in_cluster == region_ID
+        region_voxel_count = np.count_nonzero(region_mask)
+        if region_voxel_count == 0:
+            continue
+
+        subregion_volume_in_cubic_mm = ((xy_res**2) * z_res) * region_voxel_count / 1e9
+
+        if metric == "cell_density":
+            seg_in_region = seg_in_cluster.copy()
+            seg_in_region[~region_mask] = 0
+            primary_value = count_cells(seg_in_region, connectivity=connectivity)
+            metric_value = primary_value / subregion_volume_in_cubic_mm if subregion_volume_in_cubic_mm > 0 else np.nan
+            primary_header = "cell_count"
+            metric_header = "cell_density"
+            value_type = "density"
+            support_type = "cell_count"
+            aggregation_method = "recompute_from_support_and_volume"
+
+        elif metric == "label_density":
+            seg_voxel_count = np.count_nonzero(seg_in_cluster[region_mask])
+            primary_value = ((xy_res**2) * z_res) * seg_voxel_count / 1e9
+            metric_value = (primary_value / subregion_volume_in_cubic_mm * 100) if subregion_volume_in_cubic_mm > 0 else np.nan
+            primary_header = "label_volume"
+            metric_header = "label_density"
+            value_type = "density"
+            support_type = "label_volume"
+            aggregation_method = "recompute_from_support_and_volume"
+
+        elif metric == "mean_in_cluster":
+            primary_value = region_voxel_count
+            metric_value = float(intensity_in_cluster[region_mask].mean()) if primary_value > 0 else np.nan
+            primary_header = "subregion_voxel_count"
+            metric_header = "mean_intensity"
+            value_type = "mean_intensity"
+            support_type = "subregion_voxel_count"
+            aggregation_method = "weighted_mean_by_support"
+
+        elif metric == "mean_in_seg_in_cluster":
+            seg_region_mask = region_mask & (seg_in_cluster > 0)
+            primary_value = np.count_nonzero(seg_region_mask)
+            metric_value = float(intensity_in_cluster[seg_region_mask].mean()) if primary_value > 0 else np.nan
+            primary_header = "seg_voxel_count"
+            metric_header = "mean_intensity"
+            value_type = "mean_intensity"
+            support_type = "seg_voxel_count"
+            aggregation_method = "weighted_mean_by_support"
+
+        else:
+            raise ValueError(f"Unsupported metric: {metric}")
+
+        row = {
+            "cluster_ID": cluster_ID,
+            "region_ID": int(region_ID),
+            "metric": metric,
+            "value": metric_value,
+            "value_type": value_type,
+            "support": primary_value,
+            "support_type": support_type,
+            "aggregation_method": aggregation_method,
+            "cluster_volume": cluster_volume_in_cubic_mm,
+            "subregion_volume": subregion_volume_in_cubic_mm,
+            primary_header: primary_value,
+            metric_header: metric_value,
+            "xmin": xmin, "xmax": xmax,
+            "ymin": ymin, "ymax": ymax,
+            "zmin": zmin, "zmax": zmax
+        }
+
+        if region_lookup is not None:
+            region_info = region_lookup.get(int(region_ID), {})
+            row["abbreviation"] = region_info.get("abbreviation", np.nan)
+            row["region_name"] = region_info.get("region_name", np.nan)
+
+        rows.append(row)
+
+    return rows
+
+@print_func_name_args_times()
+def metric_in_subregions_of_cluster_parallel(cluster_bbox_results, native_cluster_index_cropped, atlas_cropped,
+                                             seg_cropped, xy_res, z_res, connectivity=6,
+                                             metric='cell_density', intensity_cropped=None,
+                                             region_lookup=None):
+    """Measure a metric in atlas subregions within each cluster, in parallel."""
+    results = []
+    num_cores = os.cpu_count()
+    workers = min(num_cores, len(cluster_bbox_results))
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
+        future_to_cluster = {
+            executor.submit(
+                metric_in_subregions_of_cluster,
+                cluster_data,
+                native_cluster_index_cropped,
+                atlas_cropped,
+                seg_cropped,
+                xy_res,
+                z_res,
+                connectivity,
+                metric,
+                intensity_cropped,
+                region_lookup
+            ): cluster_data[0]
+            for cluster_data in cluster_bbox_results
+        }
+
+        for future in concurrent.futures.as_completed(future_to_cluster):
+            cluster_ID = future_to_cluster[future]
+            try:
+                results.extend(future.result())
+            except Exception as exc:
+                print(f'Cluster {cluster_ID} generated an exception: {exc}')
+
+    return results
+
 
 @log_command
 def main():
@@ -261,6 +462,7 @@ def main():
     verbose_start_msg()
 
     sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
+    region_lookup = load_ccfv3_lookup(args.info_csv_path) if args.atlas_tissue else None
 
     progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
@@ -270,8 +472,17 @@ def main():
             cluster_index_dir = str(Path(args.moving_img).name).replace(".nii.gz", "").replace("_rev_cluster_index_", "_")
             if args.output:
                 output_path = resolve_path(sample_path, args.output)
-            else: 
-                output_path = resolve_path(sample_path, Path("clusters", cluster_index_dir, f"{args.metric}_data.csv"), make_parents=True)
+            else:
+                default_name = (
+                    f"{args.metric}_by_subregion_data.csv"
+                    if args.atlas_tissue else
+                    f"{args.metric}_data.csv"
+                )
+                output_path = resolve_path(
+                    sample_path,
+                    Path("clusters", cluster_index_dir, default_name),
+                    make_parents=True
+                )
 
             # Skip if the chosen output exists
             if output_path.exists():
@@ -327,6 +538,29 @@ def main():
                 continue
             seg_cropped = load_nii_subset(seg_path, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax)
 
+            # Load the atlas image and crop it to the outer bounds of all clusters if --atlas_tissue is provided
+            atlas_cropped = None
+            if args.atlas_tissue:
+                atlas_path = next(sample_path.glob(str(args.atlas_tissue)), None)
+                if atlas_path is None:
+                    print(f"\n    [red bold]No files match the pattern {args.atlas_tissue} in {sample_path}\n")
+                    progress.update(task_id, advance=1)
+                    continue
+
+                atlas_img = load_3D_img(atlas_path, verbose=args.verbose)
+                atlas_cropped = atlas_img[
+                    outer_xmin:outer_xmax,
+                    outer_ymin:outer_ymax,
+                    outer_zmin:outer_zmax
+                ]
+                del atlas_img
+
+                if atlas_cropped.shape != seg_cropped.shape:
+                    raise ValueError(
+                        f"Atlas image shape {atlas_cropped.shape} does not match segmentation shape {seg_cropped.shape} "
+                        f"after cropping for {sample_path.name}."
+                    )
+
             # Load the intensity image and crop it to the outer bounds of all clusters if needed for the chosen metric
             intensity_cropped = None
             if args.metric in ["mean_in_cluster", "mean_in_seg_in_cluster"]:
@@ -354,66 +588,97 @@ def main():
                     )
 
             # Process each cluster to count cells or measure volume, in parallel
-            cluster_data_results = metric_in_cluster_parallel(cluster_bbox_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, args.connect, args.metric, intensity_cropped)
+            if args.atlas_tissue:
+                data_list = metric_in_subregions_of_cluster_parallel(
+                    cluster_bbox_data,
+                    native_cluster_index_cropped,
+                    atlas_cropped,
+                    seg_cropped,
+                    xy_res,
+                    z_res,
+                    args.connect,
+                    args.metric,
+                    intensity_cropped,
+                    region_lookup
+                )
 
-            # Process cluster_data_results to save to CSV or perform further analysis
-            data_list = []
-            for result in cluster_data_results:
-                cluster_ID, primary_value, cluster_volume_in_cubic_mm, metric_value, xmin, xmax, ymin, ymax, zmin, zmax = result
-                
-                if args.metric == "cell_density":
-                    primary_header, metric_header = "cell_count", "cell_density"
-                    value_type = "density"
-                    support_type = "cell_count"
-                    aggregation_method = "recompute_from_support_and_volume"
+                if not data_list:
+                    print(f"\n    [yellow]No atlas subregions overlapped the selected clusters in {sample_path.name}\n")
+                    progress.update(task_id, advance=1)
+                    continue
 
-                elif args.metric == "label_density":
-                    primary_header, metric_header = "label_volume", "label_density"
-                    value_type = "density"
-                    support_type = "label_volume"
-                    aggregation_method = "recompute_from_support_and_volume"
+                for row in data_list:
+                    row["sample"] = sample_path.name
 
-                elif args.metric == "mean_in_cluster":
-                    primary_header, metric_header = "cluster_voxel_count", "mean_intensity"
-                    value_type = "mean_intensity"
-                    support_type = "cluster_voxel_count"
-                    aggregation_method = "weighted_mean_by_support"
+                df = pd.DataFrame(data_list)
+                df_sorted = df.sort_values(by=['cluster_ID', 'region_ID'], ascending=True)
 
-                elif args.metric == "mean_in_seg_in_cluster":
-                    primary_header, metric_header = "seg_voxel_count", "mean_intensity"
-                    value_type = "mean_intensity"
-                    support_type = "seg_voxel_count"
-                    aggregation_method = "weighted_mean_by_support"
+            else:
+                # Original per-cluster behavior
+                cluster_data_results = metric_in_cluster_parallel(
+                    cluster_bbox_data,
+                    native_cluster_index_cropped,
+                    seg_cropped,
+                    xy_res,
+                    z_res,
+                    args.connect,
+                    args.metric,
+                    intensity_cropped
+                )
 
-                else:
-                    raise ValueError(f"Unsupported metric: {args.metric}")
+                data_list = []
+                for result in cluster_data_results:
+                    cluster_ID, primary_value, cluster_volume_in_cubic_mm, metric_value, xmin, xmax, ymin, ymax, zmin, zmax = result
 
-                data = {
-                    "sample": sample_path.name,
-                    "cluster_ID": cluster_ID,
-                    "metric": args.metric,
-                    "value": metric_value,
-                    "value_type": value_type,
-                    "support": primary_value,
-                    "support_type": support_type,
-                    "aggregation_method": aggregation_method,
-                    "cluster_volume": cluster_volume_in_cubic_mm,
-                    primary_header: primary_value,
-                    metric_header: metric_value,
-                    "xmin": xmin, "xmax": xmax,
-                    "ymin": ymin, "ymax": ymax,
-                    "zmin": zmin, "zmax": zmax
-                }
+                    if args.metric == "cell_density":
+                        primary_header, metric_header = "cell_count", "cell_density"
+                        value_type = "density"
+                        support_type = "cell_count"
+                        aggregation_method = "recompute_from_support_and_volume"
 
-                data_list.append(data)
-            
-            # Create a DataFrame from the list of data dictionaries
-            df = pd.DataFrame(data_list)
+                    elif args.metric == "label_density":
+                        primary_header, metric_header = "label_volume", "label_density"
+                        value_type = "density"
+                        support_type = "label_volume"
+                        aggregation_method = "recompute_from_support_and_volume"
 
-            # Sort the DataFrame by 'cluster_ID' in ascending order
-            df_sorted = df.sort_values(by='cluster_ID', ascending=True)
+                    elif args.metric == "mean_in_cluster":
+                        primary_header, metric_header = "cluster_voxel_count", "mean_intensity"
+                        value_type = "mean_intensity"
+                        support_type = "cluster_voxel_count"
+                        aggregation_method = "weighted_mean_by_support"
 
-            # Save the sorted DataFrame to the CSV file
+                    elif args.metric == "mean_in_seg_in_cluster":
+                        primary_header, metric_header = "seg_voxel_count", "mean_intensity"
+                        value_type = "mean_intensity"
+                        support_type = "seg_voxel_count"
+                        aggregation_method = "weighted_mean_by_support"
+
+                    else:
+                        raise ValueError(f"Unsupported metric: {args.metric}")
+
+                    data = {
+                        "sample": sample_path.name,
+                        "cluster_ID": cluster_ID,
+                        "metric": args.metric,
+                        "value": metric_value,
+                        "value_type": value_type,
+                        "support": primary_value,
+                        "support_type": support_type,
+                        "aggregation_method": aggregation_method,
+                        "cluster_volume": cluster_volume_in_cubic_mm,
+                        primary_header: primary_value,
+                        metric_header: metric_value,
+                        "xmin": xmin, "xmax": xmax,
+                        "ymin": ymin, "ymax": ymax,
+                        "zmin": zmin, "zmax": zmax
+                    }
+
+                    data_list.append(data)
+
+                df = pd.DataFrame(data_list)
+                df_sorted = df.sort_values(by='cluster_ID', ascending=True)
+
             df_sorted.to_csv(output_path, index=False)
             print(f"\n    Output: [default bold]{output_path}")
 
