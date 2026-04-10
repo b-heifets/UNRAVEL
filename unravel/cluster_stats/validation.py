@@ -4,8 +4,8 @@
 Use ``cstats_validation`` (``cv``) from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify validation metrics (e.g., cell density, label density, and mean intensity) in each cluster.
 
 Prereqs:
+    - Create cluster maps using ``clusters`` or ``cstats_fdr`` (note, the cluster index is reversed so that the largest cluster is 1)
     - Optional: ``cstats_fdr_range`` to determine the q value thresholds yielding significant clusters
-    - ``cstats_fdr`` to generate a cluster index in atlas space (a map of clusters of significant voxels)
     - ``cstats_mirror_indices`` to recursively mirror the cluster indices to the other hemisphere (if bilateral data was combined and processed w/ a hemispheric mask).
     - ``seg_ilastik`` to generate a segmentation mask in tissue space (e.g., to label c-Fos+ cells)
 
