@@ -49,12 +49,17 @@ def main():
     verbose_start_msg()
 
     output = args.output if args.output else args.input.replace('.nii.gz', '_rev_cluster_index.nii.gz')
+    Path(output).parent.mkdir(parents=True, exist_ok=True)
 
     # Create the cluster index
     cluster_info = cluster_index(args.input, args.min_size, args.threshold, output)
 
     # Save cluster info
-    with open(Path(args.input).parent / f"{str(Path(args.input).name).replace('.nii.gz', '_cluster_info.txt')}", 'w') as f:
+    if str(output).endswith('_rev_cluster_index.nii.gz'):
+        cluster_info_path = str(output).replace('_rev_cluster_index.nii.gz', '_cluster_info.txt')
+    else:
+        cluster_info_path = str(output).replace('.nii.gz', '_cluster_info.txt')
+    with open(cluster_info_path, 'w') as f:
         f.write(cluster_info)
 
     # Load the cluster index and convert to an ndarray
