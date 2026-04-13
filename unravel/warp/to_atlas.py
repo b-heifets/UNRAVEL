@@ -132,6 +132,7 @@ def main():
             output.parent.mkdir(exist_ok=True, parents=True)
             if output.exists():
                 print(f"\n\n    {output} already exists. Skipping.\n")
+                progress.update(task_id, advance=1)
                 continue
 
             # Load resolutions from metadata
