@@ -212,7 +212,14 @@ def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, re
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
-    
+
+def load_single_tif(tif_file):
+    """Load a single .tif file using OpenCV and return the ndarray."""
+    img = cv2.imread(str(tif_file), cv2.IMREAD_UNCHANGED)
+    if img is None:
+        raise ValueError(f"Failed to load image: {tif_file}")
+    return img
+
 @print_func_name_args_times()
 def load_tifs(tif_dir_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None, parallel_loading=True):
     """
@@ -246,12 +253,6 @@ def load_tifs(tif_dir_path, desired_axis_order="xyz", return_res=False, return_m
     tuple, optional
         If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
     """
-    def load_single_tif(tif_file):
-        """Load a single .tif file using OpenCV and return the ndarray."""
-        img = cv2.imread(str(tif_file), cv2.IMREAD_UNCHANGED)
-        if img is None:
-            raise ValueError(f"Failed to load image: {tif_file}")
-        return img
     tif_files = match_files('*.tif', base_path=tif_dir_path)
     if parallel_loading:
         with ThreadPoolExecutor() as executor:
