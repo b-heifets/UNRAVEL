@@ -560,7 +560,7 @@ def main():
         },
         "Image tools": {
             "img_math": {
-                "module": "unravel.image_tools.math",
+                "module": "unravel.image_tools.img_math",
                 "description": "Perform mathematical operations on 3D images.",
                 "common": True,
                 "alias": "math"

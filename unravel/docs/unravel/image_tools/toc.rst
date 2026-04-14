@@ -4,7 +4,7 @@ unravel.image_tools package
 .. toctree::
    :maxdepth: 3
 
-   math
+   img_math
    avg
    bbox
    extend
