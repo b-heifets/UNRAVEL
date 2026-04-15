@@ -22,6 +22,7 @@ unravel.image_tools package
    smooth
    invert
    dilate
+   means_in_mask
    atlas/toc
 
 .. automodule:: unravel.image_tools

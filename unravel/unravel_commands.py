@@ -666,7 +666,13 @@ def main():
                 "description": "Dilate a binary mask in a NIfTI image.",
                 "common": False,
                 "alias": "dilate"
-            }
+            },
+            "img_means_in_mask": {
+                "module": "unravel.image_tools.means_in_mask",
+                "description": "Calculate the mean intensity for each image within a mask.",
+                "common": False,
+                "alias": "means_in_mask"
+            },
         },
         "Atlas tools": {
             "atlas_relabel": {
