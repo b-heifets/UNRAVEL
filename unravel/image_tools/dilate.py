@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_dilate`` (``dl``) from UNRAVEL to dilate a binary mask in a NIfTI image.
+Use ``img_dilate`` (``dilate``) from UNRAVEL to dilate a binary mask in a NIfTI image.
 
 Usage: 
 ------

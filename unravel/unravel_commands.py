@@ -660,6 +660,12 @@ def main():
                 "description": "Invert image intensities (for uint8 and uint16 images).",
                 "common": False,
                 "alias": "invert"
+            },
+            "img_dilate": {
+                "module": "unravel.image_tools.dilate",
+                "description": "Dilate a binary mask in a NIfTI image.",
+                "common": False,
+                "alias": "dilate"
             }
         },
         "Atlas tools": {

@@ -21,6 +21,7 @@ unravel.image_tools package
    filter_objects_by_size
    smooth
    invert
+   dilate
    atlas/toc
 
 .. automodule:: unravel.image_tools
