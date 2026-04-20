@@ -47,6 +47,7 @@ def parse_args():
     opts.add_argument('-vd', '--vstats_path', help='path/vstats_dir (the dir ``vstats`` was run from) to copy p val, info, and index files if provided', default=None, action=SM)
     opts.add_argument('-td', '--target_dir', help='path/dir to copy results. If omitted, copy data to the cwd', default=None, action=SM)
     opts.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from ``cstats_fdr``). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
+    opts.add_argument('-bsr', '--by_subregion', help='Copy <metric>_by_subregion_data.csv instead of <metric>_data.csv.', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
@@ -188,7 +189,7 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             import sys; sys.exit()
 
 @print_func_name_args_times()
-def organize_validation_data(sample_path, clusters_path, validation_dir_pattern, metric, target_dir, vstats_path, p_val_txt):
+def organize_validation_data(sample_path, clusters_path, validation_dir_pattern, metric, target_dir, vstats_path, p_val_txt, by_subregion=False):
     """Copy the cluster validation, p value, cluster info, and rev_cluster_index files to the target directory.
     
     Args:
@@ -199,7 +200,9 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
         - target_dir (Path): the path to the target directory
         - vstats_path (Path): the path to the vstats directory
         - p_val_txt (str): the name of the file with the corrected p value threshold
-        - cluster_idx (str): the name of the rev_cluster_index file"""
+        - cluster_idx (str): the name of the rev_cluster_index file
+        - by_subregion (bool): whether to copy <metric>_by_subregion_data.csv instead of <metric>_data.csv
+    """
 
     validation_dirs = []
     for pat in validation_dir_pattern:
@@ -213,15 +216,14 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
         if validation_dir.is_dir():
             dest_path = target_dir / validation_dir.name
             dest_path.mkdir(parents=True, exist_ok=True)
-            src_csv = validation_dir / f'{metric}_data.csv'
+            suffix = '_by_subregion_data.csv' if by_subregion else '_data.csv'
+            src_csv = validation_dir / f'{metric}{suffix}'
 
             if src_csv.exists():
-                dest_csv = dest_path / f'{sample_path.name}__{metric}_data__{validation_dir.name}.csv'
-                
-                if not dest_csv.exists(): 
+                dest_csv = dest_path / f'{sample_path.name}__{metric}{suffix[:-4]}__{validation_dir.name}.csv'
+                if not dest_csv.exists():
                     cp(src=src_csv, dest=dest_csv)
-
-            else: 
+            else:
                 print(f'\n    [red]The expected csv ({src_csv}) does not exist\n')
 
             if vstats_path is not None:
@@ -243,7 +245,7 @@ def main():
 
         clusters_path = sample_path / 'clusters'
         if clusters_path.exists():
-            organize_validation_data(sample_path=sample_path, clusters_path=clusters_path, validation_dir_pattern=args.cluster_val_dirs, metric=args.metric, target_dir=target_dir, vstats_path=args.vstats_path, p_val_txt=args.p_val_txt)
+            organize_validation_data(sample_path=sample_path, clusters_path=clusters_path, validation_dir_pattern=args.cluster_val_dirs, metric=args.metric, target_dir=target_dir, vstats_path=args.vstats_path, p_val_txt=args.p_val_txt, by_subregion=args.by_subregion)
 
     verbose_end_msg()
 
