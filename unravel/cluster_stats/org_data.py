@@ -12,7 +12,9 @@ Inputs:
     - Optional: path/vstats to copy p val, info, and index files
 
 Outputs:
-    - target_dir/sample??__<metric>_data__<cluster_validation_results_`*`>.csv
+    - target_dir/<cluster_validation_results_* >/sample??__<metric>_data__<cluster_validation_results_* >.csv
+    - or, with --by_subregion:
+      target_dir/<cluster_validation_results_* >/sample??__<metric>_by_subregion_data__<cluster_validation_results_* >.csv
 
 Notes:
     - If the cluster_validation_results_`*` directory name contains "_gt_" or "_lt_", the script will attempt to replace it with "_v_" to match the vstats directory.
@@ -200,7 +202,6 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
         - target_dir (Path): the path to the target directory
         - vstats_path (Path): the path to the vstats directory
         - p_val_txt (str): the name of the file with the corrected p value threshold
-        - cluster_idx (str): the name of the rev_cluster_index file
         - by_subregion (bool): whether to copy <metric>_by_subregion_data.csv instead of <metric>_data.csv
     """
 
