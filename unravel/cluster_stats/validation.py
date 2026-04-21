@@ -66,6 +66,7 @@ def parse_args():
     opts.add_argument('-c', '--clusters', help='Clusters to process: all or list of clusters (e.g., 1 3 4). Default: Processes all clusters', nargs='*', default='all', action=SM)
     opts.add_argument('-at', '--atlas_tissue', help='rel_path/native atlas in tissue space (e.g., native/native_atlas_CCFv3_2020_30um.nii.gz from to_native). When provided, metrics are measured per atlas subregion within each cluster.', default=None, action=SM)
     opts.add_argument('-csv', '--info_csv_path', help='CSV name or path/name.csv for regional info with -at. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
+    opts.add_argument('-idc', '--region_id_col', help="Column in info_csv_path to use for region IDs with --atlas_tissue. Default: lowered_ID", default='lowered_ID', choices=['lowered_ID', 'structure_ID'], action=SM)
 
     # Optional to_native() args
     opts_to_native = parser.add_argument_group('Optional args for to_native()')
@@ -174,17 +175,26 @@ def count_cells(seg_in_cluster, connectivity=6):
 
     return n
 
-def load_ccfv3_lookup(info_csv_path):
+def load_ccfv3_lookup(info_csv_path, region_id_col='lowered_ID'):
     """Load region lookup from a built-in or user-provided CCFv3 info CSV.
 
-    Returns:
-        dict mapping region ID -> {'abbreviation': ..., 'region_name': ...}
+    Parameters
+    ----------
+    info_csv_path : str or Path
+        Path to a custom info CSV, or one of the built-in names
+        ('CCFv3-2017_info.csv', 'CCFv3-2020_info.csv').
+    region_id_col : str, optional
+        Column to use as the region-ID key. Default: 'lowered_ID'.
+        Common options:
+            - 'lowered_ID'
+            - 'structure_ID'
 
-    Notes:
-        - Tries both structure_ID and lowered_ID.
-        - structure_ID takes precedence if both exist.
+    Returns
+    -------
+    dict
+        Mapping: region ID -> {'abbreviation': ..., 'region_name': ...}
     """
-    columns_to_load = ['structure_ID', 'lowered_ID', 'abbreviation', 'full_structure_name']
+    columns_to_load = [region_id_col, 'abbreviation', 'full_structure_name']
 
     if info_csv_path in ['CCFv3-2017_info.csv', 'CCFv3-2020_info.csv']:
         info_df = pd.read_csv(
@@ -194,31 +204,17 @@ def load_ccfv3_lookup(info_csv_path):
     else:
         info_df = pd.read_csv(info_csv_path, usecols=columns_to_load)
 
-    info_df['structure_ID'] = pd.to_numeric(info_df['structure_ID'], errors='coerce')
-    info_df['lowered_ID'] = pd.to_numeric(info_df['lowered_ID'], errors='coerce')
+    info_df[region_id_col] = pd.to_numeric(info_df[region_id_col], errors='coerce')
 
     lookup = {}
-
-    # Prefer structure_ID
     for _, row in info_df.iterrows():
-        entry = {
+        if pd.isna(row[region_id_col]):
+            continue
+
+        lookup[int(row[region_id_col])] = {
             'abbreviation': row['abbreviation'] if pd.notna(row['abbreviation']) else np.nan,
             'region_name': row['full_structure_name'] if pd.notna(row['full_structure_name']) else np.nan,
         }
-
-        if pd.notna(row['structure_ID']):
-            lookup[int(row['structure_ID'])] = entry
-
-    # Add lowered_ID only if that ID is not already present
-    for _, row in info_df.iterrows():
-        if pd.notna(row['lowered_ID']):
-            lookup.setdefault(
-                int(row['lowered_ID']),
-                {
-                    'abbreviation': row['abbreviation'] if pd.notna(row['abbreviation']) else np.nan,
-                    'region_name': row['full_structure_name'] if pd.notna(row['full_structure_name']) else np.nan,
-                }
-            )
 
     return lookup
 
@@ -462,7 +458,10 @@ def main():
     verbose_start_msg()
 
     sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
-    region_lookup = load_ccfv3_lookup(args.info_csv_path) if args.atlas_tissue else None
+    region_lookup = (
+        load_ccfv3_lookup(args.info_csv_path, region_id_col=args.region_id_col)
+        if args.atlas_tissue else None
+    )
 
     progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
