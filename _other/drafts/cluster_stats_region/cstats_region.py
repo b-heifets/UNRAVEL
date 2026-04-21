@@ -1,0 +1,1347 @@
+#!/usr/bin/env python3
+
+"""
+Use ``cstats`` (``cs``) from UNRAVEL to validate clusters based on statistical comparisons.
+
+Supports:
+    - Pairwise comparisons (t-test, directional or two-sided)
+    - Dunnett's test (one control vs multiple groups; control must appear only as the first group)
+    - Holm-Šidák correction (for arbitrary pairwise tests)
+    - Main-effect or interaction ANOVA (1-way or 2-way) with an external condition-to-factor map
+    - Tukey's HSD (if ``--comparisons all``)
+
+Input files:
+    - `*_density_data.csv` from ``cstats_validation`` (in each subdir named after the cluster mask)
+
+Outputs:
+    - ./_valid_clusters_stats/ with raw data, stats results, and summary info
+
+Note: 
+    - This script will loop through all directories in the current working dir and process the data in each subdir.
+    - Each subdir should contain .csv files with the density data for each cluster.
+    - Clusters are considered valid if the number of significant comparisons meets the validation criteria.
+
+Input CSV naming conventions (sides pooled if both LH and RH files exist):
+    - Condition: first word before '_' in the file name
+    - Side: last word before .csv (LH or RH)
+
+Example unilateral inputs in the subdirs:
+    - condition1_sample01_<cell|label>_density_data.csv 
+    - condition1_sample02_<cell|label>_density_data.csv
+    - condition2_sample03_<cell|label>_density_data.csv
+    - condition2_sample04_<cell|label>_density_data.csv
+
+Example bilateral inputs (if any file has _LH.csv or _RH.csv, the command will attempt to pool data):
+    - condition1_sample01_<cell|label>_density_data_LH.csv
+    - condition1_sample01_<cell|label>_density_data_RH.csv
+
+Columns in the input .csv files:
+    sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
+
+Example content of a group_map CSV:
+-----------------------------------
+condition,Psilocybin,Housing
+SalineHC,Saline,HC
+SalineEE,Saline,EE
+PsilocybinHC,Psilocybin,HC
+PsilocybinEE,Psilocybin,EE
+
+Note:
+    When --effect is provided, only that ANOVA term is used to determine cluster validity.
+    Other model terms are ignored during validation.
+    If --effect is not provided, all ANOVA terms are considered.
+
+Usage for a one-tailed t-test
+-----------------------------
+    cs -c saline<MDMA
+
+Usage for non-directional t-tests with Holm-Sidak correction:
+-------------------------------------------------------------
+    cs -c saline,MDMA MDMA,R-MDMA saline,R-MDMA
+
+Usage for Tukey's test (all pairwise comparisons):
+--------------------------------------------------
+    cs -c all
+
+Usage for 1-way ANOVA main effect:
+----------------------------------
+    cs --group_map entactogen_map.csv --formula Entactogen --effect Entactogen
+
+Usage for 2-way ANOVA main effect:
+----------------------------------
+    cs --group_map psilo_housing_map.csv --formula Psilocybin+Housing --effect Psilocybin
+
+Usage for 2-way ANOVA interaction:
+----------------------------------
+    cs --group_map psilo_housing_map.csv --formula Psilocybin*Housing --effect Psilocybin:Housing
+
+Usage for testing all ANOVA terms:
+----------------------------------
+    cs --group_map psilo_housing_map.csv --formula Psilocybin*Housing
+"""
+
+import re
+import numpy as np
+import pandas as pd
+from itertools import combinations
+from fnmatch import fnmatch
+from pathlib import Path
+from rich import print
+from rich.traceback import install
+from rich.live import Live
+from scipy.stats import ttest_ind, dunnett
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+from statsmodels.stats.multitest import multipletests
+
+from unravel.cluster_stats.stats_table import cluster_summary
+from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, initialize_progress_bar
+
+
+def parse_args():
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts_comparisons = parser.add_argument_group('Optional args for comparisons')
+    opts_comparisons.add_argument('-comp', '--comparisons', help=("List of pairwise comparisons (e.g. saline<MDMA saline,R-MDMA), with the control group first. Use '<' or '>' for directional tests, or ',' for two-sided. Use 'all' for Tukey tests. "), nargs='*', default=None, action=SM)
+
+    opts_anova = parser.add_argument_group('Optional args for ANOVA')
+    opts_anova.add_argument('-gm', '--group_map', help='CSV file mapping condition names to factor levels (required for ANOVA).', action=SM)
+    opts_anova.add_argument('-e', '--effect', help='Specific effect or interaction to validate from ANOVA (e.g., Psilocybin or Psilocybin:Housing)', default=None, action=SM)
+    opts_anova.add_argument('-f', '--formula', help='ANOVA model formula (e.g., Psilocybin+Housing or Psilocybin*Housing). Required if using group_map', required=False, action=SM)
+    opts_anova.add_argument('--posthoc', choices=['dunnett'], default=None, help='Optional post hoc procedure to run after ANOVA. Currently supports: dunnett')
+    opts_anova.add_argument('--control-group', default=None, help='Control group for ANOVA post hoc tests (e.g., Saline). Required with --posthoc dunnett.')
+    opts_anova.add_argument('--posthoc-alpha', type=float, default=0.05, help='Alpha threshold for ANOVA post hoc significance calls. Default: 0.05')
+
+    opts_validation = parser.add_argument_group('Optional args for validation criteria and output')
+    opts_validation.add_argument('-vc', '--val_crit', help="Validation criteria: 'all' (default), 'any', or a number of comparisons that must be significant for a cluster to be valid.", default='all', action=SM)
+    opts_validation.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from cstats_fdr). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
+    opts_validation.add_argument('-ov', '--overwrite', help='Force re-processing even if outputs exist. Default: False', action='store_true', default=False)
+    opts_validation.add_argument('-td', '--target_dirs', help='Only process subdirectories whose names match these exact names or glob patterns.', nargs='*', default=None, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
+    return parser.parse_args()
+
+
+
+def matches_any_pattern(name, patterns):
+    """Return True if *name* matches any exact name or glob pattern in *patterns*."""
+    if not patterns:
+        return True
+    return any(fnmatch(name, pattern) for pattern in patterns)
+
+
+def parse_comparisons(comp_list, all_conditions):
+    """
+    Parse comparison strings into tuples.
+
+    Parameters
+    ----------
+    comp_list : list of str
+        List of comparison strings (e.g., ['saline<MDMA', 'saline,R-MDMA']).
+    all_conditions : list of str
+        List of all conditions present in the dataset (e.g., ['saline', 'MDMA', 'R-MDMA']).
+
+    
+    Returns
+    -------
+    list of tuples
+        List of tuples in the format (group1, group2, direction), where direction is 'less', 'greater', or 'two-sided'.
+        - group1: str, name of the first group
+        - group2: str, name of the second group
+        - direction: str, 'less', 'greater', or 'two-sided'
+    """
+    if len(comp_list) == 1 and comp_list[0].lower() == 'all':
+        return [(g1, g2, 'two-sided') for g1, g2 in combinations(sorted(all_conditions), 2)]
+
+    parsed = []
+    for comp in comp_list:
+        if '<' in comp:
+            g1, g2 = comp.split('<')
+            direction = 'less'
+        elif '>' in comp:
+            g1, g2 = comp.split('>')
+            direction = 'greater'
+        elif ',' in comp:
+            g1, g2 = comp.split(',')
+            direction = 'two-sided'
+        else:
+            raise ValueError(f"Invalid comparison format: {comp}")
+        parsed.append((g1.strip(), g2.strip(), direction))
+    return parsed
+
+def valid_clusters_t_test(df, group1, group2, density_col, alternative='two-sided'):
+    """Perform unpaired t-tests for each cluster in the DataFrame and return the results as a DataFrame.
+    
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame containing the cluster data with columns 'cluster_ID', 'condition', and the density column.
+    group1 : str
+        Name of the first group (e.g., 'saline').
+    group2 : str
+        Name of the second group (e.g., 'MDMA').
+    density_col : str
+        Name of the column containing the density values (e.g., 'cell_density' or 'label_density').
+    alternative : str, optional
+        Specifies the alternative hypothesis for the t-test. Options are 'two-sided', 'less', or 'greater'.
+        Default is 'two-sided'. 
+    
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing the t-test results for each cluster.
+        Columns include 'cluster_ID', 'comparison', 'higher_mean_group', 'p-value', and 'significance'.
+    """
+    print(f"\n[yellow bold]=== Running t-test validation for clusters: {group1} vs {group2} ===[/yellow bold]")
+    stats_df = pd.DataFrame()
+    id_cols = analysis_id_cols(df)
+    units = df[id_cols].drop_duplicates().sort_values(id_cols)
+
+    for _, unit in units.iterrows():
+        selector = pd.Series(True, index=df.index)
+        for col in id_cols:
+            selector &= df[col] == unit[col]
+        cluster_data = df[selector]
+        cluster_id = unit['cluster_ID']
+        region_id = unit['region_ID'] if 'region_ID' in unit.index else None
+        group1_data = np.array([value for value in cluster_data[cluster_data['condition'] == group1][density_col].values.ravel()])
+        group2_data = np.array([value for value in cluster_data[cluster_data['condition'] == group2][density_col].values.ravel()])
+        
+        # Perform unpaired two-tailed t-test
+        t_stat, p_value = ttest_ind(group1_data, group2_data, equal_var=True, alternative=alternative)
+        p_value = float(f"{p_value:.6f}")
+
+        # Create a temporary DataFrame for the current t-test result
+        temp_row = {'cluster_ID': cluster_id, 'p-value': p_value}
+        if region_id is not None:
+            temp_row['region_ID'] = region_id
+        temp_df = pd.DataFrame([temp_row])
+
+        # Use pd.concat to append the temporary DataFrame
+        stats_df = pd.concat([stats_df, temp_df], ignore_index=True)
+
+    # Add a column the higher mean group
+    stats_df['group1'] = group1  # Add columns for the group names
+    stats_df['group2'] = group2
+    stats_df['comparison'] = stats_df['group1'] + ' vs ' + stats_df['group2']
+
+    def unit_mean(row, group):
+        selector = df['cluster_ID'] == row['cluster_ID']
+        if 'region_ID' in stats_df.columns:
+            selector &= df['region_ID'] == row['region_ID']
+        selector &= df['condition'] == group
+        return df.loc[selector, density_col].mean()
+
+    stats_df['group1_mean'] = stats_df.apply(lambda row: unit_mean(row, group1), axis=1)
+    stats_df['group2_mean'] = stats_df.apply(lambda row: unit_mean(row, group2), axis=1)
+    
+    stats_df['meandiff'] = stats_df['group1_mean'] - stats_df['group2_mean']
+    stats_df['higher_mean_group'] = stats_df['meandiff'].apply(lambda diff: group1 if diff > 0 else group2)
+    stats_df['significance'] = stats_df['p-value'].apply(lambda p: '****' if p < 0.0001 else '***' if p < 0.001 else '**' if p < 0.01 else '*' if p < 0.05 else 'n.s.')
+
+    # Update columns
+    stats_df.drop(columns=['group1_mean', 'group2_mean', 'meandiff', 'group1', 'group2'], inplace=True)
+    out_cols = ['cluster_ID']
+    if 'region_ID' in stats_df.columns:
+        out_cols.append('region_ID')
+    out_cols += ['comparison', 'higher_mean_group', 'p-value', 'significance']
+    stats_df = stats_df[out_cols]
+
+    return stats_df
+
+def match_effect(aov_term, effect_of_interest):
+    """Match effect name ignoring C() wrapper and case sensitivity."""
+    # Remove 'C(...)' if present from patsy formula terms
+    def clean(term):
+        return re.sub(r'^C\((.+)\)$', r'\1', term.strip(), flags=re.IGNORECASE).lower()
+    return clean(aov_term) == clean(effect_of_interest)
+
+def valid_clusters_anova(data_df, density_col, formula, effect_of_interest=None):
+    """
+    Run per-cluster ANOVA and collect p-values for each effect term.
+
+    For each cluster, fits an ANOVA model using the specified formula and extracts
+    p-values for all model terms (excluding residuals). Designed for validating
+    cluster-level effects in voxel- or region-wise statistics (e.g., cell or label density).
+
+    Parameters
+    ----------
+    data_df : pd.DataFrame
+        Input DataFrame containing one row per sample per cluster.
+        Must include:
+            - 'cluster_ID': integer cluster identifiers.
+            - Dependent variable column (e.g., 'cell_density').
+            - All factor columns referenced in the formula.
+    density_col : str
+        Name of the dependent variable column (e.g., 'cell_density').
+    formula : str
+        Statsmodels formula specifying the model.
+        Examples:
+            - 'condition'
+            - 'condition + group'
+            - 'condition * group'
+    effect_of_interest : str, optional
+        Specific factor or interaction to highlight in the output table
+        (e.g., 'condition', 'condition:group'). Defaults to the full formula.
+
+    Returns
+    -------
+    pd.DataFrame
+        ANOVA results aggregated across clusters with columns:
+            - 'cluster_ID'
+            - 'comparison' (e.g., 'ANOVA: condition')
+            - 'higher_mean_group' (blank for ANOVA)
+            - 'p-value'
+            - 'significance' ('****', '***', '**', '*', or 'n.s.')
+            - 'effect_of_interest'
+
+    Notes
+    -----
+    - Automatically verifies numeric data and missing factor columns.
+    - Skips clusters that fail ANOVA fitting or lack within-group variation.
+    - Uses type II sums of squares (`sm.stats.anova_lm(..., typ=2)`).
+    - Prints cluster-wise progress and summary of results.
+    - Significance thresholds:
+          ****  p < 0.0001
+          ***   p < 0.001
+          **    p < 0.01
+          *     p < 0.05
+          n.s.  otherwise
+    """
+    rows = []
+    clusters = sorted(data_df["cluster_ID"].unique())
+
+    print("\n[yellow bold]=== Running ANOVA validation for clusters ===[/yellow bold]")
+    print(f"Formula: [cyan]{formula}[/cyan]")
+    if effect_of_interest:
+        print(f"Effect of interest: [cyan]{effect_of_interest}[/cyan]")
+    print(f"Dependent variable: [magenta]{density_col}[/magenta]")
+    print(f"DataFrame shape: {data_df.shape}")
+
+    # Check that dependent variable exists and is numeric
+    if density_col not in data_df.columns:
+        print(f"[red]Error: '{density_col}' not found in DataFrame![/red]")
+        return pd.DataFrame()
+    if not pd.api.types.is_numeric_dtype(data_df[density_col]):
+        print(f"[red]Error: '{density_col}' column is not numeric![/red]")
+        print(data_df[[density_col]].head())
+        return pd.DataFrame()
+
+    # Extract all factor terms from the formula (handles + and *)
+    factors = [f.strip() for f in formula.replace("*", "+").split("+") if f.strip()]
+    missing_factors = [f for f in factors if f not in data_df.columns]
+    if missing_factors:
+        print(f"[red]Error: Missing factors in DataFrame: {missing_factors}[/red]")
+        return pd.DataFrame()
+
+    # Show unique values for each factor
+    print("[green]Unique factor values:[/green]")
+    for f in factors:
+        print(f"  {f}: {data_df[f].unique()}")
+
+    print("\n[yellow]Preview of first few rows:[/yellow]")
+    print(data_df.head(), "\n")
+
+    # Loop through each cluster and run ANOVA
+    for cluster_id in clusters:
+        cluster_data = data_df[data_df["cluster_ID"] == cluster_id]
+
+        print(f"[blue]Processing cluster {cluster_id}[/blue]")
+
+        try:
+            model = ols(f"{density_col} ~ {formula}", data=cluster_data).fit()
+            aov_table = sm.stats.anova_lm(model, typ=2)
+
+            # print("  [green]ANOVA result table:[/green]")
+            # print(aov_table, "\n")
+
+            # Iterate through ANOVA terms and collect results
+            for aov_term, row in aov_table.iterrows():
+                if aov_term == "Residual":
+                    continue
+
+                pval = row["PR(>F)"]
+                signif = (
+                    "****" if pval < 0.0001 else
+                    "***"  if pval < 0.001 else
+                    "**"   if pval < 0.01 else
+                    "*"    if pval < 0.05 else
+                    "n.s."
+                )
+
+                rows.append({
+                    "cluster_ID": cluster_id,
+                    "comparison": f"ANOVA: {aov_term}",
+                    "higher_mean_group": "",
+                    "p-value": pval,
+                    "significance": signif,
+                    "effect_of_interest": effect_of_interest or formula
+                })
+
+                print(f"    Term: {aov_term:15s}  p={pval:.4g}  →  {signif}")
+
+        except Exception as e:
+            print(f"[red]  Skipping cluster {cluster_id}: ANOVA failed — {e}[/red]")
+            print("  Possible causes: wide-format data, non-numeric values, or missing factor levels.\n")
+            continue
+
+    if not rows:
+        print("[yellow]No successful ANOVA results collected — all clusters failed.[/yellow]")
+        return pd.DataFrame()
+
+    stats_df = pd.DataFrame(rows)
+    print(f"\n[green bold]✓ Finished ANOVA validation. Generated results for {len(stats_df['cluster_ID'].unique())} clusters.[/green bold]")
+    print(stats_df)
+    
+    return stats_df
+
+
+def valid_clusters_dunnett_test(df, control_group, test_groups, density_col, direction='two-sided'):
+    """
+    Perform Dunnett's test across clusters, comparing multiple test groups to a single control.
+
+    For each cluster, performs one-sided or two-sided t-tests between the control group and each test group,
+    then applies Dunnett's correction for multiple comparisons. The maximum p-value across tests is reported.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame containing cluster-level data. Must include 'cluster_ID', 'condition', and the specified density column.
+    control_group : str
+        Name of the control group. Must appear only as the first group (not in test_groups).
+    test_groups : list of str
+        List of experimental groups to compare against the control group.
+    density_col : str
+        Name of the column containing the dependent variable (e.g., 'cell_density', 'label_density').
+    direction : {'two-sided', 'less', 'greater'}, default='two-sided'
+        Type of alternative hypothesis for the t-tests:
+            - 'less': tests if control < test group
+            - 'greater': tests if control > test group
+            - 'two-sided': tests for any difference
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with one row per cluster.
+        Columns: ['cluster_ID', 'comparison', 'higher_mean_group', 'p-value', 'significance']
+
+    Notes
+    -----
+    - Dunnett’s test adjusts for multiple comparisons between one control and multiple test groups.
+    - All comparisons must show significance in the same direction for the cluster to be considered valid later.
+    - The reported p-value is the maximum across all individual comparisons for that cluster.
+    - 'higher_mean_group' is left blank, since the test does not directly identify the direction of the effect per group.
+    - Significance levels are annotated as:
+        * '****' if p < 0.0001
+        * '***'  if p < 0.001
+        * '**'   if p < 0.01
+        * '*'    if p < 0.05
+        * 'n.s.' otherwise
+    - Clusters that cause errors (e.g., due to missing group data) are skipped with a warning.
+    """
+
+    print(f"\n[yellow bold]=== Running Dunnett's test validation for clusters ===[/yellow bold]")
+    stats_df = pd.DataFrame()
+
+    for cluster_id in df['cluster_ID'].unique():
+        sub_df = df[df['cluster_ID'] == cluster_id]
+
+        control_vals = sub_df[sub_df['condition'] == control_group][density_col]
+        test_vals = [sub_df[sub_df['condition'] == g][density_col] for g in test_groups]
+
+        try:
+            res = dunnett(*test_vals, control=control_vals, alternative=direction)
+        except Exception as e:
+            print(f"[warning] Skipping cluster {cluster_id} due to error: {e}")
+            continue
+
+        max_p = max(res.pvalue)
+        stats_df = pd.concat([
+            stats_df,
+            pd.DataFrame({
+                'cluster_ID': [cluster_id],
+                'comparison': [f"Dunnett: {control_group} vs {','.join(test_groups)}"],
+                'higher_mean_group': [''],  # Leave blank for now
+                'p-value': [max_p],
+                'significance': ['****' if max_p < 0.0001 else '***' if max_p < 0.001 else '**' if max_p < 0.01 else '*' if max_p < 0.05 else 'n.s.']
+            })
+        ], ignore_index=True)
+    return stats_df
+
+def valid_clusters_holm_sidak(df, comparisons, density_col):
+    """
+    Perform multiple two-sided t-tests with Holm–Šidák correction across clusters.
+
+    For each cluster, performs all specified pairwise comparisons between groups using unpaired
+    two-sided t-tests. P-values are adjusted for multiple comparisons using the Holm–Šidák method.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame containing cluster-level data. Must include 'cluster_ID', 'condition', and the specified density column.
+    comparisons : list of tuple
+        List of comparisons in the format (group1, group2, direction), where 'direction' is ignored
+        (always two-sided tests are used here).
+    density_col : str
+        Name of the column containing the dependent variable (e.g., 'cell_density', 'label_density').
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with one row per cluster per comparison.
+        Columns: ['cluster_ID', 'comparison', 'higher_mean_group', 'p-value', 'significance']
+
+    Notes
+    -----
+    - The Holm–Šidák correction controls the family-wise error rate across multiple pairwise comparisons.
+    - Comparisons are always two-sided, regardless of any directional input in the comparisons list.
+    - 'higher_mean_group' indicates which group had the higher mean (only filled if the test is significant).
+    - Significance levels are annotated as:
+        * '***' if p < 0.001
+        * '**'  if p < 0.01
+        * '*'   if p < 0.05
+        * 'n.s.' otherwise
+    - Clusters with insufficient data in any group may yield unreliable results; no explicit filtering is applied.
+    - This test is useful when there is no shared control group and comparisons are arbitrary.
+    """
+    print(f"\n[yellow bold]=== Running Holm–Šidák test validation for clusters ===[/yellow bold]")
+    results = []
+    for cluster_id in df['cluster_ID'].unique():
+        pvals = []
+        comp_names = []
+        higher_means = []
+        for g1, g2, _ in comparisons:
+            vals1 = df[(df['cluster_ID'] == cluster_id) & (df['condition'] == g1)][density_col]
+            vals2 = df[(df['cluster_ID'] == cluster_id) & (df['condition'] == g2)][density_col]
+            t, p = ttest_ind(vals1, vals2, equal_var=True, alternative='two-sided')
+            pvals.append(p)
+            comp_names.append(f"{g1} vs {g2}")
+            higher_means.append(g1 if vals1.mean() > vals2.mean() else g2)
+
+        reject, pvals_corr, _, _ = multipletests(pvals, alpha=0.05, method='holm-sidak')
+        for i in range(len(pvals)):
+            results.append({
+                'cluster_ID': cluster_id,
+                'comparison': comp_names[i],
+                'higher_mean_group': higher_means[i] if reject[i] else '',
+                'p-value': pvals_corr[i],
+                'significance': '***' if pvals_corr[i] < 0.001 else '**' if pvals_corr[i] < 0.01 else '*' if pvals_corr[i] < 0.05 else 'n.s.'
+            })
+
+    results_df = pd.DataFrame(results)
+    return results_df
+
+def valid_clusters_tukey_test(df, density_col):
+    """
+    Perform Tukey's HSD test for each cluster and return the multiple comparison results.
+
+    For each unique cluster_ID, this function compares all group pairs using Tukey’s
+    Honestly Significant Difference (HSD) test. The group with the higher mean is reported
+    along with adjusted p-values and significance levels.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame containing cluster-level data. Must include:
+            - 'cluster_ID': unique cluster identifiers
+            - 'condition': group labels (e.g., treatment groups)
+            - The specified density column (e.g., 'cell_density' or 'label_density')
+    density_col : str
+        Name of the column containing the dependent variable to test.
+
+    Returns
+    -------
+    stats_df : pd.DataFrame
+        DataFrame containing Tukey's test results for each cluster and pairwise group comparison.
+        Columns:
+            - 'cluster_ID': the cluster being tested
+            - 'comparison': formatted as "Group1 vs Group2"
+            - 'higher_mean_group': the group with the higher mean
+            - 'p-value': adjusted p-value for the comparison
+            - 'significance': significance annotation based on the p-value
+
+    Notes
+    -----
+    - Tukey’s HSD test performs all pairwise comparisons between groups and controls the family-wise error rate.
+    - The group with the higher mean is inferred from the sign of the `meandiff` in the Tukey results.
+    - P-values are adjusted automatically and mapped to the following significance levels:
+        * '****' if p < 0.0001
+        * '***'  if p < 0.001
+        * '**'   if p < 0.01
+        * '*'    if p < 0.05
+        * 'n.s.' otherwise
+    - Progress is displayed using a Rich live progress bar.
+    - Clusters with no data are skipped.
+    """
+    print(f"\n[yellow bold]=== Running Tukey's HSD test validation for clusters ===[/yellow bold]")
+    stats_df = pd.DataFrame()
+    progress, task_id = initialize_progress_bar(len(df['cluster_ID'].unique()), "[default]Processing clusters...")
+    with Live(progress):
+        for cluster_id in df['cluster_ID'].unique():
+            cluster_data = df[df['cluster_ID'] == cluster_id]
+            if not cluster_data.empty:
+                # Flatten the data
+                densities = np.array([value for value in cluster_data[density_col].values.ravel()])
+                group_labels = np.array([value for value in cluster_data['condition'].values.ravel()])
+
+                # Perform Tukey's HSD test
+                tukey_results = pairwise_tukeyhsd(endog=densities, groups=group_labels, alpha=0.05)
+
+                # Extract significant comparisons from Tukey's results 
+                # Columns: group1, group2, meandiff, p-adj, lower, upper, reject, cluster_ID
+                test_results_df = pd.DataFrame(data=tukey_results.summary().data[1:], columns=tukey_results.summary().data[0])
+
+                # Add the cluster ID to the DataFrame
+                test_results_df['cluster_ID'] = cluster_id
+
+                # Add a column for the group with the higher mean density
+                test_results_df['higher_mean_group'] = test_results_df.apply(lambda row: row['group1'] if row['meandiff'] < 0 else row['group2'], axis=1)
+
+                # Append the current test results to the overall DataFrame 
+                stats_df = pd.concat([stats_df, test_results_df], ignore_index=True)
+
+            progress.update(task_id, advance=1)
+
+    # Update columns
+    stats_df.rename(columns={'p-adj': 'p-value'}, inplace=True)
+    stats_df['comparison'] = stats_df['group1'] + ' vs ' + stats_df['group2']
+    stats_df.drop(columns=['lower', 'upper', 'reject', 'meandiff', 'group1', 'group2'], inplace=True)
+    stats_df['significance'] = stats_df['p-value'].apply(lambda p: '****' if p < 0.0001 else '***' if p < 0.001 else '**' if p < 0.01 else '*' if p < 0.05 else 'n.s.')
+    stats_df = stats_df[['cluster_ID', 'comparison', 'higher_mean_group', 'p-value', 'significance']]
+
+    return stats_df 
+
+def cluster_validation_data_df(density_col, has_hemisphere, csv_files, groups, data_col, data_col_pooled):
+    """
+    Aggregate cluster-level data from .csv files, optionally pooling across hemispheres.
+
+    This function loads per-sample cluster data from CSV files, filters by specified groups,
+    and optionally pools bilateral data (if LH/RH hemisphere files are detected). It returns
+    a unified DataFrame suitable for statistical analysis.
+
+    Parameters
+    ----------
+    density_col : str
+        Name of the column containing the density values (e.g., 'cell_density', 'label_density').
+    has_hemisphere : bool
+        Whether the input files contain hemisphere-specific suffixes (e.g., _LH.csv or _RH.csv).
+        If True, hemisphere-specific data will be summed per sample.
+    csv_files : list of Path
+        List of input CSV files containing cluster-wise data.
+    groups : list of str
+        List of group/condition names to include (e.g., ['saline', 'MDMA']).
+    data_col : str
+        Name of the raw count/volume column to pool (e.g., 'cell_count' or 'label_volume').
+    data_col_pooled : str
+        Name of the pooled column to create (e.g., 'pooled_cell_count').
+
+    Returns
+    -------
+    data_df : pd.DataFrame
+        Aggregated DataFrame with cluster-level data ready for analysis.
+        For bilateral data (has_hemisphere=True), columns include:
+            - 'condition', 'sample', 'cluster_ID', pooled counts/volume, pooled cluster volume, and density.
+        For unilateral data, the same columns are returned, excluding pooling.
+
+    Notes
+    -----
+    - Files must include columns like: 'sample', 'cluster_ID', data_col, 'cluster_volume',
+      and optionally bounding box coordinates ('xmin', 'xmax', etc.), which are dropped.
+    - Hemisphere data is pooled by summing values across LH and RH files per sample.
+    - Group filtering is based on the prefix of the file name (e.g., 'saline_sample01.csv' → group = 'saline').
+    - Only files matching one of the specified groups are processed.
+    """
+
+    # Create a results dataframe
+    data_df = pd.DataFrame()
+
+    if has_hemisphere:
+        # Process files with hemisphere pooling
+        print(f"Organizing [red1 bold]bilateral[/red1 bold] [dark_orange bold]{density_col}[/] data from [orange1 bold]_LH.csv[/] and [orange1 bold]_RH.csv[/] files...")
+        for file in csv_files:
+            condition_name = str(file.name).split('_')[0]
+            if condition_name in groups:
+                side = str(file.name).split('_')[-1].split('.')[0]
+                df = pd.read_csv(file)
+                drop_cols = [c for c in ['xmin', 'xmax', 'ymin', 'ymax', 'zmin', 'zmax'] if c in df.columns]
+                df = df.drop(columns=drop_cols)
+                df['condition'] = condition_name  # Add the condition to the df
+                df['side'] = side  # Add the side 
+                data_df = pd.concat([data_df, df], ignore_index=True)
+
+        group_cols = ['condition', 'sample', 'cluster_ID']
+        if 'region_ID' in data_df.columns:
+            group_cols.append('region_ID')
+
+        agg_kwargs = {
+            data_col_pooled: pd.NamedAgg(column=data_col, aggfunc='sum'),
+            'pooled_cluster_volume': pd.NamedAgg(column='cluster_volume', aggfunc='sum'),
+        }
+
+        if 'subregion_volume' in data_df.columns:
+            agg_kwargs['pooled_subregion_volume'] = pd.NamedAgg(column='subregion_volume', aggfunc='sum')
+        if 'abbreviation' in data_df.columns:
+            agg_kwargs['abbreviation'] = pd.NamedAgg(column='abbreviation', aggfunc='first')
+        if 'region_name' in data_df.columns:
+            agg_kwargs['region_name'] = pd.NamedAgg(column='region_name', aggfunc='first')
+
+        data_df = data_df.groupby(group_cols).agg(**agg_kwargs).reset_index()
+
+        denom_col = 'pooled_subregion_volume' if 'pooled_subregion_volume' in data_df.columns else 'pooled_cluster_volume'
+        data_df[density_col] = data_df[data_col_pooled] / data_df[denom_col]
+
+    else:
+        # Process files without hemisphere pooling
+        print(f"Organizing [red1 bold]unilateral[/] [dark_orange bold]{density_col}[/] data...")
+        for file in csv_files:
+            df = pd.read_csv(file)
+            condition_name = file.stem.split('_')[0]
+            if condition_name in groups:
+                df['condition'] = str(condition_name)
+                drop_cols = [c for c in [data_col, 'cluster_volume', 'xmin', 'xmax', 'ymin', 'ymax', 'zmin', 'zmax'] if c in df.columns]
+                df = df.drop(columns=drop_cols)
+
+    return data_df
+
+def significance_label(p_value):
+    if pd.isna(p_value):
+        return 'n.s.'
+    if p_value < 0.0001:
+        return '****'
+    if p_value < 0.001:
+        return '***'
+    if p_value < 0.01:
+        return '**'
+    if p_value < 0.05:
+        return '*'
+    return 'n.s.'
+
+def has_region_level_data(df):
+    return 'region_ID' in df.columns
+
+def analysis_id_cols(df):
+    cols = ['cluster_ID']
+    if has_region_level_data(df):
+        cols.append('region_ID')
+    return cols
+
+def make_unit_label(row):
+    if 'region_ID' in row.index:
+        return f"cluster_{row['cluster_ID']}__region_{row['region_ID']}"
+    return f"cluster_{row['cluster_ID']}"
+
+def sanitize_tag_component(value):
+    value = str(value).strip()
+    value = re.sub(r'[^A-Za-z0-9_-]+', '_', value)
+    value = re.sub(r'_+', '_', value).strip('_')
+    return value or 'group'
+
+
+def run_anova_dunnett_posthoc(data_df, cluster_ids, group_col, control_group, density_col, alpha=0.05, group_order=None):
+    # Run two-sided Dunnett post hoc tests on ANOVA-valid clusters and classify directions.
+    rows = []
+    classified = {
+        'any': [],
+        'increase': [],
+        'decrease': [],
+        'mixed': [],
+        'any_increase': [],
+        'any_decrease': [],
+        'per_group': {},
+    }
+
+    if group_order is None:
+        group_order = [g for g in pd.unique(data_df[group_col]) if pd.notna(g)]
+    group_order = [g for g in group_order if pd.notna(g)]
+    test_group_order = [g for g in group_order if g != control_group]
+
+    for group in test_group_order:
+        classified['per_group'][group] = {
+            'any': [],
+            'increase': [],
+            'decrease': [],
+            'tag': sanitize_tag_component(group),
+        }
+
+    for cluster_id in sorted(cluster_ids):
+        sub_df = data_df[data_df['cluster_ID'] == cluster_id].copy()
+        sub_df = sub_df[[group_col, density_col]].dropna()
+        if sub_df.empty:
+            continue
+
+        control_vals = pd.to_numeric(sub_df.loc[sub_df[group_col] == control_group, density_col], errors='coerce').dropna().to_numpy()
+        if control_vals.size == 0:
+            print(f"[yellow]Skipping cluster {cluster_id} for Dunnett post hoc: no control-group data for {control_group}.[/]")
+            continue
+
+        test_groups = []
+        test_vals = []
+        for group in test_group_order:
+            vals = pd.to_numeric(sub_df.loc[sub_df[group_col] == group, density_col], errors='coerce').dropna().to_numpy()
+            if vals.size == 0:
+                continue
+            test_groups.append(group)
+            test_vals.append(vals)
+
+        if not test_vals:
+            print(f"[yellow]Skipping cluster {cluster_id} for Dunnett post hoc: no experimental-group data.[/]")
+            continue
+
+        try:
+            res = dunnett(*test_vals, control=control_vals, alternative='two-sided')
+        except Exception as e:
+            print(f"[yellow]Skipping cluster {cluster_id} for Dunnett post hoc due to error: {e}[/]")
+            continue
+
+        pvals = np.atleast_1d(np.asarray(res.pvalue, dtype=float))
+        stats = np.atleast_1d(np.asarray(res.statistic, dtype=float))
+        control_mean = float(np.mean(control_vals))
+        sig_dirs = set()
+        any_sig = False
+
+        for group, stat, pval, vals in zip(test_groups, stats, pvals, test_vals):
+            test_mean = float(np.mean(vals))
+            mean_diff = test_mean - control_mean
+            group_sets = classified['per_group'].setdefault(group, {
+                'any': [], 'increase': [], 'decrease': [], 'tag': sanitize_tag_component(group)
+            })
+
+            is_sig = bool(pval < alpha)
+            if is_sig and mean_diff > 0:
+                direction = 'increase'
+                higher_mean_group = group
+                sig_dirs.add('increase')
+                any_sig = True
+                group_sets['any'].append(cluster_id)
+                group_sets['increase'].append(cluster_id)
+            elif is_sig and mean_diff < 0:
+                direction = 'decrease'
+                higher_mean_group = control_group
+                sig_dirs.add('decrease')
+                any_sig = True
+                group_sets['any'].append(cluster_id)
+                group_sets['decrease'].append(cluster_id)
+            else:
+                direction = 'n.s.'
+                higher_mean_group = ''
+
+            rows.append({
+                'cluster_ID': cluster_id,
+                'comparison': f'Dunnett: {group} vs {control_group}',
+                'group_factor': group_col,
+                'control_group': control_group,
+                'test_group': group,
+                'mean_control': control_mean,
+                'mean_test': test_mean,
+                'mean_diff_test_minus_control': mean_diff,
+                'statistic': stat,
+                'p-value': pval,
+                'significance': significance_label(pval),
+                'direction': direction,
+                'higher_mean_group': higher_mean_group,
+            })
+
+        if any_sig:
+            classified['any'].append(cluster_id)
+        if 'increase' in sig_dirs:
+            classified['increase'].append(cluster_id)
+            classified['any_increase'].append(cluster_id)
+        if 'decrease' in sig_dirs:
+            classified['decrease'].append(cluster_id)
+            classified['any_decrease'].append(cluster_id)
+        if len(sig_dirs) > 1:
+            classified['mixed'].append(cluster_id)
+
+    # deduplicate while preserving order
+    for key in ['any', 'increase', 'decrease', 'mixed', 'any_increase', 'any_decrease']:
+        classified[key] = list(dict.fromkeys(classified[key]))
+    for group_sets in classified['per_group'].values():
+        for key in ['any', 'increase', 'decrease']:
+            group_sets[key] = list(dict.fromkeys(group_sets[key]))
+
+    return pd.DataFrame(rows), classified
+
+
+def write_validation_bundle(output_dir, tag, valid_ids, total_clusters, p_thresh, fdr_q=None, validation_criteria_desc='', extra_info=None):
+    extra_info = extra_info or {}
+    valid_ids = list(dict.fromkeys(valid_ids))
+    valid_ids_str = ' '.join(map(str, valid_ids))
+    validation_rate = (len(valid_ids) / total_clusters * 100) if total_clusters else 0.0
+
+    ids_path = output_dir / f'valid_cluster_IDs_{tag}.txt'
+    info_txt = output_dir / f'cluster_validation_info_{tag}.txt'
+    info_csv = output_dir / f'cluster_validation_info_{tag}.csv'
+
+    with open(ids_path, 'w') as f:
+        f.write(valid_ids_str)
+
+    lines = [f'Validation criteria: {validation_criteria_desc}']
+    if fdr_q is not None:
+        lines.append(f'FDR q: {fdr_q} == p-value threshold {p_thresh}')
+    else:
+        lines.append(f'P-value threshold: {p_thresh}')
+    for key, value in extra_info.items():
+        lines.append(f'{key}: {value}')
+    lines.append(f'Valid clusters: {valid_ids_str}')
+    lines.append(f'# of valid / total #: {len(valid_ids)} / {total_clusters}')
+    lines.append(f'Cluster validation rate: {validation_rate:.2f}%')
+    info_txt.write_text('\n'.join(lines) + '\n')
+
+    info_row = {
+        'Validation criteria': validation_criteria_desc,
+        'Test type': tag,
+        'P value thresh': p_thresh,
+        'Valid clusters': valid_ids_str,
+        '# of valid clusters': len(valid_ids),
+        '# of clusters': total_clusters,
+        'Validation rate': f'{validation_rate:.2f}%',
+        'FDR q': fdr_q,
+    }
+    info_row.update(extra_info)
+    pd.DataFrame([info_row]).to_csv(info_csv, index=False)
+
+    return valid_ids_str, validation_rate
+
+
+def determine_valid_clusters(stats_df, validation_criteria='all'):
+    """
+    Determine valid clusters based on test type and significance criteria.
+
+    Parameters
+    ----------
+    stats_df : pd.DataFrame
+    test_type : str
+    validation_criteria : str or int
+        - 'all': all comparisons must be significant
+        - 'any': at least one must be significant
+        - int: at least N comparisons must be significant
+    Returns
+    -------
+    valid_units : list of tuples
+        List of valid cluster identifiers (e.g., [(cluster_ID, region_ID), ...])
+    id_cols : list of str
+        The columns used to identify unique clusters (e.g., ['cluster_ID', 'region_ID'])
+    """
+    id_cols = analysis_id_cols(stats_df)
+    valid_units = []
+
+    for keys, group_df in stats_df.groupby(id_cols):
+        n_sig = (group_df['significance'] != 'n.s.').sum()
+
+        keep = False
+        if validation_criteria == 'all':
+            keep = (n_sig == len(group_df))
+        elif validation_criteria == 'any':
+            keep = (n_sig >= 1)
+        else:
+            try:
+                validation_criteria_n = int(validation_criteria)
+                keep = (n_sig >= validation_criteria_n)
+            except ValueError:
+                raise ValueError(f"Invalid --validation_criteria value: {validation_criteria}")
+
+        if keep:
+            if isinstance(keys, tuple):
+                valid_units.append(keys)
+            else:
+                valid_units.append((keys,))
+
+    return valid_units, id_cols
+
+
+@log_command
+def main():
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
+    # Validation logic
+    val_crit = int(args.val_crit) if args.val_crit.isdigit() else args.val_crit.lower()
+    if val_crit not in {'all', 'any'} and not isinstance(val_crit, int):
+        print('[red]--val_crit must be a number, "all", or "any".[/]')
+        return
+    
+    # Enforce mutually exclusive modes of validation: either comparisons OR ANOVA (group_map + formula)
+    using_anova = bool(args.group_map and args.formula)
+    using_comparisons = bool(args.comparisons)
+    if using_anova and using_comparisons:
+        raise ValueError("Cannot use both ANOVA (--group_map/--formula) and --comparisons in the same run.")
+    if using_anova and not (args.group_map and args.formula):
+        raise ValueError("Both --group_map and --formula are required for ANOVA.")
+    if not using_anova and not using_comparisons:
+        raise ValueError("You must provide either --comparisons or both --group_map and --formula for ANOVA.")
+
+    cwd = Path.cwd()
+    skip_dirs = {'_valid_clusters_stats', 'valid_clusters_tables_and_legend', 'stats', '3D_brains'}
+
+    subdirs = [d for d in cwd.iterdir() if d.is_dir() and d.name not in skip_dirs]
+
+    if args.target_dirs:
+        subdirs = [d for d in subdirs if matches_any_pattern(d.name, args.target_dirs)]
+        if args.verbose:
+            print(f"[cyan]Filtering to target directories:[/] {', '.join(args.target_dirs)}")
+
+    if not subdirs:
+        print('[red]No subdirectories found to process.[/]')
+        return
+
+    # Iterate over all subdirectories in the current working directory
+    for subdir in subdirs:
+        print(f"\n[bold]Processing directory:[/] {subdir.name}")
+
+        # Load all .csv files in the current subdirectory
+        csv_files = sorted(subdir.glob('*.csv'))
+        if not csv_files:
+            print(f"[yellow]No CSV files found in {subdir}; skipping.[/]")
+            continue  # Skip directories with no CSV files
+
+        # Make output dir
+        output_dir = subdir / '_valid_clusters_stats'
+        output_dir.mkdir(exist_ok=True)
+
+        # Skip processing if prior results exist and --overwrite is not set
+        prior_outputs = [
+            output_dir.glob('*_results.csv'),
+            output_dir.glob('valid_cluster_IDs_*.txt'),
+            output_dir.glob('cluster_validation_info_*.csv'),
+        ]
+
+        if not args.overwrite and not (using_anova and args.posthoc == 'dunnett') and all(any(files) for files in prior_outputs): # e.g., checks if tukey_results.csv, valid_cluster_IDs_tukey.txt, and cluster_validation_info_tukey.csv exist
+            print(f"[green]Skipping {subdir.name} - output already exists. Use --overwrite to force reprocessing.")
+            continue
+
+        # Load the first .csv file to check for data columns and set the appropriate column names
+        first_df = pd.read_csv(csv_files[0])
+        if 'cell_count' in first_df.columns:
+            data_col, data_col_pooled, density_col = 'cell_count', 'pooled_cell_count', 'cell_density'
+        elif 'label_volume' in first_df.columns:
+            data_col, data_col_pooled, density_col = 'label_volume', 'pooled_label_volume', 'label_density'
+        else:
+            print("[red1]Error: Input CSVs lack recognized data columns.")
+            continue
+        
+        # Get the total number of clusters before filtering out non-significant clusters
+        total_clusters = first_df['cluster_ID'].nunique()
+
+        # Check if any files contain hemisphere indicators
+        has_hemisphere = any('_LH.csv' in str(f.name) or '_RH.csv' in str(f.name) for f in csv_files)
+
+        # Parse comparisons or main effect
+        comparisons = None
+        if args.group_map and args.formula:
+            test_type = 'anova'
+            group_map = pd.read_csv(args.group_map)
+            if 'condition' not in group_map.columns:
+                print('[red]group_map CSV must include a "condition" column.[/]')
+                continue
+            formula = args.formula.replace(" ", "")
+            factor_cols = [f.strip() for f in formula.replace('*', '+').split('+')]
+            missing_cols = [col for col in factor_cols if col not in group_map.columns]
+            if missing_cols:
+                print(f'[red]Missing factor columns in group_map: {missing_cols}[/]')
+                continue
+            groups = group_map['condition'].unique().tolist()
+        elif args.comparisons:
+            all_conditions = sorted(set(f.name.split('_')[0] for f in csv_files))
+            comparisons = parse_comparisons(args.comparisons, all_conditions)
+            groups = sorted(set(g for c in comparisons for g in c[:2]))
+            if args.comparisons == ['all']:
+                test_type = 'tukey'
+            elif len(comparisons) == 1:
+                test_type = 't-test'
+            elif all(g1 == comparisons[0][0] for g1, _, _ in comparisons):  # All comparisons share the same control group (Group 1)
+                test_type = 'dunnett'
+            else:
+                test_type = 'holm'
+        else:
+            print('[red]You must provide either --comparisons or both --group_map and --formula for ANOVA.[/]')
+            continue
+    
+        # Aggregate the data from all .csv files and pool the data if hemispheres are present
+        data_df = cluster_validation_data_df(
+            density_col=density_col,
+            has_hemisphere=has_hemisphere,
+            csv_files=csv_files,
+            groups=groups,
+            data_col=data_col,
+            data_col_pooled=data_col_pooled
+        )
+
+        if data_df.empty:
+            print("[red1]No matching data found for specified groups.")
+            continue
+
+        # Run selected test
+        if test_type == 'anova':
+            data_df = data_df.merge(group_map, on='condition', how='left')
+            if data_df.isnull().any().any():
+                print('[red]One or more conditions in the CSVs are not present in the group_map.[/]')
+                continue
+
+            # Automatically cast string-based columns in factor_cols to category
+            for col in factor_cols:
+                if data_df[col].dtype == object or pd.api.types.is_string_dtype(data_df[col]):
+                    data_df[col] = data_df[col].astype('category')
+
+            # --- Ensure cell_density and pooled columns are numeric ---
+            for col in [density_col, data_col_pooled, "pooled_cluster_volume"]:
+                if col in data_df.columns:
+                    before_dtype = data_df[col].dtype
+                    data_df[col] = pd.to_numeric(data_df[col], errors="coerce")
+                    after_dtype = data_df[col].dtype
+                    num_nans = data_df[col].isna().sum()
+                    if num_nans > 0:
+                        print(f"[red]Warning: {num_nans} NaN values created during conversion in '{col}'![/red]")
+                else:
+                    print(f"[red]Column '{col}' not found in data_df[/red]")
+
+            stats_df = valid_clusters_anova(data_df, density_col, formula, effect_of_interest=args.effect)
+
+            if args.effect:
+                stats_df = stats_df[
+                    stats_df["comparison"].str.replace("ANOVA: ", "", regex=False).apply(
+                        lambda term: match_effect(term, args.effect)
+                    )
+                ].copy()
+
+        elif test_type == 'tukey':
+            print("[bold gold1]Running Tukey's HSD[/] across all groups")
+            stats_df = valid_clusters_tukey_test(data_df, density_col)
+        elif test_type == 'dunnett':
+            control_group = comparisons[0][0]  # First group in the first comparison is the control
+            test_groups = [g2 for g1, g2, _ in comparisons if g1 == control_group]
+            print(f"[bold gold1]Running Dunnett's test[/] with control: [cyan]{control_group}[/]")
+            stats_df = valid_clusters_dunnett_test(data_df, control_group, test_groups, density_col)
+        elif test_type == 'holm':
+            print("[bold gold1]Running Holm–Šidák corrected t-tests[/]")
+            stats_df = valid_clusters_holm_sidak(data_df, comparisons, density_col)
+        elif test_type == 't-test':
+            g1, g2, direction = comparisons[0]
+            print(f"[bold gold1]Running t-test:[/] [cyan]{g1} {direction} {g2}[/]")
+            stats_df = valid_clusters_t_test(data_df, g1, g2, density_col, alternative=direction)
+        else:
+            print("[red1]Invalid test_type detected.")
+            continue
+
+        # Warn if val_crit exceeds number of comparisons
+        max_comparisons = stats_df.groupby('cluster_ID').size().max()
+        if isinstance(val_crit, int) and val_crit > max_comparisons:
+            print(f"[yellow]Warning: --val_crit={val_crit} exceeds number of comparisons per cluster ({max_comparisons}). No clusters will pass.")
+
+        # Determine valid clusters
+        valid_units, id_cols = determine_valid_clusters(stats_df, validation_criteria=val_crit)
+
+        if id_cols == ['cluster_ID']:
+            valid_ids = [u[0] for u in valid_units]
+            valid_ids_str = ' '.join(map(str, valid_ids))
+        else:
+            valid_ids = valid_units
+            valid_ids_str = ' '.join([f'{u[0]}:{u[1]}' for u in valid_units])
+
+        # Load p-threshold from file
+        p_val_file = next(subdir.rglob(args.p_val_txt), None)
+        if p_val_file is None:
+            print(f"[red1]Missing p-value file: {args.p_val_txt}")
+            continue
+        p_thresh = float(p_val_file.read_text().strip())
+
+        # Save results
+        tag = test_type
+        raw_prefix = output_dir / f'raw_data_for_{tag}'
+        raw_path = raw_prefix.parent / f"{raw_prefix.name}_pooled.csv" if has_hemisphere else raw_prefix.with_suffix('.csv')
+        stats_path = output_dir / f'{tag}_results.csv'
+        ids_path = output_dir / f'valid_cluster_IDs_{tag}.txt'
+        info_path = output_dir / f'cluster_validation_info_{tag}.csv'
+
+        data_df.to_csv(raw_path, index=False)
+        stats_df.to_csv(stats_path, index=False)
+        with open(ids_path, 'w') as f:
+            f.write(valid_ids_str)
+
+        # Extract the FDR q value from the first csv file (float after 'FDR' or 'q' in the file name)
+        first_csv_name = csv_files[0]
+        if 'FDR' in first_csv_name.name or 'q' in first_csv_name.name:
+            fdr_q = float(str(first_csv_name).split('FDR')[-1].split('q')[-1].split('_')[0])
+        else:
+            fdr_q = None  # No FDR/q value found
+
+        # Print validation info
+        print(f"\n[bold green]Validation complete for {subdir.name}[/]")
+        if fdr_q is not None:
+            print(f"FDR q: [cyan bold]{fdr_q}[/] == p-value threshold: [cyan bold]{p_thresh}")
+        else:
+            print(f"P-value threshold: [cyan bold]{p_thresh}")
+        print(f"Valid cluster IDs: [cyan]{valid_ids_str}")
+        print(f"[default]# of valid / total #: [bright_magenta]{len(valid_ids)} / {total_clusters}")
+        validation_rate = len(valid_ids) / total_clusters * 100
+        print(f"Cluster validation rate: [purple bold]{validation_rate:.2f}%")
+
+        # Save the number of significant clusters, total clusters, and validation rate to a .txt file
+        validation_inf_txt = output_dir / f'cluster_validation_info_{tag}.txt'
+        with open(validation_inf_txt, 'w') as f:
+            f.write(f"Validation criteria: {val_crit}\n")
+            if fdr_q is not None:
+                f.write(f"FDR q: {fdr_q} == p-value threshold {p_thresh}\n")
+            else:
+                f.write(f"P-value threshold: {p_thresh}\n")
+            f.write(f"Valid cluster IDs: {valid_ids_str}\n")
+            f.write(f"# of valid / total #: {len(valid_ids)} / {total_clusters}\n")
+            f.write(f"Cluster validation rate: {validation_rate:.2f}%\n")
+
+        pd.DataFrame({
+            'Validation criteria': [args.comparisons or args.effect],
+            'Test type': [test_type],
+            'P value thresh': [p_thresh],
+            'Valid clusters': [valid_ids_str],
+            '# of valid clusters': [len(valid_ids)],
+            '# of clusters': [total_clusters],
+            'Validation rate': [f"{validation_rate:.2f}%"],
+            'FDR q': fdr_q
+        }).to_csv(info_path, index=False)
+
+        if test_type == 'anova' and args.posthoc == 'dunnett':
+            posthoc_factor = args.effect or args.formula
+            if not posthoc_factor:
+                print('[yellow]Skipping ANOVA Dunnett post hoc: no effect/formula available.[/]')
+            elif any(token in posthoc_factor for token in ['+', '*', ':']):
+                print(f"[yellow]Skipping ANOVA Dunnett post hoc for {subdir.name}: '{posthoc_factor}' is not a simple one-factor effect.[/]")
+            elif args.control_group is None:
+                print('[yellow]Skipping ANOVA Dunnett post hoc: --control-group is required when --posthoc dunnett is used.[/]')
+            elif posthoc_factor not in data_df.columns:
+                print(f"[yellow]Skipping ANOVA Dunnett post hoc: factor '{posthoc_factor}' not present in merged data.[/]")
+            else:
+                group_order = group_map[posthoc_factor].drop_duplicates().tolist() if posthoc_factor in group_map.columns else sorted(data_df[posthoc_factor].dropna().unique().tolist())
+                if args.control_group not in group_order:
+                    print(f"[yellow]Skipping ANOVA Dunnett post hoc: control group '{args.control_group}' not found in factor '{posthoc_factor}'.[/]")
+                elif len(group_order) < 2:
+                    print(f"[yellow]Skipping ANOVA Dunnett post hoc: factor '{posthoc_factor}' has fewer than two levels.[/]")
+                else:
+                    anova_valid_ids = valid_ids
+                    print(f"[bold gold1]Running ANOVA-gated Dunnett post hoc[/] for factor [cyan]{posthoc_factor}[/] vs control [cyan]{args.control_group}[/] on [cyan]{len(anova_valid_ids)}[/] ANOVA-valid clusters")
+                    dunnett_df, dunnett_sets = run_anova_dunnett_posthoc(
+                        data_df,
+                        cluster_ids=anova_valid_ids,
+                        group_col=posthoc_factor,
+                        control_group=args.control_group,
+                        density_col=density_col,
+                        alpha=args.posthoc_alpha,
+                        group_order=group_order,
+                    )
+
+                    dunnett_df.to_csv(output_dir / 'dunnett_posthoc_results.csv', index=False)
+
+                    # Aggregate result tables
+                    sig_df = dunnett_df[dunnett_df['significance'] != 'n.s.'].copy() if not dunnett_df.empty else pd.DataFrame()
+                    inc_df = dunnett_df[dunnett_df['direction'] == 'increase'].copy() if not dunnett_df.empty else pd.DataFrame()
+                    dec_df = dunnett_df[dunnett_df['direction'] == 'decrease'].copy() if not dunnett_df.empty else pd.DataFrame()
+                    mixed_ids_set = set(dunnett_sets['mixed'])
+                    mixed_df = dunnett_df[dunnett_df['cluster_ID'].isin(mixed_ids_set)].copy() if not dunnett_df.empty else pd.DataFrame()
+
+                    sig_df.to_csv(output_dir / 'dunnett_any_results.csv', index=False)
+                    inc_df.to_csv(output_dir / 'dunnett_increase_results.csv', index=False)
+                    dec_df.to_csv(output_dir / 'dunnett_decrease_results.csv', index=False)
+                    mixed_df.to_csv(output_dir / 'dunnett_mixed_results.csv', index=False)
+                    # clearer aliases for the across-any-group direction calls
+                    inc_df.to_csv(output_dir / 'dunnett_any_increase_results.csv', index=False)
+                    dec_df.to_csv(output_dir / 'dunnett_any_decrease_results.csv', index=False)
+
+                    common_desc = (
+                        f"ANOVA-gated Dunnett post hoc on {posthoc_factor}: first require ANOVA-significant cluster(s) "
+                        f"for {args.effect or args.formula}; then call Dunnett significant at alpha={args.posthoc_alpha} vs {args.control_group}."
+                    )
+                    common_extra = {
+                        'ANOVA effect': args.effect or args.formula,
+                        'Posthoc factor': posthoc_factor,
+                        'Control group': args.control_group,
+                        'Posthoc alpha': args.posthoc_alpha,
+                        '# of ANOVA-valid clusters': len(anova_valid_ids),
+                    }
+
+                    bundle_specs = [
+                        ('dunnett_any', dunnett_sets['any'], sig_df, common_desc + ' Keep clusters with any significant Dunnett contrast in either direction.'),
+                        ('dunnett_increase', dunnett_sets['increase'], inc_df, common_desc + ' Keep clusters with any significant Dunnett contrast where test > control.'),
+                        ('dunnett_decrease', dunnett_sets['decrease'], dec_df, common_desc + ' Keep clusters with any significant Dunnett contrast where test < control.'),
+                        ('dunnett_any_increase', dunnett_sets['any_increase'], inc_df, common_desc + ' Keep clusters with any significant Dunnett contrast where any test group > control.'),
+                        ('dunnett_any_decrease', dunnett_sets['any_decrease'], dec_df, common_desc + ' Keep clusters with any significant Dunnett contrast where any test group < control.'),
+                        ('dunnett_mixed', dunnett_sets['mixed'], mixed_df, common_desc + ' Keep clusters with at least one significant increase and one significant decrease across Dunnett contrasts.'),
+                    ]
+
+                    for group_name, group_sets in dunnett_sets['per_group'].items():
+                        tag_group = group_sets['tag']
+                        group_any_df = dunnett_df[(dunnett_df['test_group'] == group_name) & (dunnett_df['significance'] != 'n.s.')].copy() if not dunnett_df.empty else pd.DataFrame()
+                        group_inc_df = dunnett_df[(dunnett_df['test_group'] == group_name) & (dunnett_df['direction'] == 'increase')].copy() if not dunnett_df.empty else pd.DataFrame()
+                        group_dec_df = dunnett_df[(dunnett_df['test_group'] == group_name) & (dunnett_df['direction'] == 'decrease')].copy() if not dunnett_df.empty else pd.DataFrame()
+
+                        group_any_df.to_csv(output_dir / f'dunnett_{tag_group}_any_results.csv', index=False)
+                        group_inc_df.to_csv(output_dir / f'dunnett_{tag_group}_increase_results.csv', index=False)
+                        group_dec_df.to_csv(output_dir / f'dunnett_{tag_group}_decrease_results.csv', index=False)
+
+                        group_extra = {
+                            **common_extra,
+                            'Posthoc test group': group_name,
+                        }
+                        bundle_specs.extend([
+                            (f'dunnett_{tag_group}_any', group_sets['any'], group_any_df,
+                             common_desc + f' Keep clusters where {group_name} differs significantly from {args.control_group} in either direction.'),
+                            (f'dunnett_{tag_group}_increase', group_sets['increase'], group_inc_df,
+                             common_desc + f' Keep clusters where {group_name} is significantly greater than {args.control_group}.'),
+                            (f'dunnett_{tag_group}_decrease', group_sets['decrease'], group_dec_df,
+                             common_desc + f' Keep clusters where {group_name} is significantly less than {args.control_group}.'),
+                        ])
+
+                    for tag_name, tag_ids, tag_df, desc in bundle_specs:
+                        if tag_df is not None and not tag_df.empty:
+                            tag_df.to_csv(output_dir / f'{tag_name}_results.csv', index=False)
+                        else:
+                            pd.DataFrame().to_csv(output_dir / f'{tag_name}_results.csv', index=False)
+
+                        extra = dict(common_extra)
+                        if tag_name.startswith('dunnett_'):
+                            maybe_group = tag_name[len('dunnett_'):]
+                            # pull original group label into metadata when tag represents one test group
+                            for original_group, group_sets in dunnett_sets['per_group'].items():
+                                if maybe_group.startswith(group_sets['tag']):
+                                    extra['Posthoc test group'] = original_group
+                                    break
+                        write_validation_bundle(
+                            output_dir, tag_name, tag_ids, total_clusters, p_thresh,
+                            fdr_q=fdr_q,
+                            validation_criteria_desc=desc,
+                            extra_info=extra,
+                        )
+
+                    print(f"[green]ANOVA-gated Dunnett post hoc complete for {subdir.name}[/]")
+                    print(
+                        f"  Any / Any increase / Any decrease / Mixed: [cyan]"
+                        f"{len(dunnett_sets['any'])} / {len(dunnett_sets['any_increase'])} / "
+                        f"{len(dunnett_sets['any_decrease'])} / {len(dunnett_sets['mixed'])}[/]"
+                    )
+                    for group_name, group_sets in dunnett_sets['per_group'].items():
+                        print(
+                            f"  {group_name}: [cyan]any={len(group_sets['any'])}, "
+                            f"increase={len(group_sets['increase'])}, decrease={len(group_sets['decrease'])}[/]"
+                        )
+
+    # Merge validation summaries for every discovered validation tag
+    summary_tags = set()
+    for info_csv in Path.cwd().rglob('*/_valid_clusters_stats/cluster_validation_info_*.csv'):
+        name = info_csv.name
+        if name.startswith('cluster_validation_info_') and name.endswith('.csv'):
+            summary_tags.add(name[len('cluster_validation_info_'):-4])
+
+    for tag in sorted(summary_tags):
+        files = list(Path.cwd().rglob(f'*/_valid_clusters_stats/cluster_validation_info_{tag}.csv'))
+        if files:
+            cluster_summary(f'cluster_validation_info_{tag}.csv', f'cluster_validation_summary_{tag}.csv')
+
+    verbose_end_msg()
+
+
+if __name__ == '__main__':
+    main()
