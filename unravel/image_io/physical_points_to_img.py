@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``physical_points_to_img`` or ``pp2i`` from UNRAVEL to convert physical-space point coordinates (e.g., coordinates in µm) into a 3D image using a reference image.
+Use ``io_physical_points_to_img`` or ``pp2i`` from UNRAVEL to convert physical-space point coordinates (e.g., coordinates in µm) into a 3D image using a reference image.
 
 This is useful when point coordinates are given in physical units rather than voxel indices. For example, Allen CCF25 coordinates in µm can be converted to voxel coordinates by dividing by 25.
 
@@ -24,7 +24,7 @@ Note:
 
 Usage:
 ------
-    physical_points_to_img -i coordinates.csv -ri atlas_CCFv3_2020_25um.nii.gz -x x -y y -z z -s 25 -o units_CCF25.nii.gz 
+    io_physical_points_to_img -i coordinates.csv -ri atlas_CCFv3_2020_25um.nii.gz -x x -y y -z z -s 25 -o units_CCF25.nii.gz 
 """
 
 from pathlib import Path

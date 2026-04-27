@@ -556,6 +556,12 @@ def main():
                 "description": "Compress .zarr or decompress .zarr.tar.gz files.",
                 "common": False,
                 "alias": "zc"
+            },
+            "io_physical_points_to_img": {
+                "module": "unravel.image_io.physical_points_to_img",
+                "description": "Convert physical-space point coordinates to a 3D image.",
+                "common": False,
+                "alias": "pp2i"
             }
         },
         "Image tools": {

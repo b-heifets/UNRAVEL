@@ -18,6 +18,7 @@ unravel.image_io package
    zarr_to_nii
    zarr_compress
    points_to_img
+   physical_points_to_img
    img_to_points
 
 .. automodule:: unravel.image_io
