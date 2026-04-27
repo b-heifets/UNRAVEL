@@ -3,6 +3,11 @@
 """
 Use ``io_points_to_img`` (``p2i``) from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.
 
+IMPORTANT:
+    - Input coordinates must be in voxel/index space (integer indices).
+    - If your points are in physical space (e.g., µm or mm), convert them
+      to voxel coordinates first (e.g., using `physical_points_to_img`).
+
 Input:
     - A CSV file where each row represents a point corresponding to a detection in the 3D image. 
     - The columns should include 'x', 'y', 'z', and 'Region_ID' (e.g., from ``rstats`` or ``io_img_to_points``).
