@@ -562,7 +562,13 @@ def main():
                 "description": "Convert physical-space point coordinates to a 3D image.",
                 "common": False,
                 "alias": "pp2i"
-            }
+            },
+            "io_physical_points_add_regions": {
+                "module": "unravel.image_io.physical_points_add_regions",
+                "description": "Add region IDs to physical-space point coordinates.",
+                "common": False,
+                "alias": "ppar"
+            },
         },
         "Image tools": {
             "img_math": {
