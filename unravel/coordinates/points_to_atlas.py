@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``warp_points_to_atlas`` (``wp2a``) from UNRAVEL to convert cell centroids in native space to an image matching the fixed registration input and then warp it to atlas space.
+Use ``coords_points_to_atlas`` (``p2a``) from UNRAVEL to convert cell centroids in native space to an image matching the fixed registration input and then warp it to atlas space.
 
 
 Prereqs: 
@@ -16,11 +16,11 @@ Outputs:
     - ./sample??/atlas_space/<input>.nii.gz
 
 Notes:
-    - If the input CSV has a 'count' column, use ``utils_points_compressor`` to unpack the points before running this script.
+    - If the input CSV has a 'count' column, use ``coords_points_compressor`` to unpack the points before running this script.
 
 Usage:
 ------
-    warp_points_to_atlas -i regional_stats/<asterisk>_sample??_cell_centroids.csv [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-af reg_inputs/autofl_50um.nii.gz] [-thr 20000 or -uthr 20000] [-md parameters/metadata.txt] [-mi] [-d list of paths] [-p sample??] [-v]
+    coords_points_to_atlas -i regional_stats/<asterisk>_sample??_cell_centroids.csv [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-af reg_inputs/autofl_50um.nii.gz] [-thr 20000 or -uthr 20000] [-md parameters/metadata.txt] [-mi] [-d list of paths] [-p sample??] [-v]
 """
 
 import nibabel as nib
@@ -36,8 +36,8 @@ from unravel.core.config import Configuration
 from unravel.core.img_io import load_image_metadata_from_txt, nii_to_ndarray, nii_voxel_size
 from unravel.core.img_tools import reorient_axes, reverse_reorient_axes
 from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
-from unravel.image_io.img_to_points import img_to_points
-from unravel.image_tools.resample_points import resample_and_convert_points
+from unravel.coordinates.img_to_points import img_to_points
+from unravel.coordinates.resample_points import resample_and_convert_points
 from unravel.warp.to_atlas import to_atlas
 
 

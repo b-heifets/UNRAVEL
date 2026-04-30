@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``refine_catchall_regions.py`` to refine catch-all atlas labels for points/units/channels using nearby descendant regions.
+Use ``coords_refine_catchall_regions`` or ``refine_catchall`` from UNRAVEL to refine catch-all atlas labels for points/units/channels using nearby descendant regions.
 
 This script is intended to run after ``io_physical_points_add_regions``. It keeps
 the original atlas lookup columns and adds refined region columns.
@@ -40,7 +40,7 @@ Note:
 
 Usage:
 ------
-    ./refine_catchall_regions.py \\
+    coords_refine_catchall_regions \\
         -i ISOTRP_all_recordings_units_CCFcoordinates__w_CCFv3-2020_regions.csv \\
         -a atlas_CCFv3_2020_25um_LIP_applied.nii.gz \\
         -rc CCFv3-2020_info.csv \\
@@ -59,7 +59,7 @@ from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-from unravel.image_io.physical_points_to_img import parse_spacing, validate_columns
+from unravel.coordinates.physical_points_to_img import parse_spacing, validate_columns
 
 DEFAULT_CATCHALL_ABBRS = ["CB", "CTXsp", "fiber tracts", "HPF", "HY", "MB", "MOB", "MY", "OLF", "PAL", "P", "STR", "TH"]
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_resample_points`` (``resample_points``) from UNRAVEL to resample a set of points (coordinates) and optionally convert them to an image, accounting for the number of detections at each voxel.
+Use ``coords_resample_points`` (``resample_points``) from UNRAVEL to resample a set of points (coordinates) and optionally convert them to an image, accounting for the number of detections at each voxel.
 
 Input image types:
     .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
@@ -13,7 +13,7 @@ Outputs:
 
 Usage: 
 ------
-    img_resample_points -i path/points.csv -ri path/ref_image.nii.gz -cr 3.52 3.52 6 -tr 50 [-co path/resampled_points.csv] [-io path/resampled_image.nii.gz] [-thr 20000 or -uthr 20000] [-v]
+    coords_resample_points -i path/points.csv -ri path/ref_image.nii.gz -cr 3.52 3.52 6 -tr 50 [-co path/resampled_points.csv] [-io path/resampled_image.nii.gz] [-thr 20000 or -uthr 20000] [-v]
 """
 
 import numpy as np
@@ -28,7 +28,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-from unravel.image_io.points_to_img import points_to_img, load_and_prepare_points
+from unravel.coordinates.points_to_img import points_to_img, load_and_prepare_points
 
 
 def parse_args():

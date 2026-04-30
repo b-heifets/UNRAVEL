@@ -176,12 +176,6 @@ def main():
                 "common": True,
                 "alias": "w2n"
             },
-            "warp_points_to_atlas": {
-                "module": "unravel.warp.points_to_atlas",
-                "description": "Warp cell centroids in tissue space to atlas space.",
-                "common": True,
-                "alias": "wp2a"
-            },
             "warp": {
                 "module": "unravel.warp.warp",
                 "description": "Warp to/from atlas space and registration input space.",
@@ -539,35 +533,11 @@ def main():
                 "common": False,
                 "alias": "i2np"
             },
-            "io_img_to_points": {
-                "module": "unravel.image_io.img_to_points",
-                "description": "Convert and image into points coordinates.",
-                "common": False,
-                "alias": "i2p"
-            },
-            "io_points_to_img": {
-                "module": "unravel.image_io.points_to_img",
-                "description": "Populate an empty image with point coordinates.",
-                "common": False,
-                "alias": "p2i"
-            },
             "io_zarr_compress": {
                 "module": "unravel.image_io.zarr_compress",
                 "description": "Compress .zarr or decompress .zarr.tar.gz files.",
                 "common": False,
                 "alias": "zc"
-            },
-            "io_physical_points_to_img": {
-                "module": "unravel.image_io.physical_points_to_img",
-                "description": "Convert physical-space point coordinates to a 3D image.",
-                "common": False,
-                "alias": "pp2i"
-            },
-            "io_physical_points_add_regions": {
-                "module": "unravel.image_io.physical_points_add_regions",
-                "description": "Add region IDs to physical-space point coordinates.",
-                "common": False,
-                "alias": "ppar"
             },
         },
         "Image tools": {
@@ -630,12 +600,6 @@ def main():
                 "description": "Resample image.nii.gz.",
                 "common": False,
                 "alias": "resample"
-            },
-            "img_resample_points": {
-                "module": "unravel.image_tools.resample_points",
-                "description": "Resample a set of points [and save as an image].",
-                "common": False,
-                "alias": "resample_points"
             },
             "img_extend": {
                 "module": "unravel.image_tools.extend",
@@ -755,12 +719,6 @@ def main():
                 "common": False,
                 "alias": "clean_tifs"
             },
-            "utils_points_compressor": {
-                "module": "unravel.utilities.points_compressor",
-                "description": "Pack or unpack point data in a CSV file or summarize the number of points per region.",
-                "common": False,
-                "alias": "points_compressor"
-            }
         },
         "Allen Brain Cell Atlas (ABCA)": {
             "abca_cache": {
@@ -974,6 +932,56 @@ def main():
                 "alias": "concat"
             },
         },
+        "Coordinates": {
+            "coords_points_to_img": {
+                "module": "unravel.coordinates.points_to_img",
+                "description": "Convert point coordinates to a 3D image.",
+                "common": False,
+                "alias": "p2i"
+            },
+            "coords_img_to_points": {
+                "module": "unravel.coordinates.img_to_points",
+                "description": "Convert a 3D image to point coordinates.",
+                "common": False,
+                "alias": "i2p"
+            },
+            "coords_physical_points_to_img": {
+                "module": "unravel.coordinates.physical_points_to_img",
+                "description": "Convert physical point coordinates to a 3D image.",
+                "common": False,
+                "alias": "pp2i"
+            },
+            "coords_physical_points_add_regions": {
+                "module": "unravel.coordinates.physical_points_add_regions",
+                "description": "Add region information to physical point coordinates.",
+                "common": False,
+                "alias": "ppar"
+            },
+            "coords_resample_points": {
+                "module": "unravel.coordinates.resample_points",
+                "description": "Resample point coordinates.",
+                "common": False,
+                "alias": "resample_points"
+            },
+            "coords_points_compressor": {
+                "module": "unravel.coordinates.points_compressor",
+                "description": "Compress point coordinates (e.g., for sharing).",
+                "common": False,
+                "alias": "points_compressor"
+            },
+            "coords_points_to_atlas": {
+                "module": "unravel.coordinates.points_to_atlas",
+                "description": "Warp point coordinates to atlas space.",
+                "common": False,
+                "alias": "p2a"
+            },
+            "coords_refine_catchall_regions": {
+                "module": "unravel.coordinates.refine_catchall_regions",
+                "description": "Refine anatomical assignments for points in catchall regions by checking proximity to descendent regions.",
+                "common": False,
+                "alias": "refine_catchall"
+            },
+        }
     }
 
     print("\n[magenta bold]Category[/], [cyan bold]Command[/], [green]Alias (-a), [purple3]Module (-m)[/], [grey50]Description (-d), \n")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use `io_img_to_points` (``i2p``) from UNRAVEL to convert non-zero voxels in a 3D image to a set of points, accounting for voxel intensity (e.g., number of detections).
+Use `coords_img_to_points` (``i2p``) from UNRAVEL to convert non-zero voxels in a 3D image to a set of points, accounting for voxel intensity (e.g., number of detections).
 
 Input image types:
     - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
@@ -13,7 +13,7 @@ Output:
 
 Usage: 
 ------
-    io_img_to_points -i path/image [-a path/atlas_image.nii.gz] [-o path/points.csv] [-v]
+    coords_img_to_points -i path/image [-a path/atlas_image.nii.gz] [-o path/points.csv] [-v]
 """
 
 from pathlib import Path

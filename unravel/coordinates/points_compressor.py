@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``utils_points_compressor`` (``points_compressor``) from UNRAVEL to pack or unpack point data in a CSV file or summarize the number of points per region.
+Use ``coords_points_compressor`` (``points_compressor``) from UNRAVEL to pack or unpack point data in a CSV file or summarize the number of points per region.
 
 Input:
     - CSV file with either unpacked (`x, y, z, Region_ID`) or packed (`x, y, z, Region_ID, count`) format.
@@ -19,7 +19,7 @@ Note:
 
 Usage:
 ------
-    utils_points_compressor -i path/<asterisk>_points.csv [-p or -u or -s] [-v]
+    coords_points_compressor -i path/<asterisk>_points.csv [-p or -u or -s] [-v]
 """
 
 import pandas as pd

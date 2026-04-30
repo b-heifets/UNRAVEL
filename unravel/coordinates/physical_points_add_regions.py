@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_physical_points_add_regions`` or ``ppar`` from UNRAVEL to add atlas region IDs and region metadata to a CSV containing physical-space point coordinates.
+Use ``coords_physical_points_add_regions`` or ``ppar`` from UNRAVEL to add atlas region IDs and region metadata to a CSV containing physical-space point coordinates.
 
 This is useful when point coordinates are in physical units, e.g. µm, rather
 than voxel/index space. Coordinates are converted to voxel indices using the
@@ -33,7 +33,7 @@ Note:
 
 Usage:
 ------
-    io_physical_points_add_regions \\
+    coords_physical_points_add_regions \\
         -i ISOTRP_all_recordings_units_CCFcoordinates.csv \\
         -a CCF25/atlas_CCFv3_2020_25um_in_kevin_space.nii.gz \\
         -x channel_ml -y channel_dv -z channel_ap \\
@@ -44,7 +44,7 @@ Usage:
 
 Usage example for one recording:
 --------------------------
-    physical_points_add_regions \\
+    coords_physical_points_add_regions \\
         -i ISOTRP_all_recordings_units_CCFcoordinates.csv \\
         -a CCF25/atlas_CCFv3_2020_25um_in_kevin_space.nii.gz \\
         -x channel_ml -y channel_dv -z channel_ap \\
@@ -66,7 +66,7 @@ from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-from unravel.image_io.physical_points_to_img import parse_spacing, physical_to_voxel_coords, validate_columns
+from unravel.coordinates.physical_points_to_img import parse_spacing, physical_to_voxel_coords, validate_columns
 
 
 def parse_args():
