@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``physical_points_add_regions`` or ``ppar`` from UNRAVEL to add atlas region IDs and region metadata to a CSV containing physical-space point coordinates.
+Use ``io_physical_points_add_regions`` or ``ppar`` from UNRAVEL to add atlas region IDs and region metadata to a CSV containing physical-space point coordinates.
 
 This is useful when point coordinates are in physical units, e.g. µm, rather
 than voxel/index space. Coordinates are converted to voxel indices using the
@@ -33,7 +33,7 @@ Note:
 
 Usage:
 ------
-    physical_points_add_regions \\
+    io_physical_points_add_regions \\
         -i ISOTRP_all_recordings_units_CCFcoordinates.csv \\
         -a CCF25/atlas_CCFv3_2020_25um_in_kevin_space.nii.gz \\
         -x channel_ml -y channel_dv -z channel_ap \\
@@ -84,7 +84,7 @@ def parse_args():
 
     region_args = parser.add_argument_group("Region info CSV arguments")
     region_args.add_argument('-rc', '--region_csv', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
-    region_args.add_argument('-rcc', '--region_csv_cols', help='Columns to load from the region CSV. Default: columns from -id, -abbr, -name', default=None, action=SM)
+    region_args.add_argument('-rcc', '--region_csv_cols', help='Columns to load from the region CSV. Default: columns from -id, -abbr, -name', default=None, nargs='*', action=SM)
     region_args.add_argument("-id", "--region_id_col", help="Region ID column in region CSV. Default: lowered_ID", default="lowered_ID", action=SM)
     region_args.add_argument("-abbr", "--abbr_col", help="Abbreviation column in region CSV. Default: abbreviation", default="abbreviation", action=SM)
     region_args.add_argument("-name", "--name_col", help="Region name column in region CSV. Default: full_structure_name", default="full_structure_name", action=SM)
@@ -92,8 +92,6 @@ def parse_args():
     opts = parser.add_argument_group("Optional arguments")
     opts.add_argument("-o", "--output", help="Output CSV path. Default: input stem + _with_regions.csv", default=None, action=SM)
     opts.add_argument("-f", "--filter",help="Optional pandas query string. Example: -f \"recording_name == 'NP09_R1' and shank_id == 0\"",default=None,action=SM)
-    opts.add_argument("--floor", help="Use floor(coord / spacing) instead of rounding. Default: False", action="store_true", default=False)
-    opts.add_argument("-1", "--one-indexed",help="Subtract 1 from voxel coordinates after conversion.",action="store_true",default=False)
 
     general = parser.add_argument_group("General arguments")
     general.add_argument("-v", "--verbose", help="Increase verbosity. Default: False", action="store_true", default=False)
@@ -156,9 +154,7 @@ def main():
         x_col=args.x_col,
         y_col=args.y_col,
         z_col=args.z_col,
-        spacing=spacing,
-        use_floor=args.floor,
-        one_indexed=args.one_indexed,
+        spacing=spacing
     )
 
     # Create output DataFrame with original metadata plus new columns for voxel coordinates and region info
