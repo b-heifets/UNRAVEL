@@ -58,8 +58,6 @@ def parse_args():
     opts.add_argument("-o", "--output", help="Output image path. Default: input stem + .nii.gz", default=None, action=SM)
     opts.add_argument("-f", "--filter", help="Optional pandas query string for filtering rows before conversion. Example: -q \"recording_name == 'NP09_R1' and shank_id == 0\"", default=None, action=SM)
     opts.add_argument("-b", "--binary", help="Write binary occupancy instead of point counts. Default: False", action="store_true", default=False)
-    opts.add_argument("--floor", help="Use floor(coord / spacing) instead of rounding. Default: False", action="store_true", default=False)
-    opts.add_argument("-1", "--one-indexed", help=("Subtract 1 from voxel coordinates after conversion. Use only if input physical coordinates were derived from one-indexed voxel indices."), action="store_true", default=False)
 
     general = parser.add_argument_group("General arguments")
     general.add_argument("-v", "--verbose", help="Increase verbosity. Default: False", action="store_true", default=False)
@@ -86,21 +84,15 @@ def validate_columns(df, columns):
         )
 
 
-def physical_to_voxel_coords(points_df, x_col, y_col, z_col, spacing, use_floor=False, one_indexed=False):
+def physical_to_voxel_coords(points_df, x_col, y_col, z_col, spacing):
     """Convert x/y/z physical point coordinates to voxel indices and return as a numpy array"""
     physical = points_df[[x_col, y_col, z_col]].to_numpy(dtype=float)
 
     voxel = physical / spacing
 
-    if use_floor:
-        voxel = np.floor(voxel)
-    else:
-        voxel = np.rint(voxel)
+    voxel = np.rint(voxel)
 
     voxel = voxel.astype(int)
-
-    if one_indexed:
-        voxel -= 1
 
     return voxel
 
@@ -136,9 +128,7 @@ def main():
         x_col=args.x_col,
         y_col=args.y_col,
         z_col=args.z_col,
-        spacing=spacing,
-        use_floor=args.floor,
-        one_indexed=args.one_indexed,
+        spacing=spacing
     )
 
     ref_img = load_3D_img(ref_img_path, verbose=args.verbose)
