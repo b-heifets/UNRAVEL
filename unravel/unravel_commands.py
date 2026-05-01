@@ -427,6 +427,12 @@ def main():
                 "description": "Calculate relative effect sizes by sex.",
                 "common": False,
                 "alias": "esr"
+            },
+            "cstats_reshape": {
+                "module": "unravel.cluster_stats.reshape",
+                "description": "Reshape cluster validation data.",
+                "common": False,
+                "alias": "reshape"
             }
         },
         "Region-wise stats": {

@@ -27,6 +27,7 @@ unravel.cluster_stats package
    mean_IF
    mean_IF_summary
    clusters
+   reshape
    effect_sizes/toc
 
 .. automodule:: unravel.cluster_stats
