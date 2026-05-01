@@ -3,7 +3,7 @@
 """
 Use ``coords_refine_catchall_regions`` or ``refine_catchall`` from UNRAVEL to refine catch-all atlas labels for points/units/channels using nearby descendant regions.
 
-This script is intended to run after ``io_physical_points_add_regions``. It keeps
+This script is intended to run after ``coords_physical_points_add_regions``. It keeps
 the original atlas lookup columns and adds refined region columns.
 
 For points assigned to broad/catch-all regions, e.g. STR, TH, HY, MB, etc., the script:
@@ -15,7 +15,7 @@ For points assigned to broad/catch-all regions, e.g. STR, TH, HY, MB, etc., the 
 
 Input:
     - CSV with voxel coordinate columns, e.g. x, y, z
-    - Region metadata columns from ``io_physical_points_add_regions``
+    - Region metadata columns from ``coords_physical_points_add_regions``
     - Atlas image in the same array orientation as the voxel coordinates
     - Region info CSV, e.g. CCFv3-2020_info.csv
 
@@ -68,7 +68,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group("Required arguments")
-    reqs.add_argument("-i", "--input", help="Input CSV from io_physical_points_add_regions.", required=True, action=SM)
+    reqs.add_argument("-i", "--input", help="Input CSV from ``coords_physical_points_add_regions``.", required=True, action=SM)
     reqs.add_argument("-a", "--atlas", help="Atlas image matching x/y/z voxel coordinate space.", required=True, action=SM)
 
     coord_args = parser.add_argument_group("Coordinate arguments")
