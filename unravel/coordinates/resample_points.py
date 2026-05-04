@@ -16,7 +16,6 @@ Usage:
     coords_resample_points -i path/points.csv -ri path/ref_image.nii.gz -cr 3.52 3.52 6 -tr 50 [-co path/resampled_points.csv] [-io path/resampled_image.nii.gz] [-thr 20000 or -uthr 20000] [-v]
 """
 
-from botocore import args
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -46,7 +45,7 @@ def parse_args():
     opts.add_argument('-io', '--img_output', help="Optional: Path to save resampled points as an image.", action=SM)
     opts.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
     opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
-    opts.add_argument("--region-id-col", help="Column name for region IDs used for filtering (default: Region_ID). Set to None to disable filtering.", default="Region_ID", action=SM)
+    opts.add_argument("-c", "--region-id-col", help="Column name for region IDs used for filtering (default: Region_ID). Set to None to disable filtering.", default="Region_ID", action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -106,6 +105,12 @@ def resample_and_convert_points(points_csv_input_path, current_res, target_res, 
         raise ValueError("\n    [red1]target_res must be a single float or a tuple/list of 3 floats (x_res, y_res, z_res).\n")
 
     # Load and prepare points
+    points_df = pd.read_csv(points_csv_input_path)
+
+    if 'count' in points_df.columns:
+        print("\n    [red1]The input CSV file contains a 'count' column. Please use `coords_points_compressor` to unpack the points before rerunning this script.\n")
+        import sys; sys.exit()
+
     if region_id_col == "None":
         if verbose:
             print("[yellow]Skipping region-based filtering (--region-id-col None)[/]")
@@ -121,7 +126,7 @@ def resample_and_convert_points(points_csv_input_path, current_res, target_res, 
             points_df,
             thresh=thresh,
             upper_thresh=upper_thresh,
-            region_id_col=region_id_col  # <-- update function too
+            region_id_col=region_id_col,
         )
 
     # Convert voxel coordinates to physical space
