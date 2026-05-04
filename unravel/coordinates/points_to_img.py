@@ -49,6 +49,11 @@ def parse_args():
     opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
     opts.add_argument("-c", "--region-id-col", help="Column name for region IDs used for filtering (default: Region_ID). Set to None to disable filtering.", default="Region_ID", action=SM)
 
+    coord_args = parser.add_argument_group("Coordinate arguments")
+    coord_args.add_argument("-x", "--x_col", help="Voxel coordinate column for axis 0. Default: x", default="x", action=SM)
+    coord_args.add_argument("-y", "--y_col", help="Voxel coordinate column for axis 1. Default: y", default="y", action=SM)
+    coord_args.add_argument("-z", "--z_col", help="Voxel coordinate column for axis 2. Default: z", default="z", action=SM)
+
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
@@ -200,7 +205,7 @@ def main():
         )
 
     # Extract the ndarray of coordinates from the DataFrame
-    points_ndarray = points_df[['x', 'y', 'z']].values
+    points_ndarray = points_df[[args.x_col, args.y_col, args.z_col]].values
 
     # Create an image from the points using a reference image to determine the shape
     ref_img = load_3D_img(args.ref_img, verbose=args.verbose)
