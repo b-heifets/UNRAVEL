@@ -47,6 +47,7 @@ def parse_args():
     opts.add_argument('-o', '--output', help='Path to save the output image. Default: path/input.nii.gz', default=None, action=SM)
     opts.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
     opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
+    opts.add_argument("-c", "--region-id-col", help="Column name for region IDs used for filtering (default: Region_ID). Set to None to disable filtering.", default="Region_ID", action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -178,7 +179,25 @@ def main():
     verbose_start_msg()
 
     # Load and prepare points
-    points_df = load_and_prepare_points(points_csv_path=args.input, thresh=args.thresh, upper_thresh=args.upper_thr)
+    points_df = pd.read_csv(args.input)
+
+    if args.region_id_col == "None":
+        if args.verbose:
+            print("[yellow]Skipping region-based filtering[/]")
+
+    elif args.region_id_col not in points_df.columns:
+        raise ValueError(
+            f"Column '{args.region_id_col}' not found. "
+            "Use --region-id-col None to disable filtering."
+        )
+
+    else:
+        points_df = threshold_points_by_region_id(
+            points_df,
+            thresh=args.thresh,
+            upper_thresh=args.upper_thr,
+            region_id_col=args.region_id_col
+        )
 
     # Extract the ndarray of coordinates from the DataFrame
     points_ndarray = points_df[['x', 'y', 'z']].values
