@@ -16,6 +16,7 @@ Usage:
     coords_resample_points -i path/points.csv -ri path/ref_image.nii.gz -cr 3.52 3.52 6 -tr 50 [-co path/resampled_points.csv] [-io path/resampled_image.nii.gz] [-thr 20000 or -uthr 20000] [-v]
 """
 
+from botocore import args
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -28,7 +29,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-from unravel.coordinates.points_to_img import points_to_img, load_and_prepare_points
+from unravel.coordinates.points_to_img import points_to_img, threshold_points_by_region_id
 
 
 def parse_args():
@@ -45,6 +46,7 @@ def parse_args():
     opts.add_argument('-io', '--img_output', help="Optional: Path to save resampled points as an image.", action=SM)
     opts.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
     opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
+    opts.add_argument("--region-id-col", help="Column name for region IDs used for filtering (default: Region_ID). Set to None to disable filtering.", default="Region_ID", action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -52,7 +54,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def resample_and_convert_points(points_csv_input_path, current_res, target_res, ref_img, thresh=None, upper_thresh=None):
+def resample_and_convert_points(points_csv_input_path, current_res, target_res, ref_img, thresh=None, upper_thresh=None, region_id_col="Region_ID", verbose=False):
     """Resample a set of points and optionally convert them to an image.
 
     Parameters:
@@ -104,7 +106,23 @@ def resample_and_convert_points(points_csv_input_path, current_res, target_res, 
         raise ValueError("\n    [red1]target_res must be a single float or a tuple/list of 3 floats (x_res, y_res, z_res).\n")
 
     # Load and prepare points
-    points_df = load_and_prepare_points(points_csv_input_path, thresh=thresh, upper_thresh=upper_thresh)
+    if region_id_col == "None":
+        if verbose:
+            print("[yellow]Skipping region-based filtering (--region-id-col None)[/]")
+
+    elif region_id_col not in points_df.columns:
+        raise ValueError(
+            f"Column '{region_id_col}' not found. "
+            "Use --region-id-col None to disable filtering."
+        )
+
+    else:
+        points_df = threshold_points_by_region_id(
+            points_df,
+            thresh=thresh,
+            upper_thresh=upper_thresh,
+            region_id_col=region_id_col  # <-- update function too
+        )
 
     # Convert voxel coordinates to physical space
     points_ndarray_physical = points_df[['x', 'y', 'z']].values * np.array(current_res)
@@ -134,7 +152,7 @@ def main():
     ref_img = load_3D_img(args.ref_img, verbose=args.verbose)
 
     # Resample and convert the points
-    points_resampled_df, points_resampled_img = resample_and_convert_points(args.input, args.current_res, args.target_res, ref_img, args.thresh, args.upper_thr)
+    points_resampled_df, points_resampled_img = resample_and_convert_points(args.input, args.current_res, args.target_res, ref_img, args.thresh, args.upper_thr, region_id_col=args.region_id_col, verbose=args.verbose)
 
     # Save the resampled points to a CSV file
     if args.csv_output:

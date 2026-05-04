@@ -54,7 +54,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def threshold_points_by_region_id(points_df, thresh=None, upper_thresh=None):
+def threshold_points_by_region_id(points_df, thresh=None, upper_thresh=None, region_id_col="Region_ID"):
     """
     Filter the points (i.e., coordinates) based on the 'Region_ID' column. This function removes points that are outside the brain (i.e., 'Region_ID' == 0) and optionally filters points based on a threshold or upper threshold.
     
@@ -69,19 +69,33 @@ def threshold_points_by_region_id(points_df, thresh=None, upper_thresh=None):
     upper_thresh : float, optional
         Exclude region IDs above this threshold.
 
+    region_id_col : str, optional
+        The name of the column in points_df that contains the region IDs used for filtering. Default is "Region_ID". 
+
     Returns:
     --------
     points_df : pandas.DataFrame
-        The filtered DataFrame containing the points with columns 'x', 'y', 'z', and 'Region_ID'.
+        The filtered DataFrame containing the points with columns 'x', 'y', 'z', and region_id_col.
     """
-    # Remove points that are outside the brain (i.e., 'Region_ID' == 0)
-    points_df = points_df[points_df['Region_ID'] != 0]
+    # Remove points that are outside the brain (i.e., region_id_col == 0)
+    points_df = points_df[points_df[region_id_col] != 0]
 
-    # Filter points based on thresholding the 'Region_ID' column
+    # Filter points based on thresholding the region_id_col column
     if thresh:
-        points_df = points_df[points_df['Region_ID'] >= thresh]
+        points_df = points_df[points_df[region_id_col] >= thresh]
     if upper_thresh:
-        points_df = points_df[points_df['Region_ID'] <= upper_thresh]
+        points_df = points_df[points_df[region_id_col] <= upper_thresh]
+
+    return points_df
+
+def threshold_points_by_region_id(points_df, thresh=None, upper_thresh=None, region_id_col="Region_ID"):
+    points_df = points_df[points_df[region_id_col] != 0]
+
+    if thresh:
+        points_df = points_df[points_df[region_id_col] >= thresh]
+
+    if upper_thresh:
+        points_df = points_df[points_df[region_id_col] <= upper_thresh]
 
     return points_df
 
