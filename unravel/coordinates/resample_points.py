@@ -45,7 +45,15 @@ def parse_args():
     opts.add_argument('-io', '--img_output', help="Optional: Path to save resampled points as an image.", action=SM)
     opts.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
     opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
-    opts.add_argument("-c", "--region-id-col", help="Column name for region IDs used for filtering (default: Region_ID). Set to None to disable filtering.", default="Region_ID", action=SM)
+
+    col_args = parser.add_argument_group("Column arguments")
+    col_args.add_argument("-x", "--x_col", help="Column name for x coordinates in the input CSV. Default: x", default="x", action=SM)
+    col_args.add_argument("-y", "--y_col", help="Column name for y coordinates in the input CSV. Default: y", default="y", action=SM)
+    col_args.add_argument("-z", "--z_col", help="Column name for z coordinates in the input CSV. Default: z", default="z", action=SM)
+    col_args.add_argument("-ox", "--out_x_col", help="Column name for resampled x coordinates in the output CSV. Default: x_resampled", default="x_resampled", action=SM)
+    col_args.add_argument("-oy", "--out_y_col", help="Column name for resampled y coordinates in the output CSV. Default: y_resampled", default="y_resampled", action=SM)
+    col_args.add_argument("-oz", "--out_z_col", help="Column name for resampled z coordinates in the output CSV. Default: z_resampled", default="z_resampled", action=SM)
+    col_args.add_argument("-c", "--region-id-col", help="Column name for region IDs used for filtering (default: Region_ID). Set to None to disable filtering.", default="Region_ID", action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -53,13 +61,13 @@ def parse_args():
     return parser.parse_args()
 
 
-def resample_and_convert_points(points_csv_input_path, current_res, target_res, ref_img, thresh=None, upper_thresh=None, region_id_col="Region_ID", verbose=False):
+def resample_and_convert_points(points_csv_input_path, current_res, target_res, ref_img, thresh=None, upper_thresh=None, region_id_col="Region_ID", x_col="x", y_col="y", z_col="z", out_x_col="x_resampled", out_y_col="y_resampled", out_z_col="z_resampled", verbose=False):
     """Resample a set of points and optionally convert them to an image.
 
     Parameters:
     -----------
     points_csv_input_path : str
-        Path to the CSV file containing the points with columns 'x', 'y', 'z', and 'Region_ID'.
+        Path to the CSV file containing the points with columns 'x', 'y', 'z', and <region_id_col>.
     
     current_res : tuple of floats or float
         The current resolution of the points in micrometers, as (x_res, y_res, z_res) or a single float value for isotropic resampling.
@@ -76,10 +84,19 @@ def resample_and_convert_points(points_csv_input_path, current_res, target_res, 
     upper_thresh : float, optional
         Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data).
 
+    region_id_col : str, optional
+        The name of the column in the input CSV that contains the region IDs used for filtering. Default is "Region_ID". Set to None to disable filtering.
+
+    x_col, y_col, z_col : str, optional
+        Column names for the x, y, z coordinates in the input CSV. Defaults are "x", "y", and "z".
+
+    out_x_col, out_y_col, out_z_col : str, optional
+        Column names for the resampled x, y, z coordinates in the output CSV. Defaults are "x_resampled", "y_resampled", and "z_resampled".
+
     Returns:
     --------
     points_resampled_df : pandas.DataFrame
-        The resampled points with columns 'x', 'y', 'z', and 'Region_ID'
+        The resampled points with columns 'x', 'y', 'z', and <region_id_col> (if present in the input).
 
     points_resampled_img : numpy.ndarray or None
         The resampled image where each voxel contains the number of detections at that location. 
@@ -130,15 +147,16 @@ def resample_and_convert_points(points_csv_input_path, current_res, target_res, 
         )
 
     # Convert voxel coordinates to physical space
-    points_ndarray_physical = points_df[['x', 'y', 'z']].values * np.array(current_res)
+    points_ndarray_physical = points_df[[x_col, y_col, z_col]].values * np.array(current_res)
 
     # Resample the points to the target resolution
     points_ndarray_resampled = points_ndarray_physical / np.array(target_res)
 
     # Convert the resampled points to a DataFrame
-    points_resampled_df = pd.DataFrame(points_ndarray_resampled, columns=['x', 'y', 'z'])
-    if 'Region_ID' in points_df.columns:
-        points_resampled_df['Region_ID'] = points_df['Region_ID'].values
+    points_resampled_df = points_df.copy()
+    points_resampled_df[out_x_col] = points_ndarray_resampled[:, 0]
+    points_resampled_df[out_y_col] = points_ndarray_resampled[:, 1]
+    points_resampled_df[out_z_col] = points_ndarray_resampled[:, 2]
 
     # Create an image from the points using the reference image
     points_resampled_img = points_to_img(points_ndarray_resampled, ref_img=ref_img)
