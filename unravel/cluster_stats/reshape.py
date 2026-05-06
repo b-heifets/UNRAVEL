@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_reshape`` (``reshape``) from UNRAVEL to export raw cluster validation data
-as wide all-cluster CSVs and per-cluster replicate-layout CSVs.
+Use ``cstats_reshape`` (``reshape``) from UNRAVEL to export raw cluster validation data as long, wide and per-cluster CSVs.
 
 Prereqs:
     - ``cstats_validation``, ``cstats_org_data``, ``cstats_group_data``, ``utils_prepend``
@@ -39,7 +38,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-i', '--input', help="CSV paths or glob patterns. Default: '*_data.csv'", nargs='*', default=['*.csv'], action=SM)
-    opts.add_argument('-o', '--outdir', help="Output directory. Default: _resphaped", default="_reshaped", action=SM)
+    opts.add_argument('-o', '--outdir', help="Output directory. Default: _reshaped", default="_reshaped", action=SM)
     opts.add_argument("--value_name", help="Name to use for the metric value column. Default: cell_density", default="cell_density", action=SM)
     opts.add_argument("--support_name", help="Name to use for the support/count column. Default: cell_count", default="cell_count", action=SM)
     opts.add_argument("--combine", help="Optional combined per-cluster columns, e.g. drug1+drug2 or ent=drug1+drug2", nargs="*", default=[], action=SM)
