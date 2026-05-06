@@ -48,6 +48,7 @@ def parse_args():
     opts.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
     opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
     opts.add_argument("-c", "--region-id-col", help="Column name for region IDs used for filtering (default: Region_ID). Set to None to disable filtering.", default="Region_ID", action=SM)
+    opts.add_argument("-val", "--value_col", help="Optional column used as voxel intensity instead of incrementing counts. Default: None", default=None, action=SM)
 
     coord_args = parser.add_argument_group("Coordinate arguments")
     coord_args.add_argument("-x", "--x_col", help="Voxel coordinate column for axis 0. Default: x", default="x", action=SM)
@@ -126,10 +127,16 @@ def load_and_prepare_points(points_csv_path, thresh=None, upper_thresh=None):
     return points_df
 
 @print_func_name_args_times()
-def points_to_img(points_ndarray, ref_img=None):
+def points_to_img(points_ndarray, ref_img=None, values=None):
     """
-    Create a 3D image from a set of point coordinates, using a reference image for shape if provided.
-    If multiple points fall within the same voxel, the voxel's value is incremented accordingly.
+    Create a 3D image from point coordinates.
+
+    If values is None:
+        - voxel intensities represent counts per voxel.
+
+    If values is provided:
+        - voxel intensities are assigned from the corresponding values array.
+        - later points overwrite earlier points if multiple points map to the same voxel
 
     Parameters:
     -----------
@@ -138,6 +145,9 @@ def points_to_img(points_ndarray, ref_img=None):
 
     ref_img : numpy.ndarray
         A reference image from which to derive the output shape.
+
+    values : numpy.ndarray, optional
+        A 1D array of values corresponding to each point, used to assign voxel intensities instead of counting occurrences. Must be the same length as points_ndarray.
 
     Returns:
     --------
@@ -155,23 +165,47 @@ def points_to_img(points_ndarray, ref_img=None):
     --------
     >>> points_ndarray = np.array([[10, 20, 30], [10, 20, 30], [15, 25, 35]])
     >>> ref_img = np.zeros((50, 50, 50), dtype='uint8')
-    >>> img = points_to_img(points_ndarray, ref_img)
+    >>> img = points_to_img(points_ndarray, ref_img, values=None)
     >>> print(img[10, 20, 30])  # Output will be 2, since two points are at this coordinate.
     >>> print(img[15, 25, 35])  # Output will be 1, since one point is at this coordinate.
     """
 
-    # Create an empty image
     img_shape = ref_img.shape
-    img = np.zeros(img_shape, dtype='uint8')
 
-    # Increment the voxel value for each point's coordinates
-    for x, y, z in points_ndarray.astype(int):
-        if 0 <= x < img_shape[0] and 0 <= y < img_shape[1] and 0 <= z < img_shape[2]:
-            img[x, y, z] += 1
-            
-            # Promote to uint16 if a voxel's count exceeds 255
-            if img[x, y, z] == 255 and img.dtype == 'uint8':
-                img = img.astype('uint16')
+    if values is not None:
+        max_value = np.max(values)
+
+        if max_value <= np.iinfo(np.uint8).max:
+            dtype = np.uint8
+        elif max_value <= np.iinfo(np.uint16).max:
+            dtype = np.uint16
+        else:
+            dtype = np.uint32
+
+        img = np.zeros(img_shape, dtype=dtype)
+
+        for (x, y, z), value in zip(points_ndarray.astype(int), values):
+            if (
+                0 <= x < img_shape[0] and
+                0 <= y < img_shape[1] and
+                0 <= z < img_shape[2]
+            ):
+                img[x, y, z] = value
+
+    else:
+        img = np.zeros(img_shape, dtype=np.uint8)
+
+        # Increment the voxel value for each point's coordinates
+        for x, y, z in points_ndarray.astype(int):
+            if (
+                0 <= x < img_shape[0] and
+                0 <= y < img_shape[1] and
+                0 <= z < img_shape[2]
+            ):
+                img[x, y, z] += 1
+
+                if img[x, y, z] == 255 and img.dtype == np.uint8:
+                    img = img.astype(np.uint16)
 
     return img
 
@@ -208,8 +242,15 @@ def main():
     points_ndarray = points_df[[args.x_col, args.y_col, args.z_col]].values
 
     # Create an image from the points using a reference image to determine the shape
+    values = None
+    if args.value_col is not None:
+        if args.value_col not in points_df.columns:
+            raise ValueError(
+                f"Column '{args.value_col}' not found in input CSV."
+            )
+        values = points_df[args.value_col].values
     ref_img = load_3D_img(args.ref_img, verbose=args.verbose)
-    img = points_to_img(points_ndarray, ref_img)
+    img = points_to_img(points_ndarray, ref_img, values=values)
 
     # Save the image
     if args.output:
