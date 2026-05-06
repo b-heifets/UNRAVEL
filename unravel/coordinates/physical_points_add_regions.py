@@ -43,7 +43,7 @@ Usage:
         -o units_with_regions.csv
 
 Usage example for one recording:
---------------------------
+--------------------------------
     coords_physical_points_add_regions \\
         -i ISOTRP_all_recordings_units_CCFcoordinates.csv \\
         -a CCF25/atlas_CCFv3_2020_25um_in_kevin_space.nii.gz \\
