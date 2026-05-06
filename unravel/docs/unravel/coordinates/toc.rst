@@ -12,6 +12,10 @@ unravel.coordinates package
    points_compressor
    points_to_atlas
    resample_points
+   ccf30_points_to_merfish
+   labeled_voxel_img_to_points
+   points_to_labeled_voxel_img
+   points_to_sphere_masks
 
 .. automodule:: unravel.coordinates
    :members:
