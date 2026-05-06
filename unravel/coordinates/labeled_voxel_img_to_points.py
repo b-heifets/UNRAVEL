@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Use ``labeled_voxel_img_to_points`` to decode a labeled voxel image back into
-a table of label coordinates.
+Use ``coords_labeled_voxel_img_to_points`` or ``labeled_voxel_img_to_points`` from UNRAVEL
+to decode a labeled voxel image back into a table of label coordinates.
 
 This is useful after a unique-voxel labeled image has been reoriented,
 resampled, or warped into another space, e.g. MERFISH-CCF space.

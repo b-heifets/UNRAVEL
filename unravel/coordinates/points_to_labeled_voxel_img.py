@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``coords_points_to_labeled_voxel_img`` or ``points_to_labeled_img`` from UNRAVEL to convert point coordinates into a labeled unique-voxel image.
+Use ``coords_points_to_labeled_voxel_img`` or ``points_to_labeled_voxel_img`` from UNRAVEL to convert point coordinates into a labeled unique-voxel image.
 
 This is useful when many units/channels occupy the same voxel. Instead of
 creating one image per unit, this script groups rows by voxel coordinate and
@@ -29,7 +29,7 @@ Notes:
 
 Usage:
 ------
-    points_to_labeled_img \\
+    points_to_labeled_voxel_img \\
         -i units_with_regions.csv \\
         -ri samples/downsampled_standard_NP09_488_Ch0.nii.gz \\
         -x x -y y -z z \\

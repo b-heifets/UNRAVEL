@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Use ``points_to_sphere_masks`` to create one binary sphere/ellipsoid mask per
-point in a CSV.
+Use ``coords_points_to_sphere_masks`` or ``points_to_sphere_masks`` from UNRAVEL 
+to create one binary sphere/ellipsoid mask per point in a CSV.
 
 This is useful for generating local-neighborhood masks around transformed
 coordinates, e.g. MERFISH-space unit locations.

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Use ``coords_ccf30_points_to_merfish`` to transform CCFv3 30 µm point
-coordinates into MERFISH-CCF space using ANTs point transforms.
+Use ``coords_ccf30_points_to_merfish`` or ``ccf30_points_to_merfish`` from UNRAVEL 
+to transform CCFv3 30 µm point coordinates into MERFISH-CCF space using ANTs point transforms.
 
 This is the point-coordinate analogue of ``warp_ccf30_to_merfish``. It should
 be used instead of warping sparse labeled point images, because sparse labels

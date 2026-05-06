@@ -987,6 +987,30 @@ def main():
                 "common": False,
                 "alias": "refine_catchall"
             },
+            "coords_ccf30_points_to_merfish": {
+                "module": "unravel.coordinates.ccf30_points_to_merfish",
+                "description": "Convert CCFv3.0 point coordinates to ABCA MERFISH point coordinates.",
+                "common": False,
+                "alias": "ccf30_points_to_merfish"
+            },
+            "coords_labeled_voxel_img_to_points": {
+                "module": "unravel.coordinates.labeled_voxel_img_to_points",
+                "description": "Convert labeled voxel images to point coordinates.",
+                "common": False,
+                "alias": "labeled_voxel_img_to_points"
+            },
+            "coords_points_to_labeled_voxel_img": {
+                "module": "unravel.coordinates.points_to_labeled_voxel_img",
+                "description": "Convert point coordinates to labeled voxel images.",
+                "common": False,
+                "alias": "points_to_labeled_voxel_img"
+            },
+            "coords_points_to_sphere_masks": {
+                "module": "unravel.coordinates.points_to_sphere_masks",
+                "description": "Create one binary sphere/ellipsoid mask per point.",
+                "common": False,
+                "alias": "points_to_sphere_masks"
+            },
         }
     }
 
