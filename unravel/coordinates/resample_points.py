@@ -175,7 +175,22 @@ def main():
     ref_img = load_3D_img(args.ref_img, verbose=args.verbose)
 
     # Resample and convert the points
-    points_resampled_df, points_resampled_img = resample_and_convert_points(args.input, args.current_res, args.target_res, ref_img, args.thresh, args.upper_thr, region_id_col=args.region_id_col, verbose=args.verbose)
+    points_resampled_df, points_resampled_img = resample_and_convert_points(
+        points_csv_input_path=args.input,
+        current_res=args.current_res,
+        target_res=args.target_res,
+        ref_img=ref_img,
+        thresh=args.thresh,
+        upper_thresh=args.upper_thr,
+        region_id_col=args.region_id_col,
+        x_col=args.x_col,
+        y_col=args.y_col,
+        z_col=args.z_col,
+        out_x_col=args.out_x_col,
+        out_y_col=args.out_y_col,
+        out_z_col=args.out_z_col,
+        verbose=args.verbose
+    )
 
     # Save the resampled points to a CSV file
     if args.csv_output:
