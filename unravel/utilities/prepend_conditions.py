@@ -83,6 +83,7 @@ def rename_items(base_path, dir_name, condition, rename_files, rename_dirs, recu
 def prepend_conditions(base_path, csv_file, rename_files, rename_dirs, recursive):
     mapping_df = pd.read_csv(csv_file)
     missing = []
+    renamed_any = False
 
     for _, row in mapping_df.iterrows():
         ok = rename_items(base_path, row['dir_name'], row['condition'],
@@ -90,9 +91,11 @@ def prepend_conditions(base_path, csv_file, rename_files, rename_dirs, recursive
         if not ok:
             missing.append(row['dir_name'])
 
-    if missing:
-        print(f"[yellow]Conditions could not be prepended. No matching files/dirs found for: {', '.join(missing)} in {base_path}.")
+        if ok:
+            renamed_any = True
 
+    if missing and not renamed_any:
+        print(f"[yellow]No matching files/dirs found for any sample_key entries in {base_path}.")
 
 @log_command
 def main():
