@@ -251,7 +251,7 @@ def main():
         if not Path(rev_cluster_index_path).exists():        
             rev_cluster_index_path = input_dir / f'{input_dir.name}_rev_cluster_index_LH.nii.gz'
         if not Path(rev_cluster_index_path).exists():
-            rev_cluster_index_path = next(input_dir.glob("*rev_cluster_index*"), None)
+            rev_cluster_index_path = next(input_dir.glob("*rev_cluster_index*.nii.gz"), None)
 
         if rev_cluster_index_path is None:
             print(f"    No valid cluster index file found in {input_dir}. Skipping...")
