@@ -26,7 +26,6 @@ Usage
     cstats_org_data -cvd '<asterisk>' -me <metric> [-vd path/vstats_dir] [-td target_dir] [-pvt p_value_threshold.txt] [-d list of paths] [-p sample??] [-v]
 """
 
-import re
 import shutil
 from pathlib import Path
 from rich import print
@@ -58,7 +57,23 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Copy the rev_cluster_index.nii.gz to the target_dir
+
+def resolve_cluster_correction_dir(validation_dir_name):
+    name = str(validation_dir_name)
+
+    # Normalize directional naming
+    name = name.replace('_gt_', '_v_').replace('_lt_', '_v_')
+
+    # Remove validation-output suffix
+    name = name.replace('_rev_cluster_index', '')
+
+    # Remove hemi suffix only for finding the parent stats dir
+    hemi = None
+    if name.endswith('_LH') or name.endswith('_RH'):
+        hemi = name[-2:]
+        name = name[:-3]
+
+    return name, hemi
 
 def find_matching_directory(base_path, long_name):
     base_path = Path(base_path)
@@ -66,9 +81,9 @@ def find_matching_directory(base_path, long_name):
     # Get all directories in base_path
     dirs = [d for d in base_path.iterdir() if d.is_dir()]
 
-    # Find the directory whose name is a substring of long_name
+    # Find a directory whose name is a substring of long_name or vice versa
     for dir in dirs:
-        if dir.name in long_name:
+        if dir.name in long_name or long_name in dir.name:
             return dir.name
 
     return None
@@ -96,50 +111,17 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
 
     if vstats_path.exists():
         validation_dir_name = str(validation_dir.name)
-        original_validation_dir_name = validation_dir_name  # Keep original for fallback
-
-        # Attempt to replace _gt_/_lt_ with _v_ for cases when non-directional maps were made as directional
-        validation_dir_name = validation_dir_name.replace('_gt_', '_v_').replace('_lt_', '_v_')
-
-        # Start from validation_dir_name, then strip suffixes used by validation output dirs
-        cluster_correction_dir = validation_dir_name
-
-        # Remove hemisphere suffix if present
-        if cluster_correction_dir.endswith('_LH') or cluster_correction_dir.endswith('_RH'):
-            cluster_correction_dir = cluster_correction_dir[:-3]
-
-        # Remove rev_cluster_index suffix if present
-        cluster_correction_dir = cluster_correction_dir.replace('_rev_cluster_index', '')
-
-        # Use regex to handle cases with or without "_q" in the directory name
-        if '_q' in cluster_correction_dir:
-            pattern = r'(.*q\d+\.\d+)(_.+)?' 
-            match = re.match(pattern, cluster_correction_dir)
-            if match:
-                cluster_correction_dir = match.group(1)
-                suffix = match.group(2)[1:] if match.group(2) else ''  # Get suffix after "q" value if present
-            else:
-                print(f"\n    [red1]The regex pattern {pattern} did not match the cluster_correction_dir: {cluster_correction_dir} in cstats_org_data\n")
-        else:
-            suffix = ''
+        cluster_correction_dir, hemi = resolve_cluster_correction_dir(validation_dir_name)
 
         # Construct the path and check existence
         cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
 
         if not cluster_correction_path.exists():
-            cluster_correction_dir = find_matching_directory(vstats_path / 'stats', cluster_correction_dir)
+            matched_dir = find_matching_directory(vstats_path / 'stats', cluster_correction_dir)
 
-            if cluster_correction_dir is not None:
+            if matched_dir is not None:
+                cluster_correction_dir = matched_dir
                 cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
-            else:
-                # Fallback to original name
-                cluster_correction_path = vstats_path / 'stats' / original_validation_dir_name
-                # Remove hemisphere suffix if present
-                if str(cluster_correction_path).endswith('_LH') or str(cluster_correction_path).endswith('_RH'):
-                    cluster_correction_path = Path(str(cluster_correction_path)[:-3])  # Remove last 3 characters (_LH or _RH)
-                else:
-                    cluster_correction_path = validation_dir_name
-                cluster_correction_dir = Path(cluster_correction_path).name
 
         if not cluster_correction_path.exists():
             print(f'\n    [red]Path for rev_cluster_index.nii.gz, {p_val_txt}, and _cluster_info.txt does not exist: {cluster_correction_path}\n')
@@ -161,30 +143,11 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
         else: 
             print(f'\n    [red]The p value threshold txt ({p_val_thresh_file}) does not exist\n')
 
-        # Adjust rev_cluster_index path based on hemisphere suffix
-        if validation_dir_name.endswith('_LH'):
-            rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)[:-3]}_rev_cluster_index_LH.nii.gz'
-        elif validation_dir_name.endswith('_RH'):
-            rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)[:-3]}_rev_cluster_index_RH.nii.gz'
+        # Handle rev_cluster_index.nii.gz with optional hemisphere suffix
+        if hemi:
+            rev_cluster_index_path = cluster_correction_path / f"{cluster_correction_path.name}_rev_cluster_index_{hemi}.nii.gz"
         else:
-            rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)}_rev_cluster_index.nii.gz'
-
-        # Adjust rev_cluster_index_path if suffix is missing
-        if not rev_cluster_index_path.exists():
-            suffix = str(validation_dir_name).replace(str(cluster_correction_path.name), '')
-            rev_cluster_index_path =  cluster_correction_path / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"
-
-        if not rev_cluster_index_path.exists():
-            rev_cluster_index_path = Path(f"{cluster_correction_path}{suffix}") / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"
-
-        if (
-            not rev_cluster_index_path.exists()
-            and (
-                str(cluster_correction_path).endswith('_LH')
-                or str(cluster_correction_path).endswith('_RH')
-            )
-        ):
-            rev_cluster_index_path = Path(f"{cluster_correction_path}{str(suffix)[:-3]}") / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"
+            rev_cluster_index_path = cluster_correction_path / f"{cluster_correction_path.name}_rev_cluster_index.nii.gz"
 
         if rev_cluster_index_path.exists():
             dest_rev_cluster_index = dest_path / rev_cluster_index_path.name
