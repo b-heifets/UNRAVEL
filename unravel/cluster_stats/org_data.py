@@ -100,13 +100,16 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
 
         # Attempt to replace _gt_/_lt_ with _v_ for cases when non-directional maps were made as directional
         validation_dir_name = validation_dir_name.replace('_gt_', '_v_').replace('_lt_', '_v_')
-        cluster_correction_dir = validation_dir_name.replace('_rev_cluster_index', '')
+
+        # Start from validation_dir_name, then strip suffixes used by validation output dirs
+        cluster_correction_dir = validation_dir_name
 
         # Remove hemisphere suffix if present
-        if validation_dir_name.endswith('_LH') or validation_dir_name.endswith('_RH'):
-            cluster_correction_dir = validation_dir_name[:-3]  # Remove last 3 characters (_LH or _RH)
-        else:
-            cluster_correction_dir = validation_dir_name
+        if cluster_correction_dir.endswith('_LH') or cluster_correction_dir.endswith('_RH'):
+            cluster_correction_dir = cluster_correction_dir[:-3]
+
+        # Remove rev_cluster_index suffix if present
+        cluster_correction_dir = cluster_correction_dir.replace('_rev_cluster_index', '')
 
         # Use regex to handle cases with or without "_q" in the directory name
         if '_q' in cluster_correction_dir:
