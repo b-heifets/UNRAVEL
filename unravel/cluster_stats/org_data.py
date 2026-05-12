@@ -100,6 +100,7 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
 
         # Attempt to replace _gt_/_lt_ with _v_ for cases when non-directional maps were made as directional
         validation_dir_name = validation_dir_name.replace('_gt_', '_v_').replace('_lt_', '_v_')
+        cluster_correction_dir = validation_dir_name.replace('_rev_cluster_index', '')
 
         # Remove hemisphere suffix if present
         if validation_dir_name.endswith('_LH') or validation_dir_name.endswith('_RH'):
