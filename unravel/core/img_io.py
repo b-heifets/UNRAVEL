@@ -387,6 +387,11 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     -----
     - If xy_res and z_res are provided, they will be used instead of the values from the metadata.
     """
+
+    if not Path(nii_path).exists():
+        print(f"\n    [red1]{Path(nii_path).exists()} does not exist. Exiting...\n")
+        return
+
     ndarray = nii_to_ndarray(nii_path)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
 
