@@ -110,7 +110,7 @@ def load_region_info(args):
     ]
 
     if args.region_csv in ["CCFv3-2017_info.csv", "CCFv3-2020_info.csv"]:
-        region_csv_path = Path(__file__).parent.parent.parent.parent.parent / "unravel" / "core" / "csvs" / args.region_csv
+        region_csv_path = Path(__file__).parent.parent.parent / "unravel" / "core" / "csvs" / args.region_csv
     else:
         region_csv_path = Path(args.region_csv)
 
