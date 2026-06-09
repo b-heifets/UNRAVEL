@@ -41,7 +41,7 @@ def parse_args():
     reqs.add_argument("-m", "--masks", help="List of mask paths to combine for voxel inclusion (AND logic).", nargs="*", required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument("-o", "--output", help="Output CSV path. Default: gene_correlations.csv", action=SM, default="gene_correlations.csv")
+    opts.add_argument("-o", "--output", help="Output CSV path. Default: voxel-wise_correlations.csv", action=SM, default="voxel-wise_correlations.csv")
     opts.add_argument("-w", "--workers", help=f"Number of gene images to process in parallel. Default: 8.", type=int, default=8, action=SM)  
 
     general = parser.add_argument_group('General arguments')
@@ -63,23 +63,23 @@ def vx_correlation(x_nii_path: Path, y_img_masked: np.ndarray, mask_img: np.ndar
         r, _ = pearsonr(x_img_masked, y_img_masked) 
 
         return {
-            "gene_path": str(x_nii_path),
+            "x_image": str(x_nii_path.name),
             "r": r,
             "r2": r * r if np.isfinite(r) else np.nan,
             "n_voxels": int(x_img_masked.size),
-            "mean_gene": float(np.mean(x_img_masked)),
-            "pct_gene_nonzero": float(np.mean(x_img_masked != 0) * 100.0),
+            "mean": float(np.mean(x_img_masked)),
+            "percent_nonzero": float(np.mean(x_img_masked != 0) * 100.0),
             "status": "ok" if np.isfinite(r) else "zero_variance_or_nan",
 
         }
     except Exception as e:
         return {
-            "gene_path": str(x_nii_path),
+            "x_image": str(x_nii_path.name),
             "r": np.nan,
             "r2": np.nan,
             "n_voxels": int(x_img_masked.size),
-            "mean_gene": np.nan,
-            "pct_gene_nonzero": np.nan,
+            "mean": np.nan,
+            "percent_nonzero": np.nan,
             "status": f"error: {e}",
         }
 
