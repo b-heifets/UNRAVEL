@@ -45,7 +45,7 @@ def parse_args():
     opts.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', default=None, action=SM)
     opts.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation or CCFv3 coloring. Default: None', default=None, action=SM)
     opts.add_argument('-rw', '--regional', help='Region-wise correlation. Default: False', action='store_true', default=False)
-    opts.add_argument('-oc', '--output', help='path/output.csv', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='path/output.csv', default=None, action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-p', '--plot', help='Plot correlation. Default: False', action='store_true', default=False)
     opts.add_argument('-xl', '--x_label', help='X-axis label for the correlation plot. Default: "Image X mean intensity"', default='Image X mean intensity', action=SM)
@@ -189,12 +189,13 @@ def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='C
         x_range = plt.xlim()
         if x_range[0] < 0 and np.min(imgX_valid) > 0:
             x_range = (0, x_range[1])
-        plt.xlim(x_range)
     if y_range is None:
         y_range = plt.ylim()
         if y_range[0] < 0 and np.min(imgY_valid) > 0:
             y_range = (0, y_range[1])
-        plt.ylim(y_range)
+    
+    plt.xlim(x_range)
+    plt.ylim(y_range)
 
     # Add dashed lines at y=0 and x=0 if ranges include 0
     if x_range[0] < 0:
