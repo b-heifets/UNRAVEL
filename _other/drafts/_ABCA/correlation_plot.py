@@ -269,13 +269,15 @@ def main():
         result_df.to_csv(args.output, index=False)
 
     # Plot the correlation scatter plot
+    csv_path = Path(__file__).parent.parent.parent / 'core' / 'csvs' / args.csv_path
+
     if args.plot:
         if args.regional and args.atlas:
             # if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv':
-            #     region_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path, usecols=['Region_ID', 'R', 'G', 'B'])
+            #     region_df = pd.read_csv(csv_path, usecols=['Region_ID', 'R', 'G', 'B'])
             # else:
             #     region_df = pd.read_csv(args.csv_path, usecols=['Region_ID', 'R', 'G', 'B'])
-            region_df = pd.read_csv(args.csv_path, usecols=['Region_ID', 'R', 'G', 'B', 'Abbr'])
+            region_df = pd.read_csv(csv_path, usecols=['Region_ID', 'R', 'G', 'B', 'Abbr'])
 
             # Rename "Region_ID" to "Region" for merging
             region_df = region_df.rename(columns={'Region_ID': 'Region'})
@@ -301,7 +303,7 @@ def main():
                         valid_voxels = valid_voxels & mask_data.astype(bool)
 
                 # Color the valid voxels based on their region using the atlas and CSV
-                rgb_colors = color_voxels_by_region(atlas_img, valid_voxels=valid_voxels, region_csv_path=args.csv_path)
+                rgb_colors = color_voxels_by_region(atlas_img, valid_voxels=valid_voxels, region_csv_path=csv_path)
         
                 # Plot the voxel-wise correlation with RGB colors
                 plot_title = 'Voxel-wise Correlation'
