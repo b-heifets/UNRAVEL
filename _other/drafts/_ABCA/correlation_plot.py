@@ -269,7 +269,7 @@ def main():
         result_df.to_csv(args.output, index=False)
 
     if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv':
-        csv_path = Path(__file__).parent.parent.parent / 'unravel' / 'core' / 'csvs' / args.csv_path
+        csv_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / args.csv_path
     else:
         csv_path = Path(args.csv_path)
 
