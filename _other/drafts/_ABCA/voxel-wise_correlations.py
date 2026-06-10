@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Use ``./voxel-wise_correlation.py`` from UNRAVEL to compute voxel-wise Pearson correlations between images 
+Use ``./voxel-wise_correlations.py`` from UNRAVEL to compute voxel-wise Pearson correlations between images 
 (e.g., a c-Fos effect image and MERFISH  gene-expression images), restricted to voxels defined by one or more mask images.
 
 This script was developed for use with a c-Fos effect image (-y) such as:
