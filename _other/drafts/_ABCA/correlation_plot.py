@@ -53,6 +53,7 @@ def parse_args():
     opts.add_argument('-xr', '--x_range', help='X-axis range for the correlation plot. (e.g., -1 1)', nargs=2, type=float, default=None, action=SM)
     opts.add_argument('-yr', '--y_range', help='Y-axis range for the correlation plot. (e.g., -1 1)', nargs=2, type=float, default=None, action=SM)
     opts.add_argument('-min', '--min_voxels', help='Minimum number of voxels per region.', type=int, default=None, action=SM)
+    opts.add_argument('-al', '--alpha', help='Alpha value for scatter plot points. Default: 0.7', type=float, default=0.7, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -156,7 +157,7 @@ def toggle_hover_visibility(event):
     if event.key == 'v':  # Press 'v' to toggle visibility
         show_annotations = not show_annotations
 
-def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='Correlation Scatter Plot', rgb_colors=None, x_label=None, y_label=None, x_range=None, y_range=None, abbreviations=None):
+def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='Correlation Scatter Plot', rgb_colors=None, x_label=None, y_label=None, x_range=None, y_range=None, abbreviations=None, alpha=0.7):
     """Generate a scatter plot for the correlation between two images with hover functionality."""
 
     global show_annotations
@@ -166,9 +167,9 @@ def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='C
 
     # Scatter plot with RGB colors
     if rgb_colors is not None:
-        scatter = plt.scatter(imgX_valid, imgY_valid, color=rgb_colors, alpha=0.7, label='Data points')
+        scatter = plt.scatter(imgX_valid, imgY_valid, color=rgb_colors, alpha=alpha, label='Data points')
     else:
-        scatter = plt.scatter(imgX_valid, imgY_valid, color='blue', alpha=0.7, label='Data points')
+        scatter = plt.scatter(imgX_valid, imgY_valid, color='blue', alpha=alpha, label='Data points')
 
     # Fit and plot the trend line
     z = np.polyfit(imgX_valid, imgY_valid, 1)
@@ -290,7 +291,7 @@ def main():
             abbreviations = merged_df['Abbr'].tolist()
 
             plot_title = 'Region-wise Correlation'
-            plot_correlation(merged_df['ImgX_Mean'], merged_df['ImgY_Mean'], correlation, p_value, plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range, abbreviations=abbreviations)
+            plot_correlation(merged_df['ImgX_Mean'], merged_df['ImgY_Mean'], correlation, p_value, plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range, abbreviations=abbreviations, alpha=args.alpha)
         else:
             if args.atlas:
                 # Load the atlas image
@@ -308,10 +309,10 @@ def main():
                 # Plot the voxel-wise correlation with RGB colors
                 plot_title = 'Voxel-wise Correlation'
 
-                plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range)
+                plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range, alpha=args.alpha)
             else:
                 plot_title = 'Voxel-wise Correlation'
-                plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range)
+                plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range, alpha=args.alpha)
 
     verbose_end_msg()
 
