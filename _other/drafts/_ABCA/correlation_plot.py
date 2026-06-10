@@ -43,7 +43,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', default=None, action=SM)
-    opts.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation. Default: None', default=None, action=SM)
+    opts.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation or CCFv3 coloring. Default: None', default=None, action=SM)
     opts.add_argument('-rw', '--regional', help='Region-wise correlation. Default: False', action='store_true', default=False)
     opts.add_argument('-oc', '--output', help='path/output.csv', default=None, action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
@@ -266,7 +266,7 @@ def main():
             'Pearson correlation': [correlation],
             'p-value': [p_value],
         })
-        result_df.to_csv(args.output_csv, index=False)
+        result_df.to_csv(args.output, index=False)
 
     # Plot the correlation scatter plot
     if args.plot:
