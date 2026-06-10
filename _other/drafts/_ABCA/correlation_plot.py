@@ -268,15 +268,15 @@ def main():
         })
         result_df.to_csv(args.output, index=False)
 
-    # Plot the correlation scatter plot
-    csv_path = Path(__file__).parent.parent.parent / 'core' / 'csvs' / args.csv_path
+    if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv':
+        csv_path = Path(__file__).parent.parent.parent / 'unravel' / 'core' / 'csvs' / args.csv_path
+    else:
+        csv_path = Path(args.csv_path)
 
+    # Plot the correlation scatter plot with optional coloring by region
     if args.plot:
         if args.regional and args.atlas:
-            # if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv':
-            #     region_df = pd.read_csv(csv_path, usecols=['Region_ID', 'R', 'G', 'B'])
-            # else:
-            #     region_df = pd.read_csv(args.csv_path, usecols=['Region_ID', 'R', 'G', 'B'])
+
             region_df = pd.read_csv(csv_path, usecols=['Region_ID', 'R', 'G', 'B', 'Abbr'])
 
             # Rename "Region_ID" to "Region" for merging
