@@ -118,7 +118,7 @@ def compute_voxelwise_correlation(imgX, imgY, mask_list=None):
     imgY_valid = imgY[valid_voxels]
 
     # Number of valid voxels
-    n_of_voxels = valid_voxels.size
+    n_of_voxels = np.count_nonzero(valid_voxels)
 
     # Check if there are enough valid voxels for correlation
     if n_of_voxels < 2:
