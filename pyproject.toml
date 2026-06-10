@@ -24,6 +24,7 @@ dependencies = [
     "h5py>=3.8.0,<4.0.0",
     "lxml>=4.9.3,<5.0.0",
     "matplotlib>=3.7.1,<4.0.0",
+    "mplcursors>=0.5.2,<1.0.0",
     "nibabel>=5.2.1,<6.0.0",
     "numpy==1.24.4",  # was "numpy>=1.25.2,<2.0.0". 1.25 or 1.26 causes a warning in WSL
     # "numpy>=2.4,<2.5", # Needed for zarr v3, but causes an error (function not in v2). 
