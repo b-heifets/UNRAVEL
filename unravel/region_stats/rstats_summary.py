@@ -540,6 +540,20 @@ def main():
         numerator_group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_") and col.endswith('_numerator')]
         denominator_group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_") and col.endswith('_denominator')]
 
+    missing_groups = [g for g, cols in group_columns.items() if len(cols) == 0]
+
+    if missing_groups:
+        available = [c for c in df.columns[5:]]
+
+        raise ValueError(
+            "\nNo data columns were found for the following groups:\n"
+            f"  {', '.join(missing_groups)}\n\n"
+            "rstats_summary expects data columns to begin with the group name (one word before the first underscore; "
+            "e.g. 'saline_sample01', 'drug_sample02').\n\n"
+            "Available columns include:\n"
+            f"  {available[:10]}"
+        )
+
     # Normalization if needed
     if args.divide:
         value_cols_only = [col for cols in group_columns.values() for col in cols]
