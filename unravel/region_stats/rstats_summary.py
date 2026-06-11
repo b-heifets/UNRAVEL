@@ -401,7 +401,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
     
-    exclude_map = parse_exclude_hemi(args.exclude_hemi)
+    if args.exclude_hemi:
+        exclude_map = parse_exclude_hemi(args.exclude_hemi)
+    else:
+        exclude_map = {}
+
     if exclude_map and args.verbose:
         print("\nHemisphere exclusions:")
         for samp, side in sorted(exclude_map.items()):
@@ -484,18 +488,19 @@ def main():
     df.to_csv('regional_values_all.csv', index=False)
 
 
-    # Also save a masked version with hemisphere exclusions applied (analysis-ready)
-    df_masked = df.copy()
-    if exclude_map:
-        # Mask RH rows
-        rh_rows = df_masked["Side"].astype(str).str.upper().eq("R")
-        df_masked.loc[rh_rows] = mask_excluded_side(df_masked.loc[rh_rows], "R", exclude_map)
+    if args.exclude_hemi:
+        # Also save a masked version with hemisphere exclusions applied (analysis-ready)
+        df_masked = df.copy()
+        if exclude_map:
+            # Mask RH rows
+            rh_rows = df_masked["Side"].astype(str).str.upper().eq("R")
+            df_masked.loc[rh_rows] = mask_excluded_side(df_masked.loc[rh_rows], "R", exclude_map)
 
-        # Mask LH rows
-        lh_rows = df_masked["Side"].astype(str).str.upper().eq("L")
-        df_masked.loc[lh_rows] = mask_excluded_side(df_masked.loc[lh_rows], "L", exclude_map)
+            # Mask LH rows
+            lh_rows = df_masked["Side"].astype(str).str.upper().eq("L")
+            df_masked.loc[lh_rows] = mask_excluded_side(df_masked.loc[lh_rows], "L", exclude_map)
 
-    df_masked.to_csv("regional_values_all_w_hemi_exclusions.csv", index=False)
+        df_masked.to_csv("regional_values_all_w_hemi_exclusions.csv", index=False)
 
 
     # Prepare output directories
