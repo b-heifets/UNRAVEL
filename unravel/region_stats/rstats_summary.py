@@ -649,6 +649,12 @@ def main():
                         pooled_df[value_col] = rh_value
                     else:
                         pooled_df[value_col] = (lh_value + rh_value) / 2
+        
+        # Save the pooled data to a CSV for reference
+        if args.divide:
+            pooled_df.to_csv(f'regional_values_pooled_div{str(int(args.divide))}.csv', index=False)
+        else:
+            pooled_df.to_csv('regional_values_pooled.csv', index=False)
 
         # Averaging data across hemispheres and plotting pooled data
         unique_region_ids = df[df["Side"] == "R"]["Region_ID"].unique()
