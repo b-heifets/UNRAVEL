@@ -62,6 +62,8 @@ def parse_args():
     return parser.parse_args()
 
 
+# TODO: csv to nii for correlating csv cols. Move script to unravel/. PDF output option. 
+
 def compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list=None, min_voxels=None, verbose=False):
     """Compute region-wise correlation between two images, restricted by masks and region IDs."""
     # Apply mask(s) if provided
