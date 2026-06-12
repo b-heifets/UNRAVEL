@@ -25,6 +25,7 @@ Usage:
     cstats_reshape -g AwS AwP -i '*.csv' --metric_col mean_IF_intensity --value_name mean_IF_intensity -o _reshaped_mean_IF
 """
 
+from botocore import args
 import pandas as pd
 from pathlib import Path
 from rich import print
@@ -79,7 +80,7 @@ def simple_metric_data_df(csv_files, groups, metric_col):
     if not rows:
         return pd.DataFrame()
 
-    return pd.concat(rows, ignore_index=True).rename(columns={metric_col: "value"})
+    return pd.concat(rows, ignore_index=True)
 
 
 @log_command
@@ -105,6 +106,13 @@ def main():
             groups=args.groups,
             metric_col=args.metric_col,
         )
+
+        if data_df.empty:
+            print("    [red1]No data rows found after aggregation.")
+            return
+
+        if args.metric_col != args.value_name:
+            data_df = data_df.rename(columns={args.metric_col: args.value_name})
     else:
         try:
             schema = detect_metric_schema(first_df)
