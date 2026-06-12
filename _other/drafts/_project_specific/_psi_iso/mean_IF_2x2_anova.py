@@ -38,6 +38,7 @@ Example condition_map CSV:
 import argparse
 from pathlib import Path
 import warnings
+import glob as globlib
 
 import numpy as np
 import pandas as pd
@@ -61,8 +62,11 @@ def parse_args():
         description="Project-specific 2x2 ANOVA for mean_IF cluster CSVs."
     )
     p.add_argument(
-        "-i", "--input_dir", default=".",
-        help="Directory containing per-sample mean_IF CSVs. Default: current directory."
+        "-i", "--input_dir", dest="inputs", nargs="*", default=None,
+        help=(
+            "Input directory, CSV file, or quoted glob pattern. May be repeated as "
+            "multiple values after -i. Default: current directory."
+        )
     )
     p.add_argument(
         "-g", "--glob", default="*.csv",
@@ -149,11 +153,63 @@ def infer_condition(filename):
     return Path(filename).name.split("_")[0]
 
 
-def load_mean_if_data(input_dir, glob_pattern, group_map, value_col, cluster_col, sample_col):
-    input_dir = Path(input_dir)
-    csvs = sorted(input_dir.glob(glob_pattern))
+def expand_input_csvs(inputs, glob_pattern):
+    """Expand directories, individual CSV files, and quoted glob patterns."""
+    if not inputs:
+        inputs = ["."]
+
+    csvs = []
+    missing_inputs = []
+
+    for item in inputs:
+        item = str(item)
+
+        # Important for commands like:
+        #   -i 'cluster_mean_IF_dir/*.csv'
+        # A quoted glob should be expanded directly, not treated as a directory.
+        if globlib.has_magic(item):
+            matches = [Path(m) for m in globlib.glob(item, recursive=True)]
+            csvs.extend([
+                m for m in matches
+                if m.is_file() and m.name.lower().endswith(".csv")
+            ])
+            continue
+
+        path = Path(item).expanduser()
+
+        if path.is_dir():
+            csvs.extend([
+                m for m in path.glob(glob_pattern)
+                if m.is_file() and m.name.lower().endswith(".csv")
+            ])
+        elif path.is_file():
+            if path.name.lower().endswith(".csv"):
+                csvs.append(path)
+        else:
+            missing_inputs.append(item)
+
+    # De-duplicate while keeping deterministic order.
+    csvs = sorted({str(p): p for p in csvs}.values(), key=lambda p: str(p))
+
     if not csvs:
-        raise FileNotFoundError(f"No input CSVs found with glob {glob_pattern!r} in {input_dir}")
+        msg = (
+            "No input CSVs found. "
+            f"inputs={inputs!r}; directory glob={glob_pattern!r}"
+        )
+        if missing_inputs:
+            msg += f"; missing inputs={missing_inputs!r}"
+        raise FileNotFoundError(msg)
+
+    return csvs
+
+def load_mean_if_data(inputs, glob_pattern, group_map, value_col, cluster_col, sample_col):
+    csvs = expand_input_csvs(inputs, glob_pattern)
+
+    conditions = set(group_map["condition"].astype(str))
+    print(f"Found {len(csvs)} input CSV(s).")
+
+    rows = []
+    skipped = []
 
     conditions = set(group_map["condition"].astype(str))
     rows = []
@@ -368,7 +424,7 @@ def main():
     group_map = read_condition_map(args.condition_map)
 
     data = load_mean_if_data(
-        input_dir=args.input_dir,
+        inputs=args.inputs,
         glob_pattern=args.glob,
         group_map=group_map,
         value_col=args.value_col,
