@@ -5,6 +5,7 @@ Use ``cstats_reshape`` (``reshape``) from UNRAVEL to export raw cluster validati
 
 Prereqs:
     - ``cstats_validation``, ``cstats_org_data``, ``cstats_group_data``, ``utils_prepend``
+    - or ``cstats_mean_IF`` for reshaping mean IF intensity data (metric column autodetected if cols: sample, cluster_ID, <metric_col> are present)
 
 Input files:
     - `*_data.csv` from ``cstats_validation`` after condition prefixes were prepended
@@ -22,10 +23,12 @@ Usage:
 ------
     cstats_reshape -g saline drug1 drug2 -i '*cell_density_data.csv'
     cstats_reshape -g saline MBDB MDAI RMDMA SMDMA --combine entactogens=MBDB+MDAI+RMDMA+SMDMA
-    cstats_reshape -g AwS AwP -i '*.csv' --metric_col mean_IF_intensity --value_name mean_IF_intensity -o _reshaped_mean_IF
+
+Usage for mean_IF data:
+-----------------------
+    cstats_reshape -g AwS AwP -o _reshaped_mean_IF
 """
 
-from botocore import args
 import pandas as pd
 from pathlib import Path
 from rich import print
@@ -44,16 +47,34 @@ def parse_args():
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-i', '--input', help="CSV paths or glob patterns. Default: '*_data.csv'", nargs='*', default=['*.csv'], action=SM)
     opts.add_argument('-o', '--outdir', help="Output directory. Default: _reshaped", default="_reshaped", action=SM)
-    opts.add_argument("--value_name", help="Name to use for the metric value column. Default: cell_density", default="cell_density", action=SM)
-    opts.add_argument("--support_name", help="Name to use for the support/count column. Default: cell_count", default="cell_count", action=SM)
-    opts.add_argument("--metric_col", help="Metric column for simple CSVs, e.g. mean_IF for cstats_mean_IF outputs", default=None, action=SM)
-    opts.add_argument("--combine", help="Optional combined per-cluster columns, e.g. drug1+drug2 or ent=drug1+drug2", nargs="*", default=[], action=SM)
+    opts.add_argument("-vn", "--value_name", help="Name to use for the metric value column. Default: cell_density", default="cell_density", action=SM)
+    opts.add_argument("-sn", "--support_name", help="Name to use for the support/count column. Default: cell_count", default="cell_count", action=SM)
+    opts.add_argument("-c", "--combine", help="Optional combined per-cluster columns, e.g. drug1+drug2 or ent=drug1+drug2", nargs="*", default=[], action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
+
+def detect_simple_metric_schema(first_df):
+    required_cols = {"sample", "cluster_ID"}
+
+    if not required_cols.issubset(first_df.columns):
+        raise ValueError("Not a simple metric CSV.")
+
+    metric_cols = [
+        c for c in first_df.columns
+        if c not in required_cols
+    ]
+
+    if len(metric_cols) != 1:
+        raise ValueError(
+            f"Could not infer metric column. Expected exactly one column besides "
+            f"{sorted(required_cols)}, found: {metric_cols}"
+        )
+
+    return metric_cols[0]
 
 def simple_metric_data_df(csv_files, groups, metric_col):
     rows = []
@@ -71,6 +92,7 @@ def simple_metric_data_df(csv_files, groups, metric_col):
             continue
 
         df["condition"] = condition
+
         rows.append(
             df[["condition", "sample", "cluster_ID", metric_col]]
         )
@@ -98,25 +120,27 @@ def main():
 
     first_df = pd.read_csv(csv_files[0])
 
-    if args.metric_col:
+    try:
+        schema = detect_metric_schema(first_df)
+        is_simple_metric = False
+        metric_col = None
+    except ValueError:
+        try:
+            metric_col = detect_simple_metric_schema(first_df)
+            is_simple_metric = True
+        except ValueError as e:
+            print(f"[red1]Error: {e}")
+            return
+
+    if is_simple_metric:
+
         data_df = simple_metric_data_df(
             csv_files=csv_files,
             groups=args.groups,
-            metric_col=args.metric_col,
+            metric_col=metric_col,
         )
 
-        if data_df.empty:
-            print("    [red1]No data rows found after aggregation.")
-            return
-
-        if args.metric_col != args.value_name:
-            data_df = data_df.rename(columns={args.metric_col: args.value_name})
     else:
-        try:
-            schema = detect_metric_schema(first_df)
-        except ValueError as e:
-            print(f"Error: {e}")
-            return
 
         # Check if any files contain hemisphere indicators
         has_hemisphere = any('_LH.csv' in str(file.name) or '_RH.csv' in str(file.name) for file in csv_files)
@@ -136,20 +160,28 @@ def main():
             print("    [red1]No data rows found after aggregation.")
             return
 
-        data_df = data_df.rename(columns={
-            "value": args.value_name,
-            "support": args.support_name,
-        })
+        metric_col = args.value_name
+
+        rename_map = {}
+        if "value" in data_df.columns:
+            rename_map["value"] = metric_col
+        if "support" in data_df.columns:
+            rename_map["support"] = args.support_name
+
+        data_df = data_df.rename(columns=rename_map)
+
+    data_df = data_df.dropna(axis=1, how="all")
+
+    if metric_col not in data_df.columns:
+        print(f"[red1]Metric column not found after aggregation: {metric_col}")
+        print(f"Columns: {list(data_df.columns)}")
+        return
 
     outdir = Path(args.outdir)
     cluster_outdir = outdir / "by_cluster"
     cluster_outdir.mkdir(parents=True, exist_ok=True)
 
-    outdir = Path(args.outdir)
-    cluster_outdir = outdir / "by_cluster"
-    cluster_outdir.mkdir(parents=True, exist_ok=True)
-
-    long_path = outdir / f"{args.value_name}_long.csv"
+    long_path = outdir / f"{metric_col}_long.csv"
     data_df.to_csv(long_path, index=False)
 
     # All-clusters wide format:
@@ -161,7 +193,7 @@ def main():
         wide_df.pivot_table(
             index="cluster_ID",
             columns="_wide_col",
-            values=args.value_name,
+            values=metric_col,
             aggfunc="first",
         )
         .reset_index()
@@ -178,7 +210,7 @@ def main():
     remaining_cols = [c for c in wide_df.columns if c not in ordered_cols]
     wide_df = wide_df[ordered_cols + remaining_cols]
 
-    wide_path = outdir / f"{args.value_name}_wide.csv"
+    wide_path = outdir / f"{metric_col}_wide.csv"
     wide_df.to_csv(wide_path, index=False)
 
     # Optional combined columns for per-cluster CSVs.
@@ -204,7 +236,7 @@ def main():
         for group in args.groups:
             values = (
                 cluster_df.loc[cluster_df["condition"] == group]
-                .sort_values("sample")[args.value_name]
+                .sort_values("sample")[metric_col]
                 .reset_index(drop=True)
             )
             cluster_out_df[group] = values
@@ -212,7 +244,7 @@ def main():
         for col_name, combo_groups in combined_groups:
             values = (
                 cluster_df.loc[cluster_df["condition"].isin(combo_groups)]
-                .sort_values(["condition", "sample"])[args.value_name]
+                .sort_values(["condition", "sample"])[metric_col]
                 .reset_index(drop=True)
             )
             cluster_out_df[col_name] = values
@@ -221,7 +253,7 @@ def main():
             ch if ch.isalnum() or ch in "._-" else "_"
             for ch in str(cluster_id)
         )
-        cluster_path = cluster_outdir / f"cluster_{safe_cluster_id}__{args.value_name}.csv"
+        cluster_path = cluster_outdir / f"cluster_{safe_cluster_id}__{metric_col}.csv"
         cluster_out_df.to_csv(cluster_path, index=False)
 
     if args.verbose:
