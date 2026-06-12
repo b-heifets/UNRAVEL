@@ -15,10 +15,14 @@ Outputs:
     - _reshaped/raw_data_wide.csv
     - _reshaped/by_cluster/cluster_<cluster_ID>__<value_name>.csv
 
+Note:
+    - If hemisphere-specific CSVs are present (e.g. cluster_1_LH.csv and cluster_1_RH.csv), the script will attempt to pool the data. 
+
 Usage:
 ------
     cstats_reshape -g saline drug1 drug2 -i '*cell_density_data.csv'
     cstats_reshape -g saline MBDB MDAI RMDMA SMDMA --combine entactogens=MBDB+MDAI+RMDMA+SMDMA
+    cstats_reshape -g AwS AwP -i '*.csv' --metric_col mean_IF_intensity --value_name mean_IF_intensity -o _reshaped_mean_IF
 """
 
 import pandas as pd
@@ -41,12 +45,41 @@ def parse_args():
     opts.add_argument('-o', '--outdir', help="Output directory. Default: _reshaped", default="_reshaped", action=SM)
     opts.add_argument("--value_name", help="Name to use for the metric value column. Default: cell_density", default="cell_density", action=SM)
     opts.add_argument("--support_name", help="Name to use for the support/count column. Default: cell_count", default="cell_count", action=SM)
+    opts.add_argument("--metric_col", help="Metric column for simple CSVs, e.g. mean_IF for cstats_mean_IF outputs", default=None, action=SM)
     opts.add_argument("--combine", help="Optional combined per-cluster columns, e.g. drug1+drug2 or ent=drug1+drug2", nargs="*", default=[], action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
+
+
+def simple_metric_data_df(csv_files, groups, metric_col):
+    rows = []
+
+    for file in csv_files:
+        file = Path(file)
+        condition = file.name.split("_sample")[0]
+
+        if condition not in groups:
+            continue
+
+        df = pd.read_csv(file)
+
+        if metric_col not in df.columns:
+            continue
+
+        df["condition"] = condition
+        df["side"] = None
+        df["support"] = pd.NA
+        df["cluster_volume"] = pd.NA
+
+        rows.append(df[["condition", "sample", "side", "cluster_ID", "support", "cluster_volume", metric_col]])
+
+    if not rows:
+        return pd.DataFrame()
+
+    return pd.concat(rows, ignore_index=True).rename(columns={metric_col: "value"})
 
 
 @log_command
@@ -66,34 +99,41 @@ def main():
 
     first_df = pd.read_csv(csv_files[0])
 
-    try:
-        schema = detect_metric_schema(first_df)
-    except ValueError as e:
-        print(f"Error: {e}")
-        return
+    if args.metric_col:
+        data_df = simple_metric_data_df(
+            csv_files=csv_files,
+            groups=args.groups,
+            metric_col=args.metric_col,
+        )
+    else:
+        try:
+            schema = detect_metric_schema(first_df)
+        except ValueError as e:
+            print(f"Error: {e}")
+            return
 
-    # Check if any files contain hemisphere indicators
-    has_hemisphere = any('_LH.csv' in str(file.name) or '_RH.csv' in str(file.name) for file in csv_files)
+        # Check if any files contain hemisphere indicators
+        has_hemisphere = any('_LH.csv' in str(file.name) or '_RH.csv' in str(file.name) for file in csv_files)
 
-    # Aggregate the data from all .csv files and pool the data if hemispheres are present
-    data_df = cluster_validation_data_df(
-        metric_name=schema['metric_name'],
-        value_col=schema['value_col'],
-        support_col=schema['support_col'],
-        support_type=schema['support_type'],
-        aggregation_method=schema['aggregation_method'],
-        has_hemisphere=has_hemisphere,
-        csv_files=csv_files,
-        groups=args.groups,
-    )
-    if data_df.empty:
-        print("    [red1]No data rows found after aggregation.")
-        return
+        # Aggregate the data from all .csv files and pool the data if hemispheres are present
+        data_df = cluster_validation_data_df(
+            metric_name=schema['metric_name'],
+            value_col=schema['value_col'],
+            support_col=schema['support_col'],
+            support_type=schema['support_type'],
+            aggregation_method=schema['aggregation_method'],
+            has_hemisphere=has_hemisphere,
+            csv_files=csv_files,
+            groups=args.groups,
+        )
+        if data_df.empty:
+            print("    [red1]No data rows found after aggregation.")
+            return
 
-    data_df = data_df.rename(columns={
-        "value": args.value_name,
-        "support": args.support_name,
-    })
+        data_df = data_df.rename(columns={
+            "value": args.value_name,
+            "support": args.support_name,
+        })
 
     outdir = Path(args.outdir)
     cluster_outdir = outdir / "by_cluster"
