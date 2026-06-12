@@ -71,11 +71,9 @@ def simple_metric_data_df(csv_files, groups, metric_col):
             continue
 
         df["condition"] = condition
-        df["side"] = None
-        df["support"] = pd.NA
-        df["cluster_volume"] = pd.NA
-
-        rows.append(df[["condition", "sample", "side", "cluster_ID", "support", "cluster_volume", metric_col]])
+        rows.append(
+            df[["condition", "sample", "cluster_ID", metric_col]]
+        )
 
     if not rows:
         return pd.DataFrame()
