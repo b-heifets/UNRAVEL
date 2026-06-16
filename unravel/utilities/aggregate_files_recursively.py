@@ -36,28 +36,6 @@ def parse_args():
     return parser.parse_args()
 
 
-# def find_and_copy_files(pattern, src_dir, dest_dir, move=False):
-#     src_dir = Path(src_dir)
-
-#     # Use rglob for recursive globbing
-#     matched_files = list(src_dir.rglob(pattern))  # Convert the generator to a list
-
-#     if len(matched_files) == 0:
-#         print(f"\n    [red1]No files found matching the pattern:[/] [bold]{pattern}[/] in {src_dir}\n")
-#         import sys ; sys.exit()
-
-#     dest_dir = Path(dest_dir)
-#     if not dest_dir.is_absolute():
-#         dest_dir = src_dir.joinpath(dest_dir)
-#     dest_dir.mkdir(parents=True, exist_ok=True)
-
-#     for file_path in matched_files: 
-#         if dest_dir not in file_path.parents:
-#             if move:
-#                 shutil.move(str(file_path), dest_dir)
-#             else:
-#                 shutil.copy(str(file_path), dest_dir)
-
 def find_and_copy_files(pattern, src_dir, dest_dir, move=False):
     src_dir = Path(src_dir).resolve()
     dest_dir = Path(dest_dir)
@@ -120,6 +98,7 @@ def find_and_copy_files(pattern, src_dir, dest_dir, move=False):
         print(f"Skipped {n_skipped} existing file(s).\n")
     else:
         print()
+
 
 @log_command
 def main():
