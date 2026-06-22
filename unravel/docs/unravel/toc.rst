@@ -21,6 +21,7 @@ Subpackages
    utilities/toc
    tabular/toc
    allen_institute/toc
+   coordinates/toc
 
 Module contents
 ---------------

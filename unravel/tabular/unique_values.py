@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``tabular_unique_values`` or ``uniq_vals`` from UNRAVEL to print unique values in specified column(s) of a CSV file.
+Use ``tabular_unique_values``, ``uniq_vals``, or ``vals`` from UNRAVEL to print unique values in specified column(s) of a CSV file.
 
 Usage:
 ------

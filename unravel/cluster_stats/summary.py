@@ -4,7 +4,7 @@
 Use ``cstats_summary`` (``css``) from UNRAVEL to aggregate and analyze cluster validation data from ``cstats_validation``.
 
 Prereqs:
-    - ``cstats_validation``
+    - ``cstats_validation`` (skip hemispheres that should be excluded or remove corresponding dirs in sample??/clusters/)
     - The name of the rev_cluster_index file should relate to the name of the cluster validation directory.
     - cluster_index_dir = Path(args.moving_img from cstats_validation).name w/o "_rev_cluster_index" and ".nii.gz" 
     - _cluster_info.txt should be named like: cluster_index_dir + "_cluster_info.txt"
@@ -12,7 +12,7 @@ Prereqs:
     - <cluster_index_dir>_rev_cluster_index[_LH | _RH].nii.gz, <cluster_index_dir>_cluster_info.txt, and p_value_threshold.txt
 
 Inputs:
-    - Cell/label density CSVs from from ``cstats_validation``
+    - Output CSVs from from ``cstats_validation``
     - The current directory should not have other folders when running this script for the first time. 
     - Directories from ``cstats_summary`` or ``cstats_org_data`` are ok though.
     - The sample_key.csv file should have the following format:
@@ -42,24 +42,22 @@ find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summ
 If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:
 find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})' \;
 
-Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv).
-
-Next steps:
-    - ``cstats_summary_config``: Copy the cluster_summary.ini file to a new location.
-    - ``cstats_summary``: Aggregate and analyze cluster validation data from cstats_validation.
+Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (..._summary_for_valid_clusters.csv).
 
 Usage if running directly after ``cstats_validation``:
 ------------------------------------------------------
-    cstats_summary -c <path/config.ini> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
+    cstats_summary -c <path/config.ini> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> [-hg <higher_group>] [-d <list of paths>] [-v]
 
 Usage from a cluster correction dir after ``cstats_validation``:
 ----------------------------------------------------------------
-    cstats_summary -c cluster_summary.ini -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd ../.. -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
+    cstats_summary -c cluster_summary.ini -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd ../.. -sk <path/sample_key.csv> --groups <group1> <group2> [-hg <higher_group>] [-d <list of paths>] [-v]
 
 Usage if running after ``cstats_validation`` and ``cstats_org_data``:
 ---------------------------------------------------------------------
-    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
+    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> [-hg <higher_group>] [-d <list of paths>] [-v]
 """
+
+from fnmatch import fnmatch
 
 import nibabel as nib
 import numpy as np
@@ -69,8 +67,8 @@ from rich import print
 from rich.traceback import install
 
 from unravel.cluster_stats.org_data import cp
+from unravel.cluster_stats.cstats import get_matching_input_csvs
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, load_config
 from unravel.utilities.aggregate_files_recursively import find_and_copy_files
@@ -81,11 +79,13 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-c', '--config', help='Path to the config.ini file. Default: unravel/cluster_stats/summary.ini', default=Path(__file__).parent / 'summary.ini', action=SM)
+    reqs.add_argument('-g', '--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)', required=True, nargs='*', action=SM)
 
     # cstats_org_data -d <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
     cstats_org_data = parser.add_argument_group('Optional args for cstats_org_data')
     cstats_org_data.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
-    cstats_org_data.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cstats_org_data', action=SM) 
+    cstats_org_data.add_argument('-me', '--metric',help='Metric output from cstats_validation to aggregate (e.g., cell_density, label_density, mean, mean_in_seg)',required=True,action=SM)
+    cstats_org_data.add_argument('-cvd', '--cluster_val_dirs', help='One or more glob patterns matching cluster validation output dirs (relative to ./sample??/clusters/) for cstats_org_data', nargs='*', default=None, action=SM)
     cstats_org_data.add_argument('-vd', '--vstats_path', help='path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cstats_org_data)', action=SM)
 
     # utils_prepend -c <path/sample_key.csv> -f -r
@@ -94,9 +94,8 @@ def parse_args():
 
     # cstats --groups <group1> <group2>
     cstats = parser.add_argument_group('Optional args for cstats')
-    cstats.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)',  nargs='*', action=SM)
     cstats.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for cstats)',  nargs='*', default=None, action=SM)
-    cstats.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
+    cstats.add_argument('-hg', '--higher_group', help='Optional. Expected higher-mean group for directional validation in cstats.', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -116,6 +115,8 @@ def parse_args():
 # TODO: Could make it possible to generate data for all clusters, not just valid clusters
 # TODO: Given that the cluster_index_dir and cluster_info.txt names should be related, could add a check for this (perhaps also simplify logic for finding the cluster_info.txt file)
 # TODO: cluster_mean_IF_summary_ttest.csv has the p-value column named as p-adj even for t-tests. Could change this to p_val
+# TODO: Include some form of logging regarding the segmentation that was used in sample??/clusters/output_dir (in the dir name, output file names, or in a .txt file). Currently if a new segmentation is used, old outputs must be moved to a new directory to avoid confusion.
+# TODO: Currently to exclude hemispheres I am moving the sample??/clusters/<cluster_val_dir>/ directories that correspond to hemispheres I want to exclude. Could instead add an arg to specify hemispheres to exclude and have the script ignore the corresponding directories. This would be more user-friendly and less prone to error than having the user move directories around. 
 
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""
@@ -132,22 +133,16 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    # Check for subdirectories in the current working directory
-    subdirs = [d for d in Path.cwd().iterdir() if d.is_dir()]
-    if len(subdirs) == 0 and not args.dirs:
-        print(f"\n    [red1]No subdirectories found in the current directory. Provide -d/--dirs so that data from sample??/clusters/ can be aggregated and processed.\n")
-        return
-
     cfg = load_config(args.config)
     
-    # Run cstats_org_data
+    # Run cstats_org_data to aggregate data from cstats_validation (i.e., copy files from sample??/clusters/<cluster_val_dir>/ to .)
     if args.dirs and args.cluster_val_dirs and args.vstats_path:
         org_data_args = [
             '-d', *args.dirs,
             '-p', cfg.org_data.pattern,
-            '-cvd', args.cluster_val_dirs,
+            '-cvd', *args.cluster_val_dirs,
             '-vd', args.vstats_path,
-            '-dt', cfg.org_data.density_type,
+            '-me', args.metric,
             '-pvt', cfg.org_data.p_val_txt
         ]
         if args.verbose:
@@ -177,45 +172,95 @@ def main():
             '--groups', *args.groups,
             '-alt', cfg.stats.alternate,
             '-pvt', cfg.org_data.p_val_txt, 
-            '-hg', args.higher_group
         ]
+        if args.higher_group:
+            stats_args.extend(['-hg', args.higher_group])
         if args.condition_prefixes:
-            stats_args.append(['-cp', *args.condition_prefixes])
+            stats_args.extend(['-cp', *args.condition_prefixes])
+        if args.cluster_val_dirs:
+            stats_args.extend(['-dp', *args.cluster_val_dirs])
         if args.verbose:
             stats_args.append('-v')
         run_script('cstats', stats_args)
     
-    # Iterate over all subdirectories in the current working directory and run the following scripts
-    for subdir in [d for d in Path.cwd().iterdir() if d.is_dir() and d.name != '3D_brains' and d.name != 'valid_clusters_tables_and_legend']:
+    # If there are csvs in the cwd, process them. Otherwise, process csvs in matching input directories
+    def matches_any_pattern(name, patterns):
+        return any(fnmatch(name, pat) for pat in patterns)
+
+    exclude_dirs = {
+        '3D_brains',
+        'valid_clusters_tables_and_legend',
+        '_valid_clusters',
+        '_valid_clusters_stats',
+        '_valid_clusters_prism'
+    }
+
+    # If there are CSV files in the current working directory, process those. Otherwise, look for subdirectories that contain CSV files and process those (but exclude output directories from this script and from cstats_org_data).
+    dirs_to_process = []
+    cwd = Path.cwd()
+    exclude_dirs = {
+        '3D_brains',
+        'valid_clusters_tables_and_legend',
+        '_valid_clusters',
+        '_valid_clusters_stats',
+        '_valid_clusters_prism'
+    }
+
+    cwd_csv_files = get_matching_input_csvs(cwd, args.groups) if args.groups else []
+
+    if cwd_csv_files:
+        dirs_to_process = [cwd]
+    else:
+        dirs_to_process = [
+            d for d in cwd.iterdir()
+            if (
+                d.is_dir()
+                and d.name not in exclude_dirs
+                and (d / '_valid_clusters_stats').exists()
+                and (
+                    not args.cluster_val_dirs
+                    or matches_any_pattern(d.name, args.cluster_val_dirs)
+                )
+            )
+        ]
+
+    if len(dirs_to_process) == 0 and not args.dirs:
+        print(f"\n    [red1]No input directories found in the current directory. Provide -d/--dirs so that data from sample??/clusters/ can be aggregated and processed.\n")
+        return
+
+    # Iterate over all input directories in the current working directory and run the following scripts
+    for input_dir in dirs_to_process:
 
         # Load all .csv files in the current subdirectory
-        csv_files = list(subdir.glob('*.csv'))
+        csv_files = list(input_dir.glob('*.csv'))
         if not csv_files:
             continue  # Skip directories with no CSV files
 
-        stats_output = subdir / '_valid_clusters_stats'
+        stats_output = input_dir / '_valid_clusters_stats'
         valid_clusters_ids_txt = stats_output / 'valid_cluster_IDs_t-test.txt' if len(args.groups) == 2 else stats_output / 'valid_cluster_IDs_tukey.txt'
 
-        if valid_clusters_ids_txt.exists():
-            with open(valid_clusters_ids_txt, 'r') as f:
-                valid_cluster_ids = f.read().split()
+        if not valid_clusters_ids_txt.exists():
+            continue
 
-        rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index.nii.gz'
+        with open(valid_clusters_ids_txt, 'r') as f:
+            valid_cluster_ids = f.read().split()
+
+        rev_cluster_index_path = input_dir / f'{input_dir.name}_rev_cluster_index.nii.gz'
         if not Path(rev_cluster_index_path).exists():
-            rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index_RH.nii.gz'
+            rev_cluster_index_path = input_dir / f'{input_dir.name}_rev_cluster_index_RH.nii.gz'
         if not Path(rev_cluster_index_path).exists():        
-            rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index_LH.nii.gz'
+            rev_cluster_index_path = input_dir / f'{input_dir.name}_rev_cluster_index_LH.nii.gz'
         if not Path(rev_cluster_index_path).exists():
-            rev_cluster_index_path = next(subdir.glob("*rev_cluster_index*"))
+            rev_cluster_index_path = next(input_dir.glob("*rev_cluster_index*.nii.gz"), None)
 
         if rev_cluster_index_path is None:
-            print(f"    No valid cluster index file found in {subdir}. Skipping...")
+            print(f"    No valid cluster index file found in {input_dir}. Skipping...")
             continue  # Skip this directory and move to the next
 
-        valid_clusters_index_dir = subdir / cfg.index.valid_clusters_dir
+        valid_clusters_index_dir = input_dir / cfg.index.valid_clusters_dir
         
         if len(valid_cluster_ids) == 0: 
-            print(f"    [red1]No clusters were valid for {subdir.name}. Skipping...")
+            print(f"    [red1]No clusters were valid for {input_dir.name}. Skipping cstats_index, cstats_brain_model, cstats_table, and cstats_prism for this subdir.\n")
             continue
 
         # Run cstats_index
@@ -250,10 +295,10 @@ def main():
 
         # Aggregate files from cstats_brain_model
         if cfg.brain.mirror: 
-            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA_WB.nii.gz', subdir, Path().cwd() / '3D_brains')
+            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA_WB.nii.gz', input_dir, Path().cwd() / '3D_brains')
         else:
-            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA.nii.gz', subdir, Path().cwd() / '3D_brains')
-        find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_rgba.txt', subdir, Path().cwd() / '3D_brains')
+            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA.nii.gz', input_dir, Path().cwd() / '3D_brains')
+        find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_rgba.txt', input_dir, Path().cwd() / '3D_brains')
 
         # Run cstats_table
         table_args = [
@@ -266,7 +311,7 @@ def main():
         if args.verbose:
             table_args.append('-v')
         run_script('cstats_table', table_args)
-        find_and_copy_files('*_valid_clusters_table.xlsx', subdir, Path().cwd() / 'valid_clusters_tables_and_legend')
+        find_and_copy_files('*_valid_clusters_table.xlsx', input_dir, Path().cwd() / 'valid_clusters_tables_and_legend')
     
         if Path('valid_clusters_tables_and_legend').exists():
 
@@ -280,13 +325,13 @@ def main():
             if len(valid_cluster_ids_sorted) > 0:
                 prism_args = [
                     '-ids', *valid_cluster_ids_sorted,
-                    '-p', subdir,
+                    '-p', input_dir,
                 ]
                 if args.verbose:
                     prism_args.append('-v')
                 run_script('cstats_prism', prism_args)
             else:
-                print(f"\n    No valid cluster IDs found for {subdir}. Skipping cstats_prism...\n")
+                print(f"\n    No valid cluster IDs found for {input_dir}. Skipping cstats_prism...\n")
 
     # Copy the atlas and binarize it for visualization in DSI studio
     dest_atlas = Path().cwd() / '3D_brains' / Path(cfg.index.atlas).name
@@ -295,18 +340,18 @@ def main():
         atlas_nii = nib.load(dest_atlas)
         atlas_img = np.asanyarray(atlas_nii.dataobj, dtype=atlas_nii.header.get_data_dtype()).squeeze()
         atlas_img[atlas_img > 0] = 1
-        atlas_img.astype(np.uint8)
+        atlas_img = atlas_img.astype(np.uint8)
         atlas_nii_bin = nib.Nifti1Image(atlas_img, atlas_nii.affine, atlas_nii.header)
         atlas_nii_bin.header.set_data_dtype(np.uint8)
         nib.save(atlas_nii_bin, str(dest_atlas).replace('.nii.gz', '_bin.nii.gz'))
 
-        # Run cstats_legend
-        if Path('valid_clusters_tables_and_legend').exists():
-            legend_args = [
-                '-p', 'valid_clusters_tables_and_legend',
-                '-csv', cfg.index.info_csv_path
-            ]
-            run_script('cstats_legend', legend_args)
+    # Run cstats_legend
+    if Path('valid_clusters_tables_and_legend').exists():
+        legend_args = [
+            '-p', 'valid_clusters_tables_and_legend',
+            '-csv', cfg.index.info_csv_path
+        ]
+        run_script('cstats_legend', legend_args)
 
     verbose_end_msg()
 

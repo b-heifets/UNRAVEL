@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Use ``warp`` from UNRAVEL to warp to/from atlas space and registration input space
+Use ``warp`` from UNRAVEL to warp to/from atlas space and registration input space (at the resolution of the registration input).
 
 Prereq: 
     - ``reg``
 
 Note: 
-    - This warps padded images in ./reg_outputs (i.e., images that match the padded fixed reg input). For unpadded final images, use ``warp_to_fixed`` and ``warp_to_atlas``.
-    - To make an average template, run reg as usual then follow the usage to inverse warp the autofl images to atlas space. 
-    - agg -i 'atlas_space/tissue_in_atlas_space.nii.gz' -a -td autofl_CCF30 -d $DIRS
-    - cd autofl_CCF30
-    - avg -o SMM2_autofl_avg.nii.gz
-    - lr_avg -i SMM2_autofl_avg.nii.gz
-    - for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m path/SMM2_autofl_avg_LRavg.nii.gz -bc -sm 0.4 -ort $(cat $s/parameters/ort.txt) -m2 path/atlas_CCFv3_2020_30um.nii.gz -v -d $s  ; done ; done
+    - This warps padded images in ./reg_outputs (i.e., images that match the padded fixed reg input).
+    - So, this can be run from the reg_outputs folder or with reg_outputs as the path to the registration outputs (where the transformation files are).
+    - For warping unpadded final images, use ``warp_to_fixed`` and ``warp_to_atlas``.
 
 Usage for forward warping atlas to tissue space:
 ------------------------------------------------

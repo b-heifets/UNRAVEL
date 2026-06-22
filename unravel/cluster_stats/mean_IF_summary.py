@@ -64,7 +64,6 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Dunnett's test is not available in scipy.stats. Find an alternative or implement it.
 # TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cstats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 # TODO: CSVs are loaded for each cluster. It would be more efficient to load them once for processing all clusters. 
 # TODO: Perhaps functions in this script could be made more generic and used in rstats_mean_IF_summary.py as well.
@@ -228,7 +227,7 @@ def plot_data(cluster_id, order=None, labels=None, test_type='tukey', alt='two-s
     plt.ylim(y_min - 2 * height_diff, y_pos + 2 * height_diff)
 
     # plt.ylim(0, y_pos + 2*height_diff)
-    ax.set_xlabel(None)
+    ax.set_xlabel('') ### was None
 
     # Save the plot
     output_folder = Path('cluster_mean_IF_summary')

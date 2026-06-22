@@ -5,7 +5,7 @@ Use ``cstats_mean_IF`` (``cmi``) from UNRAVEL to measure mean intensity of immun
 
 Prereqs: 
     - ``vstats``
-    - ``cstats_fdr``
+    - ``cstats_fdr`` or ``cstats_clusters`` (to get the rev_cluster_index.nii.gz)
 
 Inputs:
     - This can be run from the vstats directory (will process .nii.gz images in the current directory)
@@ -43,7 +43,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr``', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr`` or ``cstats_clusters``', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-ip', '--input_pattern', help="Glob pattern(s) for NIfTI images to process. Default: '*.nii.gz'", default='*.nii.gz', nargs='*', action=SM)
@@ -56,6 +56,7 @@ def parse_args():
 
 # TODO: process each cluster in parallel
 # TODO: Change naming from mean_IF to mean_intensity (more general)
+# TODO: Add support to cstats_prism for cstats_mean_IF with generic schema (also need to handle pooling and excluded hemispheres). 
 
 def calculate_mean_intensity_in_clusters(cluster_index, img, clusters=None):
     """Calculates mean intensity in the img ndarray for each cluster in the cluster index ndarray and saves it to a CSV file."""

@@ -52,13 +52,14 @@ def parse_args():
     opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
     opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping (if atlas is asym.). Default: 0', default=0, type=int, action=SM)
     opts.add_argument('-tp', '--parallel', help='Enable parallel processing with thread pools', default=False, action='store_true')
-    opts.add_argument('-amas', '--atlas_mask', help='path/atlas_space_mask.nii.gz', default=None, action=SM)
+    opts.add_argument('-amas', '--atlas_mask', help='path/atlas_space_mask.nii.gz to apply after averaging sides together.', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
 
     return parser.parse_args()
 
+# TODO: Make a script that can just do smoothing of images with a kernel and optionally apply a mask.
 
 @print_func_name_args_times()
 def whole_to_LR_avg(file, kernel=0, axis=0, shift=2, atlas_mask=None):

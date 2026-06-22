@@ -237,7 +237,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     # Ensure the y-axis starts from the minimum value, allowing for negative values
     plt.ylim(y_min - 2 * height_diff, y_pos + 2 * height_diff)
 
-    ax.set_xlabel(None)
+    ax.set_xlabel('') ### was None
 
     # Remove the legend only if it exists
     if ax.get_legend():

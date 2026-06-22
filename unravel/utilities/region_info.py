@@ -9,7 +9,7 @@ Note:
 
 Usage:
 ------
-    region -f <string> [-c <filter column>] [-s <sort column>] [-csv <csv_path>]
+    region -f <string> [-c <filter column>] [-s <sort column>] [-csv <csv_path>] [-e]
 """
 
 from pathlib import Path
@@ -30,6 +30,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-c', '--column', help='Restrict filtering/sorting to this column (e.g., Region_ID, General_Region, Region, or Abbr).', default=None, action=SM)
+    opts.add_argument('-e', '--exact', help='Use exact matching instead of contains matching.', action='store_true')
     opts.add_argument('-s', '--sort', help='Sort by column. Default: Same as -c', default=None, action=SM)
     opts.add_argument('-cs', '--case_sensitive', help='Enable case-sensitive filtering (default is case-insensitive)', action='store_true')
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
@@ -38,7 +39,12 @@ def parse_args():
 
 # TODO: Add hierarchical info (parent regions and abbreviations)
 
-def filter_region_summary(filter_str, column=None, sort_column=None, csv_path='CCFv3-2020_regional_summary.csv', case_sensitive=False):
+def normalize_text(series, case_sensitive=False):
+    """Convert a Series to strings for robust matching, including numeric columns."""
+    text = series.astype(str)
+    return text if case_sensitive else text.str.lower()
+
+def filter_region_summary(filter_str, column=None, sort_column=None, csv_path='CCFv3-2020_regional_summary.csv', case_sensitive=False, exact=False):
     # Load CSV file
     csv_path = Path(__file__).parent.parent / 'core' / 'csvs' / csv_path if csv_path in ['CCFv3-2020_regional_summary.csv', 'CCFv3-2017_regional_summary.csv'] else Path(csv_path)
     if not csv_path.exists():
@@ -54,31 +60,50 @@ def filter_region_summary(filter_str, column=None, sort_column=None, csv_path='C
     if column and column not in regional_summary.columns:
         print(f"[red1]Error: Column '{column}' not found in CSV.")
         return
-    
-    # Apply filtering with case sensitivity
-    if column:
-        filtered = regional_summary[regional_summary[column].str.contains(filter_str, case=case_sensitive, na=False)]
-    else:
-        if not case_sensitive:
-            # Make all text lowercase for a case-insensitive match
-            filtered = regional_summary[regional_summary.apply(lambda row: filter_str.lower() in ' '.join(row.values.astype(str)).lower(), axis=1)]
-        else:
-            filtered = regional_summary[regional_summary.apply(lambda row: filter_str in ' '.join(row.values.astype(str)), axis=1)]
 
-    # Sort the filtered results if a sort column is specified
+    filter_value = str(filter_str) if case_sensitive else str(filter_str).lower()
+
+    if column:
+        search_col = normalize_text(regional_summary[column], case_sensitive)
+
+        if exact:
+            mask = search_col == filter_value
+        else:
+            mask = search_col.str.contains(filter_value, na=False, regex=False)
+
+        filtered = regional_summary[mask]
+
+    else:
+        search_df = regional_summary.astype(str)
+        if not case_sensitive:
+            search_df = search_df.apply(lambda col: col.str.lower())
+
+        if exact:
+            mask = search_df.eq(filter_value).any(axis=1)
+        else:
+            mask = search_df.apply(
+                lambda row: row.str.contains(filter_value, na=False, regex=False).any(),
+                axis=1,
+            )
+
+        filtered = regional_summary[mask]
+
     if sort_column:
         if sort_column not in regional_summary.columns:
             print(f"\n    [red1]Error: Sort column '{sort_column}' not found in CSV.\n")
             return
         filtered = filtered.sort_values(by=sort_column)
-    else: # Sort by the filter column
-        filtered = filtered.sort_values(by=column) if column else filtered
+    elif column:
+        filtered = filtered.sort_values(by=column)
 
     # Display filtered results in a table
     console = Console()
+
     if filtered.empty:
-        console.print(f"\n    [yellow]No results found for filter '{filter_str}' in CSV {csv_path}.\n")
+        match_type = "exact match" if exact else "filter"
+        console.print(f"\n    [yellow]No results found for {match_type} '{filter_str}' in CSV {csv_path}.\n")
         return
+
     title = f"Region Summary - {len(filtered)} Result" if len(filtered) == 1 else f"Region Summary - {len(filtered)} Results"
     table = Table(title=title)
     table.add_column("Region_ID", style="magenta")
@@ -97,7 +122,7 @@ def main():
     install()
     args = parse_args()
 
-    filter_region_summary(args.filter, args.column, args.sort, args.csv_path, case_sensitive=args.case_sensitive)
+    filter_region_summary(args.filter, args.column, args.sort, args.csv_path, case_sensitive=args.case_sensitive, exact=args.exact)
 
 
 if __name__ == '__main__':

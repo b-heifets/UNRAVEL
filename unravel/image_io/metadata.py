@@ -49,8 +49,8 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-m', '--metad_path', help='Output path relative to sample??/ for storing key raw image metadata. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
-    opts.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, default=None, action=SM)
-    opts.add_argument('-z', '--z_res', help='z resolution in um', type=float, default=None, action=SM)
+    opts.add_argument('-x', '--xy_res', help='xy resolution in um (to manually set if metadata cannot be extracted from image)', type=float, default=None, action=SM)
+    opts.add_argument('-z', '--z_res', help='z resolution in um (to manually set if metadata cannot be extracted from image)', type=float, default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
@@ -69,10 +69,11 @@ def get_dims_from_tifs(tifs_path):
     # Get dims quickly from full res tifs (Using a generator without converting to a list to be memory efficient)
     tifs = Path(tifs_path).resolve().glob("*.tif") # Generator
     tif_file = next(tifs, None) # First item in generator
+    if tif_file is None:
+        raise FileNotFoundError(f"No .tif files found in {tifs_path}")
     tif_img = cv2.imread(str(tif_file), cv2.IMREAD_UNCHANGED) # Load first tif
     x_dim, y_dim, z_dim = (tif_img.shape[1], tif_img.shape[0], sum(1 for _ in tifs) + 1) # For z count tifs + 1 (next() uses 1 generator item)
     return x_dim, y_dim, z_dim
-
 
 @log_command
 def main():
@@ -93,21 +94,43 @@ def main():
             # Resolve path to metadata file
             metadata_path = resolve_path(sample_path, path_or_pattern=args.metad_path, make_parents=True)
 
+            # Generate metadata
             if metadata_path.exists():
                 print(f'\n\n{metadata_path} exists. Skipping...')
                 print_metadata(metadata_path)
-            else: 
-                # Load image and save metadata to file
-                if img_path.exists():
-                    if img_path.is_dir and img_path.glob(f"*.tif") and args.xy_res is not None and args.z_res is not None:
-                        x_dim, y_dim, z_dim = get_dims_from_tifs(img_path)
-                        save_metadata_to_file(args.xy_res, args.z_res, x_dim, y_dim, z_dim, save_metadata=metadata_path)
-                    else: 
-                        load_3D_img(img_path, desired_axis_order="xyz", xy_res=args.xy_res, z_res=args.z_res, return_metadata=True, save_metadata=metadata_path, verbose=args.verbose)
-                        print(f'\n\n{metadata_path}:')
-                        print_metadata(metadata_path)
+
+            elif img_path.exists():
+
+                # Fast path for tif series dirs (avoid loading full stack)
+                if img_path.is_dir() and any(img_path.glob("*.tif")):
+                    if args.xy_res is None or args.z_res is None:
+                        raise ValueError(
+                            f"\n\n    xy_res and z_res must be provided for a tif series directory.\n"
+                            f"    Input: {img_path}\n"
+                            f"    Tip: rerun io_metadata with -x/-z.\n"
+                        )
+
+                    x_dim, y_dim, z_dim = get_dims_from_tifs(img_path)
+                    save_metadata_to_file(args.xy_res, args.z_res, x_dim, y_dim, z_dim, save_metadata=metadata_path)
+                    print(f'\n\n{metadata_path}:')
+                    print_metadata(metadata_path)
+
                 else:
-                    print(f"    [red1]No match found for {args.input} in {sample_path}. Skipping...")
+                    # Other formats: load once and save metadata from embedded metadata (or from -x/-z)
+                    load_3D_img(
+                        img_path,
+                        desired_axis_order="xyz",
+                        xy_res=args.xy_res,
+                        z_res=args.z_res,
+                        return_metadata=True,
+                        save_metadata=metadata_path,
+                        verbose=args.verbose,
+                    )
+                    print(f'\n\n{metadata_path}:')
+                    print_metadata(metadata_path)
+
+            else:
+                print(f"    [red1]No match found for {args.input} in {sample_path}. Skipping...")
 
             progress.update(task_id, advance=1)
 

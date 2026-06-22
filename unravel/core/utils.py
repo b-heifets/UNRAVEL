@@ -245,6 +245,7 @@ def verbose_end_msg():
 def log_command(func):
     """A decorator for main() to log the command and execution times to a hidden file (.command_log.txt)."""
     # TODO: avoid logging when -h or --help is used
+    # TODO: Don't strip quotes from patterns for glob
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         log_file = ".command_log.txt"  # Name of the hidden log file
@@ -387,15 +388,20 @@ def match_files(patterns, base_path=None):
     Parameters
     ----------
     patterns : str or list of str
-        Glob pattern(s) to match files. Supports wildcards like '*.nii.gz', '*.tif', etc.
-        Can include absolute paths with wildcards.
+        Glob pattern(s) or explicit file paths. Wildcards like '*.nii.gz' or '*.tif' are supported.
+        Both relative and absolute paths are accepted.
+        When multiple patterns are provided:
+            - Explicit paths preserve their order.
+            - Globs are expanded and sorted within that position.
     base_path : str or Path, optional
-        Base directory where relative patterns are applied. Defaults to the current working directory.
+        Base directory where relative patterns are applied.
+        Defaults to the current working directory.
 
     Returns
     -------
     list of Path
-        A sorted list of Path objects that match the provided glob patterns.
+        A list of Path objects matching the provided patterns,
+        preserving explicit input order and sorting only glob expansions.
 
     Raises
     ------
@@ -410,7 +416,7 @@ def match_files(patterns, base_path=None):
     elif isinstance(patterns, list) and all(isinstance(p, (str, Path)) for p in patterns):
         patterns = [str(p) for p in patterns]
     else:
-        raise TypeError("patterns must be a string, Path, or a list of those types.")
+        raise TypeError("patterns must be a string, Path, or list of those types.")
 
     if base_path is not None and not isinstance(base_path, (str, Path)):
         raise TypeError("base_path must be a string or Path object.")
@@ -420,15 +426,26 @@ def match_files(patterns, base_path=None):
 
     for pattern in patterns:
         pattern_path = Path(pattern)
-        if pattern_path.is_absolute():
-            paths.extend(Path(pattern_path.parent).glob(pattern_path.name))
+
+        # Determine if it's a glob (contains wildcard characters)
+        is_glob = any(ch in pattern for ch in "*?[]")
+
+        if is_glob:
+            # Absolute glob
+            if pattern_path.is_absolute():
+                matches = sorted(Path(pattern_path.parent).glob(pattern_path.name))
+            else:
+                matches = sorted(base_path.glob(pattern))
         else:
-            paths.extend(base_path.glob(pattern))
+            # Explicit file path — keep as-is, resolving relative paths
+            matches = [pattern_path if pattern_path.is_absolute() else base_path / pattern_path]
+
+        paths.extend(matches)
 
     if not paths:
-        raise ValueError(f"No files found matching patterns: {patterns}")
+        raise ValueError(f"No files found in {base_path} matching the pattern(s): {patterns}")
 
-    return sorted(paths)
+    return paths
 
 def get_stem(file_path):
     """
@@ -447,6 +464,7 @@ def get_stem(file_path):
     """
     file_path = Path(file_path)
     name = file_path.name
+    lower_name = name.lower()
 
     compound_extensions = [
         '.nii.gz',
@@ -459,7 +477,7 @@ def get_stem(file_path):
     ]
 
     for ext in compound_extensions:
-        if str(name).endswith(ext):
+        if str(lower_name).endswith(ext):
             return name[: -len(ext)]
     
     return file_path.stem
@@ -496,6 +514,173 @@ def get_extension(file_path):
             return ext
     
     return file_path.suffix
+
+def resolve_output_paths(
+    file_paths,
+    output_paths=None,
+    ext=None,
+    stem_suffix=None,
+    base_dir=None,
+    *,
+    skip_existing=False,
+    return_inputs=False,
+):
+    """
+    Resolve and prepare output file path(s) based on input file(s) and an optional output argument.
+
+    The `output_paths` argument can include an optional suffix using colon notation:
+        - "results/:_filtered" → output dir = "results/", suffix = "_filtered"
+        - ":_processed"        → no dir, just apply suffix "_processed" next to inputs
+        - "results/"           → output dir only (adds '_out' if input/output names would match)
+        - "results/file.csv"   → explicit file output
+
+    Suffix logic
+    -------------
+    - If input and output filenames (including extension) would match, '_out' is added automatically
+      to prevent overwriting.
+    - If filenames differ (e.g., due to directory, stem, or extension), no default suffix is used.
+    - User-specified suffixes (via colon notation or `stem_suffix`) always take precedence.
+
+    General rules
+    -------------
+    - One input, output is a file → use it directly.
+    - One input, output is a directory → save inside it.
+    - Multiple inputs, output must be a directory (auto-created).
+    - No output → save next to each input file, adding a suffix if needed to avoid overwriting.
+    - All parent directories for outputs are created automatically.
+
+    For multiple input files in nested directories, their relative structure under `base_dir`
+    is preserved automatically. If `base_dir` is not provided, it is inferred as:
+        - The common parent directory of all inputs, if shared
+        - Otherwise, the current working directory
+
+    Parallel processing
+    -------------------
+    This function is **safe for parallel processing**.
+    It ensures all parent directories exist so workers can write immediately.
+
+    Example usage
+    -------------
+    >>> inputs = ["data/a.nrrd", "data/b.nrrd"]
+    >>> outputs = resolve_output_paths(inputs, "results/:_aligned", ext=".nii.gz")
+    >>> for i, o in zip(inputs, outputs):
+    ...     print(f"{i} → {o}")
+    data/a.nrrd → results/a.nii.gz
+    data/b.nrrd → results/b.nii.gz
+
+    >>> # Same format and name → '_out' added
+    >>> outputs = resolve_output_paths(inputs, "results/")
+    data/a.nrrd → results/a_out.nrrd
+
+    Parameters
+    ----------
+    file_paths : list[str | Path]
+        One or more input file paths.
+    output_paths : str | Path | None, optional
+        Output path with optional suffix using colon notation (e.g., 'outdir/:_filtered').
+        If None, outputs are saved next to input files.
+    ext : str | None, optional
+        Optional override for file extension (e.g., '.csv', '.nii.gz').
+        If None, keeps the input file's extension.
+    stem_suffix : str | None, optional
+        Manual suffix to append before the extension. Overrides any suffix in `output_paths`.
+    base_dir : str | Path | None, optional
+        Base directory to preserve relative paths under.
+        If None, inferred automatically (common parent or CWD).
+    skip_existing : bool, optional
+        If True, existing outputs are skipped.
+    return_inputs : bool, optional
+        If True, returns (filtered_inputs, outputs).
+
+    Returns
+    -------
+    list[Path]  or  (list[Path], list[Path])
+        List of resolved output paths (always Path objects).
+        If `return_inputs=True`, returns (filtered_inputs, outputs).
+    """
+    file_paths = [Path(p).resolve() for p in file_paths]
+    n = len(file_paths)
+    outputs = []
+
+    # --- Parse colon notation in output_paths ---
+    output_paths = str(output_paths) if output_paths is not None else ""
+    parsed_suffix = None
+    if ":" in output_paths:
+        base_part, parsed_suffix = output_paths.split(":", 1)
+        output_paths = base_part.strip() or None
+        parsed_suffix = parsed_suffix.strip() or None
+
+    # --- Infer base_dir automatically ---
+    if base_dir:
+        base_dir = Path(base_dir).resolve()
+    elif n > 1:
+        try:
+            base_dir = Path(os.path.commonpath([str(f) for f in file_paths]))
+        except ValueError:
+            base_dir = Path.cwd()
+    else:
+        base_dir = file_paths[0].parent.resolve()
+
+    # --- Determine suffix priority ---
+    final_suffix = (
+        stem_suffix if stem_suffix is not None
+        else parsed_suffix if parsed_suffix is not None
+        else ""  # decided below dynamically if needed
+    )
+
+    # --- Main logic ---
+    if output_paths:
+        output_paths = Path(output_paths).resolve()
+
+        # Case 1: Single input, explicit output file
+        if n == 1 and output_paths.suffix:
+            output_paths.parent.mkdir(parents=True, exist_ok=True)
+            outputs = [output_paths]
+
+        # Case 2: Directory (preserve structure)
+        else:
+            output_paths.mkdir(parents=True, exist_ok=True)
+            for f in file_paths:
+                stem = get_stem(f)
+                in_ext = get_extension(f)
+                out_ext = ext or in_ext
+                try:
+                    rel = f.relative_to(base_dir)
+                    rel_dir = rel.parent
+                except ValueError:
+                    rel_dir = Path()
+
+                target_dir = output_paths / rel_dir
+                target_dir.mkdir(parents=True, exist_ok=True)
+
+                # Determine if name/extension match → add '_out'
+                candidate = target_dir / f"{stem}{final_suffix}{out_ext}"
+                if final_suffix == "" and candidate.name == f.name:
+                    final_suffix = "_out"
+
+                outputs.append(target_dir / f"{stem}{final_suffix}{out_ext}")
+
+    else:
+        # Case 3: No output path → save next to input
+        for f in file_paths:
+            stem = get_stem(f)
+            in_ext = get_extension(f)
+            out_ext = ext or in_ext
+            final_suffix_for_this = final_suffix
+            if final_suffix_for_this == "" and out_ext == in_ext:
+                final_suffix_for_this = "_out"
+            out_file = f.parent / f"{stem}{final_suffix_for_this}{out_ext}"
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            outputs.append(out_file)
+
+    # --- Optionally skip existing outputs ---
+    if skip_existing:
+        keep_idx = [i for i, p in enumerate(outputs) if not p.exists()]
+        outputs = [outputs[i] for i in keep_idx]
+        filtered_inputs = [file_paths[i] for i in keep_idx]
+        return (filtered_inputs, outputs) if return_inputs else outputs
+
+    return outputs
 
 @print_func_name_args_times()
 def get_pad_percent(reg_outputs_path, pad_percent):

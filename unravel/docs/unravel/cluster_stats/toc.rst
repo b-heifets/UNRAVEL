@@ -21,11 +21,13 @@ unravel.cluster_stats package
    cstats
    stats_table
    sunburst
+   sunburst_sort
    table
    crop
    mean_IF
    mean_IF_summary
    clusters
+   reshape
    effect_sizes/toc
 
 .. automodule:: unravel.cluster_stats

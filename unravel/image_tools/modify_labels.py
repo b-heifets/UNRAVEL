@@ -6,7 +6,13 @@ Use ``img_modify_labels`` (``ml``) from UNRAVEL to modify specified label IDs in
 Usage: 
 ------
     img_modify_labels -i path/image.nii.gz -ids 1 2 3 -o path/image.nii.gz [-val 0] [--retain_IDs] [--binarize] [-v]
+
+Usage to mask a region w/ multiple labels:
+------------------------------------------
+    img_modify_labels -i atlas.nii.gz -o mask.nii.gz --retain_IDs -ids <ID1> <ID2> -val 0 -b
 """
+
+from pathlib import Path
 
 import numpy as np
 import nibabel as nib
@@ -103,7 +109,9 @@ def main():
         new_img_array[new_img_array > 0] = 1
 
     # Save the modified image as a NIfTI file
-    nib.save(nib.Nifti1Image(new_img_array, nii.affine, nii.header), args.output)
+    output_path = Path(args.output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    nib.save(nib.Nifti1Image(new_img_array, nii.affine, nii.header), output_path)
 
     verbose_end_msg()
 

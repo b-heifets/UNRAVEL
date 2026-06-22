@@ -5,6 +5,7 @@ Use ``seg_copy_tifs`` (``sct``) from UNRAVEL to copy or save specified slices fr
 
 Note:
     - reg_inputs/autofl_50um_tifs is from ``reg_prep`` and is used to make a brain mask using ``seg_brain_mask``.
+    - 
 
 Next command: 
     ``seg_brain_mask`` for ``reg`` or ``seg_ilastik`` for pixel classification.   
@@ -15,7 +16,7 @@ Usage to prep for seg_brain_mask:
 
 Usage to copy tifs for ilastik:
 -------------------------------
-    seg_copy_tifs -i <path to dir with tifs or to a 3D image> -s 0100 0500 1000 [-td ilastik_segmentation] [-d list of paths] [-p sample??] [-v]
+    seg_copy_tifs -i <relative path to dir with tifs or to a 3D image> -s 0100 0500 1000 [-td ilastik_segmentation] [-d list of paths] [-p sample??] [-v]
 """
 
 import shutil
@@ -38,8 +39,8 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='Path to dir with the .tif files to copy or path to a 3D image', required=True, action=SM)
-    reqs.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path to dir with the source TIFFs or a rel_path/pattern for a 3D image (1st match processed)', required=True, action=SM)
+    reqs.add_argument('-s', '--slices', help='Space-separated list of slice indices (e.g., 250 or 0250, extracts slice 250 and saves it as *_0250.tif)', nargs='*', type=str, required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-td', '--target_dir', help='path/target_dir to copy TIF files to. Default: current dir', action=SM)

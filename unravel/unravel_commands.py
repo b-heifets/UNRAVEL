@@ -126,37 +126,67 @@ def main():
                 "common": False,
                 "alias": "rai"
             },
+            "reg_bias_correct": {
+                "module": "unravel.register.bias_correct",
+                "description": "Apply N4 bias field correction to an .nii.gz image.",
+                "common": False,
+                "alias": "bias_corr"
+            },
+            "reg_compare": {
+                "module": "unravel.register.reg_compare",
+                "description": "Compare registration results.",
+                "common": True,
+                "alias": "rcmp"
+            },
+            "reg_compare_fsleyes": {
+                "module": "unravel.register.reg_compare_fsleyes",
+                "description": "Compare registration results using FSLeyes.",
+                "common": True,
+                "alias": "rcmpf or rf"
+            },
+            "reg_background": {
+                "module": "unravel.register.reg_background",
+                "description": "Approximate autofluorescence by estimating and saving the background of a 3D image using a rolling-ball-like method.",
+                "common": False,
+                "alias": "background or rbg"
+            },
+            "reg_adjust_template": {
+                "module": "unravel.register.adjust_template",
+                "description": "Adjust the template image (e.g., to modify specific regions for better registration).",
+                "common": False,
+                "alias": "adjust_template or rat"
+            },
         },
         "Warping": {
             "warp_to_atlas": {
                 "module": "unravel.warp.to_atlas",
-                "description": "Warp images to atlas space.",
+                "description": "Warp native images (full res tissue space) to atlas space.",
                 "common": True,
                 "alias": "w2a"
             },
             "warp_to_fixed": {
                 "module": "unravel.warp.to_fixed",
-                "description": "Warp images to native space.",
+                "description": "Warp images to fixed image space.",
                 "common": False,
                 "alias": "w2f"
             },
             "warp_to_native": {
                 "module": "unravel.warp.to_native",
-                "description": "Warp images to native space.",
+                "description": "Warp images to native image space (full res tissue space).",
                 "common": True,
                 "alias": "w2n"
             },
-            "warp_points_to_atlas": {
-                "module": "unravel.warp.points_to_atlas",
-                "description": "Warp cell centroids in tissue space to atlas space.",
-                "common": True,
-                "alias": "wp2a"
-            },
             "warp": {
                 "module": "unravel.warp.warp",
-                "description": "Warp between moving and fixed images.",
+                "description": "Warp to/from atlas space and registration input space.",
                 "common": False
-            }
+            },
+            "warp_ccf30_to_merfish": {
+                "module": "unravel.warp.ccf30_to_merfish",
+                "description": "Warp CCFv3.0 to MERFISH space.",
+                "common": False,
+                "alias": "c2m"
+            },
         },
         "Segmentation": {
             "seg_copy_tifs": {
@@ -238,6 +268,12 @@ def main():
                 "description": "Flip and optionally shift content of images in atlas space.",
                 "common": False,
                 "alias": "mirror"
+            },
+            "vstats_match_files": {
+                "module": "unravel.voxel_stats.match_files",
+                "description": "Match files and print the order (e.g., to check the order of images for voxel-wise stats).",
+                "common": False,
+                "alias": "match_files"
             }
         },
         "Cluster-wise stats": {
@@ -338,6 +374,12 @@ def main():
                 "common": False,
                 "alias": "sunburst"
             },
+            "cstats_sunburst_sort": {
+                "module": "unravel.cluster_stats.sunburst_sort",
+                "description": "Sort sunburst CSVs by hierarchy and value.",
+                "common": False,
+                "alias": "sunburst_sort"
+            },
             "cstats_find_incongruent": {
                 "module": "unravel.cluster_stats.find_incongruent_clusters",
                 "description": "Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).",
@@ -385,6 +427,12 @@ def main():
                 "description": "Calculate relative effect sizes by sex.",
                 "common": False,
                 "alias": "esr"
+            },
+            "cstats_reshape": {
+                "module": "unravel.cluster_stats.reshape",
+                "description": "Reshape cluster validation data.",
+                "common": False,
+                "alias": "reshape"
             }
         },
         "Region-wise stats": {
@@ -491,28 +539,16 @@ def main():
                 "common": False,
                 "alias": "i2np"
             },
-            "io_img_to_points": {
-                "module": "unravel.image_io.img_to_points",
-                "description": "Convert and image into points coordinates.",
-                "common": False,
-                "alias": "i2p"
-            },
-            "io_points_to_img": {
-                "module": "unravel.image_io.points_to_img",
-                "description": "Populate an empty image with point coordinates.",
-                "common": False,
-                "alias": "p2i"
-            },
             "io_zarr_compress": {
                 "module": "unravel.image_io.zarr_compress",
                 "description": "Compress .zarr or decompress .zarr.tar.gz files.",
                 "common": False,
                 "alias": "zc"
-            }
+            },
         },
         "Image tools": {
             "img_math": {
-                "module": "unravel.image_tools.math",
+                "module": "unravel.image_tools.img_math",
                 "description": "Perform mathematical operations on 3D images.",
                 "common": True,
                 "alias": "math"
@@ -571,12 +607,6 @@ def main():
                 "common": False,
                 "alias": "resample"
             },
-            "img_resample_points": {
-                "module": "unravel.image_tools.resample_points",
-                "description": "Resample a set of points [and save as an image].",
-                "common": False,
-                "alias": "resample_points"
-            },
             "img_extend": {
                 "module": "unravel.image_tools.extend",
                 "description": "Extend images (add padding to one side).",
@@ -600,6 +630,30 @@ def main():
                 "description": "Filter objects (e.g., cells) by size.",
                 "common": False,
                 "alias": "filter_objects"
+            },
+            "img_smooth": {
+                "module": "unravel.image_tools.smooth",
+                "description": "Smooth .nii.gz images.",
+                "common": False,
+                "alias": "smooth"
+            },
+            "img_invert": {
+                "module": "unravel.image_tools.invert",
+                "description": "Invert image intensities (for uint8 and uint16 images).",
+                "common": False,
+                "alias": "invert"
+            },
+            "img_dilate": {
+                "module": "unravel.image_tools.dilate",
+                "description": "Dilate a binary mask in a NIfTI image.",
+                "common": False,
+                "alias": "dilate"
+            },
+            "img_means_in_mask": {
+                "module": "unravel.image_tools.means_in_mask",
+                "description": "Calculate the mean intensity for each image within a mask.",
+                "common": False,
+                "alias": "means_in_mask"
             },
         },
         "Atlas tools": {
@@ -671,12 +725,6 @@ def main():
                 "common": False,
                 "alias": "clean_tifs"
             },
-            "utils_points_compressor": {
-                "module": "unravel.utilities.points_compressor",
-                "description": "Pack or unpack point data in a CSV file or summarize the number of points per region.",
-                "common": False,
-                "alias": "points_compressor"
-            }
         },
         "Allen Brain Cell Atlas (ABCA)": {
             "abca_cache": {
@@ -710,16 +758,34 @@ def main():
                 "alias": "mf_filter_mask"
             },
             "abca_merfish_expression_to_nii": {
-                "module": "unravel.allen_institute.abca.merfish.abca_merfish_expression_to_nii",
+                "module": "unravel.allen_institute.abca.merfish.merfish_expression_to_nii",
                 "description": "Make a 3D .nii.gz image of ABCA MERFISH expression data.",
                 "common": True,
                 "alias": "me"
             },
             "abca_merfish_cells_to_nii": {
-                "module": "unravel.allen_institute.abca.merfish.abca_merfish_cells_to_nii",
+                "module": "unravel.allen_institute.abca.merfish.merfish_cells_to_nii",
                 "description": "Convert ABCA MERFISH cells to a .nii.gz 3D image.",
                 "common": False,
                 "alias": "mc"
+            },
+            "abca_merfish_join_expression": {
+                "module": "unravel.allen_institute.abca.merfish.merfish_join_expression",
+                "description": "Join ABCA MERFISH expression data with cell metadata.",
+                "common": False,
+                "alias": "mje"
+            },
+            "abca_merfish_check_genes": {
+                "module": "unravel.allen_institute.abca.merfish.merfish_check_genes",
+                "description": "Check what genes are present in ABCA MERFISH expression data.",
+                "common": False,
+                "alias": "mcg"
+            },
+            "abca_merfish_regions": {
+                "module": "unravel.allen_institute.abca.merfish.merfish_regions",
+                "description": "Check what regions are present in given columns of ABCA MERFISH cell metadata.",
+                "common": False,
+                "alias": "mr"
             },
             "abca_sunburst": {
                 "module": "unravel.allen_institute.abca.sunburst.sunburst",
@@ -757,11 +823,11 @@ def main():
                 "common": False,
                 "alias": "pecs"
             },
-            "abca_scRNA-seq_filter": {
+            "abca_scRNAseq_filter": {
                 "module": "unravel.allen_institute.abca.scRNA_seq.filter",
                 "description": "Filter ABCA scRNA-seq cells based on columns and values in the cell metadata and save as CSV.",
                 "common": True,
-                "alias": "s_filter"
+                "alias": "rna_filter"
             },
         },
         "Genetic Tools Atlas (GTA)": {
@@ -771,17 +837,35 @@ def main():
                 "common": False,
                 "alias": "gta_dl"
             },
-            "gta_metadata": {
-                "module": "unravel.allen_institute.genetic_tools_atlas.metadata",
+            "gta_simplify_metadata": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.simplify_metadata",
                 "description": "Simplify metadata from the GTA.",
                 "common": False,
-                "alias": "gta_m"
+                "alias": "gta_sm"
             },
             "gta_org_samples": {
                 "module": "unravel.allen_institute.genetic_tools_atlas.org_samples",
                 "description": "Organize TIFFs dirs from the GTA after conversion.",
                 "common": False,
                 "alias": "gta_os"
+            },
+            "gta_auto_crop": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.auto_crop",
+                "description": "Automatically crop GTA images to a bounding box around the brain.",
+                "common": False,
+                "alias": "gta_ac"
+            },
+            "gta_bbox_crop": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.bbox_crop",
+                "description": "Crop GTA images to a bounding box (e.g., from gta_auto_crop).",
+                "common": False,
+                "alias": "gta_bc"
+            },
+            "gta_zarr_metadata_summary": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.zarr_metadata_summary",
+                "description": "Summarize metadata from GTA Zarr files.",
+                "common": False,
+                "alias": "gta_z"
             },
         },
         "MapMySections (MMS)": {
@@ -845,9 +929,89 @@ def main():
                 "module": "unravel.tabular.unique_values",
                 "description": "Print unique values in specified column(s) of a tabular dataset.",
                 "common": False,
-                "alias": "uniq_vals"
+                "alias": "uniq_vals or vals"
+            },
+            "tabular_concat": {
+                "module": "unravel.tabular.concat",
+                "description": "Concatenate multiple CSV files into a single table.",
+                "common": False,
+                "alias": "concat"
             },
         },
+        "Coordinates": {
+            "coords_points_to_img": {
+                "module": "unravel.coordinates.points_to_img",
+                "description": "Convert point coordinates to a 3D image.",
+                "common": False,
+                "alias": "p2i"
+            },
+            "coords_img_to_points": {
+                "module": "unravel.coordinates.img_to_points",
+                "description": "Convert a 3D image to point coordinates.",
+                "common": False,
+                "alias": "i2p"
+            },
+            "coords_physical_points_to_img": {
+                "module": "unravel.coordinates.physical_points_to_img",
+                "description": "Convert physical point coordinates to a 3D image.",
+                "common": False,
+                "alias": "pp2i"
+            },
+            "coords_physical_points_add_regions": {
+                "module": "unravel.coordinates.physical_points_add_regions",
+                "description": "Add region information to physical point coordinates.",
+                "common": False,
+                "alias": "ppar"
+            },
+            "coords_resample_points": {
+                "module": "unravel.coordinates.resample_points",
+                "description": "Resample point coordinates.",
+                "common": False,
+                "alias": "resample_points"
+            },
+            "coords_points_compressor": {
+                "module": "unravel.coordinates.points_compressor",
+                "description": "Compress point coordinates (e.g., for sharing).",
+                "common": False,
+                "alias": "points_compressor"
+            },
+            "coords_points_to_atlas": {
+                "module": "unravel.coordinates.points_to_atlas",
+                "description": "Warp point coordinates to atlas space.",
+                "common": False,
+                "alias": "p2a"
+            },
+            "coords_refine_catchall_regions": {
+                "module": "unravel.coordinates.refine_catchall_regions",
+                "description": "Refine anatomical assignments for points in catchall regions by checking proximity to descendent regions.",
+                "common": False,
+                "alias": "refine_catchall"
+            },
+            "coords_ccf30_points_to_merfish": {
+                "module": "unravel.coordinates.ccf30_points_to_merfish",
+                "description": "Convert CCFv3.0 point coordinates to ABCA MERFISH point coordinates.",
+                "common": False,
+                "alias": "ccf30_points_to_merfish"
+            },
+            "coords_labeled_voxel_img_to_points": {
+                "module": "unravel.coordinates.labeled_voxel_img_to_points",
+                "description": "Convert labeled voxel images to point coordinates.",
+                "common": False,
+                "alias": "labeled_voxel_img_to_points"
+            },
+            "coords_points_to_labeled_voxel_img": {
+                "module": "unravel.coordinates.points_to_labeled_voxel_img",
+                "description": "Convert point coordinates to labeled voxel images.",
+                "common": False,
+                "alias": "points_to_labeled_voxel_img"
+            },
+            "coords_points_to_sphere_masks": {
+                "module": "unravel.coordinates.points_to_sphere_masks",
+                "description": "Create one binary sphere/ellipsoid mask per point.",
+                "common": False,
+                "alias": "points_to_sphere_masks"
+            },
+        }
     }
 
     print("\n[magenta bold]Category[/], [cyan bold]Command[/], [green]Alias (-a), [purple3]Module (-m)[/], [grey50]Description (-d), \n")

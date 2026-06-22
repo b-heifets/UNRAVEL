@@ -33,6 +33,7 @@ Usage for directories:
 import pandas as pd
 from glob import glob
 from pathlib import Path
+from rich import print
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -58,28 +59,43 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Add --input to specify glob pattern(s) for files to rename. Change default behavior to rename all matching files/dirs. Change -f and -d to enable selective renaming of files or directories.
-# TODO: This tries to rename files/dirs for each row in the CSV. If a sample is not found in the current directory, it raises: "ValueError: No files found matching patterns"
 
 def rename_items(base_path, dir_name, condition, rename_files, rename_dirs, recursive):
     search_pattern = f'**/{dir_name}*' if recursive else f'{dir_name}*'
-    items = match_files(search_pattern, base_path)
+
+    try:
+        items = match_files(search_pattern, base_path)
+    except ValueError:
+        return False  # <-- No matches found
+
+    renamed = False
     for item in items:
         if item.is_file() and rename_files:
-            new_name = item.parent / f'{condition}_{item.name}'
-            item.rename(new_name)
+            item.rename(item.parent / f"{condition}_{item.name}")
+            renamed = True
         elif item.is_dir() and rename_dirs:
-            new_name = item.parent / f'{condition}_{item.name}'
-            item.rename(new_name)
+            item.rename(item.parent / f"{condition}_{item.name}")
+            renamed = True
+
+    return renamed  # <-- True only if something was renamed
 
 @print_func_name_args_times()
 def prepend_conditions(base_path, csv_file, rename_files, rename_dirs, recursive):
     mapping_df = pd.read_csv(csv_file)
-    
-    for index, row in mapping_df.iterrows():
-        dir_name = row['dir_name']
-        condition = row['condition']
-        rename_items(base_path, dir_name, condition, rename_files, rename_dirs, recursive)
+    missing = []
+    renamed_any = False
 
+    for _, row in mapping_df.iterrows():
+        ok = rename_items(base_path, row['dir_name'], row['condition'],
+                          rename_files, rename_dirs, recursive)
+        if not ok:
+            missing.append(row['dir_name'])
+
+        if ok:
+            renamed_any = True
+
+    if missing and not renamed_any:
+        print(f"[yellow]No matching files/dirs found for any sample_key entries in {base_path}.")
 
 @log_command
 def main():

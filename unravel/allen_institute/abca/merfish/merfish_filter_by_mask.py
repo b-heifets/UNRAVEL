@@ -21,18 +21,18 @@ Outputs:
 
 Next steps:
     - Use the filtered cell metadata to examine cell type prevalence or gene expression
-    - To quantify/organize cell type proportions like in the MapMySections data challenge, use ``abca_cell_type_proportions`` to calculate proportions for a given ontological level (e.g., subclass)
-    - Then use ``abca_cell_type_proportions_concat`` to concatenate multiple CSVs into one file (one row per input file)
+    - For cell type proportions like in the MapMySections data challenge, use ``mms_cell_type_proportions`` to calculate proportions for a given ontological level (e.g., subclass)
+    - Then use ``mms_cell_type_proportions_concat`` to concatenate multiple CSVs into one file (one row per input file)
     - To visualize cell type proportions, use ``abca_sunburst`` to make a CSV for sunburst plotting
-    - For looking at gene expression, load the filtered cell metadata and join it with the expression data for the gene(s) of interest
+    - For looking at gene expression, load the filtered cell metadata and join it with the expression data for the gene(s) of interest (``abca_merfish_join_expression``)
 
 Usage:
 ------
     abca_merfish_filter_by_mask -b path/to/root_dir -i mask.nii.gz [-o path/cells_filtered_by_cluster.csv] [-v]
 """
-
 import numpy as np
 import pandas as pd
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from rich import print
 from rich.live import Live
@@ -55,13 +55,13 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='path/output/directory/ for filtered cell metadata CSV files. Default: current working directory', default='.', action=SM)
+    opts.add_argument("-n", "--workers", help="Number of parallel workers. Default: 8", default=8, type=int, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
-# TODO: Add parallelization.
 
 @print_func_name_args_times()
 def check_cells_in_mask(cell_df_bbox_filter, mask_img, xy_res, z_res):
@@ -96,6 +96,7 @@ def check_cells_in_mask(cell_df_bbox_filter, mask_img, xy_res, z_res):
     x_size, y_size, z_size = mask_img.shape
 
     # Convert cell coordinates to voxel indices
+    cell_df_bbox_filter = cell_df_bbox_filter.copy()
     cell_df_bbox_filter['x_voxel'] = (cell_df_bbox_filter['x_reconstructed'] / xy_res_mm).astype(int)
     cell_df_bbox_filter['y_voxel'] = (cell_df_bbox_filter['y_reconstructed'] / xy_res_mm).astype(int)
     cell_df_bbox_filter['z_voxel'] = (cell_df_bbox_filter['z_reconstructed'] / z_res_mm).astype(int)
@@ -259,10 +260,27 @@ def main():
     progress, task_id = initialize_progress_bar(len(input_paths), task_message="[bold green]Filtering cell metadata by mask...")
     with Live(progress):
 
-        for input_path in input_paths:
-            merfish_filter_by_mask(input_path, xy_res_mm, z_res_mm, cell_df_joined, output_dir, args.verbose)
+        def wrapped_filter(input_path):
+            try:
+                merfish_filter_by_mask(
+                    input_path,
+                    xy_res_mm,
+                    z_res_mm,
+                    cell_df_joined,
+                    output_dir,
+                    args.verbose,
+                )
+            except Exception as e:
+                return f"⚠️ Error filtering {input_path}: {e}"
+            finally:
+                progress.update(task_id, advance=1)
 
-            progress.update(task_id, advance=1)
+        with ThreadPoolExecutor(max_workers=args.workers) as executor:
+            futures = [executor.submit(wrapped_filter, p) for p in input_paths]
+            for fut in as_completed(futures):
+                msg = fut.result()
+                if msg:
+                    print(msg)
 
     verbose_end_msg()
 

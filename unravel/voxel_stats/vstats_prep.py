@@ -6,13 +6,13 @@ Use ``vstats_prep`` (``vp``) from UNRAVEL to load an immunofluo image, subtract 
 Prereqs: 
     - ``reg``
 
-Input examples (path is relative to ./sample??; 1st glob match processed): 
-    - `*`.czi, ochann/`*`.tif, ochann, `*`.tif, `*`.h5, or `*`.zarr
+Inputs:
+    - 3D image: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
-Output example:
-    - ./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz
+Outputs:
+    - Image warped to atlas space: .nii.gz
 
-Next commands for voxel-wise stats: 
+Next steps for voxel-wise stats: 
     Preprocess atlas space IF images with ``vstats_z_score`` (recommended for c-Fos-IF) or aggregate them with ``utils_agg_files``.
 
 Usage:
@@ -41,15 +41,16 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path to full res image', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="Path to full res image (relative to ./sample??/) or glob pattern (e.g., '*.czi'). First match used.", required=True, action=SM)
     reqs.add_argument('-o', '--output', help='Output file name w/o "sample??_" (added automatically). E.g., cfos_rb4_30um_CCF_space.nii.gz', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-od', '--output_dir', help='Output directory for processed files. Default: atlas_space', default='atlas_space', action=SM)
     opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz (e.g., atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     opts.add_argument('-sa', '--spatial_avg', help='Spatial averaging in 2D or 3D (2 or 3). Default: None', default=None, type=int, action=SM)
     opts.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels (Default: None)', default=None, type=int, action=SM)
     opts.add_argument('-c', '--channel', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
-    opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
+    opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default=50, type=int, action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: uint16', default="uint16", action=SM)
     opts.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image. Default: 1', default=1, type=int, action=SM)
@@ -69,6 +70,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: [default] is not showing in the help message for -inp
+# TODO: Could deprecate auto adding "sample??_" to output name (this can be done when aggregating files later)
 
 @log_command
 def main():
@@ -84,7 +86,7 @@ def main():
         for sample_path in sample_paths:
 
             output_name = f"{sample_path.name}_{Path(args.output).name}"
-            output = sample_path / "atlas_space" / output_name
+            output = sample_path / args.output_dir / output_name
             output.parent.mkdir(exist_ok=True, parents=True)
             if output.exists():
                 print(f"\n    {output} already exists. Skipping.")
@@ -103,7 +105,7 @@ def main():
                 print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ io_metadata")
                 import sys ; sys.exit()
 
-            img = load_3D_img(img_path, args.channel, "xyz", verbose=args.verbose)
+            img = load_3D_img(img_path, channel=args.channel, desired_axis_order="xyz", verbose=args.verbose)
 
             # Apply spatial averaging
             if args.spatial_avg == 3:
@@ -116,19 +118,17 @@ def main():
                 img = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)  
 
             # Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)
-            img = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
+            img = reg_prep(img, xy_res=xy_res, z_res=z_res, reg_res=args.reg_res, zoom_order=args.zoom_order, miracl=args.miracl)
 
             # Warp the image to atlas space
             fixed_reg_input = Path(sample_path, args.fixed_reg_in)    
             if not fixed_reg_input.exists():
                 fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
-            pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
-            to_atlas(sample_path, img, fixed_reg_input, args.atlas, output, args.interpol, dtype='uint16', pad_percent=pad_percent)
+            pad_percent = get_pad_percent(reg_outputs_path=sample_path / Path(args.fixed_reg_in).parent, pad_percent=args.pad_percent)
+            to_atlas(sample_path, img=img, fixed_reg_in=fixed_reg_input, atlas=args.atlas, output=output, interpol=args.interpol, dtype=args.dtype, pad_percent=pad_percent)
 
-            # Copy the atlas to atlas_space
-            atlas_space = sample_path / "atlas_space"
-            shutil.copy(args.atlas, atlas_space)
-
+            # Copy the atlas to the output dir
+            shutil.copy(args.atlas, sample_path / args.output_dir)
             progress.update(task_id, advance=1)
 
     verbose_end_msg()

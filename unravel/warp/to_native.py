@@ -111,7 +111,7 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
     if not Path(warped_nii_path).exists():
         print(f'\n    Warping the moving image to tissue space\n')
         fixed_img_for_reg_path = str(reg_outputs_path / fixed_reg_in)
-        warp(reg_outputs_path, moving_img_path, fixed_img_for_reg_path, warped_nii_path, inverse=False, interpol=interpol)
+        warp(reg_outputs_path=reg_outputs_path, moving_img_path=moving_img_path, fixed_img_path=fixed_img_for_reg_path, output_path=warped_nii_path, inverse=False, interpol=interpol)
 
     # Lower bit depth to match atlas space image
     warped_nii = nib.load(warped_nii_path)
@@ -176,6 +176,12 @@ def main():
                 output = sample_path / args.output
             else:
                 output = None
+
+            # Skip if output already exists
+            if output is not None and output.exists():
+                print(f"    [yellow]Output {output} already exists. Skipping sample {sample_path.name}.[/yellow]")
+                progress.update(task_id, advance=1)
+                continue
 
             pad_percent = get_pad_percent(sample_path / args.reg_outputs, args.pad_percent)
             to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=output, pad_percent=pad_percent)

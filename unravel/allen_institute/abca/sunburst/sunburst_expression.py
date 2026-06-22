@@ -52,6 +52,7 @@ def parse_args():
     opts.add_argument('-c', '--color_max', help='Maximum value for the color scale. Default: 10', default=10, type=float, action=SM)
     opts.add_argument('-t', '--threshold', help='Log2(CPM+1) threshold for percent gene expression. Default: 6', default=6, type=float, action=SM)
     opts.add_argument('-o', '--output', help='Output dir path. Default: ABCA_sunburst_cmax10_thr6/', default=None, action=SM)
+    opts.add_argument('-op', '--output_prefix', help='Output file prefix. Default: input file name before the extension', default=None, action=SM)
     opts.add_argument('-a', '--all', help='Save mean expression and percent expressing for all cells. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
@@ -139,7 +140,11 @@ def main():
     summary_df = summary_df.drop(columns=[args.gene]).drop_duplicates()
     
     # Save the results
-    output_path = output_dir / str(Path(args.input).name).replace('.csv', f'_sunburst_expression_thr{args.threshold}.csv')
+    if args.output_prefix is None:
+        output_prefix = str(Path(args.input).stem)
+    else:
+        output_prefix = args.output_prefix
+    output_path = output_dir / f"{output_prefix}_sunburst_expression_thr{args.threshold}.csv"
     summary_df.to_csv(output_path, index=False)
     
     print(f"\nSaved sunburst expression summary to {output_path}")

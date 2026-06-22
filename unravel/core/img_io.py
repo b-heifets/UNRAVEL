@@ -160,7 +160,7 @@ def extract_resolution(img_path):
         xy_res = res[0] * 1000 # Convert from mm to um
         z_res = res[2] * 1000
     elif str(img_path).endswith('.h5'):
-        with h5py.File(h5py, 'r') as f:
+        with h5py.File(img_path, 'r') as f:
             full_res_dataset_name = next(iter(f.keys())) # Assumes that full res data is 1st in the dataset list
             print(f"\n    Loading HDF5 dataset: {full_res_dataset_name}\n")
             dataset = f[full_res_dataset_name] 
@@ -212,7 +212,14 @@ def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, re
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
-    
+
+def load_single_tif(tif_file):
+    """Load a single .tif file using OpenCV and return the ndarray."""
+    img = cv2.imread(str(tif_file), cv2.IMREAD_UNCHANGED)
+    if img is None:
+        raise ValueError(f"Failed to load image: {tif_file}")
+    return img
+
 @print_func_name_args_times()
 def load_tifs(tif_dir_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None, parallel_loading=True):
     """
@@ -246,12 +253,6 @@ def load_tifs(tif_dir_path, desired_axis_order="xyz", return_res=False, return_m
     tuple, optional
         If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
     """
-    def load_single_tif(tif_file):
-        """Load a single .tif file using OpenCV and return the ndarray."""
-        img = cv2.imread(str(tif_file), cv2.IMREAD_UNCHANGED)
-        if img is None:
-            raise ValueError(f"Failed to load image: {tif_file}")
-        return img
     tif_files = match_files('*.tif', base_path=tif_dir_path)
     if parallel_loading:
         with ThreadPoolExecutor() as executor:
@@ -386,6 +387,11 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     -----
     - If xy_res and z_res are provided, they will be used instead of the values from the metadata.
     """
+
+    if not Path(nii_path).exists():
+        print(f"\n    [red1]{Path(nii_path).exists()} does not exist. Exiting...\n")
+        return
+
     ndarray = nii_to_ndarray(nii_path)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
 
@@ -752,6 +758,57 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
         import sys; sys.exit()
 
 
+@print_func_name_args_times()
+def load_3D_img_and_save_metadata(img_path, metadata_path=None, channel=0, desired_axis_order="xyz",
+                                  xy_res=None, z_res=None, verbose=False):
+    """
+    Load a 3D image and return the ndarray and metadata, optionally writing metadata to a file.
+
+    Parameters
+    ----------
+    img_path : str or Path
+        The path to the image file (.czi, .ome.tif, .tif, .nii.gz, .h5, .zarr) or directory w/ tif series.
+    metadata_path : str or Path, optional
+        Path to save metadata file (e.g., sample??/parameters/metadata.txt). Default is None.
+    channel : int, optional
+        Channel number for .czi and .zarr. Default is 0.
+    desired_axis_order : str, optional
+        The desired order of the image axes. Default is 'xyz'.
+    xy_res : float, optional
+        The resolution in the xy-plane (use if res is not specified in the image metadata).
+    z_res : float, optional
+        The resolution in the z-plane (use if res is not specified in the image metadata).
+    verbose : bool, optional
+        Increase verbosity. Default is False.
+
+    Returns
+    -------
+    tuple
+        Returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+    """
+    img_path = Path(img_path)
+    metadata_path = Path(metadata_path) if metadata_path is not None else None
+
+    ndarray, xy_res, z_res, x_dim, y_dim, z_dim = load_3D_img(
+        img_path,
+        channel=channel,
+        desired_axis_order=desired_axis_order,
+        return_metadata=True,
+        xy_res=xy_res,
+        z_res=z_res,
+        save_metadata=metadata_path,
+        verbose=verbose,
+    )
+
+    if xy_res is None or z_res is None:
+        raise ValueError(
+            f"\n\n    xy_res and z_res must be provided either via metadata in the image "
+            "or -x/--xy_res and -z/--z_res.\n"
+        )
+
+    return ndarray, xy_res, z_res, x_dim, y_dim, z_dim
+
+
 # Save images
 @print_func_name_args_times()
 def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=None, reference=None):
@@ -805,7 +862,7 @@ def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=None, refere
     nii = nib.Nifti1Image(ndarray, affine, header)
     nii.header.set_data_dtype(data_type or np.float32)
     
-    nib.save(nii, output)    
+    nib.save(nii, output)
     print(f"\n    Output: [default bold]{output}")
 
 @print_func_name_args_times()

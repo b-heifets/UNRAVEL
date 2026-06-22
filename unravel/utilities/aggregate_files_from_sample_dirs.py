@@ -55,7 +55,7 @@ def parse_args():
 
 def aggregate_files_from_sample_dirs(sample_path, pattern, target_dir, add_prefix=False, verbose=False):
 
-    src_paths = match_files(pattern, sample_path)
+    src_paths = match_files(patterns=pattern, base_path=sample_path)
 
     for src_path in src_paths:
 
@@ -66,7 +66,7 @@ def aggregate_files_from_sample_dirs(sample_path, pattern, target_dir, add_prefi
         else:
             target_output = target_dir / src_path.name
             if verbose:
-                print(f"Copying {src_path}")
+                print(f"Copying {src_path} to {target_output}")
 
         if src_path.exists():
             shutil.copy(src_path, target_output)
@@ -97,8 +97,8 @@ def main():
     progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
         for sample_path in sample_paths:
-
-            aggregate_files_from_sample_dirs(sample_path, args.input, target_dir, args.add_prefix, args.verbose)
+            
+            aggregate_files_from_sample_dirs(sample_path=sample_path, pattern=args.input, target_dir=target_dir, add_prefix=args.add_prefix, verbose=args.verbose)
 
             progress.update(task_id, advance=1)
 

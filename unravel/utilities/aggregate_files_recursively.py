@@ -11,6 +11,7 @@ Usage:
 import shutil
 from pathlib import Path
 from rich.traceback import install
+from rich import print
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
@@ -36,26 +37,67 @@ def parse_args():
 
 
 def find_and_copy_files(pattern, src_dir, dest_dir, move=False):
-    src_dir = Path(src_dir)
-
-    # Use rglob for recursive globbing
-    matched_files = list(src_dir.rglob(pattern))  # Convert the generator to a list
-
-    if len(matched_files) == 0:
-        print(f"\n    [red1]No files found matching the pattern:[/] [bold]{pattern}[/] in {src_dir}\n")
-        import sys ; sys.exit()
-
+    src_dir = Path(src_dir).resolve()
     dest_dir = Path(dest_dir)
+
     if not dest_dir.is_absolute():
-        dest_dir = src_dir.joinpath(dest_dir)
+        dest_dir = src_dir / dest_dir
+    dest_dir = dest_dir.resolve()
     dest_dir.mkdir(parents=True, exist_ok=True)
 
-    for file_path in matched_files: 
-        if dest_dir not in file_path.parents:
-            if move:
-                shutil.move(str(file_path), dest_dir)
-            else:
-                shutil.copy(str(file_path), dest_dir)
+    matched_files = [p.resolve() for p in src_dir.rglob(pattern) if p.is_file()]
+
+    files_to_process = []
+    seen_outputs = set()
+
+    for file_path in matched_files:
+        out_path = dest_dir / file_path.name
+
+        # Case 1: destination is the source root.
+        # Skip files already directly in the root destination.
+        if dest_dir == src_dir and file_path.parent == dest_dir:
+            continue
+
+        # Case 2: destination is a subdirectory.
+        # Skip files already inside that destination directory.
+        if dest_dir != src_dir and dest_dir in file_path.parents:
+            continue
+
+        # Avoid processing duplicate target basenames more than once.
+        # This matters if matches exist both in nested dirs and _CCF30.
+        if out_path in seen_outputs:
+            continue
+        seen_outputs.add(out_path)
+
+        files_to_process.append((file_path, out_path))
+
+    if len(files_to_process) == 0:
+        print(f"\n    [red1]No files found matching the pattern:[/] [bold]{pattern}[/] in {src_dir}\n")
+        import sys
+        sys.exit()
+
+    n_copied = 0
+    n_skipped = 0
+
+    for file_path, out_path in files_to_process:
+        if out_path.exists():
+            print(f"    [yellow]Skipping existing file:[/] {out_path}")
+            n_skipped += 1
+            continue
+
+        if move:
+            shutil.move(str(file_path), str(out_path))
+        else:
+            shutil.copy2(str(file_path), str(out_path))
+
+        n_copied += 1
+
+    action = "Moved" if move else "Copied"
+    print(f"\n{action} {n_copied} file(s) to: {dest_dir}")
+    if n_skipped:
+        print(f"Skipped {n_skipped} existing file(s).\n")
+    else:
+        print()
 
 
 @log_command

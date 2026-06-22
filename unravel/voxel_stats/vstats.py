@@ -8,10 +8,18 @@ Prereqs:
 
 Inputs:
     - `*`.nii.gz files in the current directory with conditions as prefixes (e.g., saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz)
+    - Files are merged in the order returned by Python's `sorted()` function, and this order determines group assignment in the design matrix.
+    - Sorting is case-sensitive and follows Unicode code-point order: A < Z < a < z
+    - Examples: 
+    - saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz → drug_1.nii.gz, drug_2.nii.gz, saline_1.nii.gz, saline_2.nii.gz
+    - SALINE_1.nii.gz, SALINE_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz → SALINE_1.nii.gz, SALINE_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz
+    - Saline_1.nii.gz, Saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz → Saline_1.nii.gz, Saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz
+    - Use ``match_files`` to print the order of the matched files.
 
 Outputs:
     - stats/ directory with randomise_parallel outputs (e.g., uncorrected 1-p value maps [vox_p]).
     - The name of the current directory is used as the prefix for the output files.
+    - The input image order is saved in stats/merged_image_order.csv for reference.
 
 Next commands:
     - Run ``cstats_fdr_range`` and ``cstats_fdr`` to correct for multiple comparisons.
@@ -126,7 +134,7 @@ def run_randomise_parallel(input_image_path, permutations, output_name, design_f
     command_line = " ".join(command)
     print(f"\n[bold]{command_line}\n")
 
-    if verbose is not None:
+    if verbose:
         # Execute the command and stream output
         try:
             with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1) as proc:
@@ -160,19 +168,25 @@ def main():
     stats_dir.mkdir(exist_ok=True)
 
     # Copy the mask and the atlas to the stats directory using shutil
-    if args.mask and Path(args.mask).exists():
+    if args.mask and Path(args.mask).exists() and not (stats_dir / Path(args.mask).name).exists():
         shutil.copy(args.mask, stats_dir)
     elif args.mask and not Path(args.mask).exists():
         print(f"\n    [yellow]{args.mask} does not exist. Please provide a valid mask file. Skipping masking and copying to stats/\n")
 
-    if Path(args.atlas).exists():
+    if Path(args.atlas).exists() and not (stats_dir / Path(args.atlas).name).exists():
         shutil.copy(args.atlas, stats_dir)
-    else:
+    elif args.atlas and not Path(args.atlas).exists():
         print(f"\n    [yellow]{args.atlas} does not exist. Skipping copying to stats/\n")
 
+    # Get the input images and save the order of the images being merged for reference
+    images = match_files('*.nii.gz')
+    with open(stats_dir / 'merged_image_order.csv', 'w') as f:
+        f.write("index,group,filename\n")
+        for i, image in enumerate(images):
+            group = image.stem.split('_')[0]
+            f.write(f"{i},{group},{image.name}\n")
 
     # Merge and smooth the input images
-    images = match_files('*.nii.gz')
     merged_file = stats_dir / 'all.nii.gz'
     if not merged_file.exists():
         print('\n    Merging *.nii.gz into ./stats/all.nii.gz with this order of files:')
@@ -180,7 +194,7 @@ def main():
             print(f'    {image}')
         avwutils.fslmerge('t', str(merged_file), *images)
     else: 
-        print('\n    ./stats/all.nii.gz exists. Skipping...\n')
+        print('\n    ./stats/all.nii.gz exists. Skipping merge of 3D images...\n')
  
     # Smooth the image with a kernel
     if args.kernel > 0:

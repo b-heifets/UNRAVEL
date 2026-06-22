@@ -14,7 +14,6 @@ Note:
     - Voxels outside the mask are set to zero.
 
 Next commands for voxel-wise stats: 
-    - Aggregate atlas space IF images with ``utils_agg_files``.
     - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average left and right hemispheres.
     - If using side-specific z-scoring, use ``vstats_hemi_to_avg`` to average the images.
     - Prepend condition names with ``utils_prepend``.
@@ -22,7 +21,7 @@ Next commands for voxel-wise stats:
 
 Usage:
 ------
-    vstats_z_score_cwd -i '<asterisk>.nii.gz' [-mas path/mask1.nii.gz path/mask2.nii.gz] [-s z] [-v]
+    vstats_z_score_cwd -mas path/mask1.nii.gz -i '<asterisk>.nii.gz' [-s z] [-v]
 """
 
 import nibabel as nib
@@ -54,6 +53,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Set voxels outside the mask(s) to zero
+# TODO: Use concurrent futures for parallel processing
 
 @print_func_name_args_times()
 def z_score_img(img, mask_img):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_convert_img`` (``conv``) from UNRAVEL to load a 3D image and save as a different format.
+Use ``io_convert_img`` (``conv``) from UNRAVEL to load a 3D image and save as a different format (or set .nii.gz scaling and data type).
 
 Input image types:
     - .czi
@@ -30,6 +30,11 @@ Usage to convert a single .tif series to .nii.gz:
 Usage to recursively convert all dirs with tif files to .zarr:
 --------------------------------------------------------------
 `conv -i '**/*.tif' -x 3.5 -z 6 --save_as .zarr`
+
+Usage to set scaling and data type for a .nii.gz file:
+------------------------------------------------------
+`conv -i 'img.nii.gz' -s .nii.gz -d uint16 -x 30 -z 30 -o output_dir`
+
 """
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -41,7 +46,7 @@ from rich.traceback import install
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img, save_3D_img
-from unravel.core.utils import initialize_progress_bar, log_command, match_files, print_func_name_args_times, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import get_stem, initialize_progress_bar, log_command, match_files, print_func_name_args_times, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -55,7 +60,7 @@ def parse_args():
     opts.add_argument('-z', '--z_res', help='z resolution in µm', type=float, action=SM)
     opts.add_argument('-c', '--channel', help='Channel number. Default: 0', default=0, type=int, action=SM)
     opts.add_argument('-o', '--output', help='Output directory path. Default: None (saves in the same directory as input).', default=None, action=SM)
-    opts.add_argument('-d', '--dtype', help='Data type for .nii.gz. Options: np.uint8, np.uint16, np.float32.', default=None, action=SM)
+    opts.add_argument('-d', '--dtype', help='Data type for .nii.gz. Options: uint8, uint16, float32 (numpy conventions).', default=None, action=SM)
     opts.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata. Default: None', default=None, action=SM)
     opts.add_argument('-f', '--force', help='Force overwrite existing output files. Default: False', action='store_true', default=False)
     opts.add_argument('-w', '--workers', help='Number of parallel conversions. Default: 8', type=int, default=8, action=SM)
@@ -101,10 +106,7 @@ def convert_img(img_file, save_as=None, output=None, force=False, channel=0, xy_
         raise ValueError(f"Unsupported output format: {save_as}")
     
     img_path = Path(img_file)
-    if img_path.suffix == '.tif':
-        img_path = img_path.parent  # If it's a .tif series, use the directory containing the .tif files
-
-    img_file_basename = str(img_path.name).replace('.nii.gz', '') if str(img_path).endswith('.nii.gz') else img_path.stem
+    img_file_basename = get_stem(img_path.name)
 
     # Define output path based on the input file name and specified output format
     if save_as == '.tif':
@@ -124,7 +126,7 @@ def convert_img(img_file, save_as=None, output=None, force=False, channel=0, xy_
     if xy_res is None or z_res is None:
         img, xy_res, z_res = load_3D_img(img_path, channel=channel, return_res=True, verbose=verbose)
     else:
-        img = load_3D_img(img_path, channel=channel, verbose=verbose)
+        img = load_3D_img(img_path, channel=channel, xy_res=xy_res, z_res=z_res, verbose=verbose)
 
     # Save the image in the specified format
     save_3D_img(img, output_path=out_path, ndarray_axis_order="xyz", xy_res=xy_res, z_res=z_res, data_type=dtype, reference_img=reference, verbose=verbose)

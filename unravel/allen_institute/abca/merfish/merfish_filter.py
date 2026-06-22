@@ -5,13 +5,22 @@ Use ``abca_merfish_filter`` or ``mf_filter`` from UNRAVEL to filter ABCA MERFISH
 It integrates the filtering with the generation of `exp_df` and allows optional export of filtered data or the generation of updated 3D images.
 
 Note:
+    - The input CSV may be previously filtered (e.g., ``abca_merfish_filter_by_mask``) or it may be the full cell metadata (cell_metadata.csv).
     - Columns to filter by: parcellation_substructure (default)
     - Values to filter by: e.g., ACB
-    - The input CSV may be previously filtered (e.g., ``abca_merfish_filter_by_mask``) or it may be the full cell metadata (cell_metadata.csv).
+    - Regional columns can be printed with ``cols -i <ABCA_root>/metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv``
+    - Regional values can be printed with ``vals -i <ABCA_root>/metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv -c substructure``
+    - 'parcellation_' is prepended to the regional column names in the cell metadata, so for example 'substructure' becomes 'parcellation_substructure'
 
-    
 Outputs:
     - Filtered cell metadata CSV file (default: <input_stem>_filtered[_<first_value>][_neurons].csv)
+
+Next steps:
+    - Use the filtered cell metadata to examine cell type prevalence or gene expression
+    - For cell type proportions like in the MapMySections data challenge, use ``mms_cell_type_proportions`` to calculate proportions for a given ontological level (e.g., subclass)
+    - Then use ``mms_cell_type_proportions_concat`` to concatenate multiple CSVs into one file (one row per input file)
+    - To visualize cell type proportions, use ``abca_sunburst`` to make a CSV for sunburst plotting
+    - For looking at gene expression, load the filtered cell metadata and join it with the expression data for the gene(s) of interest (``abca_merfish_join_expression``)
     
 Usage:
 ------
@@ -56,30 +65,29 @@ def filter_dataframe(df, columns, values):
     """
     Filter a DataFrame by columns and values.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     df : pd.DataFrame
         The DataFrame to filter.
     columns : list of str
-        The columns to filter by.
+        Columns to filter by.
     values : list of str
-        The corresponding values or lists of values for each column.
+        Values (or comma-separated groups of values) to include across all columns.
 
-    Returns:
-    --------
+    Returns
+    -------
     filtered_df : pd.DataFrame
         The filtered DataFrame.
     """
-    for col, val in zip(columns, values):
-        if ',' in val:  # Handle lists of values
-            value_list = val.split(',')  # For parsing multiple values from the command line
-            print(f"Filtering so that {col} only contains these values {value_list}")
-            df = df[df[col].isin(value_list)]  # Filter by multiple values
-            
-        else:  # Handle single values
-            print(f"Filtering so that {col} only contains this value {val}")
-            df = df[df[col] == val]
-
+    for col in columns:
+        # Support space-separated and comma-separated values
+        val_list = []
+        for v in values:
+            val_list.extend(v.split(','))
+        val_list = [v.strip() for v in val_list if v.strip()]
+        
+        print(f"Filtering so that '{col}' contains any of these values: {val_list}")
+        df = df[df[col].isin(val_list)]
     return df
 
 @log_command
@@ -101,7 +109,7 @@ def main():
         cell_df = mf.load_cell_metadata(download_base)
         print(f"\n    Initial cell metadata shape:\n    {cell_df.shape}")
     
-        print(f'\n{cell_df=}\n')
+        print(f'\nCell metadata:\n{cell_df}\n')
 
         # Add the reconstructed coordinates to the cell metadata
         cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
@@ -162,8 +170,11 @@ def main():
     output_path = args.output if args.output else Path().cwd() / f"{stem}_filtered{suffix}.csv"
     filtered_df.to_csv(output_path)
 
-    print("\nUnique parcellation substructures:")
-    print(cell_df_joined['parcellation_substructure'].unique())
+    print(f"\nUnique {args.columns} values in the filtered data:")
+    for col in args.columns:
+        print(f"Unique values in '{col}': {filtered_df[col].unique()}")
+    
+    print(f"\nFiltered data saved to: {output_path}")
 
     verbose_end_msg()
 

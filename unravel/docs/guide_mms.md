@@ -149,9 +149,9 @@ cd ..
 ```
 * If cropping is satisfactory, apply cropping to the other channel (otherwise, adjust parameters for gta_auto_crop)
 ```bash
-gta_bbox_crop -d red -i red
-gta_bbox_crop -d green -i green
-gta_bbox_crop -d dual -i red # or -i green 
+gta_bbox_crop -a green -i red -d red
+gta_bbox_crop -a red -i green -d green
+gta_bbox_crop -a green -i red -d dual # or -a red -i green 
 ```
 * Remove uncropped TIFFs to save disk space and speed up processing
 ```bash

@@ -83,7 +83,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    path = args.path or Path.cwd()
+    path = Path(args.path) if args.path else Path.cwd()
     xlsx_files = match_files(['*_valid_clusters_table.xlsx'], base_path=path)
 
     # Filter out files starting with '~$'

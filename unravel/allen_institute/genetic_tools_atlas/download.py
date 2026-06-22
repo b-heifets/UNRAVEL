@@ -4,6 +4,7 @@
 Use ``gta_download`` (``gta_dl``) from UNRAVEL to download STPT Zarr images from the Allen Genetic Tools Atlas (GTA) at a specified resolution level.
 
 Prereqs:
+    - Install UNRAVEL, cd to its root, run ``pip install -e . ; pip install git+https://github.com/AllenInstitute/abc_atlas_access.git ; pip install aiobotocore==2.4.2``
     - Visit the Genetic Tools Atlas (GTA): https://portal.brain-map.org/genetic-tools/genetic-tools-atlas
     - Filter by 'Data Modality' = 'STPT'
     - Optional: Apply other filters of interest
@@ -16,6 +17,11 @@ Note:
     - 3) GTA --> 'Download Data' --> 'Metadata Table' to get a CSV with experiment IDs (use -c SpecimenMetadata.csv -col 'Image Series ID').
     - 4a) Content from the MapMySections submission sheet (link below) can be copied to a CSV (use -c <path/to/csv> -col 'STPT Data File Path').
     - 4b) https://github.com/AllenInstitute/MapMySections/raw/refs/heads/main/MapMySections_EntrantData.xlsx
+
+Notes on missing levels:
+    - Some samples do not have levels 6 or higher. Check the sample count like: ``cat missing_levels_log.csv | wc -l``
+    - Get IDs that have level 7:  ``cat missing_levels_log.csv | grep \'7\' | cut -d ',' -f1 | paste -sd ' ' -``
+    - Download these IDs: gta_dl -l 7 -col 'Image Series ID' -w 40 -v -e <IDs>
 
 Next steps:
     - Convert to TIFFs (one channel per series) using ``io_img_convert`` (``conv``).
@@ -150,9 +156,15 @@ def gta_download(exp_id, level, output_dir, force=False, full=False, verbose=Fal
             elif fs.exists(alternate_level_path):
                 zarr_root = alternate_root
             else:
+                # For experiments with missing level, append to CSV: ID, requested_level, available_levels
+                log_file = output_dir / "missing_levels_log.csv"
+                if not log_file.exists():
+                    with open(log_file, "w") as log_file_handle:
+                        log_file_handle.write("experiment_id,requested_level,available_levels\n")
+
                 # List available levels from each root if the level is missing
-                available_primary_levels = []
-                available_alt_levels = []
+                available_primary_levels = []  # Primary levels = subdirectories of primary_root that are digits
+                available_alt_levels = []    # Alternate levels = subdirectories of alternate_root that are digits
                 if fs.exists(primary_root):
                     available_primary_levels = fs.ls(primary_root, detail=False)
                     available_primary_levels = [Path(p).name for p in available_primary_levels if Path(p).name.isdigit()]
@@ -167,8 +179,13 @@ def gta_download(exp_id, level, output_dir, force=False, full=False, verbose=Fal
                     print(f"   ✅ Available levels:")
                     if available_primary_levels:
                         print(f"     • [primary]  {sorted(available_primary_levels)}")
+                        with open(log_file, "a") as log_file_handle:
+                            log_file_handle.write(f"{exp_id},{level},\"{sorted(available_primary_levels)}\"\n")
+    
                     if available_alt_levels:
                         print(f"     • [alternate] {sorted(available_alt_levels)}")
+                        with open(log_file, "a") as log_file_handle:
+                            log_file_handle.write(f"{exp_id},{level},\"{sorted(available_alt_levels)}\"\n")
                 else:
                     print("   ❌ No zarr root found at either path.")
                 return

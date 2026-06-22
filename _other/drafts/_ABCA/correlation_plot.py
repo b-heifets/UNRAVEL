@@ -13,7 +13,7 @@ Note:
     
 Usage:
 ------
-    _other/drafts/correlation_plot.py -x path/x_axis_image.nii.gz -y path/y_axis_image.nii.gz [-mas path/mask1.nii.gz path/mask2.nii.gz] [-a path/atlas.nii.gz] [-r 1 2 3] [-csv path/CCFv3-2020_regional_summary.csv] [-v]
+    _other/drafts/correlation_plot.py -x path/x_image.nii.gz -y path/y_image.nii.gz [-mas mask1.nii.gz mask2.nii.gz ...] [-a path/atlas.nii.gz] [-rw] [-o path/output.csv] [-csv path/region_csv.csv] [-p] [-xl "X-axis label"] [-yl "Y-axis label"] [-xr x_min x_max] [-yr y_min y_max] [-al 0.5] [-pv] [-v]
 """
 
 import matplotlib.pyplot as plt
@@ -43,9 +43,9 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', default=None, action=SM)
-    opts.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation. Default: None', default=None, action=SM)
+    opts.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation or CCFv3 coloring. Default: None', default=None, action=SM)
     opts.add_argument('-rw', '--regional', help='Region-wise correlation. Default: False', action='store_true', default=False)
-    opts.add_argument('-oc', '--output', help='path/output.csv', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='path/output.csv', default=None, action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-p', '--plot', help='Plot correlation. Default: False', action='store_true', default=False)
     opts.add_argument('-xl', '--x_label', help='X-axis label for the correlation plot. Default: "Image X mean intensity"', default='Image X mean intensity', action=SM)
@@ -53,12 +53,16 @@ def parse_args():
     opts.add_argument('-xr', '--x_range', help='X-axis range for the correlation plot. (e.g., -1 1)', nargs=2, type=float, default=None, action=SM)
     opts.add_argument('-yr', '--y_range', help='Y-axis range for the correlation plot. (e.g., -1 1)', nargs=2, type=float, default=None, action=SM)
     opts.add_argument('-min', '--min_voxels', help='Minimum number of voxels per region.', type=int, default=None, action=SM)
+    opts.add_argument('-al', '--alpha', help='Alpha value for scatter plot points. Default: 0.5', type=float, default=0.5, action=SM)
+    opts.add_argument('-pv', '--p_value', help='Include p-value in the plot title, etc. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
+
+# TODO: csv to nii for correlating csv cols. Move script to unravel/. PDF output option. 
 
 def compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list=None, min_voxels=None, verbose=False):
     """Compute region-wise correlation between two images, restricted by masks and region IDs."""
@@ -118,7 +122,7 @@ def compute_voxelwise_correlation(imgX, imgY, mask_list=None):
     imgY_valid = imgY[valid_voxels]
 
     # Number of valid voxels
-    n_of_voxels = valid_voxels.size
+    n_of_voxels = np.count_nonzero(valid_voxels)
 
     # Check if there are enough valid voxels for correlation
     if n_of_voxels < 2:
@@ -156,7 +160,7 @@ def toggle_hover_visibility(event):
     if event.key == 'v':  # Press 'v' to toggle visibility
         show_annotations = not show_annotations
 
-def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='Correlation Scatter Plot', rgb_colors=None, x_label=None, y_label=None, x_range=None, y_range=None, abbreviations=None):
+def plot_correlation(imgX_valid, imgY_valid, correlation, p_value=None, plot_title='Correlation Scatter Plot', rgb_colors=None, x_label=None, y_label=None, x_range=None, y_range=None, abbreviations=None, alpha=0.7):
     """Generate a scatter plot for the correlation between two images with hover functionality."""
 
     global show_annotations
@@ -166,9 +170,9 @@ def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='C
 
     # Scatter plot with RGB colors
     if rgb_colors is not None:
-        scatter = plt.scatter(imgX_valid, imgY_valid, color=rgb_colors, alpha=0.7, label='Data points')
+        scatter = plt.scatter(imgX_valid, imgY_valid, color=rgb_colors, alpha=alpha, label='Data points')
     else:
-        scatter = plt.scatter(imgX_valid, imgY_valid, color='blue', alpha=0.7, label='Data points')
+        scatter = plt.scatter(imgX_valid, imgY_valid, color='blue', alpha=alpha, label='Data points')
 
     # Fit and plot the trend line
     z = np.polyfit(imgX_valid, imgY_valid, 1)
@@ -176,7 +180,10 @@ def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='C
     plt.plot(imgX_valid, p(imgX_valid), color='black', linestyle='-', label='Trend line')
 
     # Add titles and labels
-    plt.title(f'{plot_title}\nPearson r: {correlation:.2f}, p-value: {p_value:.2e}')
+    if p_value is not None:
+        plt.title(f'{plot_title}\nPearson r: {correlation:.2f}, p-value: {p_value:.2e}')
+    else:
+        plt.title(f'{plot_title}\nPearson r: {correlation:.2f}')
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     
@@ -188,12 +195,13 @@ def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='C
         x_range = plt.xlim()
         if x_range[0] < 0 and np.min(imgX_valid) > 0:
             x_range = (0, x_range[1])
-        plt.xlim(x_range)
     if y_range is None:
         y_range = plt.ylim()
         if y_range[0] < 0 and np.min(imgY_valid) > 0:
             y_range = (0, y_range[1])
-        plt.ylim(y_range)
+    
+    plt.xlim(x_range)
+    plt.ylim(y_range)
 
     # Add dashed lines at y=0 and x=0 if ranges include 0
     if x_range[0] < 0:
@@ -250,32 +258,41 @@ def main():
         correlation, p_value, imgX_valid, imgY_valid, n = compute_voxelwise_correlation(imgX, imgY, mask_list)
 
     # Output the result
-    # print(f"\n    Pearson correlation: {correlation}")
-    # print(f"    p-value: {p_value}")
-    # print(f"    Number of voxels: {n_of_voxels}\n")
     print(f'Min_voxels,{args.min_voxels}')
     print(f"Pearson correlation,{correlation}")
-    print(f"p-value,{p_value}")
+    if args.p_value:
+        print(f"p-value,{p_value}")
+    else:
+        p_value = None
     print(f"Number of data points,{n}")
 
     if args.output:
         # Save the image names and correlation results to a CSV file
-        result_df = pd.DataFrame({
-            'Image X': [str(Path(args.x_image).name)],
-            'Image Y': [str(Path(args.y_image).name)],
-            'Pearson correlation': [correlation],
-            'p-value': [p_value],
-        })
-        result_df.to_csv(args.output_csv, index=False)
+        if args.p_value:
+            result_df = pd.DataFrame({
+                'Image X': [str(Path(args.x_image).name)],
+                'Image Y': [str(Path(args.y_image).name)],
+                'Pearson correlation': [correlation],
+                'p-value': [p_value],
+            })
+        else:
+            result_df = pd.DataFrame({
+                'Image X': [str(Path(args.x_image).name)],
+                'Image Y': [str(Path(args.y_image).name)],
+                'Pearson correlation': [correlation],
+            })
+        result_df.to_csv(args.output, index=False)
 
-    # Plot the correlation scatter plot
+    if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv':
+        csv_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / args.csv_path
+    else:
+        csv_path = Path(args.csv_path)
+
+    # Plot the correlation scatter plot with optional coloring by region
     if args.plot:
         if args.regional and args.atlas:
-            # if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv':
-            #     region_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path, usecols=['Region_ID', 'R', 'G', 'B'])
-            # else:
-            #     region_df = pd.read_csv(args.csv_path, usecols=['Region_ID', 'R', 'G', 'B'])
-            region_df = pd.read_csv(args.csv_path, usecols=['Region_ID', 'R', 'G', 'B', 'Abbr'])
+
+            region_df = pd.read_csv(csv_path, usecols=['Region_ID', 'R', 'G', 'B', 'Abbr'])
 
             # Rename "Region_ID" to "Region" for merging
             region_df = region_df.rename(columns={'Region_ID': 'Region'})
@@ -288,7 +305,7 @@ def main():
             abbreviations = merged_df['Abbr'].tolist()
 
             plot_title = 'Region-wise Correlation'
-            plot_correlation(merged_df['ImgX_Mean'], merged_df['ImgY_Mean'], correlation, p_value, plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range, abbreviations=abbreviations)
+            plot_correlation(imgX_valid=merged_df['ImgX_Mean'], imgY_valid=merged_df['ImgY_Mean'], correlation=correlation, p_value=p_value, plot_title=plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range, abbreviations=abbreviations, alpha=args.alpha)
         else:
             if args.atlas:
                 # Load the atlas image
@@ -301,15 +318,15 @@ def main():
                         valid_voxels = valid_voxels & mask_data.astype(bool)
 
                 # Color the valid voxels based on their region using the atlas and CSV
-                rgb_colors = color_voxels_by_region(atlas_img, valid_voxels=valid_voxels, region_csv_path=args.csv_path)
+                rgb_colors = color_voxels_by_region(atlas_img, valid_voxels=valid_voxels, region_csv_path=csv_path)
         
                 # Plot the voxel-wise correlation with RGB colors
                 plot_title = 'Voxel-wise Correlation'
 
-                plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range)
+                plot_correlation(imgX_valid=imgX_valid, imgY_valid=imgY_valid, correlation=correlation, p_value=p_value, plot_title=plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range, alpha=args.alpha)
             else:
                 plot_title = 'Voxel-wise Correlation'
-                plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range)
+                plot_correlation(imgX_valid=imgX_valid, imgY_valid=imgY_valid, correlation=correlation, p_value=p_value, plot_title=plot_title, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range, alpha=args.alpha)
 
     verbose_end_msg()
 

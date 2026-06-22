@@ -65,6 +65,8 @@ Usage:
     io_reorient_nii -i image.nii.gz -t PIR [-o image_PIR.nii.gz] [-z] [-a] [-fc 2] [-v]
 """
 
+from pathlib import Path
+
 import nibabel as nib
 import numpy as np
 from nibabel.orientations import axcodes2ornt, ornt_transform, io_orientation, aff2axcodes, apply_orientation
@@ -74,18 +76,18 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import get_stem, log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path(s) to input NIfTI files or glob pattern(s) in quotes', required=True, nargs='*', action=SM)
     reqs.add_argument('-t', '--target_ort', help='Target orientation axis codes (e.g., RAS)', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    reqs.add_argument('-o', '--output', help='path/img.nii.gz', required=True, action=SM)
+    opts.add_argument('-o', '--output_dir', help='Directory to save output NIfTI files. If not provided, output files will be saved in ./reoriented/', default='reoriented', action=SM)
     opts.add_argument('-z', '--zero_origin', help='Provide flag to zero the origin of the affine matrix.', action='store_true', default=False)
     opts.add_argument('-a', '--apply', help='Provide flag to apply the new orientation to the ndarray data.', action='store_true', default=False)
     opts.add_argument('-fc', '--form_code', help='Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned)', type=int, default=None)
@@ -234,17 +236,21 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    nii = nib.load(args.input)
-    new_nii = reorient_nii(nii, args.target_ort, zero_origin=args.zero_origin, apply=args.apply, form_code=args.form_code)
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Save the new .nii.gz file
-    if args.output: 
-        nib.save(new_nii, args.output)
-    else:
+    input_paths = match_files(args.input)
+    for input_path in input_paths:
+
+        nii = nib.load(input_path)
+        new_nii = reorient_nii(nii, args.target_ort, zero_origin=args.zero_origin, apply=args.apply, form_code=args.form_code)
+
+        # Save the new .nii.gz file
         if args.apply:
-            nib.save(new_nii, args.input.replace('.nii.gz', f'_{args.target_ort}_applied.nii.gz'))
+            output_path = output_dir / f"{get_stem(input_path)}_{args.target_ort}_applied.nii.gz"
         else:
-            nib.save(new_nii, args.input.replace('.nii.gz', f'_{args.target_ort}.nii.gz'))
+            output_path = output_dir / f"{get_stem(input_path)}_{args.target_ort}.nii.gz"
+        nib.save(new_nii, output_path)
 
     verbose_end_msg()
 

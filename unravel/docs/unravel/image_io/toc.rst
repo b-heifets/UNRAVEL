@@ -19,6 +19,8 @@ unravel.image_io package
    zarr_compress
    points_to_img
    img_to_points
+   physical_points_to_img
+   physical_points_add_regions
 
 .. automodule:: unravel.image_io
    :members:

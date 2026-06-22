@@ -10,7 +10,7 @@ Prerequisites:
 
 Usage:
 ------
-    reg_check_fsleyes [-fri fixed_reg_in] [-af autofl_img] [-wa warped_atlas] [-min min_val] [-max max_val] [-og] [-af autofl_img] [-d list of paths]
+    reg_check_fsleyes [-fri fixed_reg_in] [-af autofl_img] [-wa warped_atlas] [-min min_val] [-max max_val]
 """
 
 import subprocess
@@ -43,20 +43,48 @@ def main():
 
     # Collect autofl NIfTI paths
     autofl_nii_paths = match_files(args.autofl_img) if glob(args.autofl_img) else []
-    masked_autofl_nii_paths = match_files(args.fixed_reg_in)
-    warped_atlas_nii_paths = match_files(args.warped_atlas)
+    masked_autofl_nii_paths = match_files(args.fixed_reg_in) if glob(args.fixed_reg_in) else []
+    warped_atlas_nii_paths = match_files(args.warped_atlas) if glob(args.warped_atlas) else []
 
-    # Ensure lists have the same length
+    autofl_only_mode = (
+        autofl_nii_paths
+        and not masked_autofl_nii_paths
+        and not warped_atlas_nii_paths
+    )
+
+    if autofl_only_mode:
+        print("[cyan]Autofluorescence-only mode detected[/cyan]")
+        print(f"[green]Loaded {len(autofl_nii_paths)} autofluorescence images[/green]")
+
+        fsleyes_command = ['fsleyes']
+        fsleyes_command.extend([str(autofl_nii_paths[0]), '-dr', str(args.min), str(args.max)])
+
+        for img in autofl_nii_paths[1:]:
+            fsleyes_command.extend([str(img), '-dr', str(args.min), str(args.max), '-d'])
+
+        subprocess.run(fsleyes_command)
+        return
+
+    if not masked_autofl_nii_paths or not warped_atlas_nii_paths:
+        print(
+            "[red]Error:[/red] No valid registration files found.\n"
+            "Expected either:\n"
+            "  • fixed_reg_in + warped_atlas [+ autofl], or\n"
+            "  • autofl-only directory"
+        )
+        return
+
     if len(masked_autofl_nii_paths) != len(warped_atlas_nii_paths):
         print("Warning: The number of fixed and warped atlas files do not match.")
         return
-    
+
     if autofl_nii_paths and len(masked_autofl_nii_paths) != len(autofl_nii_paths):
         print("Warning: The number of fixed and autofluorescence files do not match.")
         return
 
     # Define command for fsleyes
     fsleyes_command = ['fsleyes']
+
     if autofl_nii_paths:
         fsleyes_command.extend([str(autofl_nii_paths[0]), '-dr', str(args.min), str(args.max)])
     fsleyes_command.extend([str(masked_autofl_nii_paths[0]), '-dr', str(args.min), str(args.max)])
@@ -68,18 +96,17 @@ def main():
     masked_autofl_nii_paths.pop(0)
     warped_atlas_nii_paths.pop(0)
 
-    # Iterate over fixed_reg_input_files and warped_atlas_files
+    # Iterate over fixed_reg_input_files and warped_atlas_files (and autofl_files if present)
     if autofl_nii_paths:
-        for autofl, masked_autofl, atlas,  in zip(autofl_nii_paths, masked_autofl_nii_paths, warped_atlas_nii_paths):
+        for autofl, masked_autofl, atlas in zip(autofl_nii_paths, masked_autofl_nii_paths, warped_atlas_nii_paths):
             fsleyes_command.extend([str(autofl), '-dr', str(args.min), str(args.max), '-d'])
             fsleyes_command.extend([str(masked_autofl), '-dr', str(args.min), str(args.max), '-d'])
             fsleyes_command.extend([str(atlas), '-ot', 'label', '-l', 'ccfv3_2020', '-o', '-a', '50', '-d'])
-    else: 
+    else:
         for masked_autofl, atlas in zip(masked_autofl_nii_paths, warped_atlas_nii_paths):
             fsleyes_command.extend([str(masked_autofl), '-dr', str(args.min), str(args.max), '-d']) # -d for no display
             fsleyes_command.extend([str(atlas), '-ot', 'label', '-l', 'ccfv3_2020', '-o', '-a', '50', '-d'])
 
-    # Execute fsleyes command
     subprocess.run(fsleyes_command)
 
 

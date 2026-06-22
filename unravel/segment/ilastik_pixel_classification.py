@@ -53,7 +53,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
-    reqs.add_argument('-i', '--input', help='Relative path to dir with tifs or an image (.nii.gz, .h5, .zarr).', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Relative path to dir with tifs or an image (.czi, .tif, .nii.gz, .h5, .zarr).', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='Output dir name', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -116,6 +116,12 @@ def main():
                     print(f"\n\n    {final_output} already exists. Skipping.\n")
                     progress.update(task_id, advance=1)
                     continue
+
+            # Also check if there are already segmented TIFFs (intermediate output) and skip (to avoid redundant processing with parallel runs)
+            if output_tif_dir.exists() and any(output_tif_dir.glob("*.tif")):
+                print(f"\n\n    {output_tif_dir} already contains segmented TIFFs. Skipping.\n")
+                progress.update(task_id, advance=1)
+                continue
 
             # Check if input TIFF series exists
             if input_path.is_dir() and any(input_path.glob("*.tif")):

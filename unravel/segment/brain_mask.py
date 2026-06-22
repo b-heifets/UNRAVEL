@@ -93,7 +93,16 @@ def main():
                 ilastik_project = Path(sample_path.parent, args.ilastik_prj).resolve()
             else:
                 ilastik_project = Path(args.ilastik_prj).resolve()
+                
+            if not ilastik_project.exists():
+                raise FileNotFoundError(f"Ilastik project file not found: {ilastik_project}")
+
             pixel_classification(autofl_tif_directory, ilastik_project, seg_dir, args.ilastik_exe)
+
+            # Check that there are tifs in the segmentation output directory
+            seg_tifs = list(Path(seg_dir).glob('*.tif'))
+            if not seg_tifs:
+                raise FileNotFoundError(f"No .tif files found in segmentation output directory: {seg_dir}")
 
             # Load brain mask image
             seg_img = load_3D_img(seg_dir, "xyz", verbose=args.verbose)
