@@ -37,7 +37,7 @@ Usage for t-tests:
 
 Usage for mean intensity in segmentation mask within each region:
 -----------------------------------------------------------------
-    rstats_summary --groups Saline LPS --side both -i '*mean_in_seg.csv' -y 'Mean Iba1-IF in segmentation mask'
+    rstats_summary --groups Saline LPS --side both -i '`*`mean_in_seg.csv' -y 'Mean Iba1-IF in segmentation mask'
 
 """
 

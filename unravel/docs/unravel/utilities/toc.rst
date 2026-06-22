@@ -13,7 +13,6 @@ unravel.utilities package
    process_samples
    rename
    toggle_samples
-   points_compressor
 
 .. automodule:: unravel.utilities
    :members:

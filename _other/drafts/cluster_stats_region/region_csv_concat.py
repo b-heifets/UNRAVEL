@@ -9,8 +9,8 @@ Prereqs:
 Expected filename pattern:
     condition_sampleXXX__...csv
 or similar, where:
-    - condition = first token before '_'
-    - side = LH or RH if the filename stem ends with _LH or _RH
+    - condition = first token before `_`
+    - side = LH or RH if the filename stem ends with `_LH` or `_RH`
 
 Default kept columns:
     cluster_ID, region_ID, abbreviation, region_name, cell_count, subregion_volume

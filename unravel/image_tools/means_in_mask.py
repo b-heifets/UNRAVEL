@@ -5,7 +5,7 @@ Use ``img_means_in_mask`` or ``means_in_mask`` from UNRAVEL to calculate the mea
 
 Usage:
 ------
-    means_in_mask -i path/to/images/*.nii.gz -m path/to/mask.nii.gz [-o mean_in_mask.csv] [-v]
+    means_in_mask -i path/to/images/`*`.nii.gz -m path/to/mask.nii.gz [-o mean_in_mask.csv] [-v]
 """
 
 import pandas as pd

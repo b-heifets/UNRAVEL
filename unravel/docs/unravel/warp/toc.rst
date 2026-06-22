@@ -8,7 +8,6 @@ unravel.warp package
    to_fixed
    to_native
    warp
-   points_to_atlas
    ccf30_to_merfish
 
 .. automodule:: unravel.warp

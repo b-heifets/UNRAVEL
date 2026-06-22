@@ -181,19 +181,19 @@ def load_ccfv3_lookup(info_csv_path, region_id_col='lowered_ID'):
     Parameters
     ----------
     info_csv_path : str or Path
-        Path to a custom info CSV, or one of the built-in names
-        ('CCFv3-2017_info.csv', 'CCFv3-2020_info.csv').
+        Path to a custom info CSV, or one of the built-in names:
+        ``CCFv3-2017_info.csv`` or ``CCFv3-2020_info.csv``.
     region_id_col : str, optional
-        Column to use as the region-ID key. Default: 'lowered_ID'.
-        Common options:
-            - 'lowered_ID'
-            - 'structure_ID'
+        Column to use as the region-ID key. Default: ``lowered_ID``.
+        Common options include ``lowered_ID`` and ``structure_ID``.
 
     Returns
     -------
     dict
-        Mapping: region ID -> {'abbreviation': ..., 'region_name': ...}
+        Mapping from region ID to a dictionary with ``abbreviation`` and
+        ``region_name`` values.
     """
+
     columns_to_load = [region_id_col, 'abbreviation', 'full_structure_name']
 
     if info_csv_path in ['CCFv3-2017_info.csv', 'CCFv3-2020_info.csv']:

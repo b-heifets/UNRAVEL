@@ -7,9 +7,7 @@ results in FSLeyes for multiple samples in a single session.
 Two usage modes:
 
 1. Aggregated mode (default):
-   Run inside a directory containing files named like:
-       sample01_autofl_50um_masked_fixed_reg_input.nii.gz
-       sample01_atlas_*_in_tissue_space*.nii.gz
+   Run inside a directory containing files named like: sample01_autofl_50um_masked_fixed_reg_input.nii.gz, sample01_atlas_`*`_in_tissue_space*.nii.gz
    Files are grouped by sample prefix (sample??_).
    Such directories can be created using ``reg_compare`` to aggregate
    registration outputs across samples.
