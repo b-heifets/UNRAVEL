@@ -643,20 +643,14 @@ merfish_in_bounds</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<ul>
+<ul class="simple">
 <li><p>Input x/y/z are assumed to be CCF30 voxel coordinates.</p></li>
 <li><p>ANTs point transforms use physical coordinates in LPS space.</p></li>
 <li><p>NIfTI affines from nibabel are treated as RAS; by default this script
 converts RAS &lt;-&gt; LPS around the ANTs point transform.</p></li>
 <li><p>Image resampling and point transforms use opposite transform directions
 in ANTs. For moving CCF30 points -&gt; fixed MERFISH points, this script
-uses:</p>
-<blockquote>
-<div><p>initial transform inverted
-affine transform inverted
-inverse warp</p>
-</div></blockquote>
-</li>
+uses: initial transform inverted, affine transform inverted, inverse warp</p></li>
 <li><p>The final MERFISH voxel coordinates are cropped to match the unpadded
 MERFISH_resampled_average_template.nii.gz dimensions, matching the
 behavior of warp_ccf30_to_merfish / forward_warp.</p></li>

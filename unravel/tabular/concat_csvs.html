@@ -624,7 +624,7 @@
 <section id="usage-in-zsh-to-pass-in-files-in-order-e-g-prefix-1-csv-prefix-3-csv-prefix-2-csv">
 <h2>Usage in zsh to pass in files in order (e.g., prefix_1.csv, prefix_3.csv, prefix_2.csv):<a class="headerlink" href="#usage-in-zsh-to-pass-in-files-in-order-e-g-prefix-1-csv-prefix-3-csv-prefix-2-csv" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>array=(1 3 2) ; inputs=(${^array/#/<a href="#id1"><span class="problematic" id="id2">prefix_</span></a>}.csv) ; tabular_concat -i $inputs [-a 0|1] [-o path/output.csv] [-v]</p>
+<div><p><cite>array=(1 3 2) ; inputs=(${^array/#/prefix_}.csv) ; tabular_concat -i $inputs [-a 0|1] [-o path/output.csv] [-v]</cite></p>
 </div></blockquote>
 </section>
 <dl class="py function">

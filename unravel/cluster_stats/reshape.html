@@ -642,8 +642,13 @@ e.g., saline_cell_density_data.csv, drug_cell_density_data.csv</p></li>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_reshape -g saline drug1 drug2 -i ‘<a href="#id1"><span class="problematic" id="id2">`</span></a><a href="#id3"><span class="problematic" id="id4">*</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a>cell_density_data.csv’
-cstats_reshape -g saline MBDB MDAI RMDMA SMDMA –combine entactogens=MBDB+MDAI+RMDMA+SMDMA</p>
+<div><p>cstats_reshape -g saline drug1 drug2 -i ‘<cite>*cell_density_data.csv</cite>’</p>
+</div></blockquote>
+</section>
+<section id="usage-with-combined-groups">
+<h2>Usage with combined groups:<a class="headerlink" href="#usage-with-combined-groups" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_reshape -g saline MBDB MDAI RMDMA SMDMA –combine <cite>entactogens=MBDB+MDAI+RMDMA+SMDMA</cite></p>
 </div></blockquote>
 </section>
 <section id="usage-for-mean-if-data">
@@ -722,6 +727,7 @@ cstats_reshape -g saline MBDB MDAI RMDMA SMDMA –combine entactogens=MBDB+MDAI+
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-with-combined-groups">Usage with combined groups:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-mean-if-data">Usage for mean_IF data:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.reshape.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.reshape.detect_simple_metric_schema"><code class="docutils literal notranslate"><span class="pre">detect_simple_metric_schema()</span></code></a></li>

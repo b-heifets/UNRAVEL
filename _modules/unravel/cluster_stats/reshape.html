@@ -817,8 +817,11 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    cstats_reshape -g saline drug1 drug2 -i &#39;`*`cell_density_data.csv&#39;</span>
-<span class="sd">    cstats_reshape -g saline MBDB MDAI RMDMA SMDMA --combine entactogens=MBDB+MDAI+RMDMA+SMDMA</span>
+<span class="sd">    cstats_reshape -g saline drug1 drug2 -i &#39;`*cell_density_data.csv`&#39;</span>
+
+<span class="sd">Usage with combined groups:</span>
+<span class="sd">---------------------------</span>
+<span class="sd">    cstats_reshape -g saline MBDB MDAI RMDMA SMDMA --combine `entactogens=MBDB+MDAI+RMDMA+SMDMA`</span>
 
 <span class="sd">Usage for mean_IF data:</span>
 <span class="sd">-----------------------</span>

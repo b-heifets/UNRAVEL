@@ -951,13 +951,8 @@ to prevent overwriting.</p></li>
 <li><p>All parent directories for outputs are created automatically.</p></li>
 </ul>
 <p>For multiple input files in nested directories, their relative structure under <cite>base_dir</cite>
-is preserved automatically. If <cite>base_dir</cite> is not provided, it is inferred as:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>The common parent directory of all inputs, if shared</p></li>
-<li><p>Otherwise, the current working directory</p></li>
-</ul>
-</div></blockquote>
+is preserved automatically. If <cite>base_dir</cite> is not provided, it is inferred as:
+The common parent directory of all inputs, if shared, or the cwd</p>
 </section>
 <section id="parallel-processing">
 <h2>Parallel processing<a class="headerlink" href="#parallel-processing" title="Link to this heading">#</a></h2>
