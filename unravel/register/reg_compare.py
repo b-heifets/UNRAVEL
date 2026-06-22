@@ -23,7 +23,7 @@ Usage:
     reg_compare [-td <path/target_output_dir>] [-afd <autofl_dir>] [-afn <autofl_name>] [-as folder:file ...] [--suffix_map folder=suffix ...] [-d list of paths] [-p sample??] [-v]
 
 Usage for aggregating registration outputs:
---------------
+-------------------------------------------
     rcmp -td reg_compare -ro 'reg_outputs<asterisk>' -afd reg_outputs [-d list of paths] [-p sample??] [-v]
 """
 

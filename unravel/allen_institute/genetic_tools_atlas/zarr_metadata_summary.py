@@ -21,12 +21,13 @@ Usage:
     gta_z [-e <exp_id1> <exp_id2> ...] [-f <file_with_exp_ids>] [-a] [-o <output_csv>] [-w <num_workers>] [--metadata-dir <dir_to_cache_metadata>] [--force] [-v]
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import pandas as pd
 import s3fs
 import re
-from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from rich.traceback import install

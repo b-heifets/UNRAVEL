@@ -5,7 +5,7 @@ Use ``abca_merfish_regions`` or ``mr`` from UNRAVEL to list unique region names 
 
 Note:
     - This is useful for finding region acronyms that are relevant to MERFISH data analysis.
-    - For other MERFISH scripts, parcellation_ is prepended to the region-related columns (e.g., parcellation_substructure). 
+    - For other MERFISH scripts, ``parcellation_`` is prepended to the region-related columns (e.g., ``parcellation_substructure``). 
 
 Usage:
 ------

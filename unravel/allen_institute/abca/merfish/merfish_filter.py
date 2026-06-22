@@ -2,15 +2,15 @@
 
 """
 Use ``abca_merfish_filter`` or ``mf_filter`` from UNRAVEL to filter ABCA MERFISH cells based on columns and values in the cell metadata. 
-It integrates the filtering with the generation of `exp_df` and allows optional export of filtered data or the generation of updated 3D images.
+It integrates the filtering with the generation of ``exp_df`` and allows optional export of filtered data or the generation of updated 3D images.
 
 Note:
     - The input CSV may be previously filtered (e.g., ``abca_merfish_filter_by_mask``) or it may be the full cell metadata (cell_metadata.csv).
-    - Columns to filter by: parcellation_substructure (default)
-    - Values to filter by: e.g., ACB
+    - Columns to filter by: ``parcellation_substructure`` (default)
+    - Values to filter by: e.g., ``ACB``
     - Regional columns can be printed with ``cols -i <ABCA_root>/metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv``
     - Regional values can be printed with ``vals -i <ABCA_root>/metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv -c substructure``
-    - 'parcellation_' is prepended to the regional column names in the cell metadata, so for example 'substructure' becomes 'parcellation_substructure'
+    - ``parcellation_`` is prepended to the regional column names in the cell metadata, so for example ``substructure`` becomes ``parcellation_substructure``
 
 Outputs:
     - Filtered cell metadata CSV file (default: <input_stem>_filtered[_<first_value>][_neurons].csv)

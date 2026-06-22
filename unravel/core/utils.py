@@ -388,20 +388,19 @@ def match_files(patterns, base_path=None):
     Parameters
     ----------
     patterns : str or list of str
-        Glob pattern(s) or explicit file paths. Wildcards like '*.nii.gz' or '*.tif' are supported.
-        Both relative and absolute paths are accepted.
-        When multiple patterns are provided:
-            - Explicit paths preserve their order.
-            - Globs are expanded and sorted within that position.
+        Glob pattern(s) or explicit file paths. Wildcards like ``*.nii.gz`` or
+        ``*.tif`` are supported. Both relative and absolute paths are accepted.
+        When multiple patterns are provided, explicit paths preserve their order,
+        while glob expansions are sorted within that position.
     base_path : str or Path, optional
-        Base directory where relative patterns are applied.
-        Defaults to the current working directory.
+        Base directory where relative patterns are applied. Defaults to the
+        current working directory.
 
     Returns
     -------
     list of Path
-        A list of Path objects matching the provided patterns,
-        preserving explicit input order and sorting only glob expansions.
+        A list of Path objects matching the provided patterns, preserving
+        explicit input order and sorting only glob expansions.
 
     Raises
     ------
