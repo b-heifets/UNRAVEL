@@ -350,7 +350,6 @@ uc -m
 - [**warp_to_atlas**](unravel.warp.to_atlas): Warp full res tissue space images to atlas space.
 - [**warp_to_fixed**](unravel.warp.to_fixed): Warp full res tissue space images to fixed img space and unpad.
 - [**warp_to_native**](unravel.warp.to_native): Warp images to native img space, unpad, and scale to full res.
-- [**warp_points_to_atlas**](unravel.warp.points_to_atlas): Warp cell centroids in tissue space to atlas space.
 - [**warp**](unravel.warp.warp): Warp between moving and fixed images (these have 15% padding from reg)
 :::
 
@@ -421,8 +420,6 @@ uc -m
 - [**io_h5_to_tifs**](unravel.image_io.h5_to_tifs): Convert H5 files to TIFFs.
 - [**io_tif_to_tifs**](unravel.image_io.tif_to_tifs): Convert TIF to TIFF series.
 - [**io_img_to_npy**](unravel.image_io.img_to_npy): Convert images to Numpy arrays.
-- [**io_points_to_img**](unravel.image_io.points_to_img): Populate an empty image with point coordinates.
-- [**io_img_to_points**](unravel.image_io.img_to_points): Convert and image into points coordinates.
 - [**io_zarr_compress**](unravel.image_io.zarr_compress): Compress .zarr or decompress .zarr.tar.gz files.
 :::
 
@@ -439,7 +436,6 @@ uc -m
 - [**img_resample**](unravel.image_tools.resample): Resample images.
 - [**img_extend**](unravel.image_tools.extend): Extend images (add padding to one side).
 - [**img_transpose**](unravel.image_tools.transpose_axes): Transpose image axes.
-- [**img_resample_points**](unravel.image_tools.resample_points): Resample a set of points [and save as an image].
 - [**img_modify_labels**](unravel.image_tools.modify_labels): Modify labels (drop or keep IDs and optionally binarize the result).
 - [**img_filter_objects_by_size**](unravel.image_tools.filter_objects_by_size): Filter objects in a segmentation image by size.
 :::
@@ -459,7 +455,14 @@ uc -m
 - [**utils_rename**](unravel.utilities.rename): Rename files.
 - [**utils_toggle**](unravel.utilities.toggle_samples): Toggle sample?? folders for select batch processing.
 - [**utils_clean_tifs**](unravel.utilities.clean_tif_dirs): Clean TIF directories (no spaces, move non-tifs).
-- [**utils_points_compressor**](unravel.utilities.points_compressor): Pack or unpack point data in a CSV file or summarize the number of points per region.
+:::
+
+:::{tab-item} Coordinates
+- [**coords_points_to_atlas**](unravel.coordinates.points_to_atlas): Warp cell centroids in tissue space to atlas space.
+- [**coords_points_to_img**](unravel.coordinates.points_to_img): Populate an empty image with point coordinates.
+- [**coords_img_to_points**](unravel.coordinates.img_to_points): Convert and image into points coordinates.
+- [**coords_resample_points**](unravel.coordinates.resample_points): Resample a set of points [and save as an image].
+- [**coords_points_compressor**](unravel.coordinates.points_compressor): Pack or unpack point data in a CSV file or summarize the number of points per region.
 :::
 
 ::::

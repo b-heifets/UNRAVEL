@@ -31,10 +31,7 @@ Notes:
       converts RAS <-> LPS around the ANTs point transform.
     - Image resampling and point transforms use opposite transform directions
       in ANTs. For moving CCF30 points -> fixed MERFISH points, this script
-      uses:
-          initial transform inverted
-          affine transform inverted
-          inverse warp
+      uses: initial transform inverted, affine transform inverted, inverse warp
     - The final MERFISH voxel coordinates are cropped to match the unpadded
       MERFISH_resampled_average_template.nii.gz dimensions, matching the
       behavior of warp_ccf30_to_merfish / forward_warp.

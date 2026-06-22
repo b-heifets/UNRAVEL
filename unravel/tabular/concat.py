@@ -9,7 +9,7 @@ Usage:
 
 Usage in zsh to pass in files in order (e.g., prefix_1.csv, prefix_3.csv, prefix_2.csv):
 ----------------------------------------------------------------------------------------
-    array=(1 3 2) ; inputs=(${^array/#/prefix_}.csv) ; tabular_concat -i $inputs [-a 0|1] [-o path/output.csv] [-v]
+    `array=(1 3 2) ; inputs=(${^array/#/prefix_}.csv) ; tabular_concat -i $inputs [-a 0|1] [-o path/output.csv] [-v]`
 """
 
 from pathlib import Path

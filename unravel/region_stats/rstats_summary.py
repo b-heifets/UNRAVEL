@@ -34,10 +34,9 @@ Usage for t-tests:
 ------------------
     rstats_summary --groups Saline MDMA --side both -c Saline [-i <input_pattern>] [-alt two-sided] [-y cell_density | label_density | y axis name] [-div 10000] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-eh sample07:R sample12:L] [-v]
 
-
 Usage for mean intensity in segmentation mask within each region:
 -----------------------------------------------------------------
-    rstats_summary --groups Saline LPS --side both -i '`*`mean_in_seg.csv' -y 'Mean Iba1-IF in segmentation mask'
+    rstats_summary --groups Saline LPS --side both -i '`*mean_in_seg.csv`' -y 'Mean Iba1-IF in segmentation mask'
 
 """
 
