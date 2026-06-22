@@ -550,8 +550,7 @@ def resolve_output_paths(
 
     For multiple input files in nested directories, their relative structure under `base_dir`
     is preserved automatically. If `base_dir` is not provided, it is inferred as:
-        - The common parent directory of all inputs, if shared
-        - Otherwise, the current working directory
+    The common parent directory of all inputs, if shared, or the cwd
 
     Parallel processing
     -------------------

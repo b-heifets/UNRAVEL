@@ -21,8 +21,11 @@ Note:
 
 Usage:
 ------
-    cstats_reshape -g saline drug1 drug2 -i '`*`cell_density_data.csv'
-    cstats_reshape -g saline MBDB MDAI RMDMA SMDMA --combine entactogens=MBDB+MDAI+RMDMA+SMDMA
+    cstats_reshape -g saline drug1 drug2 -i '`*cell_density_data.csv`'
+
+Usage with combined groups:
+---------------------------
+    cstats_reshape -g saline MBDB MDAI RMDMA SMDMA --combine `entactogens=MBDB+MDAI+RMDMA+SMDMA`
 
 Usage for mean_IF data:
 -----------------------
