@@ -10,6 +10,7 @@ unravel.segment package
    key_value_to_table
    unique_values
    utils
+   concat
    
 .. automodule:: unravel.segment
    :members:

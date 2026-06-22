@@ -26,19 +26,19 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
@@ -46,39 +46,474 @@
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">
-import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
-window.addEventListener("load", () => mermaid.run());
-</script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/register/reg';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
-
+  <body data-default-mode="dark">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -104,7 +539,7 @@ window.addEventListener("load", () => mermaid.run());
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -415,15 +850,16 @@ window.addEventListener("load", () => mermaid.run());
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich</span><span class="w"> </span><span class="kn">import</span> <span class="nb">print</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.live</span><span class="w"> </span><span class="kn">import</span> <span class="n">Live</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.traceback</span><span class="w"> </span><span class="kn">import</span> <span class="n">install</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">gaussian_filter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">gaussian_filter</span><span class="p">,</span> <span class="n">binary_dilation</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.image_io.reorient_nii</span><span class="w"> </span><span class="kn">import</span> <span class="n">reorient_nii</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.help_formatter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.img_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.img_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">resolve_path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.img_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">pad</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">print_func_name_args_times</span><span class="p">,</span> <span class="n">initialize_progress_bar</span><span class="p">,</span> <span class="n">get_samples</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.register.affine_initializer_check</span><span class="w"> </span><span class="kn">import</span> <span class="n">affine_initializer_check</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.voxel_stats.apply_mask</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_mask</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.warp.warp</span><span class="w"> </span><span class="kn">import</span> <span class="n">warp</span>
 
 
@@ -436,15 +872,17 @@ window.addEventListener("load", () => mermaid.run());
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--moving_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/moving_img.nii.gz (e.g., average template optimally matching tissue)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--fixed_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;reg_inputs/autofl_50um_masked.nii.gz (from ``reg_prep``)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_inputs/autofl_50um_masked.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mas&#39;</span><span class="p">,</span> <span class="s1">&#39;--mask&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Brain mask for bias correction. Default: reg_inputs/autofl_50um_brain_mask.nii.gz. or pass in None&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_inputs/autofl_50um_brain_mask.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ro&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_outputs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of folder w/ outputs from ``reg`` (e.g., transforms). Default: reg_outputs&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_outputs&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-bc&#39;</span><span class="p">,</span> <span class="s1">&#39;--bias_correct&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Perform N4 bias field correction on autofluo image. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pad&#39;</span><span class="p">,</span> <span class="s1">&#39;--pad_percent&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Initial percentage of padding to add to each dimension of the fixed image (gives space for initial alignment of the moving image). Default: 0.25 (25</span><span class="si">%%</span><span class="s1">).&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sm&#39;</span><span class="p">,</span> <span class="s1">&#39;--smooth&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ort&#39;</span><span class="p">,</span> <span class="s1">&#39;--ort_code&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sm&#39;</span><span class="p">,</span> <span class="s1">&#39;--smooth&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m2&#39;</span><span class="p">,</span> <span class="s1">&#39;--moving_img2&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/atlas.nii.gz (outputs &lt;reg_outputs&gt;/&lt;atlas&gt;_in_tissue_space.nii.gz for checking reg; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;atlas/atlas_CCFv3_2020_30um.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-inp&#39;</span><span class="p">,</span> <span class="s1">&#39;--interpol&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Interpolation method for warping -m2 to padded fixed img space (nearestNeighbor, multiLabel \[default], linear, bSpline)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;multiLabel&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pad&#39;</span><span class="p">,</span> <span class="s1">&#39;--pad_percent&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Initial percentage of padding to add to each dimension of the fixed image (gives space for initial alignment of the moving image). Default: 0.25 (25</span><span class="si">%%</span><span class="s1">).&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--fixed_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;reg_inputs/autofl_50um_masked.nii.gz (from ``reg_prep``)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_inputs/autofl_50um_masked.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ro&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_outputs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of folder w/ outputs from ``reg`` (e.g., transforms). Default: reg_outputs&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_outputs&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mas&#39;</span><span class="p">,</span> <span class="s1">&#39;--mask&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Brain mask used for -bc and/or -rm; ignored otherwise. Use &#39;None&#39; to disable for -bc. Default: reg_inputs/autofl_50um_brain_mask.nii.gz&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_inputs/autofl_50um_brain_mask.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-bc&#39;</span><span class="p">,</span> <span class="s1">&#39;--bias_correct&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Perform N4 bias field correction on autofluo image. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-rm&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_mask&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide flag to restrict spatially restrict reg, so the SyN similarity metric occurs in voxels occupied by either tissue or the initially aligned template; affine initialization is unaffected&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-rmd&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_mask_dilation&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Voxel dilation applied to tissue mask for registration only (if -rm is set). Default: 1&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-it&#39;</span><span class="p">,</span> <span class="s1">&#39;--init_time&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Time in seconds allowed for ``reg_affine_initializer`` to run. Default: 30&#39;</span> <span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;30&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments for checking if the initial template alignment fits fully within the padded version of the fixed image&#39;</span><span class="p">)</span>
@@ -497,6 +935,10 @@ window.addEventListener("load", () => mermaid.run());
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_mask</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">mask</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[yellow]--reg_mask requested but --mask is None; registration mask will not be constructed[/yellow]&quot;</span><span class="p">)</span>
+
+
     <span class="n">sample_paths</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dirs</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
     <span class="n">progress</span><span class="p">,</span> <span class="n">task_id</span> <span class="o">=</span> <span class="n">initialize_progress_bar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_paths</span><span class="p">),</span> <span class="s2">&quot;[red]Processing samples...&quot;</span><span class="p">)</span>
@@ -507,6 +949,13 @@ window.addEventListener("load", () => mermaid.run());
             <span class="n">reg_outputs_path</span> <span class="o">=</span> <span class="n">resolve_path</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_outputs</span><span class="p">)</span>
             <span class="n">reg_outputs_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
  
+            <span class="c1"># Define final output and skip processing if it exists</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">reg_outputs_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">moving_img</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.nii.gz&quot;</span><span class="p">,</span> <span class="s2">&quot;__warped_to_fixed_image.nii.gz&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [green]Registration complete for </span><span class="si">{</span><span class="n">sample_path</span><span class="si">}</span><span class="s2"> (found </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">). Skipping.[/green]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">continue</span>
+
             <span class="c1"># Define inputs and outputs for the fixed image</span>
             <span class="n">fixed_img_nii_path</span> <span class="o">=</span> <span class="n">resolve_path</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">fixed_img</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">fixed_img_nii_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -627,39 +1076,83 @@ window.addEventListener("load", () => mermaid.run());
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [green]The initial alignment of the moving image is within the padded region of the fixed image. Proceeding with registration.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">initial_alignment_ok</span> <span class="o">=</span> <span class="kc">True</span>
 
-            <span class="c1"># Define final output and skip processing if it exists</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">reg_outputs_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">moving_img</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.nii.gz&quot;</span><span class="p">,</span> <span class="s2">&quot;__warped_to_fixed_image.nii.gz&quot;</span><span class="p">)))</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="c1"># Ensure fixed_image and transformed_image are loaded</span>
+            <span class="n">fixed_image</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">image_read</span><span class="p">(</span><span class="n">fixed_img_for_reg_path</span><span class="p">)</span>
+            <span class="n">transformed_image</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">image_read</span><span class="p">(</span><span class="n">init_align_out</span><span class="p">)</span>
 
-                <span class="c1"># Perform registration (reg is a dict with multiple outputs)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    Running registration </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">output_prefix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">reg_outputs_path</span><span class="p">,</span> <span class="s2">&quot;ANTsPy_&quot;</span><span class="p">))</span>
-                <span class="n">reg</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">registration</span><span class="p">(</span>
-                    <span class="n">fixed</span><span class="o">=</span><span class="n">fixed_image</span><span class="p">,</span>  <span class="c1"># e.g., fixed autofluo image</span>
-                    <span class="n">moving</span><span class="o">=</span><span class="n">transformed_image</span><span class="p">,</span>  <span class="c1"># e.g., the initially aligned moving image (e.g., template)</span>
-                    <span class="n">type_of_transform</span><span class="o">=</span><span class="s1">&#39;SyN&#39;</span><span class="p">,</span>  <span class="c1"># SyN = symmetric normalization</span>
-                    <span class="n">grad_step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># Gradient step size</span>
-                    <span class="n">syn_metric</span><span class="o">=</span><span class="s1">&#39;CC&#39;</span><span class="p">,</span>  <span class="c1"># Cross-correlation</span>
-                    <span class="n">syn_sampling</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># Corresponds to CC radius</span>
-                    <span class="n">reg_iterations</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>  <span class="c1"># Convergence criteria</span>
-                    <span class="n">outprefix</span><span class="o">=</span><span class="n">output_prefix</span><span class="p">,</span> 
-                    <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+            <span class="c1"># Load fixed and initially aligned moving images</span>
+            <span class="n">reg_mask_ants</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_mask</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">mask</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Constructing registration mask (tissue ∪ aligned template)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Load tissue mask</span>
+                <span class="n">mask_path</span> <span class="o">=</span> <span class="n">resolve_path</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
+                <span class="n">mask_img</span> <span class="o">=</span> <span class="n">load_mask</span><span class="p">(</span><span class="n">mask_path</span><span class="p">)</span>
+                <span class="n">mask_img</span> <span class="o">=</span> <span class="n">pad</span><span class="p">(</span><span class="n">mask_img</span><span class="p">,</span> <span class="n">pad_percent</span><span class="o">=</span><span class="n">pad_percent</span><span class="p">)</span>
+
+                <span class="c1"># Dilate tissue mask (registration only)</span>
+                <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_mask_dilation</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">mask_img</span> <span class="o">=</span> <span class="n">binary_dilation</span><span class="p">(</span><span class="n">mask_img</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">reg_mask_dilation</span><span class="p">)</span>
+
+                <span class="c1"># Load initially aligned template</span>
+                <span class="n">init_align_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">init_align_out</span><span class="p">)</span>
+                <span class="n">init_align_bin</span> <span class="o">=</span> <span class="n">init_align_img</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+                <span class="c1"># Union mask</span>
+                <span class="n">reg_mask_img</span> <span class="o">=</span> <span class="n">mask_img</span> <span class="o">|</span> <span class="n">init_align_bin</span>
+
+                <span class="c1"># Report coverage of registration mask</span>
+                <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                    <span class="n">coverage</span> <span class="o">=</span> <span class="n">reg_mask_img</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Registration mask covers </span><span class="si">{</span><span class="n">coverage</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">% of voxels&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Convert to ANTs image</span>
+                <span class="n">reg_mask_ants</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span>
+                    <span class="n">reg_mask_img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span>
+                    <span class="n">spacing</span><span class="o">=</span><span class="n">fixed_image</span><span class="o">.</span><span class="n">spacing</span><span class="p">,</span>
+                    <span class="n">origin</span><span class="o">=</span><span class="n">fixed_image</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span>
+                    <span class="n">direction</span><span class="o">=</span><span class="n">fixed_image</span><span class="o">.</span><span class="n">direction</span>
                 <span class="p">)</span>
 
-                <span class="c1"># Save the warped moving image output</span>
-                <span class="n">ants</span><span class="o">.</span><span class="n">image_write</span><span class="p">(</span><span class="n">reg</span><span class="p">[</span><span class="s1">&#39;warpedmovout&#39;</span><span class="p">],</span> <span class="n">output</span><span class="p">)</span>  <span class="c1"># The interpolation method is not NN or multiLabel</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Transformed moving image saved to: </span><span class="se">\n</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Perform registration (reg is a dict with multiple outputs)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    Running registration </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">output_prefix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">reg_outputs_path</span><span class="p">,</span> <span class="s2">&quot;ANTsPy_&quot;</span><span class="p">))</span>
+            <span class="n">reg</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">registration</span><span class="p">(</span>
+                <span class="n">fixed</span><span class="o">=</span><span class="n">fixed_image</span><span class="p">,</span>  <span class="c1"># e.g., fixed autofluo image</span>
+                <span class="n">moving</span><span class="o">=</span><span class="n">transformed_image</span><span class="p">,</span>  <span class="c1"># e.g., the initially aligned moving image (e.g., template)</span>
+                <span class="n">type_of_transform</span><span class="o">=</span><span class="s1">&#39;SyN&#39;</span><span class="p">,</span>  <span class="c1"># SyN = symmetric normalization</span>
+                <span class="n">grad_step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># Gradient step size</span>
+                <span class="n">syn_metric</span><span class="o">=</span><span class="s1">&#39;CC&#39;</span><span class="p">,</span>  <span class="c1"># Cross-correlation</span>
+                <span class="n">syn_sampling</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># Corresponds to CC radius</span>
+                <span class="n">reg_iterations</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>  <span class="c1"># Convergence criteria</span>
+                <span class="n">outprefix</span><span class="o">=</span><span class="n">output_prefix</span><span class="p">,</span>
+                <span class="n">mask</span><span class="o">=</span><span class="n">reg_mask_ants</span><span class="p">,</span> <span class="c1"># Restrict registration metric to union of tissue mask and initially aligned template</span>
+                <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+            <span class="p">)</span>
 
-                <span class="c1"># Save the warped fixed image output (optional)</span>
-                <span class="c1"># warpedfixout = str(Path(reg_outputs_path, str(Path(args.fixed_img).name).replace(&quot;.nii.gz&quot;, &quot;__warped_to_moving_image.nii.gz&quot;)))</span>
-                <span class="c1"># ants.image_write(reg[&#39;warpedfixout&#39;], warpedfixout)</span>
-                <span class="c1"># print(f&quot;\nTransformed fixed image saved to: \n{warpedfixout}&quot;)</span>
+            <span class="c1"># Save the warped moving image output</span>
+            <span class="n">ants</span><span class="o">.</span><span class="n">image_write</span><span class="p">(</span><span class="n">reg</span><span class="p">[</span><span class="s1">&#39;warpedmovout&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>  <span class="c1"># The interpolation method is not NN or multiLabel</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Transformed moving image saved to: </span><span class="se">\n</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Save the warped fixed image output (optional)</span>
+            <span class="c1"># warpedfixout = str(Path(reg_outputs_path, str(Path(args.fixed_img).name).replace(&quot;.nii.gz&quot;, &quot;__warped_to_moving_image.nii.gz&quot;)))</span>
+            <span class="c1"># ants.image_write(reg[&#39;warpedfixout&#39;], warpedfixout)</span>
+            <span class="c1"># print(f&quot;\nTransformed fixed image saved to: \n{warpedfixout}&quot;)</span>
 
             <span class="c1"># Warp the atlas image to the tissue image for checking reg (naming prioritizes the common usage)</span>
             <span class="n">warped_atlas</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">reg_outputs_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">moving_img2</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.nii.gz&quot;</span><span class="p">,</span> <span class="s2">&quot;_in_tissue_space.nii.gz&quot;</span><span class="p">)))</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">warped_atlas</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    Warping the atlas to padded fixed image space for checking reg: reg_outputs/&lt;atlas&gt;_in_tissue_space.nii.gz</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">warp</span><span class="p">(</span><span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">moving_img2</span><span class="p">,</span> <span class="n">fixed_img_for_reg_path</span><span class="p">,</span> <span class="n">warped_atlas</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">interpol</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">interpol</span><span class="p">)</span>
+                <span class="n">warp</span><span class="p">(</span><span class="n">reg_outputs_path</span><span class="o">=</span><span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">moving_img_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">moving_img2</span><span class="p">,</span> <span class="n">fixed_img_path</span><span class="o">=</span><span class="n">fixed_img_for_reg_path</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="n">warped_atlas</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">interpol</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">interpol</span><span class="p">)</span>
+
+            <span class="c1"># Save the orientation (from args.ort_code) to a text file in reg_outputs</span>
+            <span class="n">orient_txt</span> <span class="o">=</span> <span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="s2">&quot;orientation_code.txt&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">orient_txt</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">ort_code</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ort_code</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Not specified&quot;</span><span class="p">)</span>
 
             <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -698,8 +1191,8 @@ window.addEventListener("load", () => mermaid.run());
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -710,7 +1203,7 @@ window.addEventListener("load", () => mermaid.run());
 
   <p class="copyright">
     
-      © Copyright 2025, the UNRAVEL team.
+      © Copyright 2026, the UNRAVEL team.
       <br/>
     
   </p>
@@ -733,7 +1226,7 @@ window.addEventListener("load", () => mermaid.run());
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
 </p></div>
       
     </div>

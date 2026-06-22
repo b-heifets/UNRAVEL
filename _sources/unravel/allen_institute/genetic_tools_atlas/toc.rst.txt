@@ -9,6 +9,7 @@ unravel.allen_institute.genetic_tools_atlas package
    org_samples
    auto_crop
    bbox_crop
+   zarr_metadata_summary
 
 .. automodule:: unravel.allen_institute.genetic_tools_atlas
    :members:

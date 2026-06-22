@@ -26,19 +26,19 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
@@ -46,39 +46,474 @@
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">
-import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
-window.addEventListener("load", () => mermaid.run());
-</script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/core/utils';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
-
+  <body data-default-mode="dark">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -104,7 +539,7 @@ window.addEventListener("load", () => mermaid.run());
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -647,6 +1082,7 @@ window.addEventListener("load", () => mermaid.run());
 <span class="k">def</span><span class="w"> </span><span class="nf">log_command</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A decorator for main() to log the command and execution times to a hidden file (.command_log.txt).&quot;&quot;&quot;</span>
     <span class="c1"># TODO: avoid logging when -h or --help is used</span>
+    <span class="c1"># TODO: Don&#39;t strip quotes from patterns for glob</span>
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">log_file</span> <span class="o">=</span> <span class="s2">&quot;.command_log.txt&quot;</span>  <span class="c1"># Name of the hidden log file</span>
@@ -801,15 +1237,20 @@ window.addEventListener("load", () => mermaid.run());
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    patterns : str or list of str</span>
-<span class="sd">        Glob pattern(s) to match files. Supports wildcards like &#39;*.nii.gz&#39;, &#39;*.tif&#39;, etc.</span>
-<span class="sd">        Can include absolute paths with wildcards.</span>
+<span class="sd">        Glob pattern(s) or explicit file paths. Wildcards like &#39;*.nii.gz&#39; or &#39;*.tif&#39; are supported.</span>
+<span class="sd">        Both relative and absolute paths are accepted.</span>
+<span class="sd">        When multiple patterns are provided:</span>
+<span class="sd">            - Explicit paths preserve their order.</span>
+<span class="sd">            - Globs are expanded and sorted within that position.</span>
 <span class="sd">    base_path : str or Path, optional</span>
-<span class="sd">        Base directory where relative patterns are applied. Defaults to the current working directory.</span>
+<span class="sd">        Base directory where relative patterns are applied.</span>
+<span class="sd">        Defaults to the current working directory.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of Path</span>
-<span class="sd">        A sorted list of Path objects that match the provided glob patterns.</span>
+<span class="sd">        A list of Path objects matching the provided patterns,</span>
+<span class="sd">        preserving explicit input order and sorting only glob expansions.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -824,7 +1265,7 @@ window.addEventListener("load", () => mermaid.run());
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">):</span>
         <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;patterns must be a string, Path, or a list of those types.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;patterns must be a string, Path, or list of those types.&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">base_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;base_path must be a string or Path object.&quot;</span><span class="p">)</span>
@@ -834,15 +1275,26 @@ window.addEventListener("load", () => mermaid.run());
 
     <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
         <span class="n">pattern_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">pattern_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
-            <span class="n">paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">pattern_path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern_path</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="c1"># Determine if it&#39;s a glob (contains wildcard characters)</span>
+        <span class="n">is_glob</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">ch</span> <span class="ow">in</span> <span class="n">pattern</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="s2">&quot;*?[]&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_glob</span><span class="p">:</span>
+            <span class="c1"># Absolute glob</span>
+            <span class="k">if</span> <span class="n">pattern_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+                <span class="n">matches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">pattern_path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern_path</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">matches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span>
+            <span class="c1"># Explicit file path — keep as-is, resolving relative paths</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">pattern_path</span> <span class="k">if</span> <span class="n">pattern_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="k">else</span> <span class="n">base_path</span> <span class="o">/</span> <span class="n">pattern_path</span><span class="p">]</span>
+
+        <span class="n">paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">paths</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No files found matching patterns: </span><span class="si">{</span><span class="n">patterns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No files found in </span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2"> matching the pattern(s): </span><span class="si">{</span><span class="n">patterns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">paths</span></div>
 
 
 <div class="viewcode-block" id="get_stem">
@@ -864,6 +1316,7 @@ window.addEventListener("load", () => mermaid.run());
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">lower_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
     <span class="n">compound_extensions</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span>
@@ -876,7 +1329,7 @@ window.addEventListener("load", () => mermaid.run());
     <span class="p">]</span>
 
     <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">compound_extensions</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">lower_name</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">name</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">ext</span><span class="p">)]</span>
     
     <span class="k">return</span> <span class="n">file_path</span><span class="o">.</span><span class="n">stem</span></div>
@@ -916,6 +1369,176 @@ window.addEventListener("load", () => mermaid.run());
             <span class="k">return</span> <span class="n">ext</span>
     
     <span class="k">return</span> <span class="n">file_path</span><span class="o">.</span><span class="n">suffix</span></div>
+
+
+<div class="viewcode-block" id="resolve_output_paths">
+<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.resolve_output_paths">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_output_paths</span><span class="p">(</span>
+    <span class="n">file_paths</span><span class="p">,</span>
+    <span class="n">output_paths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">ext</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">stem_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">base_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">skip_existing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">return_inputs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolve and prepare output file path(s) based on input file(s) and an optional output argument.</span>
+
+<span class="sd">    The `output_paths` argument can include an optional suffix using colon notation:</span>
+<span class="sd">        - &quot;results/:_filtered&quot; → output dir = &quot;results/&quot;, suffix = &quot;_filtered&quot;</span>
+<span class="sd">        - &quot;:_processed&quot;        → no dir, just apply suffix &quot;_processed&quot; next to inputs</span>
+<span class="sd">        - &quot;results/&quot;           → output dir only (adds &#39;_out&#39; if input/output names would match)</span>
+<span class="sd">        - &quot;results/file.csv&quot;   → explicit file output</span>
+
+<span class="sd">    Suffix logic</span>
+<span class="sd">    -------------</span>
+<span class="sd">    - If input and output filenames (including extension) would match, &#39;_out&#39; is added automatically</span>
+<span class="sd">      to prevent overwriting.</span>
+<span class="sd">    - If filenames differ (e.g., due to directory, stem, or extension), no default suffix is used.</span>
+<span class="sd">    - User-specified suffixes (via colon notation or `stem_suffix`) always take precedence.</span>
+
+<span class="sd">    General rules</span>
+<span class="sd">    -------------</span>
+<span class="sd">    - One input, output is a file → use it directly.</span>
+<span class="sd">    - One input, output is a directory → save inside it.</span>
+<span class="sd">    - Multiple inputs, output must be a directory (auto-created).</span>
+<span class="sd">    - No output → save next to each input file, adding a suffix if needed to avoid overwriting.</span>
+<span class="sd">    - All parent directories for outputs are created automatically.</span>
+
+<span class="sd">    For multiple input files in nested directories, their relative structure under `base_dir`</span>
+<span class="sd">    is preserved automatically. If `base_dir` is not provided, it is inferred as:</span>
+<span class="sd">        - The common parent directory of all inputs, if shared</span>
+<span class="sd">        - Otherwise, the current working directory</span>
+
+<span class="sd">    Parallel processing</span>
+<span class="sd">    -------------------</span>
+<span class="sd">    This function is **safe for parallel processing**.</span>
+<span class="sd">    It ensures all parent directories exist so workers can write immediately.</span>
+
+<span class="sd">    Example usage</span>
+<span class="sd">    -------------</span>
+<span class="sd">    &gt;&gt;&gt; inputs = [&quot;data/a.nrrd&quot;, &quot;data/b.nrrd&quot;]</span>
+<span class="sd">    &gt;&gt;&gt; outputs = resolve_output_paths(inputs, &quot;results/:_aligned&quot;, ext=&quot;.nii.gz&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; for i, o in zip(inputs, outputs):</span>
+<span class="sd">    ...     print(f&quot;{i} → {o}&quot;)</span>
+<span class="sd">    data/a.nrrd → results/a.nii.gz</span>
+<span class="sd">    data/b.nrrd → results/b.nii.gz</span>
+
+<span class="sd">    &gt;&gt;&gt; # Same format and name → &#39;_out&#39; added</span>
+<span class="sd">    &gt;&gt;&gt; outputs = resolve_output_paths(inputs, &quot;results/&quot;)</span>
+<span class="sd">    data/a.nrrd → results/a_out.nrrd</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_paths : list[str | Path]</span>
+<span class="sd">        One or more input file paths.</span>
+<span class="sd">    output_paths : str | Path | None, optional</span>
+<span class="sd">        Output path with optional suffix using colon notation (e.g., &#39;outdir/:_filtered&#39;).</span>
+<span class="sd">        If None, outputs are saved next to input files.</span>
+<span class="sd">    ext : str | None, optional</span>
+<span class="sd">        Optional override for file extension (e.g., &#39;.csv&#39;, &#39;.nii.gz&#39;).</span>
+<span class="sd">        If None, keeps the input file&#39;s extension.</span>
+<span class="sd">    stem_suffix : str | None, optional</span>
+<span class="sd">        Manual suffix to append before the extension. Overrides any suffix in `output_paths`.</span>
+<span class="sd">    base_dir : str | Path | None, optional</span>
+<span class="sd">        Base directory to preserve relative paths under.</span>
+<span class="sd">        If None, inferred automatically (common parent or CWD).</span>
+<span class="sd">    skip_existing : bool, optional</span>
+<span class="sd">        If True, existing outputs are skipped.</span>
+<span class="sd">    return_inputs : bool, optional</span>
+<span class="sd">        If True, returns (filtered_inputs, outputs).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[Path]  or  (list[Path], list[Path])</span>
+<span class="sd">        List of resolved output paths (always Path objects).</span>
+<span class="sd">        If `return_inputs=True`, returns (filtered_inputs, outputs).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_paths</span><span class="p">)</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># --- Parse colon notation in output_paths ---</span>
+    <span class="n">output_paths</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_paths</span><span class="p">)</span> <span class="k">if</span> <span class="n">output_paths</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">parsed_suffix</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">output_paths</span><span class="p">:</span>
+        <span class="n">base_part</span><span class="p">,</span> <span class="n">parsed_suffix</span> <span class="o">=</span> <span class="n">output_paths</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">output_paths</span> <span class="o">=</span> <span class="n">base_part</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span>
+        <span class="n">parsed_suffix</span> <span class="o">=</span> <span class="n">parsed_suffix</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span>
+
+    <span class="c1"># --- Infer base_dir automatically ---</span>
+    <span class="k">if</span> <span class="n">base_dir</span><span class="p">:</span>
+        <span class="n">base_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">base_dir</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">base_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">commonpath</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">]))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">base_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">base_dir</span> <span class="o">=</span> <span class="n">file_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="c1"># --- Determine suffix priority ---</span>
+    <span class="n">final_suffix</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">stem_suffix</span> <span class="k">if</span> <span class="n">stem_suffix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">else</span> <span class="n">parsed_suffix</span> <span class="k">if</span> <span class="n">parsed_suffix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">else</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># decided below dynamically if needed</span>
+    <span class="p">)</span>
+
+    <span class="c1"># --- Main logic ---</span>
+    <span class="k">if</span> <span class="n">output_paths</span><span class="p">:</span>
+        <span class="n">output_paths</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_paths</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+        <span class="c1"># Case 1: Single input, explicit output file</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">output_paths</span><span class="o">.</span><span class="n">suffix</span><span class="p">:</span>
+            <span class="n">output_paths</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">output_paths</span><span class="p">]</span>
+
+        <span class="c1"># Case 2: Directory (preserve structure)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_paths</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">:</span>
+                <span class="n">stem</span> <span class="o">=</span> <span class="n">get_stem</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">in_ext</span> <span class="o">=</span> <span class="n">get_extension</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">out_ext</span> <span class="o">=</span> <span class="n">ext</span> <span class="ow">or</span> <span class="n">in_ext</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">rel</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">base_dir</span><span class="p">)</span>
+                    <span class="n">rel_dir</span> <span class="o">=</span> <span class="n">rel</span><span class="o">.</span><span class="n">parent</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="n">rel_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span>
+
+                <span class="n">target_dir</span> <span class="o">=</span> <span class="n">output_paths</span> <span class="o">/</span> <span class="n">rel_dir</span>
+                <span class="n">target_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="c1"># Determine if name/extension match → add &#39;_out&#39;</span>
+                <span class="n">candidate</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stem</span><span class="si">}{</span><span class="n">final_suffix</span><span class="si">}{</span><span class="n">out_ext</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">if</span> <span class="n">final_suffix</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">candidate</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">final_suffix</span> <span class="o">=</span> <span class="s2">&quot;_out&quot;</span>
+
+                <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stem</span><span class="si">}{</span><span class="n">final_suffix</span><span class="si">}{</span><span class="n">out_ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Case 3: No output path → save next to input</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">:</span>
+            <span class="n">stem</span> <span class="o">=</span> <span class="n">get_stem</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">in_ext</span> <span class="o">=</span> <span class="n">get_extension</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">out_ext</span> <span class="o">=</span> <span class="n">ext</span> <span class="ow">or</span> <span class="n">in_ext</span>
+            <span class="n">final_suffix_for_this</span> <span class="o">=</span> <span class="n">final_suffix</span>
+            <span class="k">if</span> <span class="n">final_suffix_for_this</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">out_ext</span> <span class="o">==</span> <span class="n">in_ext</span><span class="p">:</span>
+                <span class="n">final_suffix_for_this</span> <span class="o">=</span> <span class="s2">&quot;_out&quot;</span>
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stem</span><span class="si">}{</span><span class="n">final_suffix_for_this</span><span class="si">}{</span><span class="n">out_ext</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">out_file</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out_file</span><span class="p">)</span>
+
+    <span class="c1"># --- Optionally skip existing outputs ---</span>
+    <span class="k">if</span> <span class="n">skip_existing</span><span class="p">:</span>
+        <span class="n">keep_idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">exists</span><span class="p">()]</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">outputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">keep_idx</span><span class="p">]</span>
+        <span class="n">filtered_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_paths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">keep_idx</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">filtered_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span> <span class="k">if</span> <span class="n">return_inputs</span> <span class="k">else</span> <span class="n">outputs</span>
+
+    <span class="k">return</span> <span class="n">outputs</span></div>
 
 
 <div class="viewcode-block" id="get_pad_percent">
@@ -967,8 +1590,8 @@ window.addEventListener("load", () => mermaid.run());
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -979,7 +1602,7 @@ window.addEventListener("load", () => mermaid.run());
 
   <p class="copyright">
     
-      © Copyright 2025, the UNRAVEL team.
+      © Copyright 2026, the UNRAVEL team.
       <br/>
     
   </p>
@@ -1002,7 +1625,7 @@ window.addEventListener("load", () => mermaid.run());
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
 </p></div>
       
     </div>
