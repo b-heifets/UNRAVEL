@@ -16,7 +16,6 @@ unravel.image_tools package
    rb
    transpose_axes
    unique_intensities
-   resample_points
    modify_labels
    filter_objects_by_size
    smooth

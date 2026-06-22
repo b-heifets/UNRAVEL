@@ -56,7 +56,7 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="unravel.image_tools.resample_points module" href="resample_points.html" />
+    <link rel="next" title="unravel.image_tools.modify_labels module" href="modify_labels.html" />
     <link rel="prev" title="unravel.image_tools.transpose_axes module" href="transpose_axes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -341,7 +341,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../warp/to_fixed.html">unravel.warp.to_fixed module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../warp/to_native.html">unravel.warp.to_native module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../warp/warp.html">unravel.warp.warp module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../warp/points_to_atlas.html">unravel.warp.points_to_atlas module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../warp/ccf30_to_merfish.html">unravel.warp.ccf30_to_merfish module</a></li>
 </ul>
 </details></li>
@@ -433,10 +432,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_compress.html">unravel.image_io.zarr_compress module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/physical_points_to_img.html">unravel.image_io.physical_points_to_img module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/physical_points_add_regions.html">unravel.image_io.physical_points_add_regions module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.image_tools package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -452,7 +447,6 @@
 <li class="toctree-l2"><a class="reference internal" href="rb.html">unravel.image_tools.rb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.image_tools.unique_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modify_labels.html">unravel.image_tools.modify_labels module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="filter_objects_by_size.html">unravel.image_tools.filter_objects_by_size module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="smooth.html">unravel.image_tools.smooth module</a></li>
@@ -476,7 +470,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../utilities/process_samples.html">unravel.utilities.process_samples module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/toggle_samples.html">unravel.utilities.toggle_samples module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/points_compressor.html">unravel.utilities.points_compressor module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tabular/toc.html">unravel.segment package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -486,6 +479,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tabular/key_value_to_table.html">unravel.tabular.key_value_to_table module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tabular/unique_values.html">unravel.tabular.unique_values module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tabular/utils.html">unravel.tabular.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/concat_csvs.html">unravel.tabular.concat module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../allen_institute/toc.html">unravel.allen_institute package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -671,11 +665,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="resample_points.html"
+       href="modify_labels.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.image_tools.resample_points module</p>
+        <p class="prev-next-title">unravel.image_tools.modify_labels module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

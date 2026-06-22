@@ -994,19 +994,19 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    info_csv_path : str or Path</span>
-<span class="sd">        Path to a custom info CSV, or one of the built-in names</span>
-<span class="sd">        (&#39;CCFv3-2017_info.csv&#39;, &#39;CCFv3-2020_info.csv&#39;).</span>
+<span class="sd">        Path to a custom info CSV, or one of the built-in names:</span>
+<span class="sd">        ``CCFv3-2017_info.csv`` or ``CCFv3-2020_info.csv``.</span>
 <span class="sd">    region_id_col : str, optional</span>
-<span class="sd">        Column to use as the region-ID key. Default: &#39;lowered_ID&#39;.</span>
-<span class="sd">        Common options:</span>
-<span class="sd">            - &#39;lowered_ID&#39;</span>
-<span class="sd">            - &#39;structure_ID&#39;</span>
+<span class="sd">        Column to use as the region-ID key. Default: ``lowered_ID``.</span>
+<span class="sd">        Common options include ``lowered_ID`` and ``structure_ID``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dict</span>
-<span class="sd">        Mapping: region ID -&gt; {&#39;abbreviation&#39;: ..., &#39;region_name&#39;: ...}</span>
+<span class="sd">        Mapping from region ID to a dictionary with ``abbreviation`` and</span>
+<span class="sd">        ``region_name`` values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">columns_to_load</span> <span class="o">=</span> <span class="p">[</span><span class="n">region_id_col</span><span class="p">,</span> <span class="s1">&#39;abbreviation&#39;</span><span class="p">,</span> <span class="s1">&#39;full_structure_name&#39;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">info_csv_path</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;CCFv3-2017_info.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">]:</span>

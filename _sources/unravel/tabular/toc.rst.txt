@@ -10,7 +10,7 @@ unravel.segment package
    key_value_to_table
    unique_values
    utils
-   concat
+   concat_csvs
    
 .. automodule:: unravel.segment
    :members:
