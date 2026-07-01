@@ -128,6 +128,13 @@ def parse_args():
         default=None,
         action=SM,
     )
+    opts.add_argument(
+        '-a', '--alpha',
+        help='Opacity of individual data-point symbols. Default: 1.0',
+        type=float,
+        default=1.0,
+        action=SM,
+    )
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False.', action='store_true', default=False)
@@ -407,6 +414,7 @@ def plot_data(
     alt="two-sided",
     ylabel="Mean IF Intensity",
     region_lut=None,
+    symbol_alpha=1.0,
 ):
     """Plot data and return stats for one cluster or cluster-region pair."""
     df = all_df[all_df["cluster_ID"] == cluster_id].copy()
@@ -443,7 +451,7 @@ def plot_data(
         edgecolor="black",
     )
 
-    sns.swarmplot(
+    sns.stripplot(
         x="group_label",
         y="mean_intensity",
         hue="group",
@@ -452,6 +460,8 @@ def plot_data(
         size=8,
         linewidth=1,
         edgecolor="black",
+        jitter=0.25,
+        alpha=symbol_alpha,
     )
 
     if ax.legend_:
@@ -493,8 +503,9 @@ def plot_data(
         file_stem = f"cluster_{cluster_id}"
     else:
         if region_abbr:
+            safe_abbr = safe_filename(region_abbr)
             title = f"Cluster: {cluster_id}, Region: {region_id} ({region_abbr})"
-            file_stem = f"cluster_{cluster_id}_region_{region_id}_{safe_filename(region_abbr)}"
+            file_stem = f"cluster_{cluster_id}_{safe_abbr}_region_{region_id}"
         else:
             title = f"Cluster: {cluster_id}, Region: {region_id}"
             file_stem = f"cluster_{cluster_id}_region_{region_id}"
@@ -541,6 +552,9 @@ def main():
         test_type = "tukey"
     else:
         test_type = args.test
+    
+    if args.alpha < 0 or args.alpha > 1:
+        raise ValueError("--alpha must be between 0 and 1.")
 
     print(f"\n[bold]CSVs in the working dir to process (the first word defines the groups):\n")
     for filename in os.listdir():
@@ -598,6 +612,7 @@ def main():
             alt=args.alternate,
             ylabel=args.ylabel,
             region_lut=region_lut,
+            symbol_alpha=args.alpha,
         )
 
         test_df_all = pd.concat([test_df_all, test_df], ignore_index=True)
