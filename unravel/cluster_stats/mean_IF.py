@@ -20,16 +20,18 @@ Inputs:
 Outputs:
     - Cluster-only mode:
         ./cluster_mean_IF_<cluster_index>/image_name.csv
-        Columns: sample, cluster_ID, n_voxels, mean_IF_intensity
+        Columns: condition, sample, cluster_ID, n_voxels, mean_intensity
 
     - Cluster-region mode:
         ./cluster_region_mean_IF_<cluster_index>/image_name.csv
-        Columns: sample, cluster_ID, region_ID, n_voxels, mean_IF_intensity
+        Columns: condition, sample, cluster_ID, region_ID, region, abbr, n_voxels, mean_intensity
 
 Next steps:
     - cd cluster_mean_IF... or cluster_region_mean_IF...
-    - ``utils_prepend`` -sk <path/sample_key.csv> -f  # If needed
-    - ``cstats_mean_IF_summary`` --order Control Treatment --labels Control Treatment -t ttest
+    - Concatenate outputs:
+        tabular_concat -i '*.csv' -a 0 -o concat/concat.csv -v
+    - Summarize:
+        cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
 
 Usage:
 ------
@@ -43,6 +45,7 @@ Usage for region means within clusters:
 import csv
 import nibabel as nib
 import numpy as np
+import pandas as pd
 from pathlib import Path
 from rich.traceback import install
 
@@ -97,7 +100,12 @@ def parse_args():
         default=1,
         action=SM,
     )
-
+    opts.add_argument(
+        '-l', '--lut',
+        help='Optional region LUT CSV path or CSV name in unravel/core/csvs/. Expected columns: Region_ID, Region, Abbr. Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv',
+        default='CCFv3-2020__regionID_side_IDpath_region_abbr.csv',
+        action=SM,
+    )
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
 
@@ -178,50 +186,136 @@ def calculate_mean_intensity(img, valid_mask, keys, counts, keep, key_base=None)
             rows.append({
                 "cluster_ID": int(key),
                 "n_voxels": n_voxels,
-                "mean_IF_intensity": mean_intensity,
+                "mean_intensity": mean_intensity,
             })
         else:
             rows.append({
                 "cluster_ID": int(key // key_base),
                 "region_ID": int(key % key_base),
                 "n_voxels": n_voxels,
-                "mean_IF_intensity": mean_intensity,
+                "mean_intensity": mean_intensity,
             })
 
     return rows
 
 
-def write_rows_to_csv(rows, output_file, sample):
-    """Write mean IF rows to CSV."""
+def write_rows_to_csv(rows, output_file, condition, sample):
+    """Write mean intensity rows to CSV with a stable column order."""
 
     if not rows:
         return
 
-    fieldnames = ["sample"] + list(rows[0].keys())
+    has_regions = "region_ID" in rows[0]
+
+    if has_regions:
+        fieldnames = [
+            "condition",
+            "sample",
+            "cluster_ID",
+            "region_ID",
+            "region",
+            "abbr",
+            "n_voxels",
+            "mean_intensity",
+        ]
+    else:
+        fieldnames = [
+            "condition",
+            "sample",
+            "cluster_ID",
+            "n_voxels",
+            "mean_intensity",
+        ]
 
     with open(output_file, "w", newline="") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
         for row in rows:
-            writer.writerow({"sample": sample, **row})
+            writer.writerow({
+                "condition": condition,
+                "sample": sample,
+                **row,
+            })
 
 
-def sample_from_filename(file):
+def condition_sample_from_filename(file):
     """
-    Extract sample name from filename.
+    Extract condition and sample from filename.
 
-    Preserves the previous behavior of using the second underscore-separated field
-    when available.
+    Expected after utils_prepend-style naming:
+        Condition_sampleXX_....
+
+    Falls back gracefully if the filename does not contain both fields.
     """
 
-    name = Path(file).name
-    parts = name.split("_")
+    stem = Path(file).name.replace(".nii.gz", "").replace(".nii", "")
+    parts = stem.split("_")
 
-    if len(parts) > 1:
-        return parts[1]
+    if len(parts) >= 2:
+        return parts[0], parts[1]
 
-    return name.replace(".nii.gz", "").replace(".nii", "")
+    return "", stem
+
+
+def add_region_metadata(rows, region_lut):
+    """Add region and abbr columns to cluster-region rows."""
+    if not rows or "region_ID" not in rows[0]:
+        return rows
+
+    for row in rows:
+        info = region_lut.get(int(row["region_ID"]), {})
+        row["region"] = info.get("region", "")
+        row["abbr"] = info.get("abbr", "")
+
+    return rows
+
+
+def resolve_lut_path(lut):
+    """Resolve LUT path from explicit path or unravel/core/csvs/."""
+    if lut is None:
+        return None
+
+    lut_path = Path(lut)
+    if lut_path.exists():
+        return lut_path
+
+    core_lut = Path(__file__).parent.parent / 'core' / 'csvs' / lut
+    if core_lut.exists():
+        return core_lut
+
+    raise FileNotFoundError(f"Could not find LUT CSV: {lut}")
+
+
+def load_region_lut(lut):
+    """Load region LUT as a dictionary keyed by Region_ID."""
+
+    lut_path = resolve_lut_path(lut)
+
+    if lut_path is None:
+        return {}
+
+    df = pd.read_csv(lut_path)
+
+    if "Region_ID" not in df.columns:
+        raise KeyError("LUT must contain a Region_ID column.")
+
+    if "Region" not in df.columns and "Name" in df.columns:
+        df = df.rename(columns={"Name": "Region"})
+
+    for col in ["Region", "Abbr"]:
+        if col not in df.columns:
+            df[col] = ""
+
+    df = df[["Region_ID", "Region", "Abbr"]].drop_duplicates(subset=["Region_ID"])
+
+    return {
+        int(row["Region_ID"]): {
+            "region": row["Region"],
+            "abbr": row["Abbr"],
+        }
+        for _, row in df.iterrows()
+    }
 
 
 @log_command
@@ -245,6 +339,8 @@ def main():
 
         if cluster_index_img.shape != atlas_img.shape:
             raise ValueError("Cluster index and atlas must have the same shape.")
+        
+    region_lut = load_region_lut(args.lut) if args.atlas else {}
 
     label_index = build_label_index(
         cluster_index_img,
@@ -292,8 +388,11 @@ def main():
         output_filename = str(file.name).replace(".nii.gz", ".csv")
         output = output_folder / output_filename
 
-        sample = sample_from_filename(file)
-        write_rows_to_csv(rows, output, sample)
+        if args.atlas:
+            rows = add_region_metadata(rows, region_lut)
+
+        condition, sample = condition_sample_from_filename(file)
+        write_rows_to_csv(rows, output, condition, sample)
 
     if args.atlas:
         print(f"CSVs with cluster-region mean IF intensities output to ./{output_folder}/")
