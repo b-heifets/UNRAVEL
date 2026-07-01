@@ -129,11 +129,17 @@ def parse_args():
         action=SM,
     )
     opts.add_argument(
-        '-a', '--alpha',
+        '-sa', '--symbol_alpha',
         help='Opacity of individual data-point symbols. Default: 1.0',
         type=float,
         default=1.0,
         action=SM,
+    )
+    opts.add_argument(
+        '-s', '--skip_plots',
+        help='Only write summary CSVs; do not generate PDF plots.',
+        action='store_true',
+        default=False,
     )
 
     general = parser.add_argument_group('General arguments')
@@ -285,6 +291,104 @@ def perform_dunnett(df, order, alt):
     })
 
 
+def safe_col_name(text):
+    """Make text safe for CSV column names."""
+    return (
+        str(text)
+        .replace(" ", "_")
+        .replace("-", "_")
+        .replace("/", "_")
+        .replace("(", "")
+        .replace(")", "")
+    )
+
+
+def write_dunnett_wide_csv(test_df_all, output_folder, output_prefix, order):
+    """
+    Write a wide-format Dunnett summary CSV.
+
+    One row per cluster or cluster-region pair.
+    Columns include group means, n values, treatment-control diffs,
+    adjusted p-values, and significance labels.
+    """
+
+    control_group = order[0]
+    control_col = safe_col_name(control_group)
+
+    id_cols = ["cluster_ID"]
+    if "region_ID" in test_df_all.columns:
+        id_cols.append("region_ID")
+
+    metadata_cols = [col for col in ["region", "abbr"] if col in test_df_all.columns]
+
+    rows = []
+
+    for keys, df in test_df_all.groupby(id_cols, sort=True):
+        if not isinstance(keys, tuple):
+            keys = (keys,)
+
+        row = dict(zip(id_cols, keys))
+
+        for col in metadata_cols:
+            values = df[col].dropna().unique()
+            row[col] = values[0] if len(values) > 0 else ""
+
+        row["control_group"] = control_group
+
+        # Add n and mean columns for the control group.
+        control_rows = df[df["group1"] == control_group]
+        if not control_rows.empty:
+            row[f"n_{control_col}"] = control_rows["n_group1"].iloc[0]
+            row[f"mean_{control_col}"] = control_rows["mean_group1"].iloc[0]
+        else:
+            row[f"n_{control_col}"] = np.nan
+            row[f"mean_{control_col}"] = np.nan
+
+        # Add n and mean columns for each treatment group.
+        for group in order[1:]:
+            group_col = safe_col_name(group)
+            match = df[df["group2"] == group]
+
+            if match.empty:
+                row[f"n_{group_col}"] = np.nan
+                row[f"mean_{group_col}"] = np.nan
+            else:
+                match = match.iloc[0]
+                row[f"n_{group_col}"] = match["n_group2"]
+                row[f"mean_{group_col}"] = match["mean_group2"]
+
+        # Add treatment-control differences.
+        for group in order[1:]:
+            group_col = safe_col_name(group)
+            match = df[df["group2"] == group]
+
+            if match.empty:
+                row[f"diff_{group_col}_minus_{control_col}"] = np.nan
+            else:
+                row[f"diff_{group_col}_minus_{control_col}"] = match["diff_group2_minus_group1"].iloc[0]
+
+        # Add Dunnett-adjusted p-values and significance labels.
+        for group in order[1:]:
+            group_col = safe_col_name(group)
+            match = df[df["group2"] == group]
+
+            if match.empty:
+                row[f"p_adj_{control_col}_v_{group_col}"] = np.nan
+                row[f"sig_{control_col}_v_{group_col}"] = ""
+            else:
+                match = match.iloc[0]
+                row[f"p_adj_{control_col}_v_{group_col}"] = match["p-adj"]
+                row[f"sig_{control_col}_v_{group_col}"] = match["significance"]
+
+        rows.append(row)
+
+    wide_df = pd.DataFrame(rows)
+
+    output_csv = output_folder / f"{output_prefix}_dunnett_wide.csv"
+    wide_df.to_csv(output_csv, index=False)
+
+    print(f"Wide Dunnett summary CSV saved to ./{output_csv}")
+
 def perform_tukey(df):
     """Perform Tukey's HSD test."""
     test_results = pairwise_tukeyhsd(df["mean_intensity"], df["group"]).summary()
@@ -403,6 +507,46 @@ def add_significance_bars(ax, significant_comparisons, groups, y_min, y_max):
 
     return y_pos, height_diff
 
+def get_pair_df(all_df, cluster_id, region_id=None):
+    """Subset data for one cluster or cluster-region pair."""
+    df = all_df[all_df["cluster_ID"] == cluster_id].copy()
+
+    if region_id is not None:
+        df = df[df["region_ID"] == region_id].copy()
+
+    if df.empty:
+        raise ValueError(f"No data found for cluster {cluster_id}, region {region_id}")
+
+    return df
+
+def summarize_pair(
+    all_df,
+    cluster_id,
+    region_id=None,
+    order=None,
+    labels=None,
+    test_type="tukey",
+    alt="two-sided",
+    region_lut=None,
+):
+    """Run stats for one cluster or cluster-region pair without plotting."""
+    df = get_pair_df(all_df, cluster_id, region_id)
+    df = prepare_plot_df(df, order, labels)
+
+    test_df = run_stats(df, order, test_type, alt)
+
+    test_df["cluster_ID"] = cluster_id
+
+    if region_id is not None:
+        region_name, region_abbr = get_region_info(region_id, region_lut)
+        test_df["region_ID"] = region_id
+
+        if region_name is not None:
+            test_df["region"] = region_name
+        if region_abbr is not None:
+            test_df["abbr"] = region_abbr
+
+    return test_df
 
 def plot_data(
     all_df,
@@ -417,14 +561,7 @@ def plot_data(
     symbol_alpha=1.0,
 ):
     """Plot data and return stats for one cluster or cluster-region pair."""
-    df = all_df[all_df["cluster_ID"] == cluster_id].copy()
-
-    if region_id is not None:
-        df = df[df["region_ID"] == region_id].copy()
-
-    if df.empty:
-        raise ValueError(f"No data found for cluster {cluster_id}, region {region_id}")
-
+    df = get_pair_df(all_df, cluster_id, region_id)
     df = prepare_plot_df(df, order, labels)
     test_df = run_stats(df, order, test_type, alt)
 
@@ -553,8 +690,8 @@ def main():
     else:
         test_type = args.test
     
-    if args.alpha < 0 or args.alpha > 1:
-        raise ValueError("--alpha must be between 0 and 1.")
+    if args.symbol_alpha < 0 or args.symbol_alpha > 1:
+        raise ValueError("--symbol_alpha must be between 0 and 1.")
 
     print(f"\n[bold]CSVs in the working dir to process (the first word defines the groups):\n")
     for filename in os.listdir():
@@ -598,11 +735,11 @@ def main():
 
         if args.verbose:
             if has_regions:
-                print(f"Processing cluster {cluster_id}, region {region_id}")
+                print(f"Summarizing cluster {cluster_id}, region {region_id}")
             else:
-                print(f"Processing cluster {cluster_id}")
+                print(f"Summarizing cluster {cluster_id}")
 
-        test_df = plot_data(
+        test_df = summarize_pair(
             all_df,
             cluster_id,
             region_id=region_id,
@@ -610,9 +747,7 @@ def main():
             labels=args.labels,
             test_type=test_type,
             alt=args.alternate,
-            ylabel=args.ylabel,
             region_lut=region_lut,
-            symbol_alpha=args.alpha,
         )
 
         test_df_all = pd.concat([test_df_all, test_df], ignore_index=True)
@@ -645,6 +780,38 @@ def main():
 
     print(f"\n{test_df_all}\n")
     print(f"Summary CSV saved to ./{output_csv}")
+
+    if test_type == "dunnett":
+        write_dunnett_wide_csv(
+            test_df_all,
+            output_folder,
+            output_prefix,
+            args.order,
+        )
+
+    if not args.skip_plots:
+        for _, pair in pairs_to_process.iterrows():
+            cluster_id = int(pair["cluster_ID"])
+            region_id = int(pair["region_ID"]) if has_regions else None
+
+            if args.verbose:
+                if has_regions:
+                    print(f"Plotting cluster {cluster_id}, region {region_id}")
+                else:
+                    print(f"Plotting cluster {cluster_id}")
+
+            plot_data(
+                all_df,
+                cluster_id,
+                region_id=region_id,
+                order=args.order,
+                labels=args.labels,
+                test_type=test_type,
+                alt=args.alternate,
+                ylabel=args.ylabel,
+                region_lut=region_lut,
+                symbol_alpha=args.symbol_alpha,
+            )
 
     verbose_end_msg()
 
