@@ -39,7 +39,7 @@ Usage:
 
 Usage for region means within clusters:
 ---------------------------------------
-    cstats_mean_IF -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz [-ip '*.nii.gz'] [-c 1 2 3] [-r 10 20 30] [--min_voxels 5] [-v]
+    cstats_mean_IF -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz [-ip '*.nii.gz'] [-c 1 2 3] [-r 10 20 30] [-v]
 """
 
 import csv
@@ -94,13 +94,6 @@ def parse_args():
         action=SM,
     )
     opts.add_argument(
-        '--min_voxels',
-        help='Minimum voxels required for a cluster or cluster-region pair. Default: 1',
-        type=int,
-        default=1,
-        action=SM,
-    )
-    opts.add_argument(
         '-l', '--lut',
         help='Optional region LUT CSV path or CSV name in unravel/core/csvs/. Expected columns: Region_ID, Region, Abbr. Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv',
         default='CCFv3-2020__regionID_side_IDpath_region_abbr.csv',
@@ -117,7 +110,7 @@ def _has_values(values):
     return values is not None and len(values) > 0
 
 
-def build_label_index(cluster_index, atlas=None, clusters=None, regions=None, min_voxels=1):
+def build_label_index(cluster_index, atlas=None, clusters=None, regions=None):
     """
     Precompute voxel membership for cluster-only or cluster-region mean IF.
 
@@ -127,9 +120,6 @@ def build_label_index(cluster_index, atlas=None, clusters=None, regions=None, mi
     Cluster-region mode:
         key = cluster_ID * key_base + region_ID
     """
-
-    if min_voxels < 1:
-        raise ValueError("--min_voxels must be >= 1")
 
     if atlas is None:
         valid_mask = cluster_index > 0
@@ -165,7 +155,7 @@ def build_label_index(cluster_index, atlas=None, clusters=None, regions=None, mi
         raise ValueError("No valid cluster voxels found.")
 
     counts = np.bincount(keys)
-    keep = counts >= min_voxels
+    keep = counts > 0
     keep[0] = False
 
     return valid_mask, keys, counts, keep, key_base
@@ -347,7 +337,6 @@ def main():
         atlas=atlas_img,
         clusters=args.clusters,
         regions=args.regions,
-        min_voxels=args.min_voxels,
     )
 
     mode = "cluster_region_mean_IF" if args.atlas else "cluster_mean_IF"
