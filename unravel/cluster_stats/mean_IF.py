@@ -3,39 +3,52 @@
 """
 Use ``cstats_mean_IF`` (``cmi``) from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.
 
-Prereqs: 
+By default, this measures mean IF intensity in each cluster.
+
+If an atlas is provided with ``--atlas/-a``, this measures mean IF intensity in each
+atlas region within each cluster.
+
+Prereqs:
     - ``vstats``
-    - ``cstats_fdr`` or ``cstats_clusters`` (to get the rev_cluster_index.nii.gz)
+    - ``cstats_fdr`` or ``cstats_clusters`` to generate a rev_cluster_index.nii.gz
 
 Inputs:
-    - This can be run from the vstats directory (will process .nii.gz images in the current directory)
+    - Cluster index image from ``cstats_fdr`` or ``cstats_clusters``
+    - NIfTI images to measure
+    - Optional atlas image in the same space/resolution as the cluster index
 
-Outputs: 
-    - ./cluster_mean_IF_{cluster_index}/image_name.csv for each image
-    - Columns: sample, cluster_ID, mean_IF_intensity
+Outputs:
+    - Cluster-only mode:
+        ./cluster_mean_IF_<cluster_index>/image_name.csv
+        Columns: sample, cluster_ID, n_voxels, mean_IF_intensity
+
+    - Cluster-region mode:
+        ./cluster_region_mean_IF_<cluster_index>/image_name.csv
+        Columns: sample, cluster_ID, region_ID, n_voxels, mean_IF_intensity
 
 Next steps:
-    - cd cluster_mean_IF...
+    - cd cluster_mean_IF... or cluster_region_mean_IF...
     - ``utils_prepend`` -sk <path/sample_key.csv> -f  # If needed
-    - [``cstats_index`` and ``cstats_table``]  # for an xlsx table and anatomically ordered clusters that can be used with ``cstats_prism``
-    - ``cstats_mean_IF_summary`` --order Control Treatment --labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats
-    - ``cstats_mean_IF_summary`` --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests
+    - ``cstats_mean_IF_summary`` --order Control Treatment --labels Control Treatment -t ttest
 
 Usage:
 ------
-    cstats_mean_IF -ci path/rev_cluster_index.nii.gz [-ip '`*`.nii.gz'] [-c 1 2 3] [-v]
+    cstats_mean_IF -i path/rev_cluster_index.nii.gz [-ip '*.nii.gz'] [-c 1 2 3] [-v]
+
+Usage for region means within clusters:
+---------------------------------------
+    cstats_mean_IF -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz [-ip '*.nii.gz'] [-c 1 2 3] [-r 10 20 30] [--min_voxels 5] [-v]
 """
 
 import csv
 import nibabel as nib
 import numpy as np
-from pathlib import Path 
+from pathlib import Path
 from rich.traceback import install
 
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img
-from unravel.core.img_tools import label_IDs
 from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
@@ -43,61 +56,172 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr`` or ``cstats_clusters``', required=True, action=SM)
+    reqs.add_argument(
+        '-i', '--input',
+        help='Path/rev_cluster_index.nii.gz from ``cstats_fdr`` or ``cstats_clusters``',
+        required=True,
+        action=SM,
+    )
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-ip', '--input_pattern', help="Glob pattern(s) for NIfTI images to process. Default: '*.nii.gz'", default='*.nii.gz', nargs='*', action=SM)
-    opts.add_argument('-c', '--clusters', help='Space-separated list of cluster IDs to process. Default: all clusters', nargs='*', type=int, action=SM)
+    opts.add_argument(
+        '-ip', '--input_pattern',
+        help="Glob pattern(s) for NIfTI images to process. Default: '*.nii.gz'",
+        default='*.nii.gz',
+        nargs='*',
+        action=SM,
+    )
+    opts.add_argument(
+        '-a', '--atlas',
+        help='Optional atlas image. If provided, measure mean IF in each region within each cluster.',
+        action=SM,
+    )
+    opts.add_argument(
+        '-c', '--clusters',
+        help='Space-separated list of cluster IDs to process. Default: all clusters',
+        nargs='*',
+        type=int,
+        action=SM,
+    )
+    opts.add_argument(
+        '-r', '--regions',
+        help='Space-separated list of region IDs to process when --atlas is provided. Default: all regions within clusters',
+        nargs='*',
+        type=int,
+        action=SM,
+    )
+    opts.add_argument(
+        '--min_voxels',
+        help='Minimum voxels required for a cluster or cluster-region pair. Default: 1',
+        type=int,
+        default=1,
+        action=SM,
+    )
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
 
     return parser.parse_args()
 
-# TODO: process each cluster in parallel
-# TODO: Change naming from mean_IF to mean_intensity (more general)
-# TODO: Add support to cstats_prism for cstats_mean_IF with generic schema (also need to handle pooling and excluded hemispheres). 
 
-def calculate_mean_intensity_in_clusters(cluster_index, img, clusters=None):
-    """Calculates mean intensity in the img ndarray for each cluster in the cluster index ndarray and saves it to a CSV file."""
+def _has_values(values):
+    """Return True when an optional nargs list has at least one value."""
+    return values is not None and len(values) > 0
 
-    print("\n  Calculating mean immunofluorescence intensity for each cluster...\n")
 
-    # Filter out background
-    valid_mask = cluster_index > 0
-    cluster_index = cluster_index[valid_mask].ravel()
-    img_masked = img[valid_mask].ravel()
+def build_label_index(cluster_index, atlas=None, clusters=None, regions=None, min_voxels=1):
+    """
+    Precompute voxel membership for cluster-only or cluster-region mean IF.
 
-    # Use bincount to sum intensities for each cluster and count voxels
-    sums = np.bincount(cluster_index, weights=img_masked)
-    counts = np.bincount(cluster_index)
+    Cluster-only mode:
+        key = cluster_ID
 
-    # Suppress the runtime warning and handle potential division by zero
-    with np.errstate(divide='ignore', invalid='ignore'):
-        mean_intensities = sums / counts
+    Cluster-region mode:
+        key = cluster_ID * key_base + region_ID
+    """
 
-    mean_intensities = np.nan_to_num(mean_intensities)
+    if min_voxels < 1:
+        raise ValueError("--min_voxels must be >= 1")
 
-    # Convert to dictionary (ignore background)
-    mean_intensities_dict = {i: mean_intensities[i] for i in range(1, len(mean_intensities))}
+    if atlas is None:
+        valid_mask = cluster_index > 0
 
-    # Filter the dictionary if a list of clusters is provided
-    if clusters:
-        mean_intensities_dict = {cluster: mean_intensities_dict[cluster] for cluster in clusters if cluster in mean_intensities_dict}
+        if _has_values(clusters):
+            clusters = np.asarray(clusters, dtype=cluster_index.dtype)
+            valid_mask &= np.isin(cluster_index, clusters)
 
-    # Optional: Print results for the filtered clsutedrs
-    for cluster, mean_intensity in mean_intensities_dict.items():
-        print(f"    Cluster ID: {cluster}\tMean intensity: {mean_intensity}")
+        keys = cluster_index[valid_mask].astype(np.int64, copy=False)
+        key_base = None
 
-    return mean_intensities_dict
+    else:
+        valid_mask = (cluster_index > 0) & (atlas > 0)
 
-def write_to_csv(data, output_file, sample):
-    """Writes the data to a CSV file with sample name included."""
-    with open(output_file, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(["sample", "cluster_ID", "mean_IF_intensity"])
-        for key, value in data.items():
-            writer.writerow([sample, key, value])
+        if _has_values(clusters):
+            clusters = np.asarray(clusters, dtype=cluster_index.dtype)
+            valid_mask &= np.isin(cluster_index, clusters)
+
+        if _has_values(regions):
+            regions = np.asarray(regions, dtype=atlas.dtype)
+            valid_mask &= np.isin(atlas, regions)
+
+        cluster_vals = cluster_index[valid_mask].astype(np.int64, copy=False)
+        region_vals = atlas[valid_mask].astype(np.int64, copy=False)
+
+        if cluster_vals.size == 0:
+            raise ValueError("No valid cluster-region voxels found.")
+
+        key_base = int(region_vals.max()) + 1
+        keys = cluster_vals * key_base + region_vals
+
+    if keys.size == 0:
+        raise ValueError("No valid cluster voxels found.")
+
+    counts = np.bincount(keys)
+    keep = counts >= min_voxels
+    keep[0] = False
+
+    return valid_mask, keys, counts, keep, key_base
+
+
+def calculate_mean_intensity(img, valid_mask, keys, counts, keep, key_base=None):
+    """Calculate mean IF intensity for precomputed cluster or cluster-region labels."""
+
+    img_vals = img[valid_mask].ravel()
+    sums = np.bincount(keys, weights=img_vals, minlength=len(counts))
+
+    rows = []
+    for key in np.flatnonzero(keep):
+        n_voxels = int(counts[key])
+        mean_intensity = float(sums[key] / n_voxels)
+
+        if key_base is None:
+            rows.append({
+                "cluster_ID": int(key),
+                "n_voxels": n_voxels,
+                "mean_IF_intensity": mean_intensity,
+            })
+        else:
+            rows.append({
+                "cluster_ID": int(key // key_base),
+                "region_ID": int(key % key_base),
+                "n_voxels": n_voxels,
+                "mean_IF_intensity": mean_intensity,
+            })
+
+    return rows
+
+
+def write_rows_to_csv(rows, output_file, sample):
+    """Write mean IF rows to CSV."""
+
+    if not rows:
+        return
+
+    fieldnames = ["sample"] + list(rows[0].keys())
+
+    with open(output_file, "w", newline="") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for row in rows:
+            writer.writerow({"sample": sample, **row})
+
+
+def sample_from_filename(file):
+    """
+    Extract sample name from filename.
+
+    Preserves the previous behavior of using the second underscore-separated field
+    when available.
+    """
+
+    name = Path(file).name
+    parts = name.split("_")
+
+    if len(parts) > 1:
+        return parts[1]
+
+    return name.replace(".nii.gz", "").replace(".nii", "")
 
 
 @log_command
@@ -108,43 +232,76 @@ def main():
     verbose_start_msg()
 
     cluster_index_img = load_3D_img(args.input, verbose=args.verbose)
-    
-    # Check that the cluster index is an integer type (signed or unsigned)
-    if cluster_index_img.dtype not in [np.int8, np.int16, np.int32, np.int64, np.uint8, np.uint16, np.uint32, np.uint64]:
-        raise ValueError('The cluster index must be an integer type (int8, int16, int32, int64, uint8, uint16, uint32, or uint64)')
 
-    # Either use the provided list of region IDs or create it using unique intensities
-    if args.clusters:
-        clusters = args.clusters
-    else:
-        print(f'\nProcessing these clusters IDs from {Path(args.input).name}:')
-        clusters = label_IDs(cluster_index_img, min_voxel_count=1, print_IDs=True, print_sizes=False)
-        print()
+    if not np.issubdtype(cluster_index_img.dtype, np.integer):
+        raise ValueError("The cluster index must be an integer image.")
 
-    output_folder = Path(f'cluster_mean_IF_{str(Path(args.input).name).replace(".nii.gz", "")}')
+    atlas_img = None
+    if args.atlas:
+        atlas_img = load_3D_img(args.atlas, verbose=args.verbose)
+
+        if not np.issubdtype(atlas_img.dtype, np.integer):
+            raise ValueError("The atlas must be an integer label image.")
+
+        if cluster_index_img.shape != atlas_img.shape:
+            raise ValueError("Cluster index and atlas must have the same shape.")
+
+    label_index = build_label_index(
+        cluster_index_img,
+        atlas=atlas_img,
+        clusters=args.clusters,
+        regions=args.regions,
+        min_voxels=args.min_voxels,
+    )
+
+    mode = "cluster_region_mean_IF" if args.atlas else "cluster_mean_IF"
+    input_name = str(Path(args.input).name).replace(".nii.gz", "")
+    output_folder = Path(f"{mode}_{input_name}")
     output_folder.mkdir(parents=True, exist_ok=True)
 
+    valid_mask, keys, counts, keep, key_base = label_index
+
+    if args.verbose:
+        n_labels = int(np.count_nonzero(keep))
+        if args.atlas:
+            print(f"\nProcessing {n_labels} cluster-region pairs.\n")
+        else:
+            print(f"\nProcessing {n_labels} clusters.\n")
+
     files = match_files(args.input_pattern)
+
     for file in files:
-        if str(file).endswith('.nii.gz'):
-            
-            nii = nib.load(file)
-            img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
+        if not str(file).endswith(".nii.gz"):
+            continue
 
-            # Calculate mean intensity
-            mean_intensities = calculate_mean_intensity_in_clusters(cluster_index_img, img, clusters)
+        nii = nib.load(file)
+        img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
 
-            output_filename = str(file.name).replace('.nii.gz', '.csv')
-            output = output_folder / output_filename
+        if img.shape != cluster_index_img.shape:
+            raise ValueError(f"{file} does not have the same shape as the cluster index.")
 
-            parts = str(Path(file).name).split('_')
-            sample = parts[1] 
-            write_to_csv(mean_intensities, output, sample)
+        rows = calculate_mean_intensity(
+            img,
+            valid_mask,
+            keys,
+            counts,
+            keep,
+            key_base=key_base,
+        )
 
-    print(f'CSVs with mean IF intensities output to ./{output_folder}/')
+        output_filename = str(file.name).replace(".nii.gz", ".csv")
+        output = output_folder / output_filename
+
+        sample = sample_from_filename(file)
+        write_rows_to_csv(rows, output, sample)
+
+    if args.atlas:
+        print(f"CSVs with cluster-region mean IF intensities output to ./{output_folder}/")
+    else:
+        print(f"CSVs with cluster mean IF intensities output to ./{output_folder}/")
 
     verbose_end_msg()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
