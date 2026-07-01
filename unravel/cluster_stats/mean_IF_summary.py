@@ -6,10 +6,10 @@ Use ``cstats_mean_IF_summary`` (``cmis``) from UNRAVEL to plot and summarize mea
 This script handles two input schemas:
 
 Cluster-only CSVs from ``cstats_mean_IF``:
-    sample, cluster_ID, n_voxels, mean_IF_intensity
+    sample, cluster_ID, n_voxels, mean_intensity
 
 Cluster-region CSVs from ``cstats_mean_IF -a atlas.nii.gz``:
-    sample, cluster_ID, region_ID, n_voxels, mean_IF_intensity
+    sample, cluster_ID, region_ID, n_voxels, mean_intensity
 
 Outputs:
     - cluster_mean_IF_summary/cluster_<cluster_id>.pdf
@@ -225,7 +225,7 @@ def load_all_data():
     dfs = []
 
     for filename in os.listdir():
-        if filename.endswith('.csv'):
+        if filename.endswith(".csv"):
             group_name = filename.split("_")[0]
             df = pd.read_csv(filename)
             df["group"] = group_name
@@ -236,12 +236,17 @@ def load_all_data():
 
     df = pd.concat(dfs, ignore_index=True)
 
-    required_cols = ["cluster_ID", "mean_IF_intensity"]
-    missing = [col for col in required_cols if col not in df.columns]
-    if missing:
-        raise KeyError(f"Input CSVs are missing required column(s): {missing}")
+    if "cluster_ID" not in df.columns:
+        raise KeyError("Input CSVs must contain cluster_ID.")
 
-    df["mean_intensity"] = df["mean_IF_intensity"]
+    # For backward compatibility
+    if "mean_intensity" not in df.columns:
+        if "mean_IF_intensity" in df.columns:
+            df["mean_intensity"] = df["mean_IF_intensity"]
+        else:
+            raise KeyError(
+                "Input CSVs must contain mean_intensity or mean_IF_intensity."
+            )
 
     return df
 
@@ -387,7 +392,7 @@ def write_dunnett_wide_csv(test_df_all, output_folder, output_prefix, order):
     output_csv = output_folder / f"{output_prefix}_dunnett_wide.csv"
     wide_df.to_csv(output_csv, index=False)
 
-    print(f"Wide Dunnett summary CSV saved to ./{output_csv}")
+    print(f"Wide Dunnett summary CSV saved to ./{output_csv}\n")
 
 def perform_tukey(df):
     """Perform Tukey's HSD test."""
