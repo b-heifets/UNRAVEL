@@ -29,17 +29,17 @@ Outputs:
 Next steps:
     - cd cluster_mean_IF... or cluster_region_mean_IF...
     - Concatenate outputs:
-        tabular_concat -i '*.csv' -a 0 -o concat/concat.csv -v
+        tabular_concat -i '`*`.csv' -a 0 -o concat/concat.csv -v
     - Summarize:
         cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
 
 Usage:
 ------
-    cstats_mean_IF -i path/rev_cluster_index.nii.gz [-ip '*.nii.gz'] [-c 1 2 3] [-v]
+    cstats_mean_IF -i path/rev_cluster_index.nii.gz [-ip '`*`.nii.gz'] [-c 1 2 3] [-v]
 
 Usage for region means within clusters:
 ---------------------------------------
-    cstats_mean_IF -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz [-ip '*.nii.gz'] [-c 1 2 3] [-r 10 20 30] [-v]
+    cstats_mean_IF -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz [-ip '`*`.nii.gz'] [-c 1 2 3] [-r 10 20 30] [-v]
 """
 
 import csv
