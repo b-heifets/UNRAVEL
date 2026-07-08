@@ -648,7 +648,7 @@ Columns: condition, sample, cluster_ID, region_ID, region, abbr, n_voxels, mean_
 <dt>Next steps:</dt><dd><ul class="simple">
 <li><p>cd cluster_mean_IF… or cluster_region_mean_IF…</p></li>
 <li><dl class="simple">
-<dt>Concatenate outputs:</dt><dd><p>tabular_concat -i ‘<a href="#id1"><span class="problematic" id="id2">*</span></a>.csv’ -a 0 -o concat/concat.csv -v</p>
+<dt>Concatenate outputs:</dt><dd><p>tabular_concat -i ‘<cite>*</cite>.csv’ -a 0 -o concat/concat.csv -v</p>
 </dd>
 </dl>
 </li>
@@ -663,13 +663,13 @@ Columns: condition, sample, cluster_ID, region_ID, region, abbr, n_voxels, mean_
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_mean_IF -i path/rev_cluster_index.nii.gz [-ip ‘<a href="#id3"><span class="problematic" id="id4">*</span></a>.nii.gz’] [-c 1 2 3] [-v]</p>
+<div><p>cstats_mean_IF -i path/rev_cluster_index.nii.gz [-ip ‘<cite>*</cite>.nii.gz’] [-c 1 2 3] [-v]</p>
 </div></blockquote>
 </section>
 <section id="usage-for-region-means-within-clusters">
 <h2>Usage for region means within clusters:<a class="headerlink" href="#usage-for-region-means-within-clusters" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_mean_IF -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz [-ip ‘<a href="#id5"><span class="problematic" id="id6">*</span></a>.nii.gz’] [-c 1 2 3] [-r 10 20 30] [-v]</p>
+<div><p>cstats_mean_IF -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz [-ip ‘<cite>*</cite>.nii.gz’] [-c 1 2 3] [-r 10 20 30] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -706,7 +706,7 @@ Columns: condition, sample, cluster_ID, region_ID, region, abbr, n_voxels, mean_
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">condition_sample_from_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#condition_sample_from_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.condition_sample_from_filename" title="Link to this definition">#</a></dt>
 <dd><p>Extract condition and sample from filename.</p>
 <dl class="simple">
-<dt>Expected after utils_prepend-style naming:</dt><dd><p><a href="#id7"><span class="problematic" id="id8">Condition_sampleXX_</span></a>….</p>
+<dt>Expected after utils_prepend-style naming:</dt><dd><p><a href="#id1"><span class="problematic" id="id2">Condition_sampleXX_</span></a>….</p>
 </dd>
 </dl>
 <p>Falls back gracefully if the filename does not contain both fields.</p>
