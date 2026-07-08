@@ -615,34 +615,61 @@
   <section id="module-unravel.cluster_stats.mean_IF">
 <span id="unravel-cluster-stats-mean-if-module"></span><span id="unravel-cluster-stats-mean-if"></span><h1>unravel.cluster_stats.mean_IF module<a class="headerlink" href="#module-unravel.cluster_stats.mean_IF" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_mean_IF</span></code> (<code class="docutils literal notranslate"><span class="pre">cmi</span></code>) from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.</p>
+<p>By default, this measures mean IF intensity in each cluster.</p>
+<p>If an atlas is provided with <code class="docutils literal notranslate"><span class="pre">--atlas/-a</span></code>, this measures mean IF intensity in each
+atlas region within each cluster.</p>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">vstats</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_fdr</span></code> or <code class="docutils literal notranslate"><span class="pre">cstats_clusters</span></code> (to get the rev_cluster_index.nii.gz)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstats_fdr</span></code> or <code class="docutils literal notranslate"><span class="pre">cstats_clusters</span></code> to generate a rev_cluster_index.nii.gz</p></li>
 </ul>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
-<li><p>This can be run from the vstats directory (will process .nii.gz images in the current directory)</p></li>
+<li><p>Cluster index image from <code class="docutils literal notranslate"><span class="pre">cstats_fdr</span></code> or <code class="docutils literal notranslate"><span class="pre">cstats_clusters</span></code></p></li>
+<li><p>NIfTI images to measure</p></li>
+<li><p>Optional atlas image in the same space/resolution as the cluster index</p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>./cluster_mean_IF_{cluster_index}/image_name.csv for each image</p></li>
-<li><p>Columns: sample, cluster_ID, mean_IF_intensity</p></li>
+<li><dl class="simple">
+<dt>Cluster-only mode:</dt><dd><p>./cluster_mean_IF_&lt;cluster_index&gt;/image_name.csv
+Columns: condition, sample, cluster_ID, n_voxels, mean_intensity</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Cluster-region mode:</dt><dd><p>./cluster_region_mean_IF_&lt;cluster_index&gt;/image_name.csv
+Columns: condition, sample, cluster_ID, region_ID, region, abbr, n_voxels, mean_intensity</p>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 <dt>Next steps:</dt><dd><ul class="simple">
-<li><p>cd cluster_mean_IF…</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code> -sk &lt;path/sample_key.csv&gt; -f  # If needed</p></li>
-<li><p>[<code class="docutils literal notranslate"><span class="pre">cstats_index</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_table</span></code>]  # for an xlsx table and anatomically ordered clusters that can be used with <code class="docutils literal notranslate"><span class="pre">cstats_prism</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_mean_IF_summary</span></code> –order Control Treatment –labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_mean_IF_summary</span></code> –order group3 group2 group1 –labels Group_3 Group_2 Group_1  # Tukey tests</p></li>
+<li><p>cd cluster_mean_IF… or cluster_region_mean_IF…</p></li>
+<li><dl class="simple">
+<dt>Concatenate outputs:</dt><dd><p>tabular_concat -i ‘<a href="#id1"><span class="problematic" id="id2">*</span></a>.csv’ -a 0 -o concat/concat.csv -v</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Summarize:</dt><dd><p>cstats_mean_IF_summary –order Control Treatment –labels Control Treatment -t ttest</p>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 </dl>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_mean_IF -ci path/rev_cluster_index.nii.gz [-ip ‘<cite>*</cite>.nii.gz’] [-c 1 2 3] [-v]</p>
+<div><p>cstats_mean_IF -i path/rev_cluster_index.nii.gz [-ip ‘<a href="#id3"><span class="problematic" id="id4">*</span></a>.nii.gz’] [-c 1 2 3] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-region-means-within-clusters">
+<h2>Usage for region means within clusters:<a class="headerlink" href="#usage-for-region-means-within-clusters" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_mean_IF -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz [-ip ‘<a href="#id5"><span class="problematic" id="id6">*</span></a>.nii.gz’] [-c 1 2 3] [-r 10 20 30] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -651,15 +678,56 @@
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.calculate_mean_intensity_in_clusters">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">calculate_mean_intensity_in_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#calculate_mean_intensity_in_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.calculate_mean_intensity_in_clusters" title="Link to this definition">#</a></dt>
-<dd><p>Calculates mean intensity in the img ndarray for each cluster in the cluster index ndarray and saves it to a CSV file.</p>
+<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.build_label_index">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">build_label_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#build_label_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.build_label_index" title="Link to this definition">#</a></dt>
+<dd><p>Precompute voxel membership for cluster-only or cluster-region mean IF.</p>
+<dl class="simple">
+<dt>Cluster-only mode:</dt><dd><p>key = cluster_ID</p>
+</dd>
+<dt>Cluster-region mode:</dt><dd><p>key = cluster_ID * key_base + region_ID</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.write_to_csv">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">write_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#write_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.write_to_csv" title="Link to this definition">#</a></dt>
-<dd><p>Writes the data to a CSV file with sample name included.</p>
+<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.calculate_mean_intensity">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">calculate_mean_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#calculate_mean_intensity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.calculate_mean_intensity" title="Link to this definition">#</a></dt>
+<dd><p>Calculate mean IF intensity for precomputed cluster or cluster-region labels.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.write_rows_to_csv">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">write_rows_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#write_rows_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.write_rows_to_csv" title="Link to this definition">#</a></dt>
+<dd><p>Write mean intensity rows to CSV with a stable column order.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.condition_sample_from_filename">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">condition_sample_from_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#condition_sample_from_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.condition_sample_from_filename" title="Link to this definition">#</a></dt>
+<dd><p>Extract condition and sample from filename.</p>
+<dl class="simple">
+<dt>Expected after utils_prepend-style naming:</dt><dd><p><a href="#id7"><span class="problematic" id="id8">Condition_sampleXX_</span></a>….</p>
+</dd>
+</dl>
+<p>Falls back gracefully if the filename does not contain both fields.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.add_region_metadata">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">add_region_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#add_region_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.add_region_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Add region and abbr columns to cluster-region rows.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.resolve_lut_path">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">resolve_lut_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#resolve_lut_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.resolve_lut_path" title="Link to this definition">#</a></dt>
+<dd><p>Resolve LUT path from explicit path or unravel/core/csvs/.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.load_region_lut">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">load_region_lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#load_region_lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.load_region_lut" title="Link to this definition">#</a></dt>
+<dd><p>Load region LUT as a dictionary keyed by Region_ID.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -717,9 +785,15 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-region-means-within-clusters">Usage for region means within clusters:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.calculate_mean_intensity_in_clusters"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity_in_clusters()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.write_to_csv"><code class="docutils literal notranslate"><span class="pre">write_to_csv()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.build_label_index"><code class="docutils literal notranslate"><span class="pre">build_label_index()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.calculate_mean_intensity"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.write_rows_to_csv"><code class="docutils literal notranslate"><span class="pre">write_rows_to_csv()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.condition_sample_from_filename"><code class="docutils literal notranslate"><span class="pre">condition_sample_from_filename()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.add_region_metadata"><code class="docutils literal notranslate"><span class="pre">add_region_metadata()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.resolve_lut_path"><code class="docutils literal notranslate"><span class="pre">resolve_lut_path()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.load_region_lut"><code class="docutils literal notranslate"><span class="pre">load_region_lut()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
   </nav></div>

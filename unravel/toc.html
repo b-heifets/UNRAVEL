@@ -962,9 +962,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/index.html">unravel.cluster_stats.mean_IF module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#usage-for-region-means-within-clusters">Usage for region means within clusters:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.calculate_mean_intensity_in_clusters"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity_in_clusters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.write_to_csv"><code class="docutils literal notranslate"><span class="pre">write_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.build_label_index"><code class="docutils literal notranslate"><span class="pre">build_label_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.calculate_mean_intensity"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.write_rows_to_csv"><code class="docutils literal notranslate"><span class="pre">write_rows_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.condition_sample_from_filename"><code class="docutils literal notranslate"><span class="pre">condition_sample_from_filename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.add_region_metadata"><code class="docutils literal notranslate"><span class="pre">add_region_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.resolve_lut_path"><code class="docutils literal notranslate"><span class="pre">resolve_lut_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.load_region_lut"><code class="docutils literal notranslate"><span class="pre">load_region_lut()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/index.html#unravel.cluster_stats.mean_IF.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
@@ -1063,11 +1069,27 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/mean_IF_summary.html">unravel.cluster_stats.mean_IF_summary module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#usage-for-t-tests">Usage for t-tests:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions">Usage for Tukey’s tests w/ reordering and renaming of conditions:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#usage-for-cluster-only-t-tests">Usage for cluster-only t-tests:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#usage-for-cluster-region-dunnett-tests">Usage for cluster-region Dunnett tests:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#usage-with-optional-region-lut">Usage with optional region LUT:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.significance_label"><code class="docutils literal notranslate"><span class="pre">significance_label()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.safe_filename"><code class="docutils literal notranslate"><span class="pre">safe_filename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.resolve_lut_path"><code class="docutils literal notranslate"><span class="pre">resolve_lut_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.load_region_lut"><code class="docutils literal notranslate"><span class="pre">load_region_lut()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.get_region_info"><code class="docutils literal notranslate"><span class="pre">get_region_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.load_all_data"><code class="docutils literal notranslate"><span class="pre">load_all_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.perform_t_tests"><code class="docutils literal notranslate"><span class="pre">perform_t_tests()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.perform_dunnett"><code class="docutils literal notranslate"><span class="pre">perform_dunnett()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.safe_col_name"><code class="docutils literal notranslate"><span class="pre">safe_col_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.write_dunnett_wide_csv"><code class="docutils literal notranslate"><span class="pre">write_dunnett_wide_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.perform_tukey"><code class="docutils literal notranslate"><span class="pre">perform_tukey()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.add_group_summary_columns"><code class="docutils literal notranslate"><span class="pre">add_group_summary_columns()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.run_stats"><code class="docutils literal notranslate"><span class="pre">run_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.prepare_plot_df"><code class="docutils literal notranslate"><span class="pre">prepare_plot_df()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.add_significance_bars"><code class="docutils literal notranslate"><span class="pre">add_significance_bars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.get_pair_df"><code class="docutils literal notranslate"><span class="pre">get_pair_df()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.summarize_pair"><code class="docutils literal notranslate"><span class="pre">summarize_pair()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.plot_data"><code class="docutils literal notranslate"><span class="pre">plot_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
