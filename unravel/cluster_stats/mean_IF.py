@@ -234,7 +234,7 @@ def condition_sample_from_filename(file):
     Extract condition and sample from filename.
 
     Expected after utils_prepend-style naming:
-        Condition_sampleXX_....
+        `Condition_sampleXX_....`
 
     Falls back gracefully if the filename does not contain both fields.
     """
