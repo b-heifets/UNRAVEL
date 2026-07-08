@@ -880,7 +880,9 @@ Use FSLeyes to view the atlas warped to the the tissue (sample??/reg_ouputs/atla
 
 ::: {admonition} Setting up Allen brain atlas coloring in FSLeyes
 :class: note
-* Add `UNRAVEL/_other/fsleyes_luts/ccfv3_2020.lut` to the following location:
+* Download the [ccfv3_2020.lut look up table](https://drive.google.com/drive/folders/1UlZLW4rE6aK1esA9AMIMHPALDumAjieY?usp=sharing) for atlas coloring and region annotation. 
+* Or access it from the GitHub repo clone: `UNRAVEL/_other/fsleyes_luts/ccfv3_2020.lut`
+* Add `ccfv3_2020.lut` to the following location:
    * **Linux**: `/home/<your_username>/.config/fsleyes/luts/ccfv3_2020.lut`
    * **MacOS**: `/usr/local/fsl/fslpython/envs/fslpython/lib/python3.8/site-packages/fsleyes/assets/luts/ccfv3_2020.lut`
    * **Windows**: `C:\Users\<your_username>\AppData\Roaming\fsleyes\luts\ccfv3_2020.lut`

@@ -29,6 +29,7 @@ uc -h
     * This has an [iDISCO/LSFM-specific template](https://pubmed.ncbi.nlm.nih.gov/33063286/) that we warped to 30 µm [CCFv3 atlas](https://www.sciencedirect.com/science/article/pii/S0092867420304025) space
 * **Required software:**
     * [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation) for voxel-wise stats, CLI tools, and viewing .nii.gz images with [FSLeyes](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
+    * See the [registration checking part of the UNRAVEL guide](https://b-heifets.github.io/UNRAVEL/guide.html#reg-check) for info on setting up FSLeyes with a [look up table](https://drive.google.com/drive/folders/1UlZLW4rE6aK1esA9AMIMHPALDumAjieY?usp=sharing) for atlas coloring and region annotation.
         * See below on setting this up by adding lines to a terminal configuration file (e.g., .bashrc or .zshrc)
         * Extra steps are required for Windows (even if the GUI does not work, commands may work ok and [ITK-SNAP](http://www.itksnap.org/pmwiki/pmwiki.php?n=Main.HomePage) instead of [FSLeyes](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html))
     * [Ilastik](https://www.ilastik.org/download.html) for segmenting features of interest
