@@ -878,20 +878,22 @@ window.runMermaid = runMermaid;</script>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``img_dilate`` (``dilate``) from UNRAVEL to dilate a binary mask in a NIfTI image.</span>
+<span class="sd">Use ``img_dilate`` (``dilate``) from UNRAVEL to dilate a mask in a NIfTI image.</span>
 
-<span class="sd">Usage: </span>
+<span class="sd">All positive input voxels are treated as foreground. The output is a binary image.</span>
+
+<span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    img_dilate -i path/image_bin.nii.gz -it 2 [-o path/image_bin_dil{iterations}.nii.gz] [-v]</span>
+<span class="sd">    img_dilate -i path/image.nii.gz -it 2 [-o path/image_dil2.nii.gz]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.traceback</span><span class="w"> </span><span class="kn">import</span> <span class="n">install</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">binary_dilation</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.img_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_as_nii</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.img_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">save_as_nii</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.help_formatter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.voxel_stats.apply_mask</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_mask</span>
 
 
 <div class="viewcode-block" id="parse_args">
@@ -900,7 +902,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to a NIfTI mask. Non-binary inputs are permitted, but all values &gt; 0 will be treated as foreground.&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-it&#39;</span><span class="p">,</span> <span class="s1">&#39;--iterations&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of dilation iterations. Default: 1&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
@@ -918,12 +920,17 @@ window.runMermaid = runMermaid;</script>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-    <span class="c1"># Load the NIfTI image</span>
-    <span class="n">img</span> <span class="o">=</span> <span class="n">load_mask</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+    <span class="c1"># Load original intensities so non-binary input can be detected</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
 
-    <span class="n">img</span><span class="p">[</span><span class="n">img</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">((</span><span class="n">img</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">img</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [yellow bold]Warning:[/yellow bold] Input image is not binary. &quot;</span>
+            <span class="s2">&quot;All values &gt; 0 will be treated as foreground.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
-    <span class="n">img_dil</span> <span class="o">=</span> <span class="n">binary_dilation</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">iterations</span><span class="p">)</span>
+    <span class="n">img_bin</span> <span class="o">=</span> <span class="n">img</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">img_dil</span> <span class="o">=</span> <span class="n">binary_dilation</span><span class="p">(</span><span class="n">img_bin</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">iterations</span><span class="p">)</span>
 
     <span class="c1"># Save the modified image as a NIfTI file</span>
     <span class="n">output_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;_dil</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">iterations</span><span class="si">}</span><span class="s1">.nii.gz&#39;</span><span class="p">)</span>

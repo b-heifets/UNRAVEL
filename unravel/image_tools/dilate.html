@@ -614,11 +614,12 @@
                   
   <section id="module-unravel.image_tools.dilate">
 <span id="unravel-image-tools-dilate-module"></span><span id="unravel-image-tools-dilate"></span><h1>unravel.image_tools.dilate module<a class="headerlink" href="#module-unravel.image_tools.dilate" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">img_dilate</span></code> (<code class="docutils literal notranslate"><span class="pre">dilate</span></code>) from UNRAVEL to dilate a binary mask in a NIfTI image.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">img_dilate</span></code> (<code class="docutils literal notranslate"><span class="pre">dilate</span></code>) from UNRAVEL to dilate a mask in a NIfTI image.</p>
+<p>All positive input voxels are treated as foreground. The output is a binary image.</p>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>img_dilate -i path/image_bin.nii.gz -it 2 [-o path/image_bin_dil{iterations}.nii.gz] [-v]</p>
+<div><p>img_dilate -i path/image.nii.gz -it 2 [-o path/image_dil2.nii.gz]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
