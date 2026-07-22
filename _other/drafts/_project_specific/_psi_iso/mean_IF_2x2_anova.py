@@ -12,6 +12,13 @@ Default design:
     AnS = Anesthetized Saline
     AnP = Anesthetized Psilocin
 
+Default condition map:
+    condition,Drug,State
+    AwS,Saline,Awake
+    AwP,Psilocin,Awake
+    AnS,Saline,Anesthetized
+    AnP,Psilocin,Anesthetized
+
 For each cluster, outputs:
     - group means for AwS/AwP/AnS/AnP
     - awake psilocin effect: AwP - AwS
@@ -36,17 +43,20 @@ Example condition_map CSV:
     AnP,Psilocin,Anesthetized
 """
 
-import argparse
-from pathlib import Path
 import warnings
-import glob as globlib
-
 import numpy as np
 import pandas as pd
+import statsmodels.api as sm
+from pathlib import Path
+from rich import print
+from rich.traceback import install
 from scipy.stats import ttest_ind
 from statsmodels.formula.api import ols
-import statsmodels.api as sm
 from statsmodels.stats.multitest import multipletests
+
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import log_command, match_files, verbose_end_msg, verbose_start_msg
 
 
 DEFAULT_MAP = pd.DataFrame({
@@ -60,49 +70,19 @@ MIN_N_PER_CELL = 2
 
 
 def parse_args():
-    p = argparse.ArgumentParser(
-        description="Project-specific 2x2 ANOVA for mean_IF cluster CSVs."
-    )
-    p.add_argument(
-        "-i", "--input_dir", dest="inputs", nargs="*", default=None,
-        help=(
-            "Input directory, CSV file, or quoted glob pattern. May be repeated as "
-            "multiple values after -i. Default: current directory."
-        )
-    )
-    p.add_argument(
-        "-g", "--glob", default="*.csv",
-        help="Input CSV glob. Default: *.csv"
-    )
-    p.add_argument(
-        "-cm", "--condition_map", default=None,
-        help="Optional CSV mapping condition to Drug and State. Default uses AwS/AwP/AnS/AnP."
-    )
-    p.add_argument(
-        "-vcol", "--value_col", default="mean_IF_intensity",
-        help="Dependent-variable column. Default: mean_IF_intensity"
-    )
-    p.add_argument(
-        "-ccol", "--cluster_col", default="cluster_ID",
-        help="Cluster ID column. Default: cluster_ID"
-    )
-    p.add_argument(
-        "-scol", "--sample_col", default="sample",
-        help="Sample column. If absent, filename stem is used. Default: sample"
-    )
-    p.add_argument(
-        "-o", "--out", default="out/mean_IF_2x2_anova_results.csv",
-        help="Output CSV path. Default: out/mean_IF_2x2_anova_results.csv"
-    )
-    p.add_argument(
-        "--raw_out", default="out/mean_IF_2x2_anova_raw_data.csv",
-        help="Raw long-format output CSV path. Default: out/mean_IF_2x2_anova_raw_data.csv"
-    )
-    p.add_argument(
-        "--equal_var", action="store_true", default=False,
-        help="Use equal-variance t-tests for post-hoc comparisons. Default: Welch t-tests."
-    )
-    return p.parse_args()
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument("-cm", "--condition_map", help="Optional CSV mapping condition to Drug and State. Default: built-in 2x2 map for AwS/AwP/AnS/AnP", default=None, action=SM)
+    opts.add_argument('-i', '--input', help="Path(s) or glob pattern(s) for input CSV files. Default: '*.csv'", default='*.csv', nargs='*', action=SM)
+    opts.add_argument("-o", "--out", default="out/mean_IF_2x2_anova_results.csv", help="Output CSV path. Default: out/mean_IF_2x2_anova_results.csv", action=SM)
+    opts.add_argument("-r", "--raw_out", default="out/mean_IF_2x2_anova_raw_data.csv", help="Raw long-format output CSV path. Default: out/mean_IF_2x2_anova_raw_data.csv", action=SM)
+    opts.add_argument("-vc", "--value_col", default="mean_intensity", help="Dependent-variable column. Default: mean_intensity", action=SM)
+    opts.add_argument("-cc", "--cluster_col", default="cluster_ID", help="Cluster ID column. Default: cluster_ID", action=SM)
+    opts.add_argument("-sc", "--sample_col", default="sample", help="Sample column. If absent, filename stem is used. Default: sample", action=SM)
+    opts.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
+
+    return parser.parse_args()
 
 
 def p_to_sig(p):
@@ -143,65 +123,13 @@ def infer_condition(filename):
     return Path(filename).name.split("_")[0]
 
 
-def expand_input_csvs(inputs, glob_pattern):
-    """Expand directories, individual CSV files, and quoted glob patterns."""
-    if not inputs:
-        inputs = ["."]
-
-    csvs = []
-    missing_inputs = []
-
-    for item in inputs:
-        item = str(item)
-
-        # Important for commands like:
-        #   -i 'cluster_mean_IF_dir/*.csv'
-        # A quoted glob should be expanded directly, not treated as a directory.
-        if globlib.has_magic(item):
-            matches = [Path(m) for m in globlib.glob(item, recursive=True)]
-            csvs.extend([
-                m for m in matches
-                if m.is_file() and m.name.lower().endswith(".csv")
-            ])
-            continue
-
-        path = Path(item).expanduser()
-
-        if path.is_dir():
-            csvs.extend([
-                m for m in path.glob(glob_pattern)
-                if m.is_file() and m.name.lower().endswith(".csv")
-            ])
-        elif path.is_file():
-            if path.name.lower().endswith(".csv"):
-                csvs.append(path)
-        else:
-            missing_inputs.append(item)
-
-    # De-duplicate while keeping deterministic order.
-    csvs = sorted({str(p): p for p in csvs}.values(), key=lambda p: str(p))
-
-    if not csvs:
-        msg = (
-            "No input CSVs found. "
-            f"inputs={inputs!r}; directory glob={glob_pattern!r}"
-        )
-        if missing_inputs:
-            msg += f"; missing inputs={missing_inputs!r}"
-        raise FileNotFoundError(msg)
-
-    return csvs
-
-def load_mean_if_data(inputs, glob_pattern, group_map, value_col, cluster_col, sample_col):
-    csvs = expand_input_csvs(inputs, glob_pattern)
-
+def load_mean_if_data(csv_paths, group_map, value_col, cluster_col, sample_col):
     conditions = set(group_map["condition"].astype(str))
-    print(f"Found {len(csvs)} input CSV(s).")
 
     rows = []
     skipped = []
 
-    for csv in csvs:
+    for csv in csv_paths:
         condition = infer_condition(csv.name)
         if condition not in conditions:
             skipped.append(csv.name)
@@ -426,13 +354,19 @@ def build_results(data, value_col, cluster_col, equal_var):
     return results.sort_values(sort_cols, na_position="last")
 
 
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
     group_map = read_condition_map(args.condition_map)
 
+    csvs = match_files(args.input)
+
     data = load_mean_if_data(
-        inputs=args.inputs,
-        glob_pattern=args.glob,
+        csv_paths=csvs,
         group_map=group_map,
         value_col=args.value_col,
         cluster_col=args.cluster_col,
@@ -447,7 +381,7 @@ def main():
         data=data,
         value_col=args.value_col,
         cluster_col=args.cluster_col,
-        equal_var=args.equal_var,
+        equal_var=True,
     )
 
     out = Path(args.out)
@@ -457,6 +391,8 @@ def main():
     print(f"Saved raw long-format data: {raw_out}")
     print(f"Saved 2x2 ANOVA summary: {out}")
     print(results.head(20).to_string(index=False))
+
+    verbose_end_msg()
 
 
 if __name__ == "__main__":
