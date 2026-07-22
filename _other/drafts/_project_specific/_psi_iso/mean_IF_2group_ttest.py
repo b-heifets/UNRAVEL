@@ -45,11 +45,11 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help="Path(s) or glob pattern(s) for input CSV files. Default: '*.csv'", default='*.csv', nargs='*', action=SM)
-    opts.add_argument("-o", "--out", default="out/mean_intensity_2group_ttest_results.csv", help="Output CSV path. Default: out/mean_intensity_2group_ttest_results.csv")
-    opts.add_argument("-r", "--raw_out", default="out/mean_intensity_2group_ttest_raw_data.csv", help="Raw long-format output CSV path. Default: out/mean_intensity_2group_ttest_raw_data.csv")
-    opts.add_argument("-vc", "--value_col", default="mean_intensity", help="Dependent-variable column. Default: mean_intensity")
-    opts.add_argument("-cc", "--cluster_col", default="cluster_ID", help="Cluster ID column. Default: cluster_ID")
-    opts.add_argument("-sc", "--sample_col", default="sample", help="Sample column. If absent, filename stem is used. Default: sample")
+    opts.add_argument("-o", "--out", default="out/mean_intensity_2group_ttest_results.csv", help="Output CSV path. Default: out/mean_intensity_2group_ttest_results.csv", action=SM)
+    opts.add_argument("-r", "--raw_out", default="out/mean_intensity_2group_ttest_raw_data.csv", help="Raw long-format output CSV path. Default: out/mean_intensity_2group_ttest_raw_data.csv", action=SM)
+    opts.add_argument("-vc", "--value_col", default="mean_intensity", help="Dependent-variable column. Default: mean_intensity", action=SM)
+    opts.add_argument("-cc", "--cluster_col", default="cluster_ID", help="Cluster ID column. Default: cluster_ID", action=SM)
+    opts.add_argument("-sc", "--sample_col", default="sample", help="Sample column. If absent, filename stem is used. Default: sample", action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Verbose output.', action='store_true')
