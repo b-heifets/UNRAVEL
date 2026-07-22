@@ -307,20 +307,8 @@ def is_candidate_result_csv(path: Path) -> bool:
     )
 
 
-def choose_result_csv(
-    directory: Path,
-    cluster_set: str = "",
-) -> Optional[Path]:
-    """Find the preferred statistics CSV in a cluster-result directory."""
-
-    # Prefer results saved in the standard UNRAVEL out/ subdirectory,
-    # while retaining compatibility with results saved directly in the
-    # cluster directory.
-    search_dirs = [
-        directory / "out",
-        directory,
-    ]
-
+def choose_result_csv(directory: Path, cluster_set: str = "") -> Optional[Path]:
+    """Choose a full results CSV, never the renamed concise output."""
     if "AnS_v_AwS" in cluster_set:
         patterns = [
             "mean_IF_2group_ttest_results.csv",
@@ -334,25 +322,13 @@ def choose_result_csv(
     else:
         patterns = DEFAULT_RESULT_PATTERNS
 
-    for search_dir in search_dirs:
-        if not search_dir.is_dir():
-            continue
-
-        for pattern in patterns:
-            matches = sorted(
-                path
-                for path in search_dir.glob(pattern)
-                if path.is_file()
-                and path.suffix.lower() == ".csv"
-                and "raw_data" not in path.name.lower()
-                and "concise" not in path.name.lower()
-                and "audit" not in path.name.lower()
-                and "summary" not in path.name.lower()
-            )
-
-            if matches:
-                return matches[0]
-
+    for pattern in patterns:
+        matches = sorted(
+            path for path in directory.glob(pattern)
+            if is_candidate_result_csv(path)
+        )
+        if matches:
+            return matches[0]
     return None
 
 
