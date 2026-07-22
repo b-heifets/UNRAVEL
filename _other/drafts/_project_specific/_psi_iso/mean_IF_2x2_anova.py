@@ -67,7 +67,7 @@ DEFAULT_MAP = pd.DataFrame({
 
 DEFAULT_GROUP_ORDER = ["AwS", "AwP", "AnS", "AnP"]
 MIN_N_PER_CELL = 2
-
+EQUAL_VAR = True  # Assume equal variance for t-tests; can be changed to False if needed.
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -349,9 +349,44 @@ def build_results(data, value_col, cluster_col, equal_var):
         rows.append(row)
 
     results = pd.DataFrame(rows)
-    sort_cols = ["Drug_State_p", "Drug_p", "cluster_ID"]
-    sort_cols = [c for c in sort_cols if c in results.columns]
-    return results.sort_values(sort_cols, na_position="last")
+    return results.sort_values("cluster_ID")
+
+def build_concise_results(results):
+    """Return a concise table of the main ANOVA and post-hoc results."""
+    concise_cols = [
+        "cluster_ID",
+        "Drug_State_p",
+        "Drug_State_sig",
+        "AwP_vs_AwS_p_holm_sidak",
+        "AwP_vs_AwS_sig_holm_sidak",
+        "AwP_vs_AwS_higher_mean",
+        "AnP_vs_AnS_p_holm_sidak",
+        "AnP_vs_AnS_sig_holm_sidak",
+        "AnP_vs_AnS_higher_mean",
+        "psilocin_effect_classification",
+    ]
+
+    concise = results.loc[:, concise_cols].copy()
+
+    return concise.rename(columns={
+        "Drug_State_p": "interaction_p",
+        "Drug_State_sig": "interaction_sig",
+        "AwP_vs_AwS_p_holm_sidak": "awake_p_HS",
+        "AwP_vs_AwS_sig_holm_sidak": "awake_sig",
+        "AwP_vs_AwS_higher_mean": "awake_higher_mean",
+        "AnP_vs_AnS_p_holm_sidak": "anes_p_HS",
+        "AnP_vs_AnS_sig_holm_sidak": "anes_sig",
+        "AnP_vs_AnS_higher_mean": "anes_higher_mean",
+        "psilocin_effect_classification": "classification",
+    })
+
+
+def print_results_preview(concise_results):
+    """Print the concise results table."""
+    print(concise_results.to_string(
+        index=False,
+        float_format=lambda x: f"{x:.4g}",
+    ))
 
 
 @log_command
@@ -381,17 +416,23 @@ def main():
         data=data,
         value_col=args.value_col,
         cluster_col=args.cluster_col,
-        equal_var=True,
+        equal_var=EQUAL_VAR,
     )
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     results.to_csv(out, index=False)
 
-    print(f"Saved raw long-format data: {raw_out}")
-    print(f"Saved 2x2 ANOVA summary: {out}")
-    print(results.head(20).to_string(index=False))
+    concise_results = build_concise_results(results)
+    concise_out = out.with_name(f"{out.stem}_concise{out.suffix}")
+    concise_results.to_csv(concise_out, index=False)
 
+    print(f"\nSaved raw long-format data: {raw_out}")
+    print(f"Saved full 2x2 ANOVA summary: {out}")
+    print(f"Saved concise 2x2 ANOVA summary: {concise_out}\n")
+
+    print_results_preview(concise_results)
+    
     verbose_end_msg()
 
 
