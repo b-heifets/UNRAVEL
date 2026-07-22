@@ -20,7 +20,8 @@ For each cluster, outputs:
     - Type-II ANOVA p-values for Drug, State, and Drug:State
     - AwP vs AwS and AnP vs AnS t-tests with Holm-Sidak correction
     - higher-mean group for each comparison/effect
-    - qualitative psilocin-effect classification
+    - awake-anchored psilocin-effect persistence classification based on the
+      Holm-Sidak-corrected AwP vs AwS and AnP vs AnS comparisons
 
 Example:
     mean_IF_2x2_anova.py \
@@ -55,6 +56,7 @@ DEFAULT_MAP = pd.DataFrame({
 })
 
 DEFAULT_GROUP_ORDER = ["AwS", "AwP", "AnS", "AnP"]
+MIN_N_PER_CELL = 2
 
 
 def parse_args():
@@ -89,28 +91,16 @@ def parse_args():
         help="Sample column. If absent, filename stem is used. Default: sample"
     )
     p.add_argument(
-        "-o", "--out", default="mean_IF_2x2_anova_results.csv",
-        help="Output CSV path. Default: mean_IF_2x2_anova_results.csv"
+        "-o", "--out", default="out/mean_IF_2x2_anova_results.csv",
+        help="Output CSV path. Default: out/mean_IF_2x2_anova_results.csv"
     )
     p.add_argument(
-        "--raw_out", default="mean_IF_2x2_anova_raw_data.csv",
-        help="Raw long-format output CSV path. Default: mean_IF_2x2_anova_raw_data.csv"
+        "--raw_out", default="out/mean_IF_2x2_anova_raw_data.csv",
+        help="Raw long-format output CSV path. Default: out/mean_IF_2x2_anova_raw_data.csv"
     )
     p.add_argument(
         "--equal_var", action="store_true", default=False,
         help="Use equal-variance t-tests for post-hoc comparisons. Default: Welch t-tests."
-    )
-    p.add_argument(
-        "--attenuated_ratio", type=float, default=0.5,
-        help="Ratio threshold for calling anesthetized psilocin effect attenuated. Default: 0.5"
-    )
-    p.add_argument(
-        "--preserved_ratio", type=float, default=0.8,
-        help="Ratio threshold for calling anesthetized psilocin effect preserved. Default: 0.8"
-    )
-    p.add_argument(
-        "--min_n_per_cell", type=int, default=2,
-        help="Minimum n per condition needed for ANOVA/t-test. Default: 2"
     )
     return p.parse_args()
 
@@ -211,10 +201,6 @@ def load_mean_if_data(inputs, glob_pattern, group_map, value_col, cluster_col, s
     rows = []
     skipped = []
 
-    conditions = set(group_map["condition"].astype(str))
-    rows = []
-    skipped = []
-
     for csv in csvs:
         condition = infer_condition(csv.name)
         if condition not in conditions:
@@ -276,33 +262,44 @@ def higher_by_mean(means, a, b):
     return a if ma > mb else b
 
 
-def classify_effect(awake_diff, anes_diff, attenuated_ratio=0.5, preserved_ratio=0.8):
-    """Qualitative description of how the psilocin effect changes under anesthesia."""
-    if pd.isna(awake_diff) or pd.isna(anes_diff):
+def classify_effect(awake_diff, anes_diff, awake_reject, anes_reject,
+                    awake_p_hs, anes_p_hs):
+    """Classify awake-anchored persistence using Holm-Sidak comparisons."""
+    if pd.isna(awake_p_hs) or pd.isna(anes_p_hs):
         return "incomplete"
-    if np.isclose(awake_diff, 0):
-        if np.isclose(anes_diff, 0):
-            return "no_effect_in_either_state"
-        return "anes_only_or_awake_near_zero"
 
-    if np.sign(awake_diff) != np.sign(anes_diff) and not np.isclose(anes_diff, 0):
-        return "reversed"
+    if awake_reject and anes_reject:
+        if pd.isna(awake_diff) or pd.isna(anes_diff):
+            return "incomplete"
+        if np.isclose(awake_diff, 0) or np.isclose(anes_diff, 0):
+            return "significant_but_zero_mean_difference_check"
+        if np.sign(awake_diff) == np.sign(anes_diff):
+            return "preserved"
+        return "reversed_under_anesthesia"
 
-    ratio = abs(anes_diff) / abs(awake_diff)
-    if ratio >= 1.25:
-        return "enhanced"
-    if ratio >= preserved_ratio:
-        return "preserved"
-    if ratio <= 0.1:
-        return "abolished"
-    if ratio <= attenuated_ratio:
-        return "attenuated"
-    return "partially_preserved"
+    if awake_reject and not anes_reject:
+        return "not_preserved_under_anesthesia"
+    if not awake_reject and anes_reject:
+        return "anesthesia_only_significant"
+    return "no_significant_psilocin_effect"
 
 
-def run_anova(cluster_df, value_col, min_n_per_cell):
+def warn_for_small_cells(cluster_id, ns):
+    """Warn when a cluster lacks enough observations for stable inference."""
+    small = {condition: n for condition, n in ns.items() if n < MIN_N_PER_CELL}
+    if small:
+        details = ", ".join(f"{condition} n={n}" for condition, n in small.items())
+        warnings.warn(
+            f"Cluster {cluster_id}: {details}. At least {MIN_N_PER_CELL} observations "
+            "per condition are required; affected ANOVA/post-hoc results will be NaN.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+
+
+def run_anova(cluster_df, value_col):
     counts = cluster_df.groupby(["Drug", "State"], observed=True)[value_col].count()
-    if len(counts) < 4 or counts.min() < min_n_per_cell:
+    if len(counts) < 4 or counts.min() < MIN_N_PER_CELL:
         return {"Drug_p": np.nan, "State_p": np.nan, "Drug_State_p": np.nan}
 
     try:
@@ -324,10 +321,10 @@ def run_anova(cluster_df, value_col, min_n_per_cell):
     return out
 
 
-def run_ttest(cluster_df, cond_a, cond_b, value_col, equal_var, min_n_per_cell):
+def run_ttest(cluster_df, cond_a, cond_b, value_col, equal_var):
     vals_a = cluster_df.loc[cluster_df["condition"].astype(str) == cond_a, value_col].dropna().to_numpy()
     vals_b = cluster_df.loc[cluster_df["condition"].astype(str) == cond_b, value_col].dropna().to_numpy()
-    if len(vals_a) < min_n_per_cell or len(vals_b) < min_n_per_cell:
+    if len(vals_a) < MIN_N_PER_CELL or len(vals_b) < MIN_N_PER_CELL:
         return np.nan
     try:
         return safe_float(ttest_ind(vals_a, vals_b, equal_var=equal_var, alternative="two-sided").pvalue)
@@ -335,22 +332,23 @@ def run_ttest(cluster_df, cond_a, cond_b, value_col, equal_var, min_n_per_cell):
         return np.nan
 
 
-def build_results(data, value_col, cluster_col, equal_var, min_n_per_cell, attenuated_ratio, preserved_ratio):
+def build_results(data, value_col, cluster_col, equal_var):
     rows = []
     for cluster_id in sorted(data[cluster_col].unique()):
         cdf = data[data[cluster_col] == cluster_id].copy()
 
         means = {cond: group_mean(cdf, cond, value_col) for cond in DEFAULT_GROUP_ORDER}
         ns = {cond: group_n(cdf, cond, value_col) for cond in DEFAULT_GROUP_ORDER}
+        warn_for_small_cells(cluster_id, ns)
 
         awake_diff = means["AwP"] - means["AwS"] if not pd.isna(means["AwP"]) and not pd.isna(means["AwS"]) else np.nan
         anes_diff = means["AnP"] - means["AnS"] if not pd.isna(means["AnP"]) and not pd.isna(means["AnS"]) else np.nan
         interaction_effect = awake_diff - anes_diff if not pd.isna(awake_diff) and not pd.isna(anes_diff) else np.nan
         diff_ratio = abs(anes_diff) / abs(awake_diff) if not pd.isna(awake_diff) and not np.isclose(awake_diff, 0) and not pd.isna(anes_diff) else np.nan
 
-        anova = run_anova(cdf, value_col, min_n_per_cell)
-        p_awake = run_ttest(cdf, "AwP", "AwS", value_col, equal_var, min_n_per_cell)
-        p_anes = run_ttest(cdf, "AnP", "AnS", value_col, equal_var, min_n_per_cell)
+        anova = run_anova(cdf, value_col)
+        p_awake = run_ttest(cdf, "AwP", "AwS", value_col, equal_var)
+        p_anes = run_ttest(cdf, "AnP", "AnS", value_col, equal_var)
 
         p_list = [p_awake, p_anes]
         valid_p = [p for p in p_list if not pd.isna(p)]
@@ -374,7 +372,14 @@ def build_results(data, value_col, cluster_col, equal_var, min_n_per_cell, atten
         if not pd.isna(awake_mean) and not pd.isna(anes_mean):
             state_higher = "Awake" if awake_mean > anes_mean else "Anesthetized" if anes_mean > awake_mean else "tie"
 
-        classification = classify_effect(awake_diff, anes_diff, attenuated_ratio, preserved_ratio)
+        classification = classify_effect(
+            awake_diff=awake_diff,
+            anes_diff=anes_diff,
+            awake_reject=awake_reject,
+            anes_reject=anes_reject,
+            awake_p_hs=p_awake_hs,
+            anes_p_hs=p_anes_hs,
+        )
 
         row = {
             "cluster_ID": cluster_id,
@@ -401,10 +406,12 @@ def build_results(data, value_col, cluster_col, equal_var, min_n_per_cell, atten
             "AwP_vs_AwS_p": p_awake,
             "AwP_vs_AwS_p_holm_sidak": p_awake_hs,
             "AwP_vs_AwS_sig_holm_sidak": p_to_sig(p_awake_hs),
+            "AwP_vs_AwS_reject_holm_sidak": awake_reject,
             "AwP_vs_AwS_higher_mean": higher_by_mean(means, "AwP", "AwS"),
             "AnP_vs_AnS_p": p_anes,
             "AnP_vs_AnS_p_holm_sidak": p_anes_hs,
             "AnP_vs_AnS_sig_holm_sidak": p_to_sig(p_anes_hs),
+            "AnP_vs_AnS_reject_holm_sidak": anes_reject,
             "AnP_vs_AnS_higher_mean": higher_by_mean(means, "AnP", "AnS"),
             "psilocin_effect_classification": classification,
             "potential_state_confound_note": "baseline_state_shift_check" if anova.get("State_p", np.nan) < 0.05 else "",
@@ -441,9 +448,6 @@ def main():
         value_col=args.value_col,
         cluster_col=args.cluster_col,
         equal_var=args.equal_var,
-        min_n_per_cell=args.min_n_per_cell,
-        attenuated_ratio=args.attenuated_ratio,
-        preserved_ratio=args.preserved_ratio,
     )
 
     out = Path(args.out)
