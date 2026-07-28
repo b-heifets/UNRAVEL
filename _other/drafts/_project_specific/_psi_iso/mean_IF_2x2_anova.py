@@ -24,8 +24,9 @@ For each cluster, outputs:
     - awake psilocin effect: AwP - AwS
     - anesthetized psilocin effect: AnP - AnS
     - interaction effect: (AwP - AwS) - (AnP - AnS)
-    - Type-II ANOVA p-values for Drug, State, and Drug:State
-    - AwP vs AwS and AnP vs AnS t-tests with Holm-Sidak correction
+    - Type-III ANOVA statistics for Drug, State, and Drug:State using sum contrasts
+    - AwP vs AwS and AnP vs AnS comparisons using the pooled ANOVA residual
+      variance, with Holm-Sidak correction across the two comparisons
     - higher-mean group for each comparison/effect
     - awake-anchored psilocin-effect persistence classification based on the
       Holm-Sidak-corrected AwP vs AwS and AnP vs AnS comparisons
@@ -50,7 +51,7 @@ import statsmodels.api as sm
 from pathlib import Path
 from rich import print
 from rich.traceback import install
-from scipy.stats import ttest_ind
+from scipy.stats import t as student_t
 from statsmodels.formula.api import ols
 from statsmodels.stats.multitest import multipletests
 
@@ -67,7 +68,6 @@ DEFAULT_MAP = pd.DataFrame({
 
 DEFAULT_GROUP_ORDER = ["AwS", "AwP", "AnS", "AnP"]
 MIN_N_PER_CELL = 2
-EQUAL_VAR = True  # Assume equal variance for t-tests; can be changed to False if needed.
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -80,6 +80,7 @@ def parse_args():
     opts.add_argument("-vc", "--value_col", default="mean_intensity", help="Dependent-variable column. Default: mean_intensity", action=SM)
     opts.add_argument("-cc", "--cluster_col", default="cluster_ID", help="Cluster ID column. Default: cluster_ID", action=SM)
     opts.add_argument("-sc", "--sample_col", default="sample", help="Sample column. If absent, filename stem is used. Default: sample", action=SM)
+    opts.add_argument("-a", "--alpha", type=float, default=0.05, help="Family-wise significance level for Holm-Sidak correction. Default: 0.05", action=SM)
     opts.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
 
     return parser.parse_args()
@@ -228,39 +229,111 @@ def warn_for_small_cells(cluster_id, ns):
 def run_anova(cluster_df, value_col):
     counts = cluster_df.groupby(["Drug", "State"], observed=True)[value_col].count()
     if len(counts) < 4 or counts.min() < MIN_N_PER_CELL:
-        return {"Drug_p": np.nan, "State_p": np.nan, "Drug_State_p": np.nan}
+        return {
+            "Drug_SS": np.nan, "Drug_df": np.nan, "Drug_F": np.nan, "Drug_p": np.nan,
+            "State_SS": np.nan, "State_df": np.nan, "State_F": np.nan, "State_p": np.nan,
+            "Drug_State_SS": np.nan, "Drug_State_df": np.nan,
+            "Drug_State_F": np.nan, "Drug_State_p": np.nan,
+            "residual_SS": np.nan, "residual_df": np.nan, "residual_MS": np.nan,
+        }
 
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            model = ols(f"{value_col} ~ C(Drug) * C(State)", data=cluster_df).fit()
-            aov = sm.stats.anova_lm(model, typ=2)
+            model = ols(
+                f"{value_col} ~ C(Drug, Sum) * C(State, Sum)",
+                data=cluster_df,
+            ).fit()
+            aov = sm.stats.anova_lm(model, typ=3)
     except Exception as e:
-        return {"Drug_p": np.nan, "State_p": np.nan, "Drug_State_p": np.nan, "anova_error": str(e)}
+        return {
+            "Drug_SS": np.nan, "Drug_df": np.nan, "Drug_F": np.nan, "Drug_p": np.nan,
+            "State_SS": np.nan, "State_df": np.nan, "State_F": np.nan, "State_p": np.nan,
+            "Drug_State_SS": np.nan, "Drug_State_df": np.nan,
+            "Drug_State_F": np.nan, "Drug_State_p": np.nan,
+            "residual_SS": np.nan, "residual_df": np.nan, "residual_MS": np.nan,
+            "anova_error": str(e),
+        }
 
-    out = {"Drug_p": np.nan, "State_p": np.nan, "Drug_State_p": np.nan}
-    for term, col in [
-        ("C(Drug)", "Drug_p"),
-        ("C(State)", "State_p"),
-        ("C(Drug):C(State)", "Drug_State_p"),
+    out = {
+        "Drug_SS": np.nan, "Drug_df": np.nan, "Drug_F": np.nan, "Drug_p": np.nan,
+        "State_SS": np.nan, "State_df": np.nan, "State_F": np.nan, "State_p": np.nan,
+        "Drug_State_SS": np.nan, "Drug_State_df": np.nan,
+        "Drug_State_F": np.nan, "Drug_State_p": np.nan,
+        "residual_SS": np.nan, "residual_df": np.nan, "residual_MS": np.nan,
+    }
+    for term, prefix in [
+        ("C(Drug, Sum)", "Drug"),
+        ("C(State, Sum)", "State"),
+        ("C(Drug, Sum):C(State, Sum)", "Drug_State"),
     ]:
         if term in aov.index:
-            out[col] = safe_float(aov.loc[term, "PR(>F)"])
+            out[f"{prefix}_SS"] = safe_float(aov.loc[term, "sum_sq"])
+            out[f"{prefix}_df"] = safe_float(aov.loc[term, "df"])
+            out[f"{prefix}_F"] = safe_float(aov.loc[term, "F"])
+            out[f"{prefix}_p"] = safe_float(aov.loc[term, "PR(>F)"])
+
+    if "Residual" in aov.index:
+        residual_ss = safe_float(aov.loc["Residual", "sum_sq"])
+        residual_df = safe_float(aov.loc["Residual", "df"])
+        out["residual_SS"] = residual_ss
+        out["residual_df"] = residual_df
+        out["residual_MS"] = (
+            residual_ss / residual_df
+            if not pd.isna(residual_ss) and not pd.isna(residual_df) and residual_df > 0
+            else np.nan
+        )
     return out
 
 
-def run_ttest(cluster_df, cond_a, cond_b, value_col, equal_var):
-    vals_a = cluster_df.loc[cluster_df["condition"].astype(str) == cond_a, value_col].dropna().to_numpy()
-    vals_b = cluster_df.loc[cluster_df["condition"].astype(str) == cond_b, value_col].dropna().to_numpy()
-    if len(vals_a) < MIN_N_PER_CELL or len(vals_b) < MIN_N_PER_CELL:
-        return np.nan
-    try:
-        return safe_float(ttest_ind(vals_a, vals_b, equal_var=equal_var, alternative="two-sided").pvalue)
-    except Exception:
-        return np.nan
+def run_anova_comparison(cluster_df, ref_cond, test_cond, value_col, residual_ms, residual_df):
+    vals_ref = cluster_df.loc[
+        cluster_df["condition"].astype(str) == ref_cond,
+        value_col,
+    ].dropna().to_numpy()
+    vals_test = cluster_df.loc[
+        cluster_df["condition"].astype(str) == test_cond,
+        value_col,
+    ].dropna().to_numpy()
+
+    out = {
+        "difference": np.nan,
+        "SE": np.nan,
+        "t": np.nan,
+        "df": safe_float(residual_df),
+        "p": np.nan,
+    }
+    if (
+        len(vals_ref) < MIN_N_PER_CELL
+        or len(vals_test) < MIN_N_PER_CELL
+        or pd.isna(residual_ms)
+        or pd.isna(residual_df)
+        or residual_ms < 0
+        or residual_df <= 0
+    ):
+        return out
+
+    difference = safe_float(vals_test.mean() - vals_ref.mean())
+    se = safe_float(np.sqrt(residual_ms * (1.0 / len(vals_test) + 1.0 / len(vals_ref))))
+
+    if pd.isna(se):
+        return out
+    if np.isclose(se, 0):
+        t_stat = 0.0 if np.isclose(difference, 0) else np.sign(difference) * np.inf
+    else:
+        t_stat = difference / se
+
+    p_value = safe_float(2.0 * student_t.sf(abs(t_stat), residual_df))
+    return {
+        "difference": difference,
+        "SE": se,
+        "t": safe_float(t_stat),
+        "df": safe_float(residual_df),
+        "p": p_value,
+    }
 
 
-def build_results(data, value_col, cluster_col, equal_var):
+def build_results(data, value_col, cluster_col, alpha):
     rows = []
     for cluster_id in sorted(data[cluster_col].unique()):
         cdf = data[data[cluster_col] == cluster_id].copy()
@@ -275,8 +348,24 @@ def build_results(data, value_col, cluster_col, equal_var):
         diff_ratio = abs(anes_diff) / abs(awake_diff) if not pd.isna(awake_diff) and not np.isclose(awake_diff, 0) and not pd.isna(anes_diff) else np.nan
 
         anova = run_anova(cdf, value_col)
-        p_awake = run_ttest(cdf, "AwP", "AwS", value_col, equal_var)
-        p_anes = run_ttest(cdf, "AnP", "AnS", value_col, equal_var)
+        awake_comparison = run_anova_comparison(
+            cdf,
+            "AwS",
+            "AwP",
+            value_col,
+            anova.get("residual_MS", np.nan),
+            anova.get("residual_df", np.nan),
+        )
+        anes_comparison = run_anova_comparison(
+            cdf,
+            "AnS",
+            "AnP",
+            value_col,
+            anova.get("residual_MS", np.nan),
+            anova.get("residual_df", np.nan),
+        )
+        p_awake = awake_comparison["p"]
+        p_anes = anes_comparison["p"]
 
         p_list = [p_awake, p_anes]
         valid_p = [p for p in p_list if not pd.isna(p)]
@@ -285,7 +374,7 @@ def build_results(data, value_col, cluster_col, equal_var):
         awake_reject = False
         anes_reject = False
         if len(valid_p) == 2:
-            reject, p_corr, _, _ = multipletests(p_list, alpha=0.05, method="holm-sidak")
+            reject, p_corr, _, _ = multipletests(p_list, alpha=alpha, method="holm-sidak")
             p_awake_hs, p_anes_hs = [safe_float(x) for x in p_corr]
             awake_reject, anes_reject = [bool(x) for x in reject]
 
@@ -323,24 +412,52 @@ def build_results(data, value_col, cluster_col, equal_var):
             "anes_diff_AnP_minus_AnS": anes_diff,
             "interaction_effect_awake_diff_minus_anes_diff": interaction_effect,
             "anes_to_awake_abs_diff_ratio": diff_ratio,
+            "Drug_SS": anova.get("Drug_SS", np.nan),
+            "Drug_df": anova.get("Drug_df", np.nan),
+            "Drug_F": anova.get("Drug_F", np.nan),
             "Drug_p": anova.get("Drug_p", np.nan),
             "Drug_sig": p_to_sig(anova.get("Drug_p", np.nan)),
             "Drug_higher_mean": drug_higher,
+            "State_SS": anova.get("State_SS", np.nan),
+            "State_df": anova.get("State_df", np.nan),
+            "State_F": anova.get("State_F", np.nan),
             "State_p": anova.get("State_p", np.nan),
             "State_sig": p_to_sig(anova.get("State_p", np.nan)),
             "State_higher_mean": state_higher,
+            "Drug_State_SS": anova.get("Drug_State_SS", np.nan),
+            "Drug_State_df": anova.get("Drug_State_df", np.nan),
+            "Drug_State_F": anova.get("Drug_State_F", np.nan),
             "Drug_State_p": anova.get("Drug_State_p", np.nan),
             "Drug_State_sig": p_to_sig(anova.get("Drug_State_p", np.nan)),
+            "residual_SS": anova.get("residual_SS", np.nan),
+            "residual_df": anova.get("residual_df", np.nan),
+            "residual_MS": anova.get("residual_MS", np.nan),
+            "AwP_vs_AwS_difference": awake_comparison["difference"],
+            "AwP_vs_AwS_SE": awake_comparison["SE"],
+            "AwP_vs_AwS_t": awake_comparison["t"],
+            "AwP_vs_AwS_df": awake_comparison["df"],
             "AwP_vs_AwS_p": p_awake,
             "AwP_vs_AwS_p_holm_sidak": p_awake_hs,
             "AwP_vs_AwS_sig_holm_sidak": p_to_sig(p_awake_hs),
             "AwP_vs_AwS_reject_holm_sidak": awake_reject,
             "AwP_vs_AwS_higher_mean": higher_by_mean(means, "AwP", "AwS"),
+            "AnP_vs_AnS_difference": anes_comparison["difference"],
+            "AnP_vs_AnS_SE": anes_comparison["SE"],
+            "AnP_vs_AnS_t": anes_comparison["t"],
+            "AnP_vs_AnS_df": anes_comparison["df"],
             "AnP_vs_AnS_p": p_anes,
             "AnP_vs_AnS_p_holm_sidak": p_anes_hs,
             "AnP_vs_AnS_sig_holm_sidak": p_to_sig(p_anes_hs),
             "AnP_vs_AnS_reject_holm_sidak": anes_reject,
             "AnP_vs_AnS_higher_mean": higher_by_mean(means, "AnP", "AnS"),
+            "anova_method": "ordinary_two_way_ANOVA",
+            "anova_ss_type": "Type III",
+            "anova_contrasts": "sum",
+            "comparison_method": "two_sided_t_using_ANOVA_residual_MS",
+            "multiple_comparisons_method": "Holm-Sidak",
+            "multiple_comparisons_family": "AwP_vs_AwS;AnP_vs_AnS",
+            "multiple_comparisons_family_size": 2,
+            "alpha": alpha,
             "psilocin_effect_classification": classification,
             "potential_state_confound_note": "baseline_state_shift_check" if anova.get("State_p", np.nan) < 0.05 else "",
         }
@@ -355,6 +472,12 @@ def build_concise_results(results):
     """Return a concise table of the main ANOVA and post-hoc results."""
     concise_cols = [
         "cluster_ID",
+        "Drug_p",
+        "Drug_sig",
+        "Drug_higher_mean",
+        "State_p",
+        "State_sig",
+        "State_higher_mean",
         "Drug_State_p",
         "Drug_State_sig",
         "AwP_vs_AwS_p_holm_sidak",
@@ -369,6 +492,12 @@ def build_concise_results(results):
     concise = results.loc[:, concise_cols].copy()
 
     return concise.rename(columns={
+        "Drug_p": "drug_p",
+        "Drug_sig": "drug_sig",
+        "Drug_higher_mean": "drug_higher_mean",
+        "State_p": "state_p",
+        "State_sig": "state_sig",
+        "State_higher_mean": "state_higher_mean",
         "Drug_State_p": "interaction_p",
         "Drug_State_sig": "interaction_sig",
         "AwP_vs_AwS_p_holm_sidak": "awake_p_HS",
@@ -393,6 +522,8 @@ def print_results_preview(concise_results):
 def main():
     install()
     args = parse_args()
+    if not 0 < args.alpha < 1:
+        raise ValueError("alpha must be greater than 0 and less than 1")
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
@@ -416,7 +547,7 @@ def main():
         data=data,
         value_col=args.value_col,
         cluster_col=args.cluster_col,
-        equal_var=EQUAL_VAR,
+        alpha=args.alpha,
     )
 
     out = Path(args.out)
