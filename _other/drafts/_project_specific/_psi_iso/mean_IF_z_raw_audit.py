@@ -16,6 +16,10 @@ The audit also checks whether each measured direction agrees with the direction
 implied by tstat1/tstat2 in the cluster-set directory name. F-statistic maps are
 non-directional, so their directions are derived from cluster-level group means.
 
+For 2x2 results, source-analysis metadata are retained when present, including
+the ANOVA sums-of-squares type and contrasts, residual variance, multiple-
+comparison method and family, and alpha.
+
 Default contrast extraction:
     AwP_v_AwS  -> AwP vs AwS
     AnP_v_AnS  -> AnP vs AnS
@@ -100,6 +104,29 @@ CONDITION_LABELS = {
     "Awake": "Awake",
     "Anesthetized": "Anesthetized",
 }
+
+SOURCE_ANALYSIS_METADATA_COLUMNS = [
+    "anova_method",
+    "anova_ss_type",
+    "anova_contrasts",
+    "Drug_SS",
+    "Drug_df",
+    "Drug_F",
+    "State_SS",
+    "State_df",
+    "State_F",
+    "Drug_State_SS",
+    "Drug_State_df",
+    "Drug_State_F",
+    "residual_SS",
+    "residual_df",
+    "residual_MS",
+    "comparison_method",
+    "multiple_comparisons_method",
+    "multiple_comparisons_family",
+    "multiple_comparisons_family_size",
+    "alpha",
+]
 
 
 @dataclass(frozen=True)
@@ -277,6 +304,14 @@ def significant_from(
         return sig_bool, p_value, sig
 
     return None, p_value, sig
+
+
+def extract_source_analysis_metadata(row: pd.Series) -> dict:
+    """Retain statistical-method metadata from the source results when present."""
+    return {
+        column: row[column] if column in row.index else np.nan
+        for column in SOURCE_ANALYSIS_METADATA_COLUMNS
+    }
 
 
 def cluster_set_sort_key(name: str) -> tuple:
@@ -923,7 +958,7 @@ def extract_interaction(
     }
 
 def empty_extraction(spec: ContrastSpec, analysis_type: str = "unknown") -> dict:
-    return {
+    out = {
         "analysis_type": analysis_type,
         "contrast_source": spec.source,
         "ref_group": spec.ref,
@@ -941,6 +976,8 @@ def empty_extraction(spec: ContrastSpec, analysis_type: str = "unknown") -> dict
         "ref_mean": np.nan,
         "test_mean": np.nan,
     }
+    out.update({column: np.nan for column in SOURCE_ANALYSIS_METADATA_COLUMNS})
+    return out
 
 
 def extract_metric_row(
@@ -950,26 +987,30 @@ def extract_metric_row(
     ttest_sig_col: str,
 ) -> dict:
     if spec.contrast_type == "pairwise":
-        return extract_pairwise(row, spec, p_cutoff)
+        values = extract_pairwise(row, spec, p_cutoff)
 
-    if spec.contrast_type == "two_group":
-        return extract_two_group(
+    elif spec.contrast_type == "two_group":
+        values = extract_two_group(
             row,
             spec,
             p_cutoff,
             ttest_sig_col,
         )
 
-    if spec.contrast_type == "drug_main":
-        return extract_drug_main(row, spec, p_cutoff)
+    elif spec.contrast_type == "drug_main":
+        values = extract_drug_main(row, spec, p_cutoff)
 
-    if spec.contrast_type == "state_main":
-        return extract_state_main(row, spec, p_cutoff)
+    elif spec.contrast_type == "state_main":
+        values = extract_state_main(row, spec, p_cutoff)
 
-    if spec.contrast_type == "interaction":
-        return extract_interaction(row, spec, p_cutoff)
+    elif spec.contrast_type == "interaction":
+        values = extract_interaction(row, spec, p_cutoff)
 
-    return empty_extraction(spec)
+    else:
+        values = empty_extraction(spec)
+
+    values.update(extract_source_analysis_metadata(row))
+    return values
 
 def normalize_cluster_id(value) -> str:
     """Normalize 1 and 1.0 to the same key while preserving nonnumeric IDs."""
@@ -1114,7 +1155,7 @@ def review_interaction(
         z_values.get("significant") is True
         and raw_values.get("significant") is not True
     ):
-        possible_artifact = False
+        possible_artifact = None
         priority = "moderate"
         reasons.append(
             "z_interaction_significant_raw_not_significant"
