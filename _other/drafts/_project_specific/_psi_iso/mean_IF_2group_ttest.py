@@ -203,6 +203,7 @@ def run_ttest(vals_ref, vals_test, min_n_per_group=2):
         res = ttest_ind(
             vals_test,
             vals_ref,
+            equal_var=True,
             alternative="two-sided",
             nan_policy="omit",
         )
