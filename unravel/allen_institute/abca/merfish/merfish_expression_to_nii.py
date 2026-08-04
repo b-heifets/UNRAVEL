@@ -67,7 +67,8 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group("Required arguments")
-    reqs.add_argument("-b", "--base", help="Path to the root directory of the Allen Brain Cell Atlas data", 
+    reqs.add_argument("-b", "--base", 
+                      help="Path to the root directory of the Allen Brain Cell Atlas data", 
                       required=True, action=SM)
     reqs.add_argument("-g", "--gene", 
                       help="Gene(s) to convert. If omitted, all genes in the selected MERFISH dataset are processed.",
@@ -78,35 +79,46 @@ def parse_args():
                       required=True, action=SM)
 
     opts = parser.add_argument_group("Optional arguments")
-    opts.add_argument("-n", "--neurons", help="Filter out non-neuronal cells. Default: False", 
+    opts.add_argument("-n", "--neurons", 
+                      help="Filter out non-neuronal cells. Default: False", 
                       action="store_true", default=False)
     opts.add_argument("-o", "--output",
                       help=("Output path for the saved .nii.gz image. Only valid with one gene. "
                             r"Default: \[imputed_]MERFISH[_neuronal]_expression_maps/<gene>.nii.gz" ),
                       default=None, action=SM)
-    opts.add_argument("-im", "--imputed", help="Use imputed expression data. Default: False", 
+    opts.add_argument("-im", "--imputed", 
+                      help="Use imputed expression data. Default: False", 
                       action="store_true", default=False)
-    opts.add_argument("--h5ad", help="Optional expression .h5ad path. If given, bypass mf.load_expression_data().", 
+    opts.add_argument("--h5ad", 
+                      help="Optional expression .h5ad path. If given, bypass mf.load_expression_data().", 
                       default=None, action=SM)
-    opts.add_argument("-w", "--workers", help="Number of genes to process/save in parallel. Default: 1", 
-                      type=int, default=1, action=SM)
-    opts.add_argument("-f", "--force", help="Overwrite existing outputs. Default: False", 
+    opts.add_argument("-w", "--workers", 
+                      help="Number of genes to process/save in parallel. Default: 16", 
+                      type=int, default=16, action=SM)
+    opts.add_argument("-f", "--force", 
+                      help="Overwrite existing outputs. Default: False", 
                       action="store_true", default=False)
-    opts.add_argument("-px", "--pixel_size", help="MERFISH in-plane pixel size in microns. Default: 10", 
+    opts.add_argument("-px", "--pixel_size",
+                      help="MERFISH in-plane pixel size in microns. Default: 10", 
                       type=float, default=10.0, action=SM)
-    opts.add_argument("-cu", "--coord_unit", help="Unit of x_reconstructed/y_reconstructed coordinates. Default: auto", 
+    opts.add_argument("-cu", "--coord_unit", 
+                      help="Unit of x_reconstructed/y_reconstructed coordinates. Default: auto", 
                       choices=["auto", "mm", "um"], default="auto", action=SM)
-    opts.add_argument("-dt", "--dtype", help="Output dtype. Default: float32", choices=["float32", "float64"], 
+    opts.add_argument("-dt", "--dtype", 
+                      help="Output dtype. Default: float32", choices=["float32", "float64"], 
                       default="float32", action=SM)
-    opts.add_argument("--dense", help=("In-memory expression matrix --> dense NumPy array after row/gene subsetting. "
-                                       "Default: keep sparse matrices sparse. Use only if RAM is sufficient." ),
-                                action="store_true", default=False)
-    opts.add_argument("--no-csc", help=("Do not convert sparse matrices to CSC after row/gene subsetting. "
-                                        "Default: convert to CSC for faster repeated gene-column extraction." ),
-                                        action="store_true", default=False)
+    opts.add_argument("--dense", 
+                      help=("In-memory expression matrix --> dense NumPy array after row/gene subsetting. "
+                            "Default: keep sparse matrices sparse. Use only if RAM is sufficient." ),
+                      action="store_true", default=False)
+    opts.add_argument("--no-csc",
+                      help=("Do not convert sparse matrices to CSC after row/gene subsetting. "
+                            "Default: convert to CSC for faster repeated gene-column extraction." ),
+                      action="store_true", default=False)
 
     general = parser.add_argument_group("General arguments")
-    general.add_argument("-v", "--verbose", help="Increase verbosity. Default: False", action="store_true", default=False)
+    general.add_argument("-v", "--verbose",
+                         help="Increase verbosity. Default: False", action="store_true", default=False)
 
     return parser.parse_args()
 
