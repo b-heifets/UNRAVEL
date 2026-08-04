@@ -12,19 +12,27 @@ Parallel / in-memory version:
     - precomputes image voxel indices once
     - optionally processes/saves multiple requested genes in parallel with threads
 
-Usage:
-------
-    # Selected genes
-    abca_merfish_expression_to_nii -b <abc_download_root> -g <gene> [<gene> ...] \
-        -r <ref_nii> [-n] [-o <output>] [-im] [-w <workers>] [-f] [-v]
-
-    # All genes in the selected MERFISH dataset
-    abca_merfish_expression_to_nii -b <abc_download_root> -r <ref_nii> [-n] [-im] [-w <workers>] [-f] [-v]
-
 Notes:
 ------
     - ``-w`` uses threads, not processes, to avoid duplicating the loaded expression matrix.
     - Each worker still creates one full 3D output image in memory, so keep ``-w`` modest.
+
+Usage:
+------
+    abca_merfish_expression_to_nii -b <abc_download_root> -r <ref_nii> [-g <gene> ...] [--imputed] [--neurons] [-o <output>] [-w N] [--dense] [--no-csc] [-dt float32|float64] [-f] [-v]
+
+Usage for one gene:
+-------------------
+    abca_merfish_expression_to_nii -b <abc_download_root> -g <gene> --no-csc
+
+Usage for selected genes:
+-------------------------
+    abca_merfish_expression_to_nii -b <abc_download_root> -g <gene> <gene> ...
+
+Usage for all genes:
+--------------------
+    abca_merfish_expression_to_nii -b <abc_download_root>
+
 """
 
 from __future__ import annotations
@@ -89,9 +97,6 @@ def parse_args():
     opts.add_argument("-im", "--imputed", 
                       help="Use imputed expression data. Default: False", 
                       action="store_true", default=False)
-    opts.add_argument("--h5ad", 
-                      help="Optional expression .h5ad path. If given, bypass mf.load_expression_data().", 
-                      default=None, action=SM)
     opts.add_argument("-w", "--workers", 
                       help="Number of genes to process/save in parallel. Default: 16", 
                       type=int, default=16, action=SM)
@@ -102,13 +107,16 @@ def parse_args():
                       help="Output dtype. Default: float32", choices=["float32", "float64"], 
                       default="float32", action=SM)
     opts.add_argument("--dense", 
-                      help=("In-memory expression matrix --> dense NumPy array after row/gene subsetting. "
+                      help=("In-memory expression matrix --> dense NumPy array after row/gene subsetting (faster) "
                             "Default: keep sparse matrices sparse. Use only if RAM is sufficient." ),
                       action="store_true", default=False)
     opts.add_argument("--no-csc",
-                      help=("Do not convert sparse matrices to CSC after row/gene subsetting. "
-                            "Default: convert to CSC for faster repeated gene-column extraction." ),
+                      help=("Don't convert sparse matrices to CSC after row/gene subsetting (skipped if --dense used). "
+                            "Default: convert to CSC for faster repeated gene-column extraction for multiple genes." ),
                       action="store_true", default=False)
+    opts.add_argument("--h5ad", 
+                      help="Optional expression .h5ad path. If given, bypass mf.load_expression_data().", 
+                      default=None, action=SM)
 
     general = parser.add_argument_group("General arguments")
     general.add_argument("-v", "--verbose",
@@ -221,26 +229,6 @@ def find_expression_h5ad(download_base: Path, imputed: bool, verbose: bool = Fal
                 print(f"      - {path}")
 
     return selected
-
-
-def load_anndata_without_var_subsetting(download_base: Path, args, requested_genes: list[str]):
-    """Load AnnData backed/read-only without subsetting variables first."""
-    if args.h5ad:
-        h5ad_path = Path(args.h5ad)
-        print(f"\nLoading AnnData from explicit h5ad path: {h5ad_path}")
-        return anndata.read_h5ad(h5ad_path, backed="r")
-
-    h5ad_path = find_expression_h5ad(download_base, imputed=args.imputed, verbose=args.verbose)
-    if h5ad_path is not None:
-        print(f"\nLoading AnnData without backed variable subsetting: {h5ad_path}")
-        return anndata.read_h5ad(h5ad_path, backed="r")
-
-    # Fallback for unusual ABCA layouts. This preserves compatibility with the
-    # existing UNRAVEL helper, but the auto-h5ad path above is preferred because
-    # it avoids CSRDataset-backed subsetting before the matrix is loaded.
-    print("\nCould not auto-detect an expression .h5ad; falling back to mf.load_expression_data().")
-    print("If this fails with a CSRDataset subsetting error, rerun with --h5ad /path/to/expression.h5ad.")
-    return mf.load_expression_data(download_base, requested_genes, imputed=args.imputed)
 
 
 def default_output_path(gene: str, args, n_requested_genes: int) -> Path:
@@ -640,7 +628,10 @@ def main():
         print(f"\nCells after metadata/neuron filtering: {len(cell_df):,}")
 
     # Load AnnData once. Avoid adata[...] backed variable subsetting later.
-    adata = load_anndata_without_var_subsetting(download_base, args, requested_genes=genes_to_process)
+    if args.h5ad:
+        adata = anndata.read_h5ad(Path(args.h5ad), backed="r")
+    else:
+        adata = mf.load_expression_data(download_base, requested_genes, imputed=args.imputed)
 
     # Validate genes against selected dataset.
     gene_to_cols = get_gene_to_cols(adata, genes_to_process)
