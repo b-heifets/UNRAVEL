@@ -40,28 +40,14 @@ import nibabel as nib
 import numpy as np
 import pandas as pd
 from rich import print
+from rich.live import Live
 from rich.traceback import install
-
-try:
-    from rich.live import Live
-except Exception:  # pragma: no cover
-    Live = None
-
-try:
-    from scipy import sparse as sp_sparse
-except Exception:  # pragma: no cover - scipy is expected in UNRAVEL, but keep import robust
-    sp_sparse = None
+from scipy import sparse as sp_sparse
 
 import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SM, SuppressMetavar
-
-try:
-    from unravel.core.utils import initialize_progress_bar, log_command, verbose_end_msg, verbose_start_msg
-except ImportError:  # pragma: no cover - fallback for running outside the full UNRAVEL package
-    from unravel.core.utils import log_command, verbose_end_msg, verbose_start_msg
-
-    initialize_progress_bar = None
+from unravel.core.utils import initialize_progress_bar, log_command, verbose_end_msg, verbose_start_msg
 
 
 @dataclass(frozen=True)
@@ -165,8 +151,6 @@ def unique_preserve_order(values: Iterable[str]) -> list[str]:
             seen.add(value)
             out.append(value)
     return out
-
-
 
 
 def get_requested_genes_from_args(args) -> tuple[list[str], bool]:
@@ -480,7 +464,7 @@ def load_X_fully_into_memory(adata):
         except Exception:
             X_mem = np.asarray(X)
 
-    if sp_sparse is not None and sp_sparse.issparse(X_mem):
+    if sp_sparse.issparse(X_mem):
         print(f"    Loaded sparse matrix: shape={X_mem.shape}, nnz={X_mem.nnz:,}, format={X_mem.getformat()}")
     else:
         print(f"    Loaded dense/array-like matrix: shape={getattr(X_mem, 'shape', None)}")
@@ -511,16 +495,16 @@ def subset_matrix_after_memory_load(
     X = X[:, all_cols]
 
     if dense:
-        if sp_sparse is not None and sp_sparse.issparse(X):
+        if sp_sparse.issparse(X):
             print("    Converting requested expression subset to dense array...")
             X = X.toarray()
         else:
             X = np.asarray(X)
-    elif convert_to_csc and sp_sparse is not None and sp_sparse.issparse(X) and X.getformat() != "csc":
+    elif convert_to_csc and sp_sparse.issparse(X) and X.getformat() != "csc":
         print("    Converting sparse requested expression subset to CSC for faster column extraction...")
         X = X.tocsc(copy=False)
 
-    if sp_sparse is not None and sp_sparse.issparse(X):
+    if sp_sparse.issparse(X):
         print(f"    Working matrix: shape={X.shape}, nnz={X.nnz:,}, format={X.getformat()}\n")
     else:
         print(f"    Working matrix: shape={X.shape}, dtype={getattr(X, 'dtype', None)}\n")
@@ -530,7 +514,7 @@ def subset_matrix_after_memory_load(
 
 def get_gene_values(X, cols: list[int], dtype: np.dtype) -> np.ndarray:
     """Return a dense 1D expression vector for one gene from the working matrix."""
-    if sp_sparse is not None and sp_sparse.issparse(X):
+    if sp_sparse.issparse(X):
         if len(cols) == 1:
             values = X[:, cols[0]]
         else:
@@ -640,24 +624,14 @@ def run_gene_jobs(
         )
         return result
 
-    if initialize_progress_bar is not None and Live is not None:
-        progress, task_id = initialize_progress_bar(len(genes_to_process), task_message="[bold green]Making MERFISH expression maps...")
-        with Live(progress):
-            with ThreadPoolExecutor(max_workers=workers) as executor:
-                futures = {executor.submit(wrapped, gene): gene for gene in genes_to_process}
-                for future in as_completed(futures):
-                    result = future.result()
-                    with lock:
-                        progress.update(task_id, advance=1)
-                    results.append(result)
-                    if verbose:
-                        print(f"    {result.gene}: nonzero cells={result.nonzero_cells:,}; expression sum={result.expression_sum:g}")
-                    print(f"    Saved image to {result.output_path}")
-    else:
+    progress, task_id = initialize_progress_bar(len(genes_to_process), task_message="[bold green]Making MERFISH expression maps...")
+    with Live(progress):
         with ThreadPoolExecutor(max_workers=workers) as executor:
             futures = {executor.submit(wrapped, gene): gene for gene in genes_to_process}
             for future in as_completed(futures):
                 result = future.result()
+                with lock:
+                    progress.update(task_id, advance=1)
                 results.append(result)
                 if verbose:
                     print(f"    {result.gene}: nonzero cells={result.nonzero_cells:,}; expression sum={result.expression_sum:g}")
