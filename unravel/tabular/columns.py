@@ -5,7 +5,7 @@ Use ``tabular_columns`` (``cols``) from UNRAVEL to load a CSV or xlsx file and p
 
 Usage:
 ------
-    tabular_columns --input path/input.csv [-one-per-line] [-v]
+    tabular_columns --input path/input.csv [-one-per-line] [--rows N] [-d delimiter] [-v]
 """
 
 import pandas as pd
@@ -25,8 +25,8 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-1', '--one-per-line', help='Print each column name on a separate line.', action='store_true', default=False)
+    opts.add_argument('-r', '--rows', help='Print the first N rows. Default: 0 (only print column names)', type=int, default=0, action=SM)
     opts.add_argument('-d', '--delimiter', help='Delimiter used in the CSV file. Default: ", "', default=', ')
-
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -50,10 +50,18 @@ def main():
     # Print column names
     if args.one_per_line:
         for col in cols:
-            print(f'[default]{col}')
+            if args.rows > 0:
+                print(f'[green]{col}[/green][default]{args.delimiter}[/default]{args.delimiter.join(map(str, pd.read_csv(args.input, usecols=[col], nrows=args.rows).values.flatten()))}')
+            else:
+                print(f'[default]{col}')
     else:
-        print("Columns in the CSV file:")
-        print(f"[default]{args.delimiter}".join(cols))
+        if args.rows > 0:
+            print(f"[default]{args.delimiter}".join(cols))
+            print(f"\nFirst {args.rows} rows:")
+            print(pd.read_csv(args.input, nrows=args.rows))
+        else:
+            print("Columns in the CSV file:")
+            print(f"[default]{args.delimiter}".join(cols))
 
     verbose_end_msg()
 
