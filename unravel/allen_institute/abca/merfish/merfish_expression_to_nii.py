@@ -13,9 +13,9 @@ Inputs:
 
 Outputs:
     - <gene>.nii.gz for each requested gene, with the same affine and header as the reference .nii.gz
-    - Dir: [imputed_]MERFISH[_neuronal]_expression_maps/
-    - Dir with -c and -val: [imputed_]MERFISH[_neuronal]_expression_maps_<filter_column>-<filter_value>/
-    - Dir with -i: [imputed_]MERFISH[_neuronal]_expression_maps_<input_stem>/
+    - Dir: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps/
+    - Dir with -c and -val: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps_<filter_column>-<filter_value>/
+    - Dir with -i: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps_<input_stem>/
     
 Notes:
 ------
@@ -24,7 +24,7 @@ Notes:
 
 Usage:
 ------
-    abca_merfish_expression_to_nii -b <abc_download_root> -r <ref_nii> [-g <gene> ...] [-i path/cell_metadata_filtered.csv] [--imputed] [--neurons] [-o <output>] [-w N] [--dense] [--no-csc] [-dt float32|float64] [-f] [-v]
+    abca_merfish_expression_to_nii -b <abc_download_root> -r <ref_nii> [-g <gene> ...] [-i path/cell_metadata_filtered.csv] [--imputed] [--neurons | --nonneurons] [-o <output>] [-w N] [--dense] [--no-csc] [-dt float32|float64] [-f] [-v]
 
 Usage for one gene:
 -------------------
@@ -95,9 +95,13 @@ def parse_args():
     opts.add_argument("-i", "--input",
                       help="Optional path to a cell metadata CSV", 
                       default=None, action=SM)
-    opts.add_argument("-n", "--neurons", 
-                      help="Filter out non-neuronal cells. Default: False", 
-                      action="store_true", default=False)
+    cell_types = opts.add_mutually_exclusive_group()
+    cell_types.add_argument("-n", "--neurons",
+                            help="Keep neuronal cells only. Default: use all cells",
+                            action="store_true", default=False)
+    cell_types.add_argument("-nn", "--nonneurons",
+                            help="Keep non-neuronal cells only. Default: use all cells",
+                            action="store_true", default=False)
     opts.add_argument("-o", "--output",
                       help=("Output path for the saved .nii.gz image. Only valid with one gene. "
                             r"Default: \[imputed_]MERFISH[_neuronal]_expression_maps/<gene>.nii.gz" ),
@@ -259,6 +263,9 @@ def default_output_path(gene: str, args, n_requested_genes: int) -> Path:
     if args.neurons:
         name += "_neuronal"
         filename += "_neurons"
+    elif args.nonneurons:
+        name += "_nonneuronal"
+        filename += "_nonneurons"
     if args.input:
         name += f"_{Path(args.input).stem}"
     if args.filter_column:
@@ -287,6 +294,7 @@ def load_and_prepare_cell_metadata(
     download_base: Path,
     input_path: str | None,
     neurons: bool,
+    nonneurons: bool,
     filter_column: str | None = None,
     filter_value: str | None = None,
 ) -> pd.DataFrame:
@@ -297,12 +305,12 @@ def load_and_prepare_cell_metadata(
         cell_df = mf.load_cell_metadata(download_base)
         cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
 
-        if neurons or (filter_column and filter_column not in cell_df_joined.columns):
+        if neurons or nonneurons or (filter_column and filter_column not in cell_df_joined.columns):
             cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
 
-    if neurons:
+    if neurons or nonneurons:
         class_num = cell_df_joined["class"].str.split().str[0].astype(int)
-        cell_df_joined = cell_df_joined[class_num <= 29].copy()
+        cell_df_joined = cell_df_joined[class_num <= 29 if neurons else class_num > 29].copy()
 
     if filter_column:
         if filter_column not in cell_df_joined.columns:
@@ -667,6 +675,7 @@ def main():
         download_base,
         input_path=args.input,
         neurons=args.neurons,
+        nonneurons=args.nonneurons,
         filter_column=args.filter_column,
         filter_value=args.filter_value,
     )
