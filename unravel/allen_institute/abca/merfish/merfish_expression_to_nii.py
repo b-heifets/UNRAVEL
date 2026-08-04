@@ -29,25 +29,29 @@ Notes:
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 from threading import Lock
-from typing import Iterable
 
 import anndata
 import nibabel as nib
 import numpy as np
 import pandas as pd
+import unravel.allen_institute.abca.merfish.merfish as mf
 from rich import print
 from rich.live import Live
 from rich.traceback import install
 from scipy import sparse as sp_sparse
-
-import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.core.config import Configuration
-from unravel.core.help_formatter import RichArgumentParser, SM, SuppressMetavar
-from unravel.core.utils import initialize_progress_bar, log_command, verbose_end_msg, verbose_start_msg
+from unravel.core.help_formatter import SM, RichArgumentParser, SuppressMetavar
+from unravel.core.utils import (
+    initialize_progress_bar,
+    log_command,
+    verbose_end_msg,
+    verbose_start_msg,
+)
 
 
 @dataclass(frozen=True)
@@ -90,7 +94,7 @@ def parse_args():
         "--output",
         help=(
             "Output path for the saved .nii.gz image. Only valid with one gene. "
-            "Default: \[imputed_]MERFISH[_neuronal]_expression_maps/<gene>.nii.gz"
+            r"Default: \[imputed_]MERFISH[_neuronal]_expression_maps/<gene>.nii.gz"
         ),
         default=None,
         action=SM,
