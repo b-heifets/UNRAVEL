@@ -56,9 +56,13 @@ def main():
                 print(f'[default]{col}')
     else:
         if args.rows > 0:
-            print(f"[default]{args.delimiter}".join(cols))
-            print(f"\nFirst {args.rows} rows:")
-            print(pd.read_csv(args.input, nrows=args.rows))
+            header = f'[default]{args.delimiter}[/default]'.join(
+                f'[green]{col}[/green]' for col in cols
+            )
+            values = args.delimiter.join(
+                map(str, pd.read_csv(args.input, usecols=cols, nrows=args.rows).values.flatten())
+            )
+            print(f'{header}[default]{args.delimiter}[/default]{values}')        
         else:
             print("Columns in the CSV file:")
             print(f"[default]{args.delimiter}".join(cols))
