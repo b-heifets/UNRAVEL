@@ -37,7 +37,6 @@ Usage for selected genes:
 Usage for all genes:
 --------------------
     abca_merfish_expression_to_nii -b <abc_download_root>
-
 """
 
 from __future__ import annotations
