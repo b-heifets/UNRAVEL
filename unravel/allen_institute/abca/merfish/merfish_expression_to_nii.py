@@ -39,11 +39,12 @@ import anndata
 import nibabel as nib
 import numpy as np
 import pandas as pd
-import unravel.allen_institute.abca.merfish.merfish as mf
 from rich import print
 from rich.live import Live
 from rich.traceback import install
 from scipy import sparse as sp_sparse
+
+import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import SM, RichArgumentParser, SuppressMetavar
 from unravel.core.utils import (
@@ -66,78 +67,43 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group("Required arguments")
-    reqs.add_argument("-b", "--base", help="Path to the root directory of the Allen Brain Cell Atlas data", required=True, action=SM)
-    reqs.add_argument(
-        "-g",
-        "--gene",
-        help="Gene(s) to convert. If omitted, all genes in the selected MERFISH dataset are processed.",
-        required=False,
-        nargs="*",
-        default=None,
-        action=SM,
-    )
-    reqs.add_argument(
-        "-r",
-        "--ref_nii",
-        help=(
-            "Path to reference .nii.gz for header/affine/shape info "
-            "(e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)"
-        ),
-        required=True,
-        action=SM,
-    )
+    reqs.add_argument("-b", "--base", help="Path to the root directory of the Allen Brain Cell Atlas data", 
+                      required=True, action=SM)
+    reqs.add_argument("-g", "--gene", 
+                      help="Gene(s) to convert. If omitted, all genes in the selected MERFISH dataset are processed.",
+                      required=False, nargs="*", default=None, action=SM)
+    reqs.add_argument("-r", "--ref_nii", 
+                      help=("Path to reference .nii.gz for header/affine/shape info "
+                            "(e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)"),
+                      required=True, action=SM)
 
     opts = parser.add_argument_group("Optional arguments")
-    opts.add_argument("-n", "--neurons", help="Filter out non-neuronal cells. Default: False", action="store_true", default=False)
-    opts.add_argument(
-        "-o",
-        "--output",
-        help=(
-            "Output path for the saved .nii.gz image. Only valid with one gene. "
-            r"Default: \[imputed_]MERFISH[_neuronal]_expression_maps/<gene>.nii.gz"
-        ),
-        default=None,
-        action=SM,
-    )
-    opts.add_argument("-im", "--imputed", help="Use imputed expression data. Default: False", action="store_true", default=False)
-    opts.add_argument("--h5ad", help="Optional explicit expression .h5ad path. If given, bypass mf.load_expression_data().", default=None, action=SM)
-    opts.add_argument("-w", "--workers", help="Number of genes to process/save in parallel. Default: 1", type=int, default=1, action=SM)
-    opts.add_argument("-f", "--force", help="Overwrite existing outputs. Default: False", action="store_true", default=False)
-    opts.add_argument("-px", "--pixel_size", help="MERFISH in-plane pixel size in microns. Default: 10", type=float, default=10.0, action=SM)
-    opts.add_argument(
-        "-cu",
-        "--coord_unit",
-        help="Unit of x_reconstructed/y_reconstructed coordinates. Default: auto",
-        choices=["auto", "mm", "um"],
-        default="auto",
-        action=SM,
-    )
-    opts.add_argument(
-        "-dt",
-        "--dtype",
-        help="Output dtype. Default: float32",
-        choices=["float32", "float64"],
-        default="float32",
-        action=SM,
-    )
-    opts.add_argument(
-        "--dense",
-        help=(
-            "Convert the in-memory expression matrix to a dense NumPy array after row/gene subsetting. "
-            "Default: keep sparse matrices sparse. Use only if RAM is sufficient."
-        ),
-        action="store_true",
-        default=False,
-    )
-    opts.add_argument(
-        "--no-csc",
-        help=(
-            "Do not convert sparse matrices to CSC after row/gene subsetting. "
-            "Default: convert to CSC for faster repeated gene-column extraction."
-        ),
-        action="store_true",
-        default=False,
-    )
+    opts.add_argument("-n", "--neurons", help="Filter out non-neuronal cells. Default: False", 
+                      action="store_true", default=False)
+    opts.add_argument("-o", "--output",
+                      help=("Output path for the saved .nii.gz image. Only valid with one gene. "
+                            r"Default: \[imputed_]MERFISH[_neuronal]_expression_maps/<gene>.nii.gz" ),
+                      default=None, action=SM)
+    opts.add_argument("-im", "--imputed", help="Use imputed expression data. Default: False", 
+                      action="store_true", default=False)
+    opts.add_argument("--h5ad", help="Optional expression .h5ad path. If given, bypass mf.load_expression_data().", 
+                      default=None, action=SM)
+    opts.add_argument("-w", "--workers", help="Number of genes to process/save in parallel. Default: 1", 
+                      type=int, default=1, action=SM)
+    opts.add_argument("-f", "--force", help="Overwrite existing outputs. Default: False", 
+                      action="store_true", default=False)
+    opts.add_argument("-px", "--pixel_size", help="MERFISH in-plane pixel size in microns. Default: 10", 
+                      type=float, default=10.0, action=SM)
+    opts.add_argument("-cu", "--coord_unit", help="Unit of x_reconstructed/y_reconstructed coordinates. Default: auto", 
+                      choices=["auto", "mm", "um"], default="auto", action=SM)
+    opts.add_argument("-dt", "--dtype", help="Output dtype. Default: float32", choices=["float32", "float64"], 
+                      default="float32", action=SM)
+    opts.add_argument("--dense", help=("In-memory expression matrix --> dense NumPy array after row/gene subsetting. "
+                                       "Default: keep sparse matrices sparse. Use only if RAM is sufficient." ),
+                                action="store_true", default=False)
+    opts.add_argument("--no-csc", help=("Do not convert sparse matrices to CSC after row/gene subsetting. "
+                                        "Default: convert to CSC for faster repeated gene-column extraction." ),
+                                        action="store_true", default=False)
 
     general = parser.add_argument_group("General arguments")
     general.add_argument("-v", "--verbose", help="Increase verbosity. Default: False", action="store_true", default=False)
