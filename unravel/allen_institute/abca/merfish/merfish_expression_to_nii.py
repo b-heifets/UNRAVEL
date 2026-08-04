@@ -19,7 +19,7 @@ Notes:
 
 Usage:
 ------
-    abca_merfish_expression_to_nii -b <abc_download_root> -r <ref_nii> [-g <gene> ...] [--imputed] [--neurons] [-o <output>] [-w N] [--dense] [--no-csc] [-dt float32|float64] [-f] [-v]
+    abca_merfish_expression_to_nii -b <abc_download_root> -r <ref_nii> [-g <gene> ...] [-i path/cell_metadata_filtered.csv] [--imputed] [--neurons] [-o <output>] [-w N] [--dense] [--no-csc] [-dt float32|float64] [-f] [-v]
 
 Usage for one gene:
 -------------------
@@ -87,6 +87,9 @@ def parse_args():
                       required=True, action=SM)
 
     opts = parser.add_argument_group("Optional arguments")
+    opts.add_argument("-i", "--input",
+                      help="Optional path to a cell metadata CSV", 
+                      default=None, action=SM)
     opts.add_argument("-n", "--neurons", 
                       help="Filter out non-neuronal cells. Default: False", 
                       action="store_true", default=False)
@@ -97,15 +100,6 @@ def parse_args():
     opts.add_argument("-im", "--imputed", 
                       help="Use imputed expression data. Default: False", 
                       action="store_true", default=False)
-    opts.add_argument("-w", "--workers", 
-                      help="Number of genes to process/save in parallel. Default: 16", 
-                      type=int, default=16, action=SM)
-    opts.add_argument("-f", "--force", 
-                      help="Overwrite existing outputs. Default: False", 
-                      action="store_true", default=False)
-    opts.add_argument("-dt", "--dtype", 
-                      help="Output dtype. Default: float32", choices=["float32", "float64"], 
-                      default="float32", action=SM)
     opts.add_argument("--dense", 
                       help=("In-memory expression matrix --> dense NumPy array after row/gene subsetting (faster) "
                             "Default: keep sparse matrices sparse. Use only if RAM is sufficient." ),
@@ -114,9 +108,22 @@ def parse_args():
                       help=("Don't convert sparse matrices to CSC after row/gene subsetting (skipped if --dense used). "
                             "Default: convert to CSC for faster repeated gene-column extraction for multiple genes." ),
                       action="store_true", default=False)
+    opts.add_argument("-c", "--filter-column",
+                  help="Cell metadata column to filter", default=None, action=SM)
+    opts.add_argument("-val", "--filter-value",
+                    help="Value to keep in --filter-column", default=None, action=SM)
+    opts.add_argument("-f", "--force", 
+                      help="Overwrite existing outputs. Default: False", 
+                      action="store_true", default=False)
+    opts.add_argument("-w", "--workers", 
+                      help="Number of genes to process/save in parallel. Default: 16", 
+                      type=int, default=16, action=SM)
     opts.add_argument("--h5ad", 
                       help="Optional expression .h5ad path. If given, bypass mf.load_expression_data().", 
                       default=None, action=SM)
+    opts.add_argument("-dt", "--dtype", 
+                      help="Output dtype. Default: float32", choices=["float32", "float64"], 
+                      default="float32", action=SM)
 
     general = parser.add_argument_group("General arguments")
     general.add_argument("-v", "--verbose",
@@ -263,15 +270,35 @@ def get_gene_to_cols(adata, requested_genes: list[str]) -> dict[str, list[int]]:
     return gene_to_cols
 
 
-def load_and_prepare_cell_metadata(download_base: Path, neurons: bool) -> pd.DataFrame:
-    """Load MERFISH cell metadata, add reconstructed coords, and optionally keep neurons only."""
-    cell_df = mf.load_cell_metadata(download_base)
-    cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
+def load_and_prepare_cell_metadata(
+    download_base: Path,
+    input_path: str | None,
+    neurons: bool,
+    filter_column: str | None = None,
+    filter_value: str | None = None,
+) -> pd.DataFrame:
+    """Load and optionally filter MERFISH cell metadata."""
+    if input_path:
+        cell_df_joined = pd.read_csv(input_path, index_col=0)
+    else:
+        cell_df = mf.load_cell_metadata(download_base)
+        cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
+
+        if neurons or (filter_column and filter_column not in cell_df_joined.columns):
+            cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
 
     if neurons:
-        cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
         class_num = cell_df_joined["class"].str.split().str[0].astype(int)
         cell_df_joined = cell_df_joined[class_num <= 29].copy()
+
+    if filter_column:
+        if filter_column not in cell_df_joined.columns:
+            raise KeyError(f"Cell metadata column not found: {filter_column}")
+        cell_df_joined = cell_df_joined[
+            cell_df_joined[filter_column].astype(str) == filter_value
+        ].copy()
+        if cell_df_joined.empty:
+            raise ValueError(f"No cells matched {filter_column}={filter_value}")
 
     return cell_df_joined
 
@@ -340,7 +367,7 @@ def precompute_linear_indices(
     cell_df: pd.DataFrame,
     shape: tuple[int, int, int],
     pixel_size_um: float,
-) -> tuple[np.ndarray, np.ndarray, str]:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Convert reconstructed MERFISH coordinates to flattened image indices once.
 
@@ -595,6 +622,8 @@ def main():
         raise ValueError("--output can only be used when one gene is requested. Omit -o when processing all genes.")
     if args.workers < 1:
         raise ValueError("--workers must be >= 1.")
+    if (args.filter_column is None) != (args.filter_value is None):
+        raise ValueError("--filter-column and --filter-value must be used together.")
 
     # Load reference once and use its shape rather than hard-coding 1100 x 1100 x 76.
     ref_nii = nib.load(args.ref_nii)
@@ -621,11 +650,21 @@ def main():
         return
 
     # Load metadata once.
-    cell_df = load_and_prepare_cell_metadata(download_base, neurons=args.neurons)
+    cell_df = load_and_prepare_cell_metadata(
+        download_base,
+        input_path=args.input,
+        neurons=args.neurons,
+        filter_column=args.filter_column,
+        filter_value=args.filter_value,
+    )
+    if args.input:
+        print(f"\nLoaded cell metadata: {args.input} ({len(cell_df):,} cells)")
+    if args.filter_column:
+        print(f"\nFiltered cells ({args.filter_column}={args.filter_value}): {len(cell_df):,}")
     if args.verbose:
         print("\nColumns in cell metadata:")
         print(cell_df.columns)
-        print(f"\nCells after metadata/neuron filtering: {len(cell_df):,}")
+        print(f"\nCells after metadata filtering: {len(cell_df):,}")
 
     # Load AnnData once. Avoid adata[...] backed variable subsetting later.
     if args.h5ad:
@@ -655,7 +694,6 @@ def main():
         aligned_cell_df,
         shape=shape,
         pixel_size_um=10, # MERFISH in-plane pixel size in microns
-        coord_unit="mm",
     )
     valid_count = int(valid_cell_mask.sum())
     print(f"    Coordinate unit used: mm")
