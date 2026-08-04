@@ -62,6 +62,7 @@ dev = [
     "myst-parser",
     "python-cfonts",
     "pydata_sphinx_theme",
+    "ruff",
     "sphinx",
     "sphinx-autobuild", 
     "sphinx-togglebutton", 
@@ -83,6 +84,9 @@ license-files = []
 [build-system]
 requires = ["setuptools>=77.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 120
 
 [project.scripts]
 unravel_commands = "unravel.unravel_commands:main"
