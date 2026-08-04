@@ -98,12 +98,6 @@ def parse_args():
     opts.add_argument("-f", "--force", 
                       help="Overwrite existing outputs. Default: False", 
                       action="store_true", default=False)
-    opts.add_argument("-px", "--pixel_size",
-                      help="MERFISH in-plane pixel size in microns. Default: 10", 
-                      type=float, default=10.0, action=SM)
-    opts.add_argument("-cu", "--coord_unit", 
-                      help="Unit of x_reconstructed/y_reconstructed coordinates. Default: auto", 
-                      choices=["auto", "mm", "um"], default="auto", action=SM)
     opts.add_argument("-dt", "--dtype", 
                       help="Output dtype. Default: float32", choices=["float32", "float64"], 
                       default="float32", action=SM)
@@ -354,41 +348,10 @@ def align_cells_to_adata(cell_df: pd.DataFrame, adata) -> tuple[pd.DataFrame, np
     return aligned_cell_df, row_indices, id_source
 
 
-def infer_pixel_size_in_coord_units(cell_df: pd.DataFrame, shape: tuple[int, int, int], pixel_size_um: float, coord_unit: str) -> tuple[float, str]:
-    """Return pixel size expressed in the same units as reconstructed x/y coordinates."""
-    if coord_unit == "mm":
-        return pixel_size_um / 1000.0, "mm"
-    if coord_unit == "um":
-        return pixel_size_um, "um"
-
-    # Auto-detect from coordinate scale. Typical image width: 1100 px * 10 um = 11 mm = 11000 um.
-    xy = cell_df[["x_reconstructed", "y_reconstructed"]].to_numpy(dtype=np.float64)
-    xy = xy[np.isfinite(xy)]
-    if xy.size == 0:
-        raise ValueError("Cannot infer coordinate units because x/y reconstructed coordinates are empty or non-finite.")
-
-    q999 = float(np.nanpercentile(np.abs(xy), 99.9))
-    expected_mm = max(shape[:2]) * pixel_size_um / 1000.0
-    expected_um = max(shape[:2]) * pixel_size_um
-
-    # Leave generous margins because coordinates may not span the whole image.
-    if q999 <= expected_mm * 2.5:
-        return pixel_size_um / 1000.0, "mm"
-    if q999 <= expected_um * 2.5:
-        return pixel_size_um, "um"
-
-    raise ValueError(
-        "Could not infer coordinate units from x/y scale. "
-        f"99.9th percentile={q999:g}; expected ~{expected_mm:g} mm or ~{expected_um:g} um. "
-        "Pass --coord_unit mm or --coord_unit um explicitly."
-    )
-
-
 def precompute_linear_indices(
     cell_df: pd.DataFrame,
     shape: tuple[int, int, int],
     pixel_size_um: float,
-    coord_unit: str,
 ) -> tuple[np.ndarray, np.ndarray, str]:
     """
     Convert reconstructed MERFISH coordinates to flattened image indices once.
@@ -401,7 +364,7 @@ def precompute_linear_indices(
     if missing:
         raise KeyError(f"Cell metadata is missing required column(s): {missing}")
 
-    pixel_size_coord_units, inferred_unit = infer_pixel_size_in_coord_units(cell_df, shape, pixel_size_um, coord_unit)
+    pixel_size_coord_units = pixel_size_um / 1000.0
     slice_index_map = mf.slice_index_dict()
 
     # Original mf.points_to_img_sum likely uses astype(int), i.e. truncation toward zero.
@@ -425,7 +388,7 @@ def precompute_linear_indices(
         raise ValueError("No cells have valid in-bounds x/y/z coordinates for the reference image shape.")
 
     linear_idx = np.ravel_multi_index((i[in_bounds], j[in_bounds], k_int[in_bounds]), dims=shape)
-    return linear_idx.astype(np.int64, copy=False), in_bounds, inferred_unit
+    return linear_idx.astype(np.int64, copy=False), in_bounds
 
 
 def load_X_fully_into_memory(adata):
@@ -697,14 +660,14 @@ def main():
     print(f"\nAligned cells: {len(row_indices):,} using metadata field: {id_source}")
 
     # Precompute coordinates once before matrix row/gene subsetting.
-    linear_idx, valid_cell_mask, inferred_unit = precompute_linear_indices(
+    linear_idx, valid_cell_mask = precompute_linear_indices(
         aligned_cell_df,
         shape=shape,
-        pixel_size_um=args.pixel_size,
-        coord_unit=args.coord_unit,
+        pixel_size_um=10, # MERFISH in-plane pixel size in microns
+        coord_unit="mm",
     )
     valid_count = int(valid_cell_mask.sum())
-    print(f"    Coordinate unit used: {inferred_unit}")
+    print(f"    Coordinate unit used: mm")
     print(f"    Cells with valid image coordinates: {valid_count:,} / {len(valid_cell_mask):,}\n")
 
     # Load full X into memory once, then subset in memory.
