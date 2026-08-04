@@ -4,14 +4,19 @@
 Use ``abca_merfish_expression_to_nii`` or ``me`` from UNRAVEL to make 3D .nii.gz
 images of ABCA MERFISH expression data.
 
-Parallel / in-memory version:
-    - avoids backed AnnData subsetting, which can fail or be slow for CSRDataset-backed h5ad files
-    - loads ``adata.X`` fully into memory once
-    - aligns AnnData rows to MERFISH cell metadata once
-    - subsets rows/columns only after the matrix is in memory
-    - precomputes image voxel indices once
-    - optionally processes/saves multiple requested genes in parallel with threads
+Inputs:
+    - MERFISH expression .h5ad (or use -b to find it in the ABCA download cache)
+    - MERFISH cell metadata CSV (or use -b to find it in the ABCA download cache)
+    - Reference .nii.gz for affine/header/shape info (e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)
+    - Optional: -g <gene> ... to select specific genes. If omitted, all genes in the selected MERFISH dataset are processed.
+    - Optional: -i path/cell_metadata_filtered.csv to use a pre-filtered cell metadata CSV instead of the default ABCA MERFISH metadata.
 
+Outputs:
+    - <gene>.nii.gz for each requested gene, with the same affine and header as the reference .nii.gz
+    - Dir: [imputed_]MERFISH[_neuronal]_expression_maps/
+    - Dir with -c and -val: [imputed_]MERFISH[_neuronal]_expression_maps_<filter_column>-<filter_value>/
+    - Dir with -i: [imputed_]MERFISH[_neuronal]_expression_maps_<input_stem>/
+    
 Notes:
 ------
     - ``-w`` uses threads, not processes, to avoid duplicating the loaded expression matrix.
@@ -245,13 +250,21 @@ def default_output_path(gene: str, args, n_requested_genes: int) -> Path:
             raise ValueError("--output can only be used when one gene is requested.")
         return Path(args.output)
 
-    if args.imputed and args.neurons:
-        return Path.cwd() / "imputed_MERFISH_neuronal_expression_maps" / f"{gene}_imputed_neurons.nii.gz"
+    name = "MERFISH"
+    filename = gene
+
     if args.imputed:
-        return Path.cwd() / "imputed_MERFISH_expression_maps" / f"{gene}_imputed.nii.gz"
+        name = f"imputed_{name}"
+        filename += "_imputed"
     if args.neurons:
-        return Path.cwd() / "MERFISH_neuronal_expression_maps" / f"{gene}_neurons.nii.gz"
-    return Path.cwd() / "MERFISH_expression_maps" / f"{gene}.nii.gz"
+        name += "_neuronal"
+        filename += "_neurons"
+    if args.input:
+        name += f"_{Path(args.input).stem}"
+    if args.filter_column:
+        name += f"_{args.filter_column}-{args.filter_value}"
+
+    return Path.cwd() / f"{name}_expression_maps" / f"{filename}.nii.gz"
 
 
 def get_var_symbols(adata) -> np.ndarray:
