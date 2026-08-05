@@ -119,7 +119,9 @@ def main():
     if args.output is not None:
         output_path = Path(args.output)
     else:
-        output_path = str(Path(args.input).name).replace('.csv', '_filtered.csv')
+        output_path = Path(str(Path(args.input).name).replace('.csv', '_filtered.csv'))
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
     filtered_df_joined.to_csv(output_path, index=False)
     print(f"\nFiltered data saved to: {output_path}")
 
