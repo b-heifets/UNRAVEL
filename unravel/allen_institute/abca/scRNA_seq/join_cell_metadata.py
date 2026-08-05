@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNAseq_join_gene`` from UNRAVEL to join cell metadata with expression data from the ABCA.
+Use ``abca_scRNAseq_join_cell_metadata`` (``rna_join``) from UNRAVEL to join cell metadata with expression data from the ABCA.
 
 Prereqs:
-    - ``abca_scRNAseq_expression`` to generate the input expression data for the specified genes.
+    - ``abca_scRNAseq_expression`` with the --less-metadata flag
     - Cell metadata from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
 
 Output:
@@ -12,7 +12,7 @@ Output:
 
 Usage:
 ------
-    abca_scRNAseq_join_gene -i path/filtered_cells.csv -b path/base_dir -s species [-v]
+    abca_scRNAseq_join_cell_metadata -i path/filtered_cells.csv -b path/base_dir -s species [-v]
 
 """
 
