@@ -190,18 +190,46 @@ def get_gene_data_wo_cache_and_chunking(
                 continue
 
             ad = anndata.read_h5ad(file, backed='r')
+
             try:
-                exp_df = ad[:, gene_filtered.index.tolist()].to_df()
+                gene_ids = gene_filtered.index.tolist()
+                gene_positions = ad.var_names.get_indexer(gene_ids)
+
+                missing = [
+                    gene_id
+                    for gene_id, position in zip(gene_ids, gene_positions)
+                    if position == -1
+                ]
+                if missing:
+                    print(
+                        f"    [yellow1]Skipping genes not found in "
+                        f"{file.name}: {missing}"
+                    )
+
+                exp_df = pd.DataFrame(index=ad.obs_names)
+
+                for position, gene_symbol in zip(
+                    gene_positions,
+                    gene_filtered['gene_symbol'],
+                ):
+                    if position == -1:
+                        continue
+
+                    # Scalar column indexing avoids backed sparse fancy-indexing errors.
+                    values = ad.X[:, int(position)]
+
+                    if hasattr(values, 'toarray'):
+                        values = values.toarray()
+
+                    exp_df[gene_symbol] = values.ravel()
+
                 exp_df = exp_df.reindex(cell_filtered.index).dropna(how='all')
-            except KeyError as e:
-                print(f"    [yellow1]Skipping {file.name}: {e}")
-                continue
+
             finally:
                 ad.file.close()
 
             exp_df.columns = gene_filtered['gene_symbol']
             exp_dfs.append(exp_df)
-            ad.file.close()
 
         if not exp_dfs:
             print("\n    [red1]No expression data loaded from any .h5ad files.\n")
