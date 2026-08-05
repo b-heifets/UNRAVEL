@@ -8,7 +8,11 @@ Prereqs:
     - Or: ``RNAseq_expression.py`` and ``RNAseq_filter.py``
 
 Outputs:
-    - path/input_sunburst_expression_thr<value>.csv, input_mean_expression_lut.txt, and input_percent_expression_thr<value>_lut.txt
+    - path/input_sunburst.csv
+    - path/sunburst_expression_thr<value>/input__gene-GENE_sunburst_expression_thr<value>.csv
+    - path/mean_expression_lut/input__gene-GENE_mean_expression_lut.txt
+    - path/percent_expression_thr<value>_lut/input__gene-GENE_percent_expression_thr<value>_lut.txt
+    - With ``--all``: path/all_expression_thr<value>/input__gene-GENE_all.csv
 
 Note:
     - LUT location: unravel/core/csvs/ABCA/WMB_sunburst_colors.csv
@@ -37,7 +41,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
-# TODO: Update docstring with commands for other scripts in prereqs. Mean for all cells not saved yet.
+# TODO: Update docstring with commands for other scripts in prereqs.
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -52,8 +56,8 @@ def parse_args():
     opts.add_argument('-c', '--color_max', help='Maximum value for the color scale. Default: 10', default=10, type=float, action=SM)
     opts.add_argument('-t', '--threshold', help='Log2(CPM+1) threshold for percent gene expression. Default: 6', default=6, type=float, action=SM)
     opts.add_argument('-o', '--output', help='Output dir path. Default: ABCA_sunburst_cmax10_thr6/', default=None, action=SM)
-    opts.add_argument('-op', '--output_prefix', help='Output file prefix. Default: input file name before the extension', default=None, action=SM)
-    opts.add_argument('-a', '--all', help='Save mean expression and percent expressing for all cells. Default: False', action='store_true', default=False)
+    opts.add_argument('-op', '--output_prefix', help='Gene-specific output file prefix. Default: input stem + __gene-GENE', default=None, action=SM)
+    opts.add_argument('-a', '--all', help='Save mean expression and percent expressing for all cells to a one-row CSV. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -120,12 +124,39 @@ def main():
         output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Save the mean expression and percent expressing for all cells (.txt)
+    # Set output prefixes
+    input_prefix = str(Path(args.input).stem)
+    if args.output_prefix is None:
+        output_prefix = f'{input_prefix}__gene-{args.gene}'
+    else:
+        output_prefix = args.output_prefix
+
+    # Create subdirectories for each gene-specific output type
+    expression_dir = output_dir / f'sunburst_expression_thr{args.threshold}'
+    mean_lut_dir = output_dir / 'mean_expression_lut'
+    percent_lut_dir = output_dir / f'percent_expression_thr{args.threshold}_lut'
+    all_dir = output_dir / f'all_expression_thr{args.threshold}'
+
+    expression_dir.mkdir(parents=True, exist_ok=True)
+    mean_lut_dir.mkdir(parents=True, exist_ok=True)
+    percent_lut_dir.mkdir(parents=True, exist_ok=True)
+
     if args.all:
-        output_path = output_dir / str(Path(args.input).name).replace('.csv', f'_sunburst_expression_thr{args.threshold}_all.txt')
-        with open(output_path, 'w') as f:
-            f.write(f"all_mean: {all_mean}\nall_percent (threshold: {args.threshold}): {all_percent}")
-        print(f"\nSaved mean expression and percent expressing for all cells to {output_path}")
+        all_dir.mkdir(parents=True, exist_ok=True)
+
+    # Save the mean expression and percent expressing for all cells (.csv)
+    if args.all:
+        all_df = pd.DataFrame({
+            'input': [Path(args.input).name],
+            'species': [species],
+            'gene': [args.gene],
+            'threshold': [args.threshold],
+            'all_mean': [all_mean],
+            'all_percent': [all_percent],
+        })
+        all_path = all_dir / f'{output_prefix}_all.csv'
+        all_df.to_csv(all_path, index=False)
+        print(f"\nSaved mean expression and percent expressing for all cells to {all_path}")
 
     # Calculate mean expression and percent expressing at each hierarchy level
     summary_df = cells_df.copy()
@@ -138,13 +169,15 @@ def main():
         summary_df[f'{level}_percent'] = summary_df[level].map(cells_df.groupby(level)[args.gene].apply(lambda x: (x > args.threshold).mean() * 100))
 
     summary_df = summary_df.drop(columns=[args.gene]).drop_duplicates()
-    
-    # Save the results
-    if args.output_prefix is None:
-        output_prefix = str(Path(args.input).stem)
-    else:
-        output_prefix = args.output_prefix
-    output_path = output_dir / f"{output_prefix}_sunburst_expression_thr{args.threshold}.csv"
+
+    # Save the gene-independent columns used to plot the sunburst
+    sunburst_path = output_dir / f'{input_prefix}_sunburst.csv'
+    summary_df[hierarchy_levels + ['percent']].to_csv(sunburst_path, index=False)
+
+    print(f"\nSaved plot-ready sunburst data to {sunburst_path}")
+
+    # Save the gene-specific results
+    output_path = expression_dir / f"{output_prefix}_sunburst_expression_thr{args.threshold}.csv"
     summary_df.to_csv(output_path, index=False)
     
     print(f"\nSaved sunburst expression summary to {output_path}")
@@ -167,9 +200,9 @@ def main():
     mean_df = mean_df.drop(columns=['value'])
 
     # Save the mean expression LUT
-    mean_path = str(output_path).replace(f'_expression_thr{args.threshold}.csv', '_mean_expression_lut.txt')
-    for row in mean_df.itertuples(index=False):
-        with open(mean_path, 'a') as f:
+    mean_path = mean_lut_dir / f'{output_prefix}_mean_expression_lut.txt'
+    with open(mean_path, 'w') as f:
+        for row in mean_df.itertuples(index=False):
             f.write(f"{row.label}: {row.color}\n")
 
     # Stack percent expression values
@@ -185,16 +218,16 @@ def main():
     percent_df = percent_df.drop(columns=['value'])
 
     # Save the percent expression LUT
-    percent_path = str(output_path).replace(f'_expression_thr{args.threshold}.csv', f'_percent_expression_thr{args.threshold}_lut.txt')
-    for row in percent_df.itertuples(index=False):
-        with open(percent_path, 'a') as f:
+    percent_path = percent_lut_dir / f'{output_prefix}_percent_expression_thr{args.threshold}_lut.txt'
+    with open(percent_path, 'w') as f:
+        for row in percent_df.itertuples(index=False):
             f.write(f"{row.label}: {row.color}\n")
     
     if species == 'mouse':
         lut_path = Path(__file__).parent.parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WMB_sunburst_colors.csv'
     elif species == 'human':
         lut_path = Path(__file__).parent.parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_sunburst_colors.csv'
-    shutil.copy(lut_path, output_path.parent / lut_path.name)
+    shutil.copy(lut_path, output_dir / lut_path.name)
     
     verbose_end_msg()
 
