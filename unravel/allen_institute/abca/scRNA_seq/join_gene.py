@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNAseq_join_gene`` from UNRAVEL to join cell metadata with scRNA-seq expression data from the Allen Brain Cell Atlas.
+Use ``abca_scRNAseq_join_gene`` from UNRAVEL to join cell metadata with expression data from the ABCA.
 
 Prereqs:
     - ``abca_scRNAseq_expression`` to generate the input expression data for the specified genes.
@@ -21,8 +21,9 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.allen_institute.abca.scRNA_seq.expression import load_RNAseq_cell_metadata
-import unravel.allen_institute.abca.merfish.merfish as mf
+import pandas as pd
+from pathlib import Path
+from unravel.allen_institute.abca.scRNA_seq.expression import join_cell_metadata
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -44,8 +45,6 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Move cell metadata loading, classification, and color joining to RNAseq_expression.py or consolidate in a common module.
-# TODO: Save the cell_label column too
 
 @log_command
 def main():
@@ -55,32 +54,15 @@ def main():
     verbose_start_msg()
 
     download_base = Path(args.base)
-
-    cell_df = load_RNAseq_cell_metadata(download_base, species=args.species)
-
-    # Classify cells based on their metadata
-    cell_df = mf.join_cluster_details(cell_df, download_base, args.species)  # This could be moved to the RNAseq_expression.py script
-
-    # Add color info
-    cell_df = mf.join_cluster_colors(cell_df, download_base, args.species)
-
-    # Load the input expression data (from RNAseq_expression.py)
     exp_df = pd.read_csv(args.input, dtype={'cell_label': str})
-    exp_df = exp_df.set_index('cell_label')
-    exp_cols = exp_df.columns.tolist()
-
-    # Join the expression data with the cell metadata
-    exp_df = exp_df.join(cell_df, on='cell_label', how='left')
-
-    # Move the exp_cols to the end of the DataFrame
-    exp_df = exp_df[[col for col in exp_df.columns if col not in exp_cols] + exp_cols]
+    joined_df = join_cell_metadata(exp_df, download_base, args.species)
 
     # Save the joined data with the cell_label column (index)
     if args.output is not None:
         output_path = Path(args.output)
     else:
         output_path = Path(str(args.input).replace('.csv', '_w_cells.csv'))
-    exp_df.to_csv(output_path, index=True)
+    joined_df.to_csv(output_path, index=True)
     print(f"\n    Saved the joined data to {output_path}\n")
 
     verbose_end_msg()
