@@ -191,42 +191,31 @@ def get_gene_data_wo_cache_and_chunking(
 
             ad = anndata.read_h5ad(file, backed='r')
 
+
+            # DEBUGGING: Check for missing cells and genes
+            missing_cells = cell_filtered.index.difference(ad.obs_names)
+            missing_genes = gene_filtered.index.difference(ad.var_names)
+
+            print(f"    Cells requested: {len(cell_filtered)}")
+            print(f"    Cells in h5ad: {ad.n_obs}")
+            print(f"    Missing cells: {len(missing_cells)}")
+            print(f"    Missing genes: {missing_genes.tolist()}")
+            print(f"    X type: {type(ad.X)}")
+
+            test_cell = cell_filtered.index[0]
+            test_gene = gene_filtered.index[0]
+
+            print(ad[test_cell, test_gene].X)
+
+            ### End debugging
+            #         
+
             try:
-                gene_ids = gene_filtered.index.tolist()
-                gene_positions = ad.var_names.get_indexer(gene_ids)
-
-                missing = [
-                    gene_id
-                    for gene_id, position in zip(gene_ids, gene_positions)
-                    if position == -1
-                ]
-                if missing:
-                    print(
-                        f"    [yellow1]Skipping genes not found in "
-                        f"{file.name}: {missing}"
-                    )
-
-                exp_df = pd.DataFrame(index=ad.obs_names)
-
-                for position, gene_symbol in zip(
-                    gene_positions,
-                    gene_filtered['gene_symbol'],
-                ):
-                    if position == -1:
-                        continue
-
-                    # Scalar column indexing avoids backed sparse fancy-indexing errors.
-                    values = ad.X[:, int(position)]
-
-                    if hasattr(values, 'toarray'):
-                        values = values.toarray()
-
-                    exp_df[gene_symbol] = values.ravel()
-
-                exp_df = exp_df.reindex(cell_filtered.index).dropna(how='all')
-
-            finally:
+                exp_df = ad[cell_filtered.index, gene_filtered.index].to_df()
+            except KeyError as e:
+                print(f"    [yellow1]Skipping {file.name}: {e}")
                 ad.file.close()
+                continue
 
             exp_df.columns = gene_filtered['gene_symbol']
             exp_dfs.append(exp_df)
