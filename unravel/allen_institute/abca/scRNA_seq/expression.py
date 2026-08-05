@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNAseq_expression`` (``rna_exp``) from UNRAVEL to extract expression data for specific genes from the ABCA.
+Use ``abca_scRNAseq_expression`` ()``rna_exp`` from UNRAVEL to extract expression data for specific genes from the ABCA.
 
 Inputs:
     - Cell metadata from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
@@ -191,11 +191,13 @@ def get_gene_data_wo_cache_and_chunking(
 
             ad = anndata.read_h5ad(file, backed='r')
             try:
-                exp_df = ad[cell_filtered.index, gene_filtered.index].to_df()
+                exp_df = ad[:, gene_filtered.index.tolist()].to_df()
+                exp_df = exp_df.reindex(cell_filtered.index).dropna(how='all')
             except KeyError as e:
                 print(f"    [yellow1]Skipping {file.name}: {e}")
-                ad.file.close()
                 continue
+            finally:
+                ad.file.close()
 
             exp_df.columns = gene_filtered['gene_symbol']
             exp_dfs.append(exp_df)
