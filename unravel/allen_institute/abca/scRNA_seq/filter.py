@@ -37,14 +37,14 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
     reqs.add_argument('-i', '--input', help='Path to the scRNAseq CSV file', required=True, action=SM)
-    reqs.add_argument('-c', '--columns', help='Columns to filter scRNAseq cell metadata by (e.g., region_of_interest_acronym)', nargs='*', action=SM)
-    reqs.add_argument('-val', '--values', help='Values to filter scRNAseq cell metadata by (e.g., STRv).', nargs='*', action=SM)
+    reqs.add_argument('-c', '--columns', help='Columns to filter by (e.g., region_of_interest_acronym)', nargs='*', required=True, action=SM)
+    reqs.add_argument('-val', '--values', help='Values used for filtering.', nargs='*', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: mouse', default='mouse', action=SM)
     opts.add_argument('-o', '--output', help='Output path for the filtered cell metadata', default=None, action=SM)
     opts.add_argument('-ct', '--cell_type', help='Cell type to use (neurons or nonneurons). Default: None', default=None, action=SM)
-    opts.add_argument('-d', '--details', help='Add classification levels and colors to the filtered DataFrame.', default=False)
+    opts.add_argument('-d', '--details', help='Add classification levels and colors.', default=False, action='store_true')
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -76,6 +76,9 @@ def main():
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
+    
+    if len(args.columns) != len(args.values):
+        raise ValueError(f"The # of columns ({len(args.columns)}) must match the # of values ({len(args.values)}).")
 
     download_base = Path(args.base)
 
@@ -116,7 +119,7 @@ def main():
         output_path = Path(args.output)
     else:
         output_path = str(Path(args.input).name).replace('.csv', '_filtered.csv')
-    filtered_df_joined.to_csv(output_path)
+    filtered_df_joined.to_csv(output_path, index=False)
     print(f"\nFiltered data saved to: {output_path}")
 
     verbose_end_msg()
