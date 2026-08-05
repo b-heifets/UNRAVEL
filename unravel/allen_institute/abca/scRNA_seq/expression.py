@@ -33,10 +33,13 @@ Usage for mice:
 
 from typing import List
 import anndata
+import h5py
+import numpy as np
 import pandas as pd
 from pathlib import Path
 from rich import print
 from rich.traceback import install
+import scipy
 
 
 import unravel.allen_institute.abca.merfish.merfish as mf
@@ -202,10 +205,44 @@ def get_gene_data_wo_cache_and_chunking(
             print(f"    Missing genes: {missing_genes.tolist()}")
             print(f"    X type: {type(ad.X)}")
 
+            print("\n    --- Environment ---")
+            print(f"    Python: {sys.version}")
+            print(f"    anndata: {anndata.__version__}")
+            print(f"    scipy: {scipy.__version__}")
+            print(f"    numpy: {np.__version__}")
+            print(f"    pandas: {pd.__version__}")
+            print(f"    h5py: {h5py.__version__}")
+
+            print("\n    --- AnnData ---")
+            print(f"    Shape: {ad.shape}")
+            print(f"    Backed: {ad.isbacked}")
+            print(f"    X type: {type(ad.X)}")
+            print(f"    X shape: {ad.X.shape}")
+            print(f"    X dtype: {ad.X.dtype}")
+            print(f"    X format: {getattr(ad.X, 'format', None)}")
+
+            print("\n    --- Indexes ---")
+            print(f"    ad.obs_names unique: {ad.obs_names.is_unique}")
+            print(f"    ad.var_names unique: {ad.var_names.is_unique}")
+            print(f"    cell_filtered index unique: {cell_filtered.index.is_unique}")
+            print(f"    gene_filtered index unique: {gene_filtered.index.is_unique}")
+
             test_cell = cell_filtered.index[0]
             test_gene = gene_filtered.index[0]
 
-            print(ad[test_cell, test_gene].X)
+            cell_position = ad.obs_names.get_loc(test_cell)
+            gene_position = ad.var_names.get_loc(test_gene)
+
+            print(f"    Test cell: {test_cell}")
+            print(
+                f"    Cell position: {cell_position!r}; "
+                f"type: {type(cell_position)}"
+            )
+            print(f"    Test gene: {test_gene}")
+            print(
+                f"    Gene position: {gene_position!r}; "
+                f"type: {type(gene_position)}"
+            )
 
             ### End debugging
             #         
