@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNAseq_expression`` or ``rna_exp`` from UNRAVEL to extract expression data for specific genes from the Allen Brain Cell Atlas RNA-seq data.
+Use ``abca_scRNAseq_expression`` or ``rna_exp`` from UNRAVEL to produce a small expression table
+with limited metadata for analyses that do not need extensive ABCA metadata.
+
+Inputs:
+    - Cell metadata from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
+    - Gene metadata from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
+    - Expression data from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
+
+Outputs:
+    - A CSV file with the expression data for the selected genes, indexed by cell_label.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.html
@@ -30,6 +39,8 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
+
+import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -47,15 +58,16 @@ def parse_args():
     opts.add_argument('-c', '--cell_type', help='Cell type to extract data from for humans (Neurons or Nonneurons)', default=None, action=SM)
     opts.add_argument('-r', '--region', help='Region to use for mice (OLF, CTXsp, Isocortex-1, Isocortex-2, HPF, STR, PAL, TH, HY, MB, MY, P, CB). Default: all regions', default=None, action=SM)
     opts.add_argument('-o', '--output', help='Path to output folder for the expression data. Default: current directory', default='.', action=SM)
+    opts.add_argument('-l', '--less-metadata', help='Include less metadata in the output (omit cluster annotations and colors).', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
-# TODO: Should load_RNAseq_cell_metadata and load_RNAseq_gene_metadata be moved to a separate module?
 # TODO: loading expression data is slow (loads whoe dataset). It might be optimized by changing the orientation of the data (CSR to CSC) once, and then perhaps slices of data can be loaded instead of the whole dataset.
 # TODO: Add the ability to filter neurons vs nonneurons for mice here too?
+# TODO: Save the cell_label column too
 
 def load_RNAseq_cell_metadata(download_base, species='mouse'):
     """
@@ -234,6 +246,41 @@ def get_gene_data_wo_cache_and_chunking(
     return expression_subset.reset_index()
 
 
+def load_annotated_cell_metadata(
+    download_base,
+    species,
+    cell_df=None,
+):
+    """Load cell metadata if needed, then add annotations and colors."""
+    if cell_df is None:
+        cell_df = load_RNAseq_cell_metadata(download_base, species=species)
+
+    cell_df = mf.join_cluster_details(cell_df, download_base, species)
+    cell_df = mf.join_cluster_colors(cell_df, download_base, species)
+    return cell_df
+
+
+def join_cell_metadata(
+    exp_df,
+    download_base,
+    species,
+    cell_df=None,
+):
+    """Join cell metadata to an expression DataFrame."""
+    if 'cell_label' in exp_df.columns:
+        exp_df = exp_df.set_index('cell_label')
+    elif exp_df.index.name != 'cell_label':
+        raise ValueError("Expression data must contain a 'cell_label' column or index.")
+
+    cell_df = load_annotated_cell_metadata(
+        download_base,
+        species,
+        cell_df=cell_df,
+    )
+
+    return cell_df.reindex(exp_df.index).join(exp_df).reset_index()
+
+
 @log_command
 def main():
     install()
@@ -257,7 +304,15 @@ def main():
     expression_data = get_gene_data_wo_cache_and_chunking(
         download_base, cell_df, gene_df, args.genes, species=args.species, region=args.region, cell_type=args.cell_type
     )
-    
+
+    if not args.less_metadata:
+        expression_data = join_cell_metadata(
+            expression_data,
+            download_base,
+            args.species,
+            cell_df=cell_df,
+        )
+
     # Check the data before saving to confirm structure
     print(f"\n    Final output data for {args.genes}:\n{expression_data.head()}\n")
 
