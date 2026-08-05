@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNAseq_expression`` ()``rna_exp`` from UNRAVEL to extract expression data for specific genes from the ABCA.
+Use ``abca_scRNAseq_expression`` (``rna_exp``) from UNRAVEL to extract expression data for specific genes from the ABCA.
 
 Inputs:
     - Cell metadata from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
@@ -15,12 +15,12 @@ Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.html
     - Only the first gene in the list will be used to name the output file.
     - For humans, the cell type must be specified (Neurons or Nonneurons).
-    - For mice, optionally filter neurons or nonneurons with ``abca_scRNAseq_filter`` after joining cell metadata and expression data using ``abca_scRNAseq_join_gene``.
+    - For mice, optionally filter neurons or nonneurons with ``abca_scRNAseq_filter`` after joining cell metadata and expression data using ``abca_scRNAseq_join_cell_metadata``.
     - The output will be a CSV file with the expression data for the selected genes, indexed by cell_label.
 
 Usage:
 ------
-    abca_scRNAseq_expression -b path/base_dir -g genes [-s mouse | human] [-c Neurons | Nonneurons] [-r region] [-d log2 | raw ] [-o output] [-v]
+    abca_scRNAseq_expression -b path/base_dir -g genes [-s mouse | human] [-c Neurons | Nonneurons] [-r region] [-o output] [-v]
 
 Usage for humans:
 -----------------
@@ -33,13 +33,10 @@ Usage for mice:
 
 from typing import List
 import anndata
-import h5py
-import numpy as np
 import pandas as pd
 from pathlib import Path
 from rich import print
 from rich.traceback import install
-import scipy
 
 
 import unravel.allen_institute.abca.merfish.merfish as mf
@@ -56,7 +53,7 @@ def parse_args():
     reqs.add_argument('-g', '--genes', help='Genes to extract expression data for.', nargs='*', required=True, action=SM)
     
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: human', default='human', action=SM)
+    opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: human', default='human', choices=('mouse', 'human'), action=SM)
     opts.add_argument('-c', '--cell_type', help='Cell type to extract data from for humans (Neurons or Nonneurons)', default=None, action=SM)
     opts.add_argument('-r', '--region', help='Region to use for mice (OLF, CTXsp, Isocortex-1, Isocortex-2, HPF, STR, PAL, TH, HY, MB, MY, P, CB). Default: all regions', default=None, action=SM)
     opts.add_argument('-o', '--output', help='Path to output folder for the expression data. Default: current directory', default='.', action=SM)
@@ -69,9 +66,8 @@ def parse_args():
 
 # TODO: loading expression data is slow (loads whoe dataset). It might be optimized by changing the orientation of the data (CSR to CSC) once, and then perhaps slices of data can be loaded instead of the whole dataset.
 # TODO: Add the ability to filter neurons vs nonneurons for mice here too?
-# TODO: Save the cell_label column too
 
-def load_RNAseq_cell_metadata(download_base, species='mouse'):
+def load_RNAseq_cell_metadata(download_base, species='human'):
     """
     Load the cell metadata from the RNA-seq data.
 
@@ -135,6 +131,40 @@ def load_RNAseq_gene_metadata(download_base, species='human'):
     return gene_df
 
 
+def extract_gene_expression(
+    file,
+    cell_indexes,
+    gene_filtered,
+):
+    """Load an h5ad file and extract selected cells and genes."""
+    ad = anndata.read_h5ad(file)
+
+    cell_indexes = pd.Index(cell_indexes).intersection(
+        ad.obs_names,
+        sort=False,
+    )
+    gene_indexes = gene_filtered.index.intersection(
+        ad.var_names,
+        sort=False,
+    )
+
+    if cell_indexes.empty:
+        raise ValueError(f"No matching cells found in {file}")
+
+    if gene_indexes.empty:
+        raise ValueError(f"No matching genes found in {file}")
+
+    exp_df = ad[cell_indexes, gene_indexes].to_df()
+    exp_df.columns = gene_filtered.loc[
+        gene_indexes,
+        'gene_symbol',
+    ].tolist()
+    exp_df.index.name = 'cell_label'
+
+    del ad
+    return exp_df
+
+
 def get_gene_data_wo_cache_and_chunking(
     download_base: Path,
     cell_df: pd.DataFrame,
@@ -179,91 +209,37 @@ def get_gene_data_wo_cache_and_chunking(
     
     # Path to expression data
     if species == 'mouse':
-        # Load expression data from each file and concatenate
         expression_matrices_dir = download_base / 'expression_matrices'
         exp_dfs = []
-        # Glob pattern finds all regional mouse files; use WHB for human below
         pattern = 'WMB-10X*/**/*-log2.h5ad'
 
         for file in expression_matrices_dir.rglob(pattern):
-            print(f"    Loading expression data from {file}")
-            matrix_prefix = file.stem.replace('-log2', '')
-            cell_filtered = cell_df[cell_df['feature_matrix_label'] == matrix_prefix]
+            matrix_prefix = file.stem.removesuffix('-log2')
+            cell_filtered = cell_df[
+                cell_df['feature_matrix_label'] == matrix_prefix
+            ]
+
             if cell_filtered.empty:
                 continue
 
-            ad = anndata.read_h5ad(file, backed='r')
+            print(f"    Loading expression data from {file}")
 
-
-            # DEBUGGING: Check for missing cells and genes
-            missing_cells = cell_filtered.index.difference(ad.obs_names)
-            missing_genes = gene_filtered.index.difference(ad.var_names)
-
-            print(f"    Cells requested: {len(cell_filtered)}")
-            print(f"    Cells in h5ad: {ad.n_obs}")
-            print(f"    Missing cells: {len(missing_cells)}")
-            print(f"    Missing genes: {missing_genes.tolist()}")
-            print(f"    X type: {type(ad.X)}")
-
-            print("\n    --- Environment ---")
-            import sys
-            print(f"    Python: {sys.version}")
-            print(f"    anndata: {anndata.__version__}")
-            print(f"    scipy: {scipy.__version__}")
-            print(f"    numpy: {np.__version__}")
-            print(f"    pandas: {pd.__version__}")
-            print(f"    h5py: {h5py.__version__}")
-
-            print("\n    --- AnnData ---")
-            print(f"    Shape: {ad.shape}")
-            print(f"    Backed: {ad.isbacked}")
-            print(f"    X type: {type(ad.X)}")
-            print(f"    X shape: {ad.X.shape}")
-            print(f"    X dtype: {ad.X.dtype}")
-            print(f"    X format: {getattr(ad.X, 'format', None)}")
-
-            print("\n    --- Indexes ---")
-            print(f"    ad.obs_names unique: {ad.obs_names.is_unique}")
-            print(f"    ad.var_names unique: {ad.var_names.is_unique}")
-            print(f"    cell_filtered index unique: {cell_filtered.index.is_unique}")
-            print(f"    gene_filtered index unique: {gene_filtered.index.is_unique}")
-
-            test_cell = cell_filtered.index[0]
-            test_gene = gene_filtered.index[0]
-
-            cell_position = ad.obs_names.get_loc(test_cell)
-            gene_position = ad.var_names.get_loc(test_gene)
-
-            print(f"    Test cell: {test_cell}")
-            print(
-                f"    Cell position: {cell_position!r}; "
-                f"type: {type(cell_position)}"
+            exp_df = extract_gene_expression(
+                file,
+                cell_filtered.index,
+                gene_filtered,
             )
-            print(f"    Test gene: {test_gene}")
-            print(
-                f"    Gene position: {gene_position!r}; "
-                f"type: {type(gene_position)}"
-            )
-
-            ### End debugging
-            #         
-
-            try:
-                exp_df = ad[cell_filtered.index, gene_filtered.index].to_df()
-            except KeyError as e:
-                print(f"    [yellow1]Skipping {file.name}: {e}")
-                ad.file.close()
-                continue
-
-            exp_df.columns = gene_filtered['gene_symbol']
             exp_dfs.append(exp_df)
 
         if not exp_dfs:
-            print("\n    [red1]No expression data loaded from any .h5ad files.\n")
-            import sys; sys.exit()
+            print(
+                "\n    [red1]No expression data loaded "
+                "from any .h5ad files.\n"
+            )
+            import sys
+            sys.exit()
 
-        gdata = pd.concat(exp_dfs, axis=0)
-        expression_subset = gdata
+        expression_subset = pd.concat(exp_dfs, axis=0)
 
     elif species == 'human':
         expression_path = download_base / f"expression_matrices/WHB-10Xv3/20240330/WHB-10Xv3-{cell_type}-log2.h5ad"
@@ -272,32 +248,11 @@ def get_gene_data_wo_cache_and_chunking(
             print(f"[red1]Error: Expression data not found at {expression_path}\n")
             import sys; sys.exit()
         
-        print(f"    Loading expression data from {expression_path}")
-        expression_data = anndata.read_h5ad(expression_path)
-        print("    Data loaded successfully.\n")
-        
-        # Match cells between metadata and expression data
-        print("    Matching cell labels between metadata and expression data...")
-        cell_indexes = cell_df.index.intersection(expression_data.obs_names)  # Check for matching cell labels
-        if len(cell_indexes) == 0:
-            print("\n    [red1]No matching cell labels found. Please check label formats.\n")
-            import sys; sys.exit()
-        
-        print(f"    Number of matching cells: {len(cell_indexes)}")
-        
-        # Extract expression data for the selected cells and genes
-        try:
-            print(f"    Extracting expression data for the selected cells and genes...")
-            expression_subset = expression_data[cell_indexes, gene_filtered.index].to_df()
-            expression_subset.columns = gene_filtered.gene_symbol
-            expression_subset.index.name = 'cell_label'
-            print(f"    Extracted expression data:\n\n{expression_subset.head()}\n")
-        except KeyError as e:
-            print(f"\n    [red1]Error extracting data: {e}\n")
-            import sys; sys.exit()
-
-        if hasattr(expression_data, 'file'):
-            expression_data.file.close()  # Close file only if backed mode is used
+        expression_subset = extract_gene_expression(
+            expression_path,
+            cell_df.index,
+            gene_filtered,
+        )
 
     return expression_subset.reset_index()
 
@@ -379,10 +334,7 @@ def main():
         region_label = args.region if args.region else "all_regions"
         output_file = output_folder / f"WMB-10Xv3_{args.genes[0]}_expression_data_{region_label}_log2.csv"
     else:
-        if args.region is None:
-            output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_log2.csv"
-        else:
-            output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_{args.region}_log2.csv"
+        output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_log2.csv"
 
     expression_data.to_csv(output_file, index=False)
     print(f"\n    Saved expression data for gene {args.genes[0]} to {output_file}\n")
