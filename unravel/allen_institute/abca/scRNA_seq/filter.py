@@ -7,7 +7,8 @@ Notes:
     - region_of_interest_acronym: ACA, AI, AUD, AUD-TEa-PERI-ECT, CB, CTXsp, ENT, HIP, HY, LSX, MB, MO-FRP, MOp, MY, OLF, P, PAL, PL-ILA-ORB, RHP, RSP, sAMY, SS-GU-VISC, SSp, STRd, STRv, TEa-PERI-ECT, TH, VIS, VIS-PTLp
     - mouse columns: cell_label, feature_matrix_label, region_of_interest_acronym, x, y, cluster_alias, neurotransmitter, class, subclass, supertype, cluster, ..., <genes>
     - human columns: cell_label, feature_matrix_label, region_of_interest_acronym, x, y, cluster_alias, neurotransmitter, supercluster, cluster, subcluster, ..., <genes>
-    
+    - For multiple columns and values, the number of columns must match the number of values.
+
 Next steps:
     - ``abca_sunburst_expression``
 
@@ -38,7 +39,7 @@ def parse_args():
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
     reqs.add_argument('-i', '--input', help='Path to the scRNAseq CSV file', required=True, action=SM)
     reqs.add_argument('-c', '--columns', help='Columns to filter by (e.g., region_of_interest_acronym)', nargs='*', required=True, action=SM)
-    reqs.add_argument('-val', '--values', help='Values used for filtering.', nargs='*', required=True, action=SM)
+    reqs.add_argument('-val', '--values', help='Values used for filtering. For multiple columns and values, the number of columns must match the number of values.', nargs='*', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: mouse', default='mouse', action=SM)
@@ -64,7 +65,7 @@ def filter_by_cell_type(cell_df: pd.DataFrame, species: str, cell_type: str | No
     elif species == 'human' and 'supercluster' in cell_df.columns:
         nonneurons = {'Oligodendrocyte', 'Committed oligodendrocyte precursor', 'Oligodendrocyte precursor',
                       'Astrocyte', 'Ependymal', 'Microglia', 'Vascular', 'Bergmann glia', 'Fibroblast', 'Choroid plexus'}
-        is_nonneuronal = cell_df['supercluster'].str.split().str[0].isin(nonneurons)
+        is_nonneuronal = cell_df['supercluster'].isin(nonneurons)
         return cell_df[~is_nonneuronal] if ct == 'neurons' else cell_df[is_nonneuronal]
 
     print(f"[yellow]Warning: Missing expected metadata columns for {species}, returning unfiltered data.[/yellow]")
@@ -99,7 +100,7 @@ def main():
     print("Filtered cell metadata:")
     print(f'\n{filtered_df}\n')
 
-    if args.details: # This could be removed later to keep filtering simple (make sure details are consistently added upstream)
+    if args.details and args.species == 'mouse':  # This could be removed later to keep filtering simple (make sure details are consistently added upstream)
         print("\nAdding classification levels and colors to the filtered DataFrame...")
         # Add the classification levels and the corresponding color.
         filtered_df_joined = mf.join_cluster_details(filtered_df, download_base)
