@@ -206,6 +206,7 @@ def get_gene_data_wo_cache_and_chunking(
             print(f"    X type: {type(ad.X)}")
 
             print("\n    --- Environment ---")
+            import sys
             print(f"    Python: {sys.version}")
             print(f"    anndata: {anndata.__version__}")
             print(f"    scipy: {scipy.__version__}")
