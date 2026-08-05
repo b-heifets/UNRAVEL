@@ -20,7 +20,7 @@ Note:
 
 Usage:
 ------
-    abca_scRNAseq_expression -b path/base_dir -g genes [-s mouse | human] [-c Neurons | Nonneurons] [-r region] [-o output] [-v]
+    abca_scRNAseq_expression -b path/base_dir -g genes [-s mouse | human] [-c Neurons | Nonneurons] [-o output] [-v]
 
 Usage for humans:
 -----------------
@@ -28,7 +28,7 @@ Usage for humans:
 
 Usage for mice:
 ---------------
-    abca_scRNAseq_expression -b path/base_dir -g genes [-r region] [-o output_dir] [-v]
+    abca_scRNAseq_expression -b path/base_dir -g genes [-o output_dir] [-v]
 """
 
 from typing import List
@@ -55,7 +55,6 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: human', default='human', choices=('mouse', 'human'), action=SM)
     opts.add_argument('-c', '--cell_type', help='Cell type to extract data from for humans (Neurons or Nonneurons)', default=None, action=SM)
-    opts.add_argument('-r', '--region', help='Region to use for mice (OLF, CTXsp, Isocortex-1, Isocortex-2, HPF, STR, PAL, TH, HY, MB, MY, P, CB). Default: all regions', default=None, action=SM)
     opts.add_argument('-o', '--output', help='Path to output folder for the expression data. Default: current directory', default='.', action=SM)
     opts.add_argument('-l', '--less-metadata', help='Include less metadata in the output (omit cluster annotations and colors).', action='store_true', default=False)
 
@@ -171,7 +170,6 @@ def get_gene_data_wo_cache_and_chunking(
     all_genes: pd.DataFrame,
     selected_genes: List[str],
     species: str = "human",
-    region: str = None,
     cell_type: str = None
 ) -> pd.DataFrame:
     """Load and structure gene expression data directly from RNA-seq data for specific genes.
@@ -188,8 +186,6 @@ def get_gene_data_wo_cache_and_chunking(
         List of gene_symbols that are a subset of those in the full genes DataFrame.
     species : str
         The species to use (human or mouse). Default: 'human'.
-    region : str
-        The region to use for mice (OLF, CTXsp, Isocortex-1, Isocortex-2, HPF, STR, PAL, TH, HY, MB, MY, P, CB). Default: None.
     cell_type : str
         The cell type to use for humans (Neurons or Nonneurons). Default: None.
 
@@ -313,7 +309,7 @@ def main():
 
     # Retrieve expression data for all selected genes at once
     expression_data = get_gene_data_wo_cache_and_chunking(
-        download_base, cell_df, gene_df, args.genes, species=args.species, region=args.region, cell_type=args.cell_type
+        download_base, cell_df, gene_df, args.genes, species=args.species, cell_type=args.cell_type
     )
 
     if not args.less_metadata:
@@ -331,8 +327,7 @@ def main():
     output_folder = Path(args.output) if args.output != '.' else Path.cwd()
     output_folder.mkdir(parents=True, exist_ok=True)
     if args.species == 'mouse':
-        region_label = args.region if args.region else "all_regions"
-        output_file = output_folder / f"WMB-10Xv3_{args.genes[0]}_expression_data_{region_label}_log2.csv"
+        output_file = output_folder / f"WMB-10Xv3_{args.genes[0]}_expression_data_log2.csv"
     else:
         output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_log2.csv"
 
