@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_merfish_join_expression`` ``mje`` from UNRAVEL to join [filtered] cell metadata with MERFISH expression data for a specified gene from the ABCA.
+Use ``abca_merfish_join_expression`` (``mje``) from UNRAVEL to join [filtered] cell metadata with MERFISH expression data for a specified gene from the ABCA.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/merfish_tutorial_part_2b.html
