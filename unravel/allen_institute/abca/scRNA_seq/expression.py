@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNAseq_expression`` or ``rna_exp`` from UNRAVEL to produce a small expression table
-with limited metadata for analyses that do not need extensive ABCA metadata.
+Use ``abca_scRNAseq_expression`` (``rna_exp``) from UNRAVEL to extract expression data for specific genes from the ABCA.
 
 Inputs:
     - Cell metadata from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
