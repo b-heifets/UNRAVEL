@@ -279,18 +279,20 @@ def color_cell_type_tick_labels(
     ax: plt.Axes,
     df: pd.DataFrame,
 ) -> None:
-    """Color y-axis cell-type labels using cell_type_color."""
-    if 'cell_type_color' not in df.columns:
-        return
-
-    colors = df['cell_type_color'].fillna('').astype(str)
+    """Bold and color y-axis cell-type labels."""
+    colors = (
+        df['cell_type_color'].fillna('').astype(str)
+        if 'cell_type_color' in df.columns
+        else pd.Series('', index=df.index)
+    )
 
     for tick_label, color in zip(
         ax.get_yticklabels(),
         colors,
     ):
-        color = color.strip()
+        tick_label.set_fontweight('bold')
 
+        color = color.strip()
         if re.fullmatch(r'#[0-9A-Fa-f]{6}', color):
             tick_label.set_color(color)
 
@@ -614,7 +616,7 @@ def plot_dotplot(
     ax.set_xlim(-0.5, n_genes - 0.5)
     ax.set_ylim(n_rows - 0.5, -0.5)
     ax.set_xlabel('Gene')
-    ax.set_ylabel('Cell type')
+    ax.set_ylabel('Cell type', fontweight='bold')
     ax.set_title(f'{title}: dot plot')
     ax.set_axisbelow(True)
     ax.grid(True, axis='both', linewidth=0.35, alpha=0.35)
