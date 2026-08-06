@@ -4,8 +4,8 @@
 Use ``abca_sunburst_expression`` or ``sbe`` from UNRAVEL to calculate mean expression for all cell types in the ABCA and make a sunburst plot.
 
 Prereqs: 
-    - ``abca_merfish_filter`` and ``merfish_join_expression_data.py``
-    - Or: ``RNAseq_expression.py`` and ``RNAseq_filter.py``
+    - ``abca_merfish_filter`` and ``abca_merfish_join_expression``
+    - Or: ``abca_scRNAseq_expression`` and ``abca_scRNAseq_filter``
 
 Outputs:
     - path/input_sunburst.csv
@@ -21,6 +21,7 @@ Next steps:
     - Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (https://app.flourish.studio/)
     - It can be pasted into the Data tab (categories columns = cell type columns, Size by = percent column)
     - Preview tab: Hierarchy -> Depth to 5, Colors -> paste content of ..._colors.csv into Custom overrides
+    - ``abca_sunburst_expression_overview`` to summarize mean and percent expression for all cells and each cell type.
 
 Usage:
 ------ 
@@ -41,7 +42,6 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
-# TODO: Update docstring with commands for other scripts in prereqs.
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)

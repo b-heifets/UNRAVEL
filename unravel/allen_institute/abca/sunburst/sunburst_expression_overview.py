@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Combine abca_sunburst_expression *_all.csv outputs and create overview plots.
+Use ``abca_sunburst_expression_overview`` or ``seov`` from UNRAVEL to 
+combine multiple *_all.csv outputs from ``abca_sunburst_expression`` and create overview plots.
 
 The dot plot shows:
     - rows: regions/input datasets
