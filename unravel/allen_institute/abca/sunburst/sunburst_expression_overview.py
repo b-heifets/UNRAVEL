@@ -9,12 +9,29 @@ The dot plot shows:
     - dot color: mean expression
     - dot size: percent of cells above the expression threshold
 
-Also saves separate heatmaps for mean expression and percent expressing.
+Inputs:
+    - One or more *_all.csv files, directories, or glob patterns (e.g.,
+      "ABCA_sunburst_cmax6.0_thr3.0/*_all.csv" or "ABCA_sunburst_cmax6.0_thr3.0/*/*_all.csv")
+    - Each *_all.csv file should have the following columns:
+        - input: the input dataset name (e.g., WMB-10Xv3, WHB-10Xv3)
+        - species: mouse or human
+        - gene: the gene symbol
+        - threshold: the expression threshold used for filtering
+        - all_mean: the mean expression value for the gene in the input dataset
+        - all_percent: the percent of cells above the threshold for the gene in the input dataset
+    - The *_all.csv files can be generated using ``abca_sunburst_expression``
 
-Example:
-    python abca_expression_overview.py \
-        -i ABCA_sunburst_cmax6.0_thr3.0/all_expression_thr3.0 \
-        -o ABCA_sunburst_cmax6.0_thr3.0/expression_overview
+Outputs:
+    - path/abca_expression_overview_long.csv: combined long-format CSV of all *_all.csv files
+    - path/abca_expression_overview_mean_wide.csv: wide-format CSV of mean expression values (rows: regions, columns: genes)
+    - path/abca_expression_overview_percent_wide.csv: wide-format CSV of percent expressing values (rows: regions, columns: genes)
+    - path/abca_expression_overview_dotplot.png/pdf: dot plot
+    - path/abca_expression_overview_mean_heatmap.png/pdf: heatmap of mean expression values
+    - path/abca_expression_overview_percent_heatmap.png/pdf: heatmap of percent expressing values
+
+Usage:
+------
+    ./sunburst_expression_overview.py -i ABCA_sunburst_cmax6.0_thr3.0/all_expression_thr3.0
 """
 
 import argparse
