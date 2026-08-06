@@ -84,7 +84,7 @@ def parse_args():
     reqs.add_argument(
         '-g', '--genes',
         help='Gene-expression columns to summarize.',
-        nargs='+',
+        nargs='*',
         required=True,
         action=SM,
     )
