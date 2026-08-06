@@ -813,9 +813,9 @@ def main():
     saved_paths = []
 
     if args.plot in ('dotplot', 'both'):
-        dotplot_path = output_dir / (
-            f'{output_prefix}__dotplot.{args.format}'
-        )
+        dotplot_dir = output_dir / 'dotplot'
+        dotplot_dir.mkdir(parents=True, exist_ok=True)
+        dotplot_path = dotplot_dir / f'{output_prefix}__dotplot.{args.format}'
         plot_dotplot(
             df=plot_df,
             genes=genes,
@@ -840,7 +840,9 @@ def main():
             else (args.heatmap_metric,)
         )
         for metric in heatmap_metrics:
-            heatmap_path = output_dir / (
+            heatmap_dir = output_dir / f'heatmap_{metric}'
+            heatmap_dir.mkdir(parents=True, exist_ok=True)
+            heatmap_path = heatmap_dir / (
                 f'{output_prefix}__heatmap-{metric}.{args.format}'
             )
             plot_heatmap(
