@@ -84,12 +84,6 @@ def main():
             f"the # of values ({len(args.values)})."
         )
 
-    if not args.columns and not args.split_column:
-        raise ValueError(
-            "Provide --columns and --values for normal filtering, "
-            "or --split-column to write one file per unique value."
-        )
-
     # Load the cell metadata
     cell_df = pd.read_csv(args.input, dtype={'cell_label': str})
 
