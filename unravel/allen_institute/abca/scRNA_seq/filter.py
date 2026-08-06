@@ -38,8 +38,8 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-split', '--split-column', dest='split_column', help='Write one CSV per unique value in this column. In this mode, -o specifies an output directory.', default=None, action=SM)
-    opts.add_argument('-c', '--columns', help='Columns to filter by (e.g., region_of_interest_acronym)', nargs='*', required=True, action=SM)
-    opts.add_argument('-val', '--values', help='Values used for filtering. For multiple columns and values, the number of columns must match the number of values.', nargs='*', required=True, action=SM)
+    opts.add_argument('-c', '--columns', help='Columns to filter by (e.g., region_of_interest_acronym)', nargs='*', action=SM)
+    opts.add_argument('-val', '--values', help='Values used for filtering. For multiple columns and values, the number of columns must match the number of values.', nargs='*', action=SM)
     opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: mouse', default='mouse', action=SM)
     opts.add_argument('-o', '--output', help='Output path for the filtered cell metadata', default=None, action=SM)
     opts.add_argument('-ct', '--cell_type', help='Cell type to use (neurons or nonneurons). Default: None', default=None, action=SM)
