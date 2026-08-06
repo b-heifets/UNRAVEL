@@ -617,7 +617,10 @@ def plot_dotplot(
     ax.set_ylim(n_rows - 0.5, -0.5)
     ax.set_xlabel('Gene')
     ax.set_ylabel('Cell type', fontweight='bold')
-    ax.set_title(f'{title}: dot plot')
+    ax.set_title(
+        f'{title}: dot plot',
+        fontweight='bold',
+    )
     ax.set_axisbelow(True)
     ax.grid(True, axis='both', linewidth=0.35, alpha=0.35)
 
@@ -718,7 +721,10 @@ def plot_heatmap(
     color_cell_type_tick_labels(ax, df)
     ax.set_xlabel('Gene')
     ax.set_ylabel('Cell type')
-    ax.set_title(plot_title)
+    ax.set_title(
+        plot_title,
+        fontweight='bold',
+    )
 
     colorbar = fig.colorbar(image, ax=ax, pad=0.02)
     colorbar.set_label(colorbar_label)
