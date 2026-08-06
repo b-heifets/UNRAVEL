@@ -12,7 +12,7 @@ Outputs:
     - path/sunburst_expression_thr<value>/input__gene-GENE_sunburst_expression_thr<value>.csv
     - path/mean_expression_lut/input__gene-GENE_mean_expression_lut.txt
     - path/percent_expression_thr<value>_lut/input__gene-GENE_percent_expression_thr<value>_lut.txt
-    - With ``--all``: path/all_expression_thr<value>/input__gene-GENE_all.csv
+    - path/all_expression_thr<value>/input__gene-GENE_all.csv
 
 Note:
     - LUT location: unravel/core/csvs/ABCA/WMB_sunburst_colors.csv
@@ -57,7 +57,6 @@ def parse_args():
     opts.add_argument('-t', '--threshold', help='Log2(CPM+1) threshold for percent gene expression. Default: 6', default=6, type=float, action=SM)
     opts.add_argument('-o', '--output', help='Output dir path. Default: ABCA_sunburst_cmax10_thr6/', default=None, action=SM)
     opts.add_argument('-op', '--output_prefix', help='Gene-specific output file prefix. Default: input stem + __gene-GENE', default=None, action=SM)
-    opts.add_argument('-a', '--all', help='Save mean expression and percent expressing for all cells to a one-row CSV. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -141,22 +140,20 @@ def main():
     mean_lut_dir.mkdir(parents=True, exist_ok=True)
     percent_lut_dir.mkdir(parents=True, exist_ok=True)
 
-    if args.all:
-        all_dir.mkdir(parents=True, exist_ok=True)
+    all_dir.mkdir(parents=True, exist_ok=True)
 
     # Save the mean expression and percent expressing for all cells (.csv)
-    if args.all:
-        all_df = pd.DataFrame({
-            'input': [Path(args.input).name],
-            'species': [species],
-            'gene': [args.gene],
-            'threshold': [args.threshold],
-            'all_mean': [all_mean],
-            'all_percent': [all_percent],
-        })
-        all_path = all_dir / f'{output_prefix}_all.csv'
-        all_df.to_csv(all_path, index=False)
-        print(f"\nSaved mean expression and percent expressing for all cells to {all_path}")
+    all_df = pd.DataFrame({
+        'input': [Path(args.input).name],
+        'species': [species],
+        'gene': [args.gene],
+        'threshold': [args.threshold],
+        'all_mean': [all_mean],
+        'all_percent': [all_percent],
+    })
+    all_path = all_dir / f'{output_prefix}_all.csv'
+    all_df.to_csv(all_path, index=False)
+    print(f"\nSaved mean expression and percent expressing for all cells to {all_path}")
 
     # Calculate mean expression and percent expressing at each hierarchy level
     summary_df = cells_df.copy()
