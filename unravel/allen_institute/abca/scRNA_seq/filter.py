@@ -17,10 +17,7 @@ Usage:
     abca_scRNAseq_filter -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
 """
 
-import anndata
-import numpy as np
 import pandas as pd
-import nibabel as nib
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -38,10 +35,11 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
     reqs.add_argument('-i', '--input', help='Path to the scRNAseq CSV file', required=True, action=SM)
-    reqs.add_argument('-c', '--columns', help='Columns to filter by (e.g., region_of_interest_acronym)', nargs='*', required=True, action=SM)
-    reqs.add_argument('-val', '--values', help='Values used for filtering. For multiple columns and values, the number of columns must match the number of values.', nargs='*', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-split', '--split-column', dest='split_column', help='Write one CSV per unique value in this column. In this mode, -o specifies an output directory.', default=None, action=SM)
+    opts.add_argument('-c', '--columns', help='Columns to filter by (e.g., region_of_interest_acronym)', nargs='*', required=True, action=SM)
+    opts.add_argument('-val', '--values', help='Values used for filtering. For multiple columns and values, the number of columns must match the number of values.', nargs='*', required=True, action=SM)
     opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: mouse', default='mouse', action=SM)
     opts.add_argument('-o', '--output', help='Output path for the filtered cell metadata', default=None, action=SM)
     opts.add_argument('-ct', '--cell_type', help='Cell type to use (neurons or nonneurons). Default: None', default=None, action=SM)
@@ -77,9 +75,21 @@ def main():
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
-    
-    if len(args.columns) != len(args.values):
-        raise ValueError(f"The # of columns ({len(args.columns)}) must match the # of values ({len(args.values)}).")
+
+    if bool(args.columns) != bool(args.values):
+        raise ValueError("--columns and --values must be provided together.")
+
+    if args.columns and len(args.columns) != len(args.values):
+        raise ValueError(
+            f"The # of columns ({len(args.columns)}) must match "
+            f"the # of values ({len(args.values)})."
+        )
+
+    if not args.columns and not args.split_column:
+        raise ValueError(
+            "Provide --columns and --values for normal filtering, "
+            "or --split-column to write one file per unique value."
+        )
 
     download_base = Path(args.base)
 
@@ -87,42 +97,114 @@ def main():
     cell_df = pd.read_csv(args.input, dtype={'cell_label': str})
 
     print(f"\n    Initial cell metadata shape:\n    {cell_df.shape}")
-    print(f'\n{cell_df}\n')
 
-    # Filter by cell type for mice if specified
+    if args.verbose:
+        print("\nFirst five rows:")
+        print(cell_df.head())
+
+    # Filter by cell type if specified
     cell_df = filter_by_cell_type(cell_df, species=args.species, cell_type=args.cell_type)
 
-    # Filter the DataFrame
-    filtered_df = filter_dataframe(cell_df, args.columns, args.values)
+    # Optional filters applied before splitting
+    if args.columns:
+        filtered_df = filter_dataframe(
+            cell_df,
+            args.columns,
+            args.values
+        )
+    else:
+        filtered_df = cell_df
+
     print("\nFiltered cell metadata shape:", filtered_df.shape)
-    print("\n                                             First row:")
-    print(filtered_df.iloc[0])
-    print("Filtered cell metadata:")
-    print(f'\n{filtered_df}\n')
 
-    if args.details and args.species == 'mouse':  # This could be removed later to keep filtering simple (make sure details are consistently added upstream)
-        print("\nAdding classification levels and colors to the filtered DataFrame...")
-        # Add the classification levels and the corresponding color.
-        filtered_df_joined = mf.join_cluster_details(filtered_df, download_base)
-
-        # Add the cluster colors
-        filtered_df_joined = mf.join_cluster_colors(filtered_df_joined, download_base)
+    if args.details and args.species == 'mouse':
+        print("\nAdding classification levels and colors...")
+        filtered_df_joined = mf.join_cluster_details(
+            filtered_df,
+            download_base
+        )
+        filtered_df_joined = mf.join_cluster_colors(
+            filtered_df_joined,
+            download_base
+        )
     else:
         print("\nSkipping classification levels and colors addition.")
         filtered_df_joined = filtered_df
-        
+
+    # Write one CSV per unique value in the split column
+    if args.split_column:
+        if args.split_column not in filtered_df_joined.columns:
+            raise ValueError(
+                f"Column not found: {args.split_column}"
+            )
+
+        input_stem = Path(args.input).stem
+
+        if args.output is not None:
+            output_dir = Path(args.output)
+        else:
+            output_dir = Path(
+                f"{input_stem}__by_{args.split_column}"
+            )
+
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        n_outputs = 0
+
+        for value, group_df in filtered_df_joined.groupby(
+            args.split_column,
+            sort=False,
+            dropna=False
+        ):
+            value_label = "NA" if pd.isna(value) else str(value)
+
+            # Human A29-A30 -> Human_A29-A30
+            safe_value = re.sub(
+                r'[^A-Za-z0-9._-]+',
+                '_',
+                value_label
+            ).strip('_')
+
+            output_path = output_dir / (
+                f"{input_stem}__{safe_value}.csv"
+            )
+
+            group_df.to_csv(output_path, index=False)
+
+            print(
+                f"Saved {group_df.shape[0]:,} cells: "
+                f"{output_path}"
+            )
+
+            n_outputs += 1
+
+        print(
+            f"\nSaved {n_outputs} files to: "
+            f"{output_dir}"
+        )
+
+        verbose_end_msg()
+        return
+
+    # Original single-output behavior
+    if args.verbose and not filtered_df_joined.empty:
+        print("\nFirst filtered row:")
+        print(filtered_df_joined.iloc[0])
+
     for column in args.columns:
         print(f"\nUnique values for {column}:")
         print(filtered_df_joined[column].unique())
 
-    # Save the filtered DataFrame
     if args.output is not None:
         output_path = Path(args.output)
     else:
-        output_path = Path(str(Path(args.input).name).replace('.csv', '_filtered.csv'))
+        output_path = Path(
+            f"{Path(args.input).stem}_filtered.csv"
+        )
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
     filtered_df_joined.to_csv(output_path, index=False)
+
     print(f"\nFiltered data saved to: {output_path}")
 
     verbose_end_msg()
