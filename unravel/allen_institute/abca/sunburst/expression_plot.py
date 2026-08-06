@@ -188,15 +188,14 @@ def parse_args():
     )
     appearance.add_argument(
         '--mean-cmap',
-        help='Matplotlib colormap for mean expression. Default: magma_r',
-        default='magma_r',
+        help='Matplotlib colormap for mean expression. Default: magma',
+        default='magma',
         action=SM,
     )
-
     appearance.add_argument(
         '--percent-cmap',
-        help='Matplotlib colormap for percent expression. Default: viridis_r',
-        default='viridis_r',
+        help='Matplotlib colormap for percent expression. Default: viridis',
+        default='viridis',
         action=SM,
     )
     appearance.add_argument(
@@ -274,6 +273,26 @@ def natural_sort_text(value) -> str:
     """Return a zero-padded natural-sort key."""
     text = '' if pd.isna(value) else str(value).lower()
     return re.sub(r'\d+', lambda match: f'{int(match.group()):012d}', text)
+
+
+def color_cell_type_tick_labels(
+    ax: plt.Axes,
+    df: pd.DataFrame,
+) -> None:
+    """Color y-axis cell-type labels using cell_type_color."""
+    if 'cell_type_color' not in df.columns:
+        return
+
+    colors = df['cell_type_color'].fillna('').astype(str)
+
+    for tick_label, color in zip(
+        ax.get_yticklabels(),
+        colors,
+    ):
+        color = color.strip()
+
+        if re.fullmatch(r'#[0-9A-Fa-f]{6}', color):
+            tick_label.set_color(color)
 
 
 def detect_genes(columns: list[str]) -> list[str]:
@@ -591,6 +610,7 @@ def plot_dotplot(
     ax.set_xticklabels(genes, rotation=45, ha='right')
     ax.set_yticks(np.arange(n_rows))
     ax.set_yticklabels(df['_plot_label'])
+    color_cell_type_tick_labels(ax, df)
     ax.set_xlim(-0.5, n_genes - 0.5)
     ax.set_ylim(n_rows - 0.5, -0.5)
     ax.set_xlabel('Gene')
@@ -693,6 +713,7 @@ def plot_heatmap(
     ax.set_xticklabels(genes, rotation=45, ha='right')
     ax.set_yticks(np.arange(n_rows))
     ax.set_yticklabels(df['_plot_label'])
+    color_cell_type_tick_labels(ax, df)
     ax.set_xlabel('Gene')
     ax.set_ylabel('Cell type')
     ax.set_title(plot_title)
@@ -759,16 +780,8 @@ def main():
         else input_path.parent / 'expression_plots'
     )
     output_dir.mkdir(parents=True, exist_ok=True)
-    dotplot_dir = output_dir / 'dotplots'
-    mean_heatmap_dir = output_dir / 'mean_heatmaps'
-    percent_heatmap_dir = output_dir / 'percent_heatmaps'
 
     output_prefix = args.output_prefix or input_path.stem
-
-    if args.genes:
-        gene_label = '-'.join(safe_name(gene) for gene in genes)
-        output_prefix = f'{output_prefix}__gene-{gene_label}'
-
     title = default_title(summary_df, args.title)
     _, _, threshold = summary_context(summary_df)
 
@@ -781,7 +794,7 @@ def main():
     saved_paths = []
 
     if args.plot in ('dotplot', 'both'):
-        dotplot_path = dotplot_dir / (
+        dotplot_path = output_dir / (
             f'{output_prefix}__dotplot.{args.format}'
         )
         plot_dotplot(
@@ -808,13 +821,7 @@ def main():
             else (args.heatmap_metric,)
         )
         for metric in heatmap_metrics:
-            heatmap_dir = (
-                mean_heatmap_dir
-                if metric == 'mean'
-                else percent_heatmap_dir
-            )
-
-            heatmap_path = heatmap_dir / (
+            heatmap_path = output_dir / (
                 f'{output_prefix}__heatmap-{metric}.{args.format}'
             )
             plot_heatmap(
