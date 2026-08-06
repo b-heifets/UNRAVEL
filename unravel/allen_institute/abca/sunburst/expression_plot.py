@@ -188,14 +188,15 @@ def parse_args():
     )
     appearance.add_argument(
         '--mean-cmap',
-        help='Matplotlib colormap for mean expression. Default: magma',
-        default='magma',
+        help='Matplotlib colormap for mean expression. Default: magma_r',
+        default='magma_r',
         action=SM,
     )
+
     appearance.add_argument(
         '--percent-cmap',
-        help='Matplotlib colormap for percent expression. Default: viridis',
-        default='viridis',
+        help='Matplotlib colormap for percent expression. Default: viridis_r',
+        default='viridis_r',
         action=SM,
     )
     appearance.add_argument(
@@ -758,6 +759,9 @@ def main():
         else input_path.parent / 'expression_plots'
     )
     output_dir.mkdir(parents=True, exist_ok=True)
+    dotplot_dir = output_dir / 'dotplots'
+    mean_heatmap_dir = output_dir / 'mean_heatmaps'
+    percent_heatmap_dir = output_dir / 'percent_heatmaps'
 
     output_prefix = args.output_prefix or input_path.stem
 
@@ -777,7 +781,7 @@ def main():
     saved_paths = []
 
     if args.plot in ('dotplot', 'both'):
-        dotplot_path = output_dir / (
+        dotplot_path = dotplot_dir / (
             f'{output_prefix}__dotplot.{args.format}'
         )
         plot_dotplot(
@@ -804,7 +808,13 @@ def main():
             else (args.heatmap_metric,)
         )
         for metric in heatmap_metrics:
-            heatmap_path = output_dir / (
+            heatmap_dir = (
+                mean_heatmap_dir
+                if metric == 'mean'
+                else percent_heatmap_dir
+            )
+
+            heatmap_path = heatmap_dir / (
                 f'{output_prefix}__heatmap-{metric}.{args.format}'
             )
             plot_heatmap(
