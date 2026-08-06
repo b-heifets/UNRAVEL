@@ -659,6 +659,29 @@ def save_outputs(
             exist_ok=True,
         )
 
+        # Also save the top-level neurotransmitter summary here for convenience.
+        level = hierarchy_levels[0]
+        level_df = summary_df[
+            summary_df['level'] == level
+        ]
+
+        neurotransmitter_df = level_wide_dataframe(
+            level_df,
+            hierarchy_levels,
+            genes,
+        )
+
+        neurotransmitter_path = collapsed_dir / (
+            f'{output_prefix}__level-{level}_expression_summary_'
+            f'thr{threshold_label}.csv'
+        )
+
+        neurotransmitter_df.to_csv(
+            neurotransmitter_path,
+            index=False,
+        )
+        saved_paths.append(neurotransmitter_path)
+
         # Skip "all" and neurotransmitter because they do not
         # have multiple parent paths to collapse.
         for level in hierarchy_levels[1:]:
