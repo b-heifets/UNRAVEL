@@ -188,14 +188,15 @@ def parse_args():
     )
     appearance.add_argument(
         '--mean-cmap',
-        help='Matplotlib colormap for mean expression. Default: magma',
-        default='magma',
+        help='Matplotlib colormap for mean expression. Default: magma_r',
+        default='magma_r',
         action=SM,
     )
+
     appearance.add_argument(
         '--percent-cmap',
-        help='Matplotlib colormap for percent expression. Default: viridis',
-        default='viridis',
+        help='Matplotlib colormap for percent expression. Default: viridis_r',
+        default='viridis_r',
         action=SM,
     )
     appearance.add_argument(
