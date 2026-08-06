@@ -17,6 +17,8 @@ Usage:
     abca_scRNAseq_filter -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
 """
 
+import re
+
 import pandas as pd
 from pathlib import Path
 from rich import print
