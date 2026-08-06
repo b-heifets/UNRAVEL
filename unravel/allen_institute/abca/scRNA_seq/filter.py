@@ -14,7 +14,7 @@ Next steps:
 
 Usage:
 ------
-    abca_scRNAseq_filter -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
+    abca_scRNAseq_filter -i path/expression.csv [-c column1 column2 ... -val value1 value2 ...] [-s mouse | human] [-ct Neurons | Nonneurons] [-split split_column] [-o output] [-v]
 """
 
 import re
@@ -24,7 +24,6 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.allen_institute.abca.merfish.merfish_filter import filter_dataframe
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
@@ -35,7 +34,6 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
     reqs.add_argument('-i', '--input', help='Path to the scRNAseq CSV file', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -45,7 +43,6 @@ def parse_args():
     opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: mouse', default='mouse', action=SM)
     opts.add_argument('-o', '--output', help='Output path for the filtered cell metadata', default=None, action=SM)
     opts.add_argument('-ct', '--cell_type', help='Cell type to use (neurons or nonneurons). Default: None', default=None, action=SM)
-    opts.add_argument('-d', '--details', help='Add classification levels and colors.', default=False, action='store_true')
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -93,8 +90,6 @@ def main():
             "or --split-column to write one file per unique value."
         )
 
-    download_base = Path(args.base)
-
     # Load the cell metadata
     cell_df = pd.read_csv(args.input, dtype={'cell_label': str})
 
@@ -119,23 +114,9 @@ def main():
 
     print("\nFiltered cell metadata shape:", filtered_df.shape)
 
-    if args.details and args.species == 'mouse':
-        print("\nAdding classification levels and colors...")
-        filtered_df_joined = mf.join_cluster_details(
-            filtered_df,
-            download_base
-        )
-        filtered_df_joined = mf.join_cluster_colors(
-            filtered_df_joined,
-            download_base
-        )
-    else:
-        print("\nSkipping classification levels and colors addition.")
-        filtered_df_joined = filtered_df
-
     # Write one CSV per unique value in the split column
     if args.split_column:
-        if args.split_column not in filtered_df_joined.columns:
+        if args.split_column not in filtered_df.columns:
             raise ValueError(
                 f"Column not found: {args.split_column}"
             )
@@ -153,7 +134,7 @@ def main():
 
         n_outputs = 0
 
-        for value, group_df in filtered_df_joined.groupby(
+        for value, group_df in filtered_df.groupby(
             args.split_column,
             sort=False,
             dropna=False
@@ -189,13 +170,13 @@ def main():
         return
 
     # Original single-output behavior
-    if args.verbose and not filtered_df_joined.empty:
+    if args.verbose and not filtered_df.empty:
         print("\nFirst filtered row:")
-        print(filtered_df_joined.iloc[0])
+        print(filtered_df.iloc[0])
 
     for column in args.columns:
         print(f"\nUnique values for {column}:")
-        print(filtered_df_joined[column].unique())
+        print(filtered_df[column].unique())
 
     if args.output is not None:
         output_path = Path(args.output)
@@ -205,7 +186,7 @@ def main():
         )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    filtered_df_joined.to_csv(output_path, index=False)
+    filtered_df.to_csv(output_path, index=False)
 
     print(f"\nFiltered data saved to: {output_path}")
 
