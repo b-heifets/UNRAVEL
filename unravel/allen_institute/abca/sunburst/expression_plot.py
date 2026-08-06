@@ -791,7 +791,17 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     output_prefix = args.output_prefix or input_path.stem
+
+    if args.genes:
+        gene_label = '-'.join(
+            safe_name(gene) for gene in genes
+        )
+        output_prefix = (
+            f'{output_prefix}__gene-{gene_label}'
+        )
+
     title = default_title(summary_df, args.title)
+    
     _, _, threshold = summary_context(summary_df)
 
     print(f'\nInput: {input_path}')
