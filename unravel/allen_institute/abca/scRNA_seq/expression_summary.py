@@ -715,10 +715,6 @@ def main():
 
     output_prefix = args.output_prefix or input_path.stem
 
-    if args.genes:
-        gene_label = '-'.join(safe_name(gene) for gene in genes)
-        output_prefix = f'{output_prefix}__gene-{gene_label}'
-
     print(f'\nUsing species: {args.species}')
     print(f'Genes: {genes}')
     print(f'Expression threshold: {args.threshold:g}')
