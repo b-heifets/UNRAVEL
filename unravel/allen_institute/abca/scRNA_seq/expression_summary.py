@@ -430,17 +430,31 @@ def level_wide_dataframe(
         'cell_count',
     ]
 
+    metric_columns = [
+        'expressing_cell_count',
+        'mean_expression',
+        'percent_expression',
+    ]
+
     first_gene = genes[0]
-    wide_df = level_df[level_df['gene'] == first_gene][base_columns].copy()
+    wide_df = level_df[
+        level_df['gene'] == first_gene
+    ][base_columns].copy()
 
     for gene in genes:
-        gene_metrics = level_df[level_df['gene'] == gene][
-            ['ontology_path', *METRIC_COLUMNS]
+        gene_metrics = level_df[
+            level_df['gene'] == gene
+        ][
+            ['ontology_path', *metric_columns]
         ].copy()
-        gene_metrics = gene_metrics.rename(columns={
-            metric: f'{gene}_{metric}'
-            for metric in METRIC_COLUMNS
-        })
+
+        gene_metrics = gene_metrics.rename(
+            columns={
+                metric: f'{gene}_{metric}'
+                for metric in metric_columns
+            }
+        )
+
         wide_df = wide_df.merge(
             gene_metrics,
             on='ontology_path',
@@ -449,6 +463,122 @@ def level_wide_dataframe(
         )
 
     return wide_df
+
+
+def collapsed_level_wide_dataframe(
+    level_df: pd.DataFrame,
+    genes: list[str],
+) -> pd.DataFrame:
+    """Collapse identical cell-type labels across ontology parent paths."""
+    first_gene_df = level_df[
+        level_df['gene'] == genes[0]
+    ].copy()
+
+    # Shared cell-type information and total cell counts.
+    base_df = first_gene_df.groupby(
+        [
+            'input',
+            'species',
+            'threshold',
+            'level',
+            'level_order',
+            'cell_type',
+        ],
+        sort=False,
+        dropna=False,
+        as_index=False,
+    ).agg(
+        cell_type_color=('cell_type_color', 'first'),
+        source_path_count=('ontology_path', 'nunique'),
+        source_ontology_paths=(
+            'ontology_path',
+            lambda values: ' | '.join(
+                dict.fromkeys(values.astype(str))
+            ),
+        ),
+        cell_count=('cell_count', 'sum'),
+    )
+
+    # Collapse each gene separately, weighting the mean by the
+    # number of cells with non-missing expression measurements.
+    for gene in genes:
+        gene_df = level_df[
+            level_df['gene'] == gene
+        ].copy()
+
+        gene_df['_expression_sum'] = (
+            gene_df['mean_expression']
+            * gene_df['expression_cell_count']
+        )
+
+        gene_df = gene_df.groupby(
+            'cell_type',
+            sort=False,
+            dropna=False,
+            as_index=False,
+        ).agg(
+            expression_cell_count=(
+                'expression_cell_count',
+                'sum',
+            ),
+            expressing_cell_count=(
+                'expressing_cell_count',
+                'sum',
+            ),
+            expression_sum=(
+                '_expression_sum',
+                'sum',
+            ),
+        )
+
+        denominator = gene_df[
+            'expression_cell_count'
+        ].where(
+            gene_df['expression_cell_count'].ne(0)
+        )
+
+        gene_df[f'{gene}_mean_expression'] = (
+            gene_df['expression_sum']
+            / denominator
+        )
+
+        gene_df[f'{gene}_percent_expression'] = (
+            gene_df['expressing_cell_count']
+            / denominator
+            * 100
+        )
+
+        gene_df = gene_df.rename(
+            columns={
+                'expressing_cell_count':
+                    f'{gene}_expressing_cell_count',
+            }
+        )
+
+        base_df = base_df.merge(
+            gene_df[
+                [
+                    'cell_type',
+                    f'{gene}_expressing_cell_count',
+                    f'{gene}_mean_expression',
+                    f'{gene}_percent_expression',
+                ]
+            ],
+            on='cell_type',
+            how='left',
+            validate='one_to_one',
+        )
+
+    base_df['_cell_type_sort'] = base_df[
+        'cell_type'
+    ].map(natural_sort_text)
+
+    return base_df.sort_values(
+        '_cell_type_sort',
+        kind='stable',
+    ).drop(
+        columns='_cell_type_sort'
+    ).reset_index(drop=True)
 
 
 def save_outputs(
@@ -490,21 +620,70 @@ def save_outputs(
             saved_paths.append(gene_path)
 
     if save_level_files:
+        # Preserve the complete ontology path.
         level_dir = output_dir / 'by_level'
-        level_dir.mkdir(parents=True, exist_ok=True)
+        level_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
         for level in ['all', *hierarchy_levels]:
-            level_df = summary_df[summary_df['level'] == level]
+            level_df = summary_df[
+                summary_df['level'] == level
+            ]
+
             wide_df = level_wide_dataframe(
                 level_df,
                 hierarchy_levels,
                 genes,
             )
+
             level_path = level_dir / (
-                f'{output_prefix}__level-{level}_expression_summary_'
+                f'{output_prefix}__level-{level}_'
+                f'expression_summary_'
                 f'thr{threshold_label}.csv'
             )
-            wide_df.to_csv(level_path, index=False)
+
+            wide_df.to_csv(
+                level_path,
+                index=False,
+            )
             saved_paths.append(level_path)
+
+        # Collapse identical cell-type labels across parent paths.
+        collapsed_dir = (
+            output_dir / 'by_level_collapsed'
+        )
+        collapsed_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        # Skip "all" and neurotransmitter because they do not
+        # have multiple parent paths to collapse.
+        for level in hierarchy_levels[1:]:
+            level_df = summary_df[
+                summary_df['level'] == level
+            ]
+
+            collapsed_df = (
+                collapsed_level_wide_dataframe(
+                    level_df,
+                    genes,
+                )
+            )
+
+            collapsed_path = collapsed_dir / (
+                f'{output_prefix}__level-{level}_'
+                f'collapsed_expression_summary_'
+                f'thr{threshold_label}.csv'
+            )
+
+            collapsed_df.to_csv(
+                collapsed_path,
+                index=False,
+            )
+            saved_paths.append(collapsed_path)
 
     return saved_paths
 
