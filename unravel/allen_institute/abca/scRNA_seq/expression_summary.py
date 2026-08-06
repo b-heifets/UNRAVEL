@@ -33,10 +33,12 @@ Notes:
     - ``expression_cell_count`` counts non-missing values for a gene and is the denominator used for mean and percent expression.
     - An ``all`` row is included for each gene before the ontology levels.
 
-Usage:
-------
+Usage for mouse:
+----------------
     rna_exp_summary -i path/expression_data_log2.csv -s mouse -g Htr2a Htr2b Drd1 Drd2 -t 3
 
+Usage for human:
+----------------
     rna_exp_summary -i path/expression_data_Neurons_log2.csv -s human -g HTR2A HTR2B DRD1 DRD2 -t 3
 """
 
