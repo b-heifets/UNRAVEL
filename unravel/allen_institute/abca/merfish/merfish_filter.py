@@ -14,6 +14,7 @@ Note:
 
 Outputs:
     - Filtered cell metadata CSV file (default: <input_stem>_filtered[_<first_value>][_neurons].csv)
+    - With ``--all_values``, one CSV per unique value for each specified column.
 
 Next steps:
     - Use the filtered cell metadata to examine cell type prevalence or gene expression
@@ -25,7 +26,11 @@ Next steps:
 Usage:
 ------
     abca_merfish_filter -b path/base_dir [--columns] [--values] [-o path/output.csv] [-n] [-v]
+    abca_merfish_filter -b path/base_dir -a [-c column ...] [-o path/output_dir] [-w workers] [-n] [-v]
 """
+
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import re
 
 import anndata
 import numpy as np
@@ -48,11 +53,13 @@ def parse_args():
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata or input.csv by (e.g., ACB).', nargs='*', action=SM)
     opts.add_argument('-i', '--input', help='Input CSV file containing MERFISH cell metadata. If omitted, cell_metadata.csv will be loaded.', default=None, action=SM)
-    opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default=['parcellation_substructure'], nargs='*', action=SM)
-    opts.add_argument('-o', '--output', help='Output path for the filtered df. Default: <input_stem>_filtered_<first_value>.csv', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='Output CSV path, or output directory with --all_values. Default: <input_stem>_filtered_<first_value>.csv or <input_stem>_filtered_by_value/', default=None, action=SM)
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
+    opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default=['parcellation_substructure'], nargs='*', action=SM)
+    opts.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata or input.csv by (e.g., ACB).', nargs='*', action=SM)
+    opts.add_argument('-a', '--all_values', help='Write one CSV per unique value in each specified column. Default: False', action='store_true', default=False)
+    opts.add_argument('-w', '--workers', help='Number of parallel CSV-writing threads for --all_values. Default: 1', type=int, default=1, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -60,6 +67,62 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Does it make sense to consolidate this with scRNA-seq_filter.py?
+
+
+def sanitize_filename(value):
+    """Convert a column value to a filesystem-safe string."""
+    return re.sub(r'[^A-Za-z0-9._-]+', '_', str(value)).strip('_')
+
+
+def save_filtered_value(df, indices, value, output_path):
+    """Save rows corresponding to one column value."""
+    value_df = df.loc[indices]
+    value_df.to_csv(output_path)
+    return value, len(value_df), output_path
+
+
+def filter_all_values(df, columns, output_dir, stem, neurons=False, workers=1):
+    """Write one CSV for every unique value in each specified column."""
+    output_dir = Path(output_dir)
+
+    for col in columns:
+        col_output_dir = output_dir / col if len(columns) > 1 else output_dir
+        col_output_dir.mkdir(parents=True, exist_ok=True)
+
+        groups = df.groupby(col, dropna=True, sort=True).groups
+
+        print(f"\nWriting {len(groups)} unique '{col}' values to {col_output_dir}")
+
+        jobs = []
+        for value, indices in groups.items():
+            safe_value = sanitize_filename(value)
+            suffix = '_neurons' if neurons else ''
+            output_path = col_output_dir / f'{stem}_filtered_{safe_value}{suffix}.csv'
+            jobs.append((value, indices, output_path))
+
+        if workers == 1:
+            for value, indices, output_path in jobs:
+                value, n_cells, output_path = save_filtered_value(
+                    df, indices, value, output_path
+                )
+                print(f"    {value}: {n_cells:,} cells -> {output_path}")
+        else:
+            with ThreadPoolExecutor(max_workers=workers) as executor:
+                futures = [
+                    executor.submit(
+                        save_filtered_value,
+                        df,
+                        indices,
+                        value,
+                        output_path,
+                    )
+                    for value, indices, output_path in jobs
+                ]
+
+                for future in as_completed(futures):
+                    value, n_cells, output_path = future.result()
+                    print(f"    {value}: {n_cells:,} cells -> {output_path}")
+
 
 def filter_dataframe(df, columns, values):
     """
@@ -138,6 +201,40 @@ def main():
     missing_cols = [col for col in args.columns if col not in cell_df_joined.columns]
     if missing_cols:
         raise ValueError(f"Missing expected column(s) in input file: {missing_cols}")
+
+    # --all_values branch: Write one CSV per unique value in each specified column
+    if args.all_values:
+        if args.values:
+            raise ValueError("--values cannot be used with --all_values.")
+
+        if args.workers < 1:
+            raise ValueError("--workers must be at least 1.")
+
+        filtered_df = cell_df_joined.copy()
+
+        if args.neurons:
+            print("[green]Filtering out non-neuronal cells (class > 29)[/green]")
+            filtered_df = filtered_df[filtered_df['class'].str.split().str[0].astype(int) <= 29]
+
+        stem = get_stem(args.input) if args.input else "cell_metadata"
+
+        output_dir = (
+            Path(args.output)
+            if args.output
+            else Path().cwd() / f"{stem}_filtered_by_value"
+        )
+
+        filter_all_values(
+            filtered_df,
+            args.columns,
+            output_dir,
+            stem,
+            neurons=args.neurons,
+            workers=args.workers,
+        )
+
+        verbose_end_msg()
+        return
     
     # Filter the DataFrame
     if args.values:
