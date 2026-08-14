@@ -167,7 +167,8 @@ def main():
         suffix = '_neurons'
     else:
         suffix = ''
-    output_path = args.output if args.output else Path().cwd() / f"{stem}_filtered{suffix}.csv"
+    output_path = Path(args.output) if args.output else Path().cwd() / f"{stem}_filtered{suffix}.csv"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     filtered_df.to_csv(output_path)
 
     print(f"\nUnique {args.columns} values in the filtered data:")
