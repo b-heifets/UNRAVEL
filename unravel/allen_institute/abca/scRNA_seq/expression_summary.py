@@ -20,24 +20,18 @@ For each gene and ontology node, the script calculates:
     - percent_expression above the selected log2(CPM+1) threshold
 
 Outputs:
-    - all_levels_long/<input>__all_levels.csv
-      One row per gene and ontology node.
-    - by_gene/<input>__GENE.csv
-      One CSV per gene containing all ontology levels.
-    - by_level/<input>__LEVEL.csv
-      One wide CSV per ontology level, preserving the full ontology path.
-    - by_level_collapsed/<input>__LEVEL_collapsed.csv
-      One wide CSV per ontology level, with identical cell-type labels
-      combined across different parent ontology paths.
+    - <input>__LEVEL.csv
+      One wide CSV per ontology level. Identical cell-type labels that occur
+      under different parent ontology paths are combined into one row.
 
 Notes:
     - Example of collapsing: if Cell type A occurs under two different
-      neurotransmitter parents, the collapsed output contains one Cell type A
-      row combining cells from both parent paths.
+      neurotransmitter parents, the output contains one Cell type A row
+      combining cells from both parent paths.
     - The script reads the input in chunks so it can summarize large human and mouse CSVs without loading the entire file into memory.
-    - ``cell_count`` counts all rows assigned to an ontology node.
+    - ``cell_count`` counts all rows assigned to a cell type.
     - ``expression_cell_count`` counts non-missing values for a gene and is the denominator used for mean and percent expression.
-    - An ``all`` row is included for each gene before the ontology levels.
+    - By default, outputs are saved to ``expression_summary_thr<value>`` in the input directory.
 
 Usage for mouse:
 ----------------
@@ -64,13 +58,6 @@ HIERARCHY_LEVELS = {
     'mouse': ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'],
     'human': ['neurotransmitter', 'supercluster', 'cluster', 'subcluster'],
 }
-
-METRIC_COLUMNS = [
-    'expression_cell_count',
-    'expressing_cell_count',
-    'mean_expression',
-    'percent_expression',
-]
 
 
 def parse_args():
@@ -129,18 +116,6 @@ def parse_args():
         type=int,
         action=SM,
     )
-    opts.add_argument(
-        '--no-gene-files',
-        help='Do not save one CSV per gene.',
-        action='store_true',
-        default=False,
-    )
-    opts.add_argument(
-        '--no-level-files',
-        help='Do not save one CSV per ontology level.',
-        action='store_true',
-        default=False,
-    )
 
     general = parser.add_argument_group('General arguments')
     general.add_argument(
@@ -156,11 +131,6 @@ def parse_args():
 def format_number(value: float) -> str:
     """Format a numeric CLI value for compact file names."""
     return f'{value:g}'
-
-
-def safe_name(value: str) -> str:
-    """Convert a label to a file-name-safe string."""
-    return re.sub(r'[^A-Za-z0-9._-]+', '_', str(value)).strip('_')
 
 
 def natural_sort_text(value) -> str:
@@ -207,9 +177,6 @@ def summarize_chunks(
 
     partials = {level: [] for level in hierarchy_levels}
     total_cells = 0
-    total_sum = {gene: 0.0 for gene in genes}
-    total_expression_count = {gene: 0 for gene in genes}
-    total_expressing_count = {gene: 0 for gene in genes}
 
     reader = pd.read_csv(
         input_path,
@@ -234,10 +201,6 @@ def summarize_chunks(
                     f"Non-numeric value found in gene column '{gene}': {bad_value!r}"
                 )
             chunk[gene] = numeric
-
-            total_sum[gene] += numeric.sum()
-            total_expression_count[gene] += int(numeric.count())
-            total_expressing_count[gene] += int((numeric > threshold).sum())
 
         expressing = chunk[genes].gt(threshold).astype('int64')
         expressing.columns = [f'{gene}__expressing' for gene in genes]
@@ -280,32 +243,6 @@ def summarize_chunks(
 
     long_dfs = []
 
-    # Include a root row for all cells.
-    for gene in genes:
-        expression_count = total_expression_count[gene]
-        long_dfs.append(pd.DataFrame({
-            'gene': [gene],
-            'level': ['all'],
-            'level_order': [0],
-            'cell_type': ['All cells'],
-            'parent_level': [''],
-            'parent_cell_type': [''],
-            'cell_type_color': [''],
-            'ontology_path': ['All cells'],
-            **{level: [''] for level in hierarchy_levels},
-            'cell_count': [total_cells],
-            'expression_cell_count': [expression_count],
-            'expressing_cell_count': [total_expressing_count[gene]],
-            'mean_expression': [
-                total_sum[gene] / expression_count
-                if expression_count else float('nan')
-            ],
-            'percent_expression': [
-                total_expressing_count[gene] / expression_count * 100
-                if expression_count else float('nan')
-            ],
-        }))
-
     # Combine chunk-level summaries for each ontology level.
     for level_index, level in enumerate(hierarchy_levels):
         group_cols = hierarchy_levels[:level_index + 1]
@@ -338,23 +275,13 @@ def summarize_chunks(
             gene_df['level'] = level
             gene_df['level_order'] = level_index + 1
             gene_df['cell_type'] = gene_df[level]
-            gene_df['parent_level'] = (
-                hierarchy_levels[level_index - 1]
-                if level_index > 0 else 'all'
-            )
-            gene_df['parent_cell_type'] = (
-                gene_df[hierarchy_levels[level_index - 1]]
-                if level_index > 0 else 'All cells'
-            )
             gene_df['cell_type_color'] = (
                 combined['cell_type_color'].fillna('')
                 if 'cell_type_color' in combined.columns else ''
             )
 
-            for descendant in hierarchy_levels[level_index + 1:]:
-                gene_df[descendant] = ''
 
-            gene_df['ontology_path'] = gene_df[hierarchy_levels].apply(
+            gene_df['ontology_path'] = gene_df[group_cols].apply(
                 lambda row: ' > '.join(
                     str(value) for value in row if str(value)
                 ),
@@ -385,11 +312,8 @@ def summarize_chunks(
         'level',
         'level_order',
         'cell_type',
-        'parent_level',
-        'parent_cell_type',
         'cell_type_color',
         'ontology_path',
-        *hierarchy_levels,
         'cell_count',
         'expression_cell_count',
         'expressing_cell_count',
@@ -400,75 +324,16 @@ def summarize_chunks(
 
     gene_order = {gene: index for index, gene in enumerate(genes)}
     summary_df['_gene_order'] = summary_df['gene'].map(gene_order)
-
-    sort_columns = []
-    for level in hierarchy_levels:
-        sort_col = f'_{level}_sort'
-        summary_df[sort_col] = summary_df[level].map(natural_sort_text)
-        sort_columns.append(sort_col)
+    summary_df['_path_sort'] = summary_df[
+        'ontology_path'
+    ].map(natural_sort_text)
 
     summary_df = summary_df.sort_values(
-        ['level_order', *sort_columns, '_gene_order'],
+        ['level_order', '_path_sort', '_gene_order'],
         kind='stable',
-    ).drop(columns=['_gene_order', *sort_columns])
+    ).drop(columns=['_gene_order', '_path_sort'])
 
     return summary_df.reset_index(drop=True)
-
-
-def level_wide_dataframe(
-    level_df: pd.DataFrame,
-    hierarchy_levels: list[str],
-    genes: list[str],
-) -> pd.DataFrame:
-    """Convert one ontology level from long to wide gene-specific metric columns."""
-    base_columns = [
-        'input',
-        'species',
-        'threshold',
-        'level',
-        'level_order',
-        'cell_type',
-        'parent_level',
-        'parent_cell_type',
-        'cell_type_color',
-        'ontology_path',
-        *hierarchy_levels,
-        'cell_count',
-    ]
-
-    metric_columns = [
-        'expressing_cell_count',
-        'mean_expression',
-        'percent_expression',
-    ]
-
-    first_gene = genes[0]
-    wide_df = level_df[
-        level_df['gene'] == first_gene
-    ][base_columns].copy()
-
-    for gene in genes:
-        gene_metrics = level_df[
-            level_df['gene'] == gene
-        ][
-            ['ontology_path', *metric_columns]
-        ].copy()
-
-        gene_metrics = gene_metrics.rename(
-            columns={
-                metric: f'{gene}_{metric}'
-                for metric in metric_columns
-            }
-        )
-
-        wide_df = wide_df.merge(
-            gene_metrics,
-            on='ontology_path',
-            how='left',
-            validate='one_to_one',
-        )
-
-    return wide_df
 
 
 def collapsed_level_wide_dataframe(
@@ -589,119 +454,30 @@ def collapsed_level_wide_dataframe(
 
 def save_outputs(
     summary_df: pd.DataFrame,
-    input_path: Path,
     output_dir: Path,
     output_prefix: str,
     species: str,
     genes: list[str],
-    threshold: float,
-    save_gene_files: bool = True,
-    save_level_files: bool = True,
 ) -> list[Path]:
-    """Save combined, per-gene, and per-level summaries."""
+    """Save one collapsed wide CSV per ontology level."""
     hierarchy_levels = HIERARCHY_LEVELS[species]
-    threshold_label = format_number(threshold)
     saved_paths = []
 
-    long_dir = output_dir / 'all_levels_long'
-    long_dir.mkdir(parents=True, exist_ok=True)
-    combined_path = long_dir / (
-        f'{output_prefix}__all_levels.csv'
-    )
-    summary_df.to_csv(combined_path, index=False)
-    saved_paths.append(combined_path)
-
-    if save_gene_files:
-        gene_dir = output_dir / 'by_gene'
-        gene_dir.mkdir(parents=True, exist_ok=True)
-        for gene in genes:
-            gene_path = gene_dir / f'{output_prefix}__{safe_name(gene)}.csv'
-            summary_df[summary_df['gene'] == gene].to_csv(
-                gene_path,
-                index=False,
-            )
-            saved_paths.append(gene_path)
-
-    if save_level_files:
-        # Preserve the complete ontology path.
-        level_dir = output_dir / 'by_level'
-        level_dir.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
-
-        for level in ['all', *hierarchy_levels]:
-            level_df = summary_df[
-                summary_df['level'] == level
-            ]
-
-            wide_df = level_wide_dataframe(
-                level_df,
-                hierarchy_levels,
-                genes,
-            )
-
-            level_path = level_dir / f'{output_prefix}__{level}.csv'
-
-            wide_df.to_csv(
-                level_path,
-                index=False,
-            )
-            saved_paths.append(level_path)
-
-        # Collapse identical cell-type labels across parent paths.
-        collapsed_dir = (
-            output_dir / 'by_level_collapsed'
-        )
-        collapsed_dir.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
-
-        # Also save the top-level neurotransmitter summary here for convenience.
-        level = hierarchy_levels[0]
+    for level in hierarchy_levels:
         level_df = summary_df[
             summary_df['level'] == level
         ]
 
-        neurotransmitter_df = level_wide_dataframe(
+        collapsed_df = collapsed_level_wide_dataframe(
             level_df,
-            hierarchy_levels,
             genes,
         )
 
-        neurotransmitter_path = collapsed_dir / f'{output_prefix}__{level}.csv'
-
-        neurotransmitter_df.to_csv(
-            neurotransmitter_path,
-            index=False,
-        )
-        saved_paths.append(neurotransmitter_path)
-
-        # Skip "all" and neurotransmitter because they do not
-        # have multiple parent paths to collapse.
-        for level in hierarchy_levels[1:]:
-            level_df = summary_df[
-                summary_df['level'] == level
-            ]
-
-            collapsed_df = (
-                collapsed_level_wide_dataframe(
-                    level_df,
-                    genes,
-                )
-            )
-
-            collapsed_path = collapsed_dir / f'{output_prefix}__{level}_collapsed.csv'
-
-            collapsed_df.to_csv(
-                collapsed_path,
-                index=False,
-            )
-            saved_paths.append(collapsed_path)
+        output_path = output_dir / f'{output_prefix}__{level}.csv'
+        collapsed_df.to_csv(output_path, index=False)
+        saved_paths.append(output_path)
 
     return saved_paths
-
 
 @log_command
 def main():
@@ -746,14 +522,10 @@ def main():
 
     saved_paths = save_outputs(
         summary_df=summary_df,
-        input_path=input_path,
         output_dir=output_dir,
         output_prefix=output_prefix,
         species=args.species,
         genes=genes,
-        threshold=args.threshold,
-        save_gene_files=not args.no_gene_files,
-        save_level_files=not args.no_level_files,
     )
 
     print(
