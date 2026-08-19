@@ -4,7 +4,7 @@
 Use ``abca_scRNAseq_expression_plot`` (``rna_exp_plot``) from UNRAVEL to plot expression summary CSVs.
 
 Inputs: 
-    - Wide CSVs produced by ``abca_scRNAseq_expression_summary`` (``rna_exp_summary``)
+    - Wide CSVs produced by ``abca_scRNAseq_expression_summary`` (``rna_exp_summary``).
 
 Plots:
     - Dot plot (default): dot color = mean log2(CPM+1) expression; dot size = percent
@@ -15,38 +15,21 @@ The script auto-detects genes from columns ending in ``_mean_expression``.
 
 Usage:
 ------
-Plot all human superclusters:
+    rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv [-ct cell_type1 cell_type2 ...] [-g gene1 gene2 ...] [-n 50] [--rank-by ...] [--sort-by ...] [--show-cell-counts] [-p dotplot|heatmap|both] [--heatmap-metric <value>] [--mean-max <value>] [--percent-max <value>] [--size-min <value>] [--size-max <value>] [--mean-cmap <cmap>] [--percent-cmap <cmap>] [--annotate] [-o output_dir] [-op output_prefix] [-f png|pdf|svg] [--dpi <value>] [-v]
 
-    rna_exp_plot \
-        -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv
-
-Plot selected cell types and genes:
-
-    rna_exp_plot \
-        -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv \
-        -ct "Medium spiny neuron" "Eccentric medium spiny neuron" \
-        -g DRD1 DRD2
-
-Plot the top 40 clusters ranked by maximum mean expression:
-
-    rna_exp_plot \
-        -i path/expression_summary_thr3/5HTR__Human_NAC__cluster.csv \
-        -n 40 --rank-by mean
-
-Make only a percent-expression heatmap:
-
-    rna_exp_plot \
-        -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv \
-        -p heatmap -m percent
+Usage for selected cell types and genes:
+----------------------------------------
+    rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv -ct "Medium spiny neuron" "Eccentric medium spiny neuron" -g DRD1 DRD2
 """
 
-import re
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import re
+from argparse import SUPPRESS
 from matplotlib.lines import Line2D
+from pathlib import Path
 from rich import print
 from rich.traceback import install
 
@@ -63,13 +46,14 @@ def parse_args():
     parser = RichArgumentParser(
         formatter_class=SuppressMetavar,
         add_help=False,
+        usage=SUPPRESS,
         docstring=__doc__,
     )
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument(
         '-i', '--input',
-        help='Wide CSV produced by ``abca_scRNAseq_expression_plot`` (``rna_exp_plot``).',
+        help='Wide CSV produced by ``abca_scRNAseq_expression_summary`` (``rna_exp_summary``).',
         required=True,
         action=SM,
     )
