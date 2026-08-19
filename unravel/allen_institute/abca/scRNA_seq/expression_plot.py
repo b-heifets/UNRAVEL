@@ -98,21 +98,21 @@ def parse_args():
     opts.add_argument(
         '-g', '--genes',
         help='Genes to plot. Default: all detected genes.',
-        nargs='+',
+        nargs='*',
         default=None,
         action=SM,
     )
     opts.add_argument(
         '-ct', '--cell-types',
         help='Exact cell_type or ontology_path labels to include.',
-        nargs='+',
+        nargs='*',
         default=None,
         action=SM,
     )
     opts.add_argument(
         '--contains',
         help='Keep rows whose cell_type or ontology_path contains any supplied text.',
-        nargs='+',
+        nargs='*',
         default=None,
         action=SM,
     )
