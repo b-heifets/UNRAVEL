@@ -20,14 +20,20 @@ For each gene and ontology node, the script calculates:
     - percent_expression above the selected log2(CPM+1) threshold
 
 Outputs:
-    - all_levels_long/<input>__all_levels_expression_summary_thr<value>.csv
-      One row per gene and ontology node. This is the primary dot-plot-ready output.
-    - by_gene/<input>__gene-GENE_expression_summary_thr<value>.csv
+    - all_levels_long/<input>__all_levels.csv
+      One row per gene and ontology node.
+    - by_gene/<input>__GENE.csv
       One CSV per gene containing all ontology levels.
-    - by_level/<input>__level-LEVEL_expression_summary_thr<value>.csv
-      One wide CSV per ontology level, with gene-specific metric columns.
+    - by_level/<input>__LEVEL.csv
+      One wide CSV per ontology level, preserving the full ontology path.
+    - by_level_collapsed/<input>__LEVEL_collapsed.csv
+      One wide CSV per ontology level, with identical cell-type labels
+      combined across different parent ontology paths.
 
 Notes:
+    - Example of collapsing: if Cell type A occurs under two different
+      neurotransmitter parents, the collapsed output contains one Cell type A
+      row combining cells from both parent paths.
     - The script reads the input in chunks so it can summarize large human and mouse CSVs without loading the entire file into memory.
     - ``cell_count`` counts all rows assigned to an ontology node.
     - ``expression_cell_count`` counts non-missing values for a gene and is the denominator used for mean and percent expression.
@@ -106,7 +112,7 @@ def parse_args():
     )
     opts.add_argument(
         '-o', '--output',
-        help='Output directory. Default: input_dir/ABCA_expression_summary_thr<value>',
+        help='Output directory. Default: input_dir/expression_summary_thr<value>',
         default=None,
         action=SM,
     )
@@ -600,7 +606,7 @@ def save_outputs(
     long_dir = output_dir / 'all_levels_long'
     long_dir.mkdir(parents=True, exist_ok=True)
     combined_path = long_dir / (
-        f'{output_prefix}__all_levels_expression_summary_thr{threshold_label}.csv'
+        f'{output_prefix}__all_levels.csv'
     )
     summary_df.to_csv(combined_path, index=False)
     saved_paths.append(combined_path)
@@ -609,10 +615,7 @@ def save_outputs(
         gene_dir = output_dir / 'by_gene'
         gene_dir.mkdir(parents=True, exist_ok=True)
         for gene in genes:
-            gene_path = gene_dir / (
-                f'{output_prefix}__gene-{safe_name(gene)}_expression_summary_'
-                f'thr{threshold_label}.csv'
-            )
+            gene_path = gene_dir / f'{output_prefix}__{safe_name(gene)}.csv'
             summary_df[summary_df['gene'] == gene].to_csv(
                 gene_path,
                 index=False,
@@ -638,11 +641,7 @@ def save_outputs(
                 genes,
             )
 
-            level_path = level_dir / (
-                f'{output_prefix}__level-{level}_'
-                f'expression_summary_'
-                f'thr{threshold_label}.csv'
-            )
+            level_path = level_dir / f'{output_prefix}__{level}.csv'
 
             wide_df.to_csv(
                 level_path,
@@ -671,10 +670,7 @@ def save_outputs(
             genes,
         )
 
-        neurotransmitter_path = collapsed_dir / (
-            f'{output_prefix}__level-{level}_expression_summary_'
-            f'thr{threshold_label}.csv'
-        )
+        neurotransmitter_path = collapsed_dir / f'{output_prefix}__{level}.csv'
 
         neurotransmitter_df.to_csv(
             neurotransmitter_path,
@@ -696,11 +692,7 @@ def save_outputs(
                 )
             )
 
-            collapsed_path = collapsed_dir / (
-                f'{output_prefix}__level-{level}_'
-                f'collapsed_expression_summary_'
-                f'thr{threshold_label}.csv'
-            )
+            collapsed_path = collapsed_dir / f'{output_prefix}__{level}_collapsed.csv'
 
             collapsed_df.to_csv(
                 collapsed_path,
@@ -730,7 +722,7 @@ def main():
 
     if args.output is None:
         output_dir = input_path.parent / (
-            f'ABCA_expression_summary_thr{threshold_label}'
+            f'expression_summary_thr{threshold_label}'
         )
     else:
         output_dir = Path(args.output)
