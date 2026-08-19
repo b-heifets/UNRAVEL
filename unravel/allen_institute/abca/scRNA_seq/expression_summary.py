@@ -50,6 +50,10 @@ Usage for mouse:
 Usage for human:
 ----------------
     rna_exp_summary -i path/expression_data_Neurons_log2.csv [-g HTR2A HTR2B DRD1 DRD2] [-t 3]
+
+Usage for parallel processing:
+------------------------------
+    fd -e csv -d 1 -j 4 -x rna_exp_summary -i {}
 """
 
 import re
