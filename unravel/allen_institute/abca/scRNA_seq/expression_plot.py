@@ -1,47 +1,42 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNAseq_expression_plot`` or ``rna_exp_plot`` from UNRAVEL to plot
-ABCA expression summaries produced by ``abca_scRNAseq_expression_summary`` /
-``rna_exp_summary``.
+Use ``abca_scRNAseq_expression_plot`` (``rna_exp_plot``) from UNRAVEL to plot expression summary CSVs.
 
-The input should be one wide CSV from either:
-    - by_level/
-    - by_level_collapsed/
+Inputs: 
+    - Wide CSVs produced by ``abca_scRNAseq_expression_summary`` (``rna_exp_summary``)
 
 Plots:
-    - Dot plot: dot color = mean log2(CPM+1) expression; dot size = percent
+    - Dot plot (default): dot color = mean log2(CPM+1) expression; dot size = percent
       expression above the threshold used by expression_summary.py.
     - Heatmap: mean expression, percent expression, or both.
 
 The script auto-detects genes from columns ending in ``_mean_expression``.
-For hierarchy-preserving files, row labels default to ``ontology_path``.
-For collapsed files, row labels default to ``cell_type``.
 
-Examples:
----------
-Plot all human superclusters from a collapsed summary:
+Usage:
+------
+Plot all human superclusters:
 
     rna_exp_plot \
-        -i path/by_level_collapsed/input__level-supercluster_collapsed_expression_summary_thr3.csv
+        -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv
 
 Plot selected cell types and genes:
 
     rna_exp_plot \
-        -i path/input__level-supercluster_collapsed_expression_summary_thr3.csv \
+        -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv \
         -ct "Medium spiny neuron" "Eccentric medium spiny neuron" \
         -g DRD1 DRD2
 
 Plot the top 40 clusters ranked by maximum mean expression:
 
     rna_exp_plot \
-        -i path/input__level-cluster_collapsed_expression_summary_thr3.csv \
+        -i path/expression_summary_thr3/5HTR__Human_NAC__cluster.csv \
         -n 40 --rank-by mean
 
 Make only a percent-expression heatmap:
 
     rna_exp_plot \
-        -i path/input__level-supercluster_collapsed_expression_summary_thr3.csv \
+        -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv \
         -p heatmap -m percent
 """
 
@@ -62,7 +57,6 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 MEAN_SUFFIX = '_mean_expression'
 PERCENT_SUFFIX = '_percent_expression'
-EXPRESSING_COUNT_SUFFIX = '_expressing_cell_count'
 
 
 def parse_args():
@@ -75,7 +69,7 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument(
         '-i', '--input',
-        help='Wide CSV from expression_summary.py by_level or by_level_collapsed.',
+        help='Wide CSV produced by ``abca_scRNAseq_expression_plot`` (``rna_exp_plot``).',
         required=True,
         action=SM,
     )
@@ -83,8 +77,8 @@ def parse_args():
     opts = parser.add_argument_group('Plot selection')
     opts.add_argument(
         '-p', '--plot',
-        help='Plot type. Default: both',
-        default='both',
+        help='Plot type. Default: dotplot',
+        default='dotplot',
         choices=('dotplot', 'heatmap', 'both'),
         action=SM,
     )
@@ -104,14 +98,14 @@ def parse_args():
     )
     opts.add_argument(
         '-ct', '--cell-types',
-        help='Exact cell_type or ontology_path labels to include.',
+        help='Exact cell_type labels to include.',
         nargs='*',
         default=None,
         action=SM,
     )
     opts.add_argument(
         '--contains',
-        help='Keep rows whose cell_type or ontology_path contains any supplied text.',
+        help='Keep rows whose cell_type contains any supplied text.',
         nargs='*',
         default=None,
         action=SM,
@@ -142,12 +136,6 @@ def parse_args():
         help='Final row order. Default: rank',
         default='rank',
         choices=('rank', 'name', 'cells', 'input'),
-        action=SM,
-    )
-    opts.add_argument(
-        '--label-column',
-        help='Row-label column, or auto. Default: auto',
-        default='auto',
         action=SM,
     )
     opts.add_argument(
@@ -316,7 +304,7 @@ def validate_and_select_genes(
     if not detected:
         raise ValueError(
             'No gene columns ending in "_mean_expression" were found. '
-            'Use a wide by_level or by_level_collapsed CSV.'
+            'Use a CSV produced by rna_exp_summary.'
         )
 
     genes = requested_genes if requested_genes is not None else detected
@@ -341,29 +329,6 @@ def validate_and_select_genes(
     return genes
 
 
-def choose_label_column(df: pd.DataFrame, requested: str) -> str:
-    """Choose a unique, readable row-label column."""
-    if requested != 'auto':
-        if requested not in df.columns:
-            raise ValueError(f'Label column not found: {requested}')
-        return requested
-
-    # Collapsed files contain one row per cell_type and usually include
-    # source_path_count/source_ontology_paths.
-    if 'source_path_count' in df.columns and 'cell_type' in df.columns:
-        return 'cell_type'
-
-    if 'ontology_path' in df.columns:
-        return 'ontology_path'
-
-    if 'cell_type' in df.columns:
-        return 'cell_type'
-
-    raise ValueError(
-        'Could not determine row labels. Expected cell_type or ontology_path.'
-    )
-
-
 def row_rank(df: pd.DataFrame, genes: list[str], rank_by: str) -> pd.Series:
     """Calculate the metric used to select and sort cell types."""
     if rank_by == 'cells':
@@ -383,7 +348,6 @@ def prepare_plot_dataframe(
     top: int,
     rank_by: str,
     sort_by: str,
-    label_column: str,
     show_cell_counts: bool,
 ) -> pd.DataFrame:
     """Filter, rank, sort, and label summary rows for plotting."""
@@ -401,26 +365,19 @@ def prepare_plot_dataframe(
 
     plot_df = plot_df[plot_df['cell_count'] >= min_cells].copy()
 
-    searchable_columns = ['cell_type']
-    if 'ontology_path' in plot_df.columns:
-        searchable_columns.append('ontology_path')
-
     if cell_types:
-        exact_mask = pd.Series(False, index=plot_df.index)
-        for column in searchable_columns:
-            exact_mask |= plot_df[column].astype(str).isin(cell_types)
-        plot_df = plot_df[exact_mask].copy()
+        plot_df = plot_df[
+            plot_df['cell_type'].astype(str).isin(cell_types)
+        ].copy()
 
     if contains:
         contains_mask = pd.Series(False, index=plot_df.index)
         for text in contains:
-            pattern = re.escape(text)
-            for column in searchable_columns:
-                contains_mask |= plot_df[column].astype(str).str.contains(
-                    pattern,
-                    case=False,
-                    na=False,
-                )
+            contains_mask |= plot_df['cell_type'].astype(str).str.contains(
+                re.escape(text),
+                case=False,
+                na=False,
+            )
         plot_df = plot_df[contains_mask].copy()
 
     if plot_df.empty:
@@ -438,12 +395,12 @@ def prepare_plot_dataframe(
     elif sort_by == 'cells':
         plot_df = plot_df.sort_values('cell_count', ascending=False, kind='stable')
     elif sort_by == 'name':
-        plot_df['_name_sort'] = plot_df[label_column].map(natural_sort_text)
+        plot_df['_name_sort'] = plot_df['cell_type'].map(natural_sort_text)
         plot_df = plot_df.sort_values('_name_sort', kind='stable')
     elif sort_by == 'input':
         plot_df = plot_df.sort_values('_input_order', kind='stable')
 
-    plot_df['_plot_label'] = plot_df[label_column].fillna('NA').astype(str)
+    plot_df['_plot_label'] = plot_df['cell_type'].fillna('NA').astype(str)
     if show_cell_counts:
         plot_df['_plot_label'] = [
             f'{label} (n={int(count):,})'
@@ -480,24 +437,29 @@ def summary_context(df: pd.DataFrame) -> tuple[str, str, str]:
     return species, level, threshold
 
 
-def default_title(df: pd.DataFrame, custom_title: str | None) -> str:
+def default_title(
+    df: pd.DataFrame,
+    custom_title: str | None,
+) -> str:
     """Create a base title from summary metadata."""
     if custom_title:
         return custom_title
 
-    species, level, _ = summary_context(df)
-    collapsed = 'source_path_count' in df.columns
+    input_label = ''
+    level = ''
 
-    parts = []
-    if species:
-        parts.append(species.capitalize())
-    if level:
-        parts.append(level.replace('_', ' '))
-    if collapsed:
-        parts.append('collapsed')
-    parts.append('expression')
+    if 'input' in df.columns and not df['input'].dropna().empty:
+        input_label = Path(
+            str(df['input'].dropna().iloc[0])
+        ).stem
+        input_label = input_label.replace('__', ': ').replace('_', ' ')
 
-    return ' '.join(parts)
+    if 'level' in df.columns and not df['level'].dropna().empty:
+        level = str(
+            df['level'].dropna().iloc[0]
+        ).replace('_', ' ')
+
+    return f'{input_label} — {level} expression'
 
 
 def automatic_figure_size(
@@ -768,7 +730,6 @@ def main():
 
     summary_df = pd.read_csv(input_path, low_memory=False)
     genes = validate_and_select_genes(summary_df, args.genes)
-    label_column = choose_label_column(summary_df, args.label_column)
 
     plot_df = prepare_plot_dataframe(
         df=summary_df,
@@ -779,7 +740,6 @@ def main():
         top=args.top,
         rank_by=args.rank_by,
         sort_by=args.sort_by,
-        label_column=label_column,
         show_cell_counts=args.show_cell_counts,
     )
 
@@ -807,7 +767,6 @@ def main():
     print(f'\nInput: {input_path}')
     print(f'Genes: {genes}')
     print(f'Rows plotted: {len(plot_df):,}')
-    print(f'Row labels: {label_column}')
     print(f'Output directory: {output_dir}\n')
 
     saved_paths = []
