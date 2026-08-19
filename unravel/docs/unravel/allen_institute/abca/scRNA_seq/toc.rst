@@ -4,9 +4,10 @@ unravel.allen_institute.abca.scRNA_seq package
 .. toctree::
    :maxdepth: 2
 
-   filter
    expression
-   join_gene
+   filter
+   expression_summary
+   expression_plot
 
 .. automodule:: unravel.allen_institute.abca.scRNA_seq
    :members:
