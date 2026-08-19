@@ -4,15 +4,21 @@ import pandas as pd
 from pathlib import Path
 from rich import print
 
-def load_tabular_file(file_path):
+def load_tabular_file(file_path, usecols=None):
     """Load a CSV or Excel file into a pandas DataFrame."""
     file_path = Path(file_path)
     suffix = file_path.suffix.lower()
 
     if suffix == '.csv':
-        return pd.read_csv(file_path), '.csv'
+        if usecols is not None:
+            return pd.read_csv(file_path, usecols=usecols), '.csv'
+        else:
+            return pd.read_csv(file_path), '.csv'
     elif suffix in ('.xls', '.xlsx'):
-        return pd.read_excel(file_path), '.xlsx'
+        if usecols is not None:
+            return pd.read_excel(file_path, usecols=usecols), '.xlsx'
+        else:
+            return pd.read_excel(file_path), '.xlsx'
     else:
         raise ValueError(f"Unsupported file format: {file_path}")
 
