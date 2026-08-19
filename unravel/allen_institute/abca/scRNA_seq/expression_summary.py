@@ -31,14 +31,25 @@ Notes:
     - Mean expression is calculated from non-missing expression values.
     - Percent expression uses non-missing expression values as the denominator.
     - By default, outputs are saved to ``expression_summary_thr<value>`` in the input directory.
+    - ``source_path_count`` is the number of unique ontology paths contributing
+      to a collapsed cell-type row.
+    - ``source_ontology_paths`` lists those contributing ontology paths.
+
+Genes:
+    - Use -g/--genes to summarize selected genes.
+    - If -g is omitted, all columns after the last *_color column are
+      assumed to contain gene-expression values.
+
+Species:
+    - Species is inferred automatically from the ABCA ontology columns
 
 Usage for mouse:
 ----------------
-    rna_exp_summary -i path/expression_data_log2.csv -s mouse -g Htr2a Htr2b Drd1 Drd2 -t 3
+    rna_exp_summary -i path/expression_data_log2.csv [-g Htr2a Htr2b Drd1 Drd2] [-t 3]
 
 Usage for human:
 ----------------
-    rna_exp_summary -i path/expression_data_Neurons_log2.csv -s human -g HTR2A HTR2B DRD1 DRD2 -t 3
+    rna_exp_summary -i path/expression_data_Neurons_log2.csv [-g HTR2A HTR2B DRD1 DRD2] [-t 3]
 """
 
 import re
@@ -73,20 +84,12 @@ def parse_args():
         required=True,
         action=SM,
     )
-    reqs.add_argument(
-        '-g', '--genes',
-        help='Gene-expression columns to summarize.',
-        nargs='*',
-        required=True,
-        action=SM,
-    )
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument(
-        '-s', '--species',
-        help='Species to analyze. Default: mouse',
-        default='mouse',
-        choices=('mouse', 'human'),
+        '-g', '--genes',
+        help='Gene-expression columns to summarize. Default: all columns after the last *_color column.',
+        nargs='*',
         action=SM,
     )
     opts.add_argument(
@@ -118,6 +121,51 @@ def parse_args():
     )
 
     return parser.parse_args()
+
+
+def infer_species(columns: list[str]) -> str:
+    """Infer species from ABCA ontology columns."""
+    columns = set(columns)
+
+    if {'class', 'subclass', 'supertype'}.issubset(columns):
+        return 'mouse'
+
+    if {'supercluster', 'subcluster'}.issubset(columns):
+        return 'human'
+
+    raise ValueError(
+        'Could not infer species from the ABCA ontology columns.'
+    )
+
+
+def infer_genes(
+    columns: list[str],
+    requested_genes: list[str] | None,
+) -> list[str]:
+    """Return requested genes or infer gene columns from column order."""
+    if requested_genes:
+        return list(dict.fromkeys(requested_genes))
+
+    color_indexes = [
+        index
+        for index, column in enumerate(columns)
+        if column.endswith('_color')
+    ]
+
+    if not color_indexes:
+        raise ValueError(
+            'Could not infer gene columns because no *_color columns were found. '
+            'Specify genes with -g/--genes.'
+        )
+
+    genes = columns[max(color_indexes) + 1:]
+
+    if not genes:
+        raise ValueError(
+            'No gene-expression columns were found after the last *_color column.'
+        )
+
+    return genes
 
 
 def format_number(value: float) -> str:
@@ -278,14 +326,12 @@ def summarize_level(
     summary_df.insert(1, 'species', species)
     summary_df.insert(2, 'threshold', threshold)
     summary_df.insert(3, 'level', level)
-    summary_df.insert(4, 'level_order', level_index + 1)
 
     base_columns = [
         'input',
         'species',
         'threshold',
         'level',
-        'level_order',
         'cell_type',
         'cell_type_color',
         'source_path_count',
@@ -371,7 +417,14 @@ def main():
             f'Input CSV not found: {input_path}'
         )
 
-    genes = list(dict.fromkeys(args.genes))
+
+    header = pd.read_csv(input_path, nrows=0).columns.tolist()
+
+    species = infer_species(header)
+    genes = infer_genes(
+        columns=header,
+        requested_genes=args.genes,
+    )
     threshold_label = format_number(args.threshold)
 
     if args.output is None:
@@ -391,17 +444,15 @@ def main():
         or input_path.stem
     )
 
-    print(f'\nUsing species: {args.species}')
-    print(f'Genes: {genes}')
-    print(
-        f'Expression threshold: '
-        f'{args.threshold:g}'
-    )
-    print(f'Input: {input_path}\n')
+    print(f'\nInput: {input_path}\n')
+    print(f'Expression threshold: {args.threshold:g}')
+    if args.verbose:
+        print(f'Using species: {species}')
+        print(f'Genes: {genes}')
 
     cell_df, hierarchy_levels = load_expression_data(
         input_path=input_path,
-        species=args.species,
+        species=species,
         genes=genes,
     )
 
@@ -414,7 +465,7 @@ def main():
         input_name=input_path.name,
         output_dir=output_dir,
         output_prefix=output_prefix,
-        species=args.species,
+        species=species,
         genes=genes,
         threshold=args.threshold,
         hierarchy_levels=hierarchy_levels,
