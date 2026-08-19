@@ -25,7 +25,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='Path to the input CSV file.', required=True, action=SM)
-    reqs.add_argument('-c', '--column', help='Column name(s) to process (space-separated for multiple).', required=True, nargs='*', action=SM)
+    reqs.add_argument('-c', '--columns', help='Column name(s) to process (space-separated for multiple).', required=True, nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-n', '--count', help='Print the count for each unique value.', action='store_true', default=False)
@@ -102,18 +102,9 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    df, _ = load_tabular_file(args.input)
+    df, _ = load_tabular_file(args.input, usecols=args.columns)
 
-    missing = [col for col in args.column if col not in df.columns]
-    if missing:
-        print(f"[bold yellow]Warning:[/bold yellow] Column(s) not found in CSV: {missing}")
-
-    valid_columns = [col for col in args.column if col in df.columns]
-    if not valid_columns:
-        print("No valid columns found in the CSV file.")
-        return
-
-    for column in valid_columns:
+    for column in args.columns:
         col_series = df[column].dropna()
         value_counts = col_series.value_counts()
         unique_values = sorted(df[column].dropna().unique(), key=lambda x: str(x).lower())
