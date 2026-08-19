@@ -429,21 +429,21 @@ def default_title(
     if custom_title:
         return custom_title
 
-    input_label = ''
     level = ''
+    region = ''
 
     if 'input' in df.columns and not df['input'].dropna().empty:
-        input_label = Path(
+        region = Path(
             str(df['input'].dropna().iloc[0])
         ).stem
-        input_label = input_label.replace('__', ': ').replace('_', ' ')
+        region = region.split('__')[-1].replace('_', ' ')
 
     if 'level' in df.columns and not df['level'].dropna().empty:
         level = str(
             df['level'].dropna().iloc[0]
         ).replace('_', ' ')
 
-    return f'{input_label} — {level} expression'
+    return f'{region} — {level} expression'
 
 
 def automatic_figure_size(
