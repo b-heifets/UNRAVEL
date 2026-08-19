@@ -14,6 +14,7 @@ Human hierarchy:
 
 For each gene and cell type, the script calculates:
     - cell_count
+    - percent_cells (percentage of cells in the input assigned to the cell type at the given ontology level.)
     - expressing_cell_count
     - mean_expression
     - percent_expression above the selected log2(CPM+1) threshold
@@ -277,6 +278,12 @@ def summarize_level(
 
     summary_df = grouped.size().rename('cell_count').to_frame()
 
+    summary_df['percent_cells'] = (
+        summary_df['cell_count']
+        / len(cell_df)
+        * 100
+    )
+
     color_col = f'{level}_color'
     if color_col in cell_df.columns:
         summary_df['cell_type_color'] = grouped[color_col].first().fillna('')
@@ -341,6 +348,7 @@ def summarize_level(
         'source_path_count',
         'source_ontology_paths',
         'cell_count',
+        'percent_cells',
     ]
 
     metric_columns = [
