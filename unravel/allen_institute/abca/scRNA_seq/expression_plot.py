@@ -21,6 +21,10 @@ Usage for selected cell types and genes:
 ----------------------------------------
     rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv -ct "Medium spiny neuron" "Eccentric medium spiny neuron" -g DRD1 DRD2
 
+Usage for the 50 most abundant cell types:
+------------------------------------------
+    rna_exp_plot -i file.csv --rank-by cells --sort-by percent-cells
+
 Usage for parallel processing:
 ------------------------------
     fd -e csv -d 1 -j 4 -x rna_exp_plot -i {}
