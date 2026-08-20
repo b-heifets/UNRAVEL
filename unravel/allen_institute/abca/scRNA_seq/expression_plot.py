@@ -13,17 +13,24 @@ Plots:
 
 The script auto-detects genes from columns ending in ``_mean_expression``.
 
-Usage:
-------
+# Top 50 by expression, ordered by expression
+--rank-by mean
+
+# Top 50 by expression, then reorder those 50 by prevalence
+--rank-by mean --sort-by cells
+
+
+Usage (sorting by mean expression by default):
+----------------------------------------------
     rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv [-ct cell_type1 cell_type2 ...] [-g gene1 gene2 ...] [-n 50] [--rank-by ...] [--sort-by ...] [--no-cell-stats] [-p dotplot|heatmap|both] [--heatmap-metric <value>] [--mean-max <value>] [--percent-max <value>] [--size-min <value>] [--size-max <value>] [--mean-cmap <cmap>] [--percent-cmap <cmap>] [--annotate] [-o output_dir] [-op output_prefix] [-f png|pdf|svg] [--dpi <value>] [-v]
 
-Usage for selected cell types and genes:
-----------------------------------------
-    rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv -ct "Medium spiny neuron" "Eccentric medium spiny neuron" -g DRD1 DRD2
+Usage for selected cell types and genes (ranked by mean expression and sorted by cell count):
+---------------------------------------------------------------------------------------------
+    rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv -ct "Medium spiny neuron" "Eccentric medium spiny neuron" -g DRD1 DRD2 --sort-by cells
 
-Usage for the 50 most abundant cell types:
-------------------------------------------
-    rna_exp_plot -i file.csv --rank-by cells --sort-by percent-cells
+Usage for the 50 most abundant cell types sorted by abundance:
+--------------------------------------------------------------
+    rna_exp_plot -i file.csv --rank-by cells
 
 Usage for parallel processing:
 ------------------------------
@@ -117,6 +124,13 @@ def parse_args():
         action=SM,
     )
     opts.add_argument(
+        '--min-percent-cells',
+        help='Minimum percent_cells required. Default: 0',
+        default=0,
+        type=float,
+        action=SM,
+    )
+    opts.add_argument(
         '--rank-by',
         help='Metric used to choose top cell types. Default: mean',
         default='mean',
@@ -127,7 +141,7 @@ def parse_args():
         '--sort-by',
         help='Final row order. Default: rank',
         default='rank',
-        choices=('rank', 'name', 'cells', 'percent-cells', 'input'),
+        choices=('rank', 'name', 'cells', 'input'),
         action=SM,
     )
     opts.add_argument(
@@ -338,6 +352,7 @@ def prepare_plot_dataframe(
     cell_types: list[str] | None,
     contains: list[str] | None,
     min_cells: int,
+    min_percent_cells: float,
     top: int,
     rank_by: str,
     sort_by: str,
@@ -355,12 +370,21 @@ def prepare_plot_dataframe(
 
     plot_df = df.copy()
     plot_df['_input_order'] = np.arange(len(plot_df))
+
+    plot_df['cell_count'] = pd.to_numeric(
+        plot_df['cell_count'],
+        errors='coerce',
+    ).fillna(0)
+
     plot_df['percent_cells'] = pd.to_numeric(
         plot_df['percent_cells'],
         errors='coerce',
     ).fillna(0)
 
-    plot_df = plot_df[plot_df['cell_count'] >= min_cells].copy()
+    plot_df = plot_df[
+        (plot_df['cell_count'] >= min_cells)
+        & (plot_df['percent_cells'] >= min_percent_cells)
+    ].copy()
 
     if cell_types:
         plot_df = plot_df[
@@ -732,6 +756,8 @@ def main():
         raise FileNotFoundError(f'Input CSV not found: {input_path}')
     if args.min_cells < 0:
         raise ValueError('--min-cells must be 0 or greater.')
+    if not 0 <= args.min_percent_cells <= 100:
+        raise ValueError('--min-percent-cells must be between 0 and 100.')
     if args.dpi <= 0:
         raise ValueError('--dpi must be greater than 0.')
 
@@ -744,6 +770,7 @@ def main():
         cell_types=args.cell_types,
         contains=args.contains,
         min_cells=args.min_cells,
+        min_percent_cells=args.min_percent_cells,
         top=args.top,
         rank_by=args.rank_by,
         sort_by=args.sort_by,
