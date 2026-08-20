@@ -483,7 +483,16 @@ def default_title(
         region = Path(
             str(df['input'].dropna().iloc[0])
         ).stem
-        region = region.split('__')[-1].replace('_', ' ')
+
+        if '__' in region:
+            region = region.split('__')[-1]
+        elif '_filtered_' in region:
+            region = region.rsplit('_filtered_', 1)[-1]
+
+        if region.endswith('_neurons'):
+            region = region[:-len('_neurons')]
+
+        region = region.replace('_', ' ')
 
     if 'level' in df.columns and not df['level'].dropna().empty:
         level = str(
