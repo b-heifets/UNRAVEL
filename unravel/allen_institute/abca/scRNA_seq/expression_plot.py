@@ -15,7 +15,7 @@ The script auto-detects genes from columns ending in ``_mean_expression``.
 
 Usage:
 ------
-    rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv [-ct cell_type1 cell_type2 ...] [-g gene1 gene2 ...] [-n 50] [--rank-by ...] [--sort-by ...] [--show-cell-counts] [-p dotplot|heatmap|both] [--heatmap-metric <value>] [--mean-max <value>] [--percent-max <value>] [--size-min <value>] [--size-max <value>] [--mean-cmap <cmap>] [--percent-cmap <cmap>] [--annotate] [-o output_dir] [-op output_prefix] [-f png|pdf|svg] [--dpi <value>] [-v]
+    rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv [-ct cell_type1 cell_type2 ...] [-g gene1 gene2 ...] [-n 50] [--rank-by ...] [--sort-by ...] [--no-cell-stats] [-p dotplot|heatmap|both] [--heatmap-metric <value>] [--mean-max <value>] [--percent-max <value>] [--size-min <value>] [--size-max <value>] [--mean-cmap <cmap>] [--percent-cmap <cmap>] [--annotate] [-o output_dir] [-op output_prefix] [-f png|pdf|svg] [--dpi <value>] [-v]
 
 Usage for selected cell types and genes:
 ----------------------------------------
@@ -123,14 +123,15 @@ def parse_args():
         '--sort-by',
         help='Final row order. Default: rank',
         default='rank',
-        choices=('rank', 'name', 'cells', 'input'),
+        choices=('rank', 'name', 'cells', 'percent-cells', 'input'),
         action=SM,
     )
     opts.add_argument(
-        '--show-cell-counts',
-        help='Append cell counts to row labels. Default: False',
-        action='store_true',
-        default=False,
+        '-ns', '--no-cell-stats',
+        help='Do not append percent of cells to row labels. Default: show percent.',
+        dest='show_cell_stats',
+        action='store_false',
+        default=True,
     )
 
     appearance = parser.add_argument_group('Appearance')
@@ -336,18 +337,22 @@ def prepare_plot_dataframe(
     top: int,
     rank_by: str,
     sort_by: str,
-    show_cell_counts: bool,
+    show_cell_stats: bool,
 ) -> pd.DataFrame:
     """Filter, rank, sort, and label summary rows for plotting."""
-    required = {'cell_type', 'cell_count'}
+    required = {
+        'cell_type',
+        'cell_count',
+        'percent_cells',
+    }
     missing = sorted(required - set(df.columns))
     if missing:
         raise ValueError(f'Missing required summary columns: {missing}')
 
     plot_df = df.copy()
     plot_df['_input_order'] = np.arange(len(plot_df))
-    plot_df['cell_count'] = pd.to_numeric(
-        plot_df['cell_count'],
+    plot_df['percent_cells'] = pd.to_numeric(
+        plot_df['percent_cells'],
         errors='coerce',
     ).fillna(0)
 
@@ -382,22 +387,32 @@ def prepare_plot_dataframe(
         plot_df = plot_df.sort_values('_rank', ascending=False, kind='stable')
     elif sort_by == 'cells':
         plot_df = plot_df.sort_values('cell_count', ascending=False, kind='stable')
+    elif sort_by == 'percent-cells':
+        plot_df = plot_df.sort_values(
+            'percent_cells',
+            ascending=False,
+            kind='stable',
+        )
     elif sort_by == 'name':
         plot_df['_name_sort'] = plot_df['cell_type'].map(natural_sort_text)
         plot_df = plot_df.sort_values('_name_sort', kind='stable')
     elif sort_by == 'input':
         plot_df = plot_df.sort_values('_input_order', kind='stable')
 
-    plot_df['_plot_label'] = plot_df['cell_type'].fillna('NA').astype(str)
-    if show_cell_counts:
+    plot_df['_plot_label'] = (
+        plot_df['cell_type']
+        .fillna('NA')
+        .astype(str)
+    )
+
+    if show_cell_stats:
         plot_df['_plot_label'] = [
-            f'{label} (n={int(count):,})'
-            for label, count in zip(
+            f'{label} ({percent_cells:.3g}%)'
+            for label, percent_cells in zip(
                 plot_df['_plot_label'],
-                plot_df['cell_count'],
+                plot_df['percent_cells'],
             )
         ]
-
     return plot_df.reset_index(drop=True)
 
 
@@ -728,7 +743,7 @@ def main():
         top=args.top,
         rank_by=args.rank_by,
         sort_by=args.sort_by,
-        show_cell_counts=args.show_cell_counts,
+        show_cell_stats=args.show_cell_stats,
     )
 
     output_dir = (
