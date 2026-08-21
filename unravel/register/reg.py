@@ -86,10 +86,6 @@ def parse_args():
     opts.add_argument('-rm', '--reg_mask', help='Provide flag to restrict spatially restrict reg, so the SyN similarity metric occurs in voxels occupied by either tissue or the initially aligned template; affine initialization is unaffected', action='store_true', default=False)
     opts.add_argument('-rmd', '--reg_mask_dilation', help='Voxel dilation applied to tissue mask for registration only (if -rm is set). Default: 1', type=int, default=1, action=SM)
     opts.add_argument('-it', '--init_time', help='Time in seconds allowed for ``reg_affine_initializer`` to run. Default: 30' , default='30', type=str, action=SM)
-
-    opts = parser.add_argument_group('Optional arguments for checking if the initial template alignment fits fully within the padded version of the fixed image')
-    opts.add_argument('-t', '--threshold', help='Intensity threshold at the image surface to check if the initially aligned template does not extend outside the padded image. Default: 0', type=float, default=0, action=SM)
-    opts.add_argument('-msv', '--max_surface_voxels', help='Max number of allowed surface voxels above intensity threshold. Default: 0', type=int, default=0, action=SM)
     opts.add_argument('-mp', '--max_padding', help='Maximum padding percentage to allow before proceeding with registration. Default: 0.6 (60%%)', type=float, default=0.5, action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -255,9 +251,9 @@ def main():
                     ants.image_write(transformed_image, init_align_out)
 
                 # Check if the initial alignment of the moving image is within the padded region of the fixed image
-                above_thresh_surface_voxel_count = affine_initializer_check(init_align_out, args.threshold)
-                if above_thresh_surface_voxel_count > args.max_surface_voxels:
-                    print(f"\n[yellow]WARNING: {init_align_out} has {above_thresh_surface_voxel_count} surface voxels above the threshold {args.threshold}, suggesting that the initially aligned template is not fully within the padded region of the fixed image. Increasing padding by 0.05. New padding = {pad_percent:.2f}")
+                above_thresh_surface_voxel_count = affine_initializer_check(init_align_out, 0)
+                if above_thresh_surface_voxel_count > 0:
+                    print(f"\n[yellow]WARNING: {init_align_out} has {above_thresh_surface_voxel_count} surface voxels above the threshold 0, suggesting that the initially aligned template is not fully within the padded region of the fixed image. Increasing padding by 0.05. New padding = {pad_percent:.2f}")
 
                     pad_percent += 0.05
 

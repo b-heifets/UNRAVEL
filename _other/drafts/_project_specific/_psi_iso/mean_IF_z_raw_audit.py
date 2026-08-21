@@ -1,51 +1,64 @@
 #!/usr/bin/env python3
 """
-Audit z-scored vs non-z-scored mean IF cluster results.
+Audit effect direction in z-scored versus non-z-scored mean IF results.
 
-This script pairs matching cluster result directories under:
+This script pairs matching cluster-result directories under:
     mean_IF_z/cluster_mean_z_<cluster_set>
     mean_IF_wo_z/cluster_mean_IF_<cluster_set>
 
-For each paired directory, it reads the per-cluster statistics CSVs produced by
-`mean_IF_2x2_anova.py` and/or `mean_IF_2group_ttest.py`, extracts the relevant
-contrast, and writes a master table showing whether z-scored and raw IF effects
-are directionally concordant and whether each metric is significant.
+For each paired directory, it reads the full per-cluster statistics CSV produced
+by `mean_IF_2x2_anova.py` or `mean_IF_2group_ttest.py`. It then compares the
+sign of the biologically relevant effect in the z-scored and non-z-scored data.
+For 2x2 results, Holm-Sidak reject columns are preferred over recomputing
+significance from corrected p-values.
 
-Intended use from the f-gated_t-test_mean_IF directory:
-    mean_IF_z_raw_audit.py \
-        --root . \
-        -o mean_IF_z_raw_audit.csv \
-        --summary_out mean_IF_z_raw_audit_summary.csv
+The audit also checks whether each measured direction agrees with the direction
+implied by tstat1/tstat2 in the cluster-set directory name. F-statistic maps are
+non-directional, so their directions are derived from cluster-level group means.
+
+For 2x2 results, source-analysis metadata are retained when present, including
+the ANOVA sums-of-squares type and contrasts, residual variance, multiple-
+comparison method and family, and alpha.
 
 Default contrast extraction:
-    AwP_v_AwS  -> AwP vs AwS pairwise comparison
-    AnP_v_AnS  -> AnP vs AnS pairwise comparison
-    AnS_v_AwS  -> AnS vs AwS two-group comparison, or State fallback if needed
-    P_v_S      -> Drug main effect: Psilocin vs Saline
+    AwP_v_AwS  -> AwP vs AwS
+    AnP_v_AnS  -> AnP vs AnS
+    AnS_v_AwS  -> AnS vs AwS
+    P_v_S      -> Psilocin vs Saline main effect
+    fstat1     -> Psilocin main effect, averaged across state
+    fstat2     -> State main effect, averaged across drug
+    fstat3     -> Drug x State interaction: (AwP - AwS) - (AnP - AnS)
+
+For AnS_v_AwS, a dedicated two-group result is preferred. If only a 2x2 result
+is available, direction is calculated from the exact AnS and AwS condition
+means; the State main effect is not substituted because it is a different
+contrast. Significance is left unknown unless a direct pairwise test is present.
 
 Classification:
     robust
         z significant, raw IF significant, same direction
 
     supported_direction
-        z significant, raw IF same direction, raw IF not significant
+        z significant, raw IF same direction, raw IF not significant or unknown
 
     discordant_exclude_directional_claim
-        z and raw IF opposite directions
+        z and raw IF have opposite directions
 
     raw_only
-        raw IF significant, z not significant, same direction
+        raw IF significant, z not significant or unknown, same direction
 
     concordant_nonsig
         same direction, neither metric significant
 
     incomplete_or_ambiguous
         missing result, missing direction, or tie/near-zero effect
+
+Example from the mean_IF directory:
+    mean_IF_z_raw_audit.py -r .
 """
 
 from __future__ import annotations
 
-import argparse
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -53,7 +66,16 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
+from rich import print
+from rich.traceback import install
 
+from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SM, SuppressMetavar
+from unravel.core.utils import log_command, verbose_end_msg, verbose_start_msg
+
+
+Z_DIR_PREFIX = "cluster_mean_z_"
+RAW_DIR_PREFIX = "cluster_mean_IF_"
 
 DEFAULT_RESULT_PATTERNS = [
     "mean_IF_2x2_anova_results.csv",
@@ -63,6 +85,14 @@ DEFAULT_RESULT_PATTERNS = [
     "*2x2*results.csv",
     "*anova_results.csv",
 ]
+
+EXCLUDED_RESULT_NAME_PARTS = {
+    "raw_data",
+    "audit",
+    "summary",
+    "concise",
+    "skipped",
+}
 
 CONDITION_LABELS = {
     "AwS": "Awake Saline",
@@ -75,153 +105,270 @@ CONDITION_LABELS = {
     "Anesthetized": "Anesthetized",
 }
 
+SOURCE_ANALYSIS_METADATA_COLUMNS = [
+    "anova_method",
+    "anova_ss_type",
+    "anova_contrasts",
+    "Drug_SS",
+    "Drug_df",
+    "Drug_F",
+    "State_SS",
+    "State_df",
+    "State_F",
+    "Drug_State_SS",
+    "Drug_State_df",
+    "Drug_State_F",
+    "residual_SS",
+    "residual_df",
+    "residual_MS",
+    "comparison_method",
+    "multiple_comparisons_method",
+    "multiple_comparisons_family",
+    "multiple_comparisons_family_size",
+    "alpha",
+]
 
-@dataclass
+
+@dataclass(frozen=True)
 class ContrastSpec:
-    contrast_type: str  # pairwise, two_group, drug_main, state_main, unknown
+    contrast_type: str
     ref: str
     test: str
     label: str
     source: str
 
 
-def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(
-        description="Audit z-scored vs raw mean IF cluster result direction/significance."
+def parse_args():
+    parser = RichArgumentParser(
+        formatter_class=SuppressMetavar,
+        add_help=False,
+        docstring=__doc__,
     )
-    p.add_argument(
-        "--root", default=".",
-        help="Root directory containing mean_IF_z and mean_IF_wo_z. Default: current directory."
+
+    opts = parser.add_argument_group("Optional arguments")
+    opts.add_argument(
+        "-r",
+        "--root",
+        default=".",
+        help=(
+            "Root directory containing mean_IF_z and mean_IF_wo_z. "
+            "Default: current directory"
+        ),
+        action=SM,
     )
-    p.add_argument(
-        "--z_dir", default="mean_IF_z",
-        help="Directory containing z-scored cluster result folders. Default: mean_IF_z"
+    opts.add_argument(
+        "-z",
+        "--z_dir",
+        default="mean_IF_z",
+        help="Directory containing z-scored result folders. Default: mean_IF_z",
+        action=SM,
     )
-    p.add_argument(
-        "--raw_dir", default="mean_IF_wo_z",
-        help="Directory containing non-z/raw IF cluster result folders. Default: mean_IF_wo_z"
+    opts.add_argument(
+        "-nz",
+        "--raw_dir",
+        default="mean_IF_wo_z",
+        help=(
+            "Directory containing non-z-scored result folders. "
+            "Default: mean_IF_wo_z"
+        ),
+        action=SM,
     )
-    p.add_argument(
-        "-o", "--out", default="mean_IF_z_raw_audit.csv",
-        help="Master audit CSV. Default: mean_IF_z_raw_audit.csv"
+    opts.add_argument(
+        "-o",
+        "--out",
+        default="mean_IF_z_raw_audit.csv",
+        help="Detailed audit CSV. Default: mean_IF_z_raw_audit.csv",
+        action=SM,
     )
-    p.add_argument(
-        "--summary_out", default="mean_IF_z_raw_audit_summary.csv",
-        help="Summary-count CSV. Default: mean_IF_z_raw_audit_summary.csv"
+    opts.add_argument(
+        "-so",
+        "--summary_out",
+        default="mean_IF_z_raw_audit_summary.csv",
+        help="Summary-count CSV. Default: mean_IF_z_raw_audit_summary.csv",
+        action=SM,
     )
-    p.add_argument(
-        "--p_cutoff", type=float, default=0.05,
-        help="P-value cutoff for significance when boolean reject columns are absent. Default: 0.05"
+    opts.add_argument(
+        "-p",
+        "--p_cutoff",
+        type=float,
+        default=0.05,
+        help=(
+            "P-value cutoff used only when an explicit reject column is absent. "
+            "Default: 0.05"
+        ),
+        action=SM,
     )
-    p.add_argument(
-        "--ttest_sig_col", default="auto",
+    opts.add_argument(
+        "-ts",
+        "--ttest_sig_col",
+        default="auto",
         choices=["auto", "sig_holm_sidak", "sig_fdr_bh", "sig"],
         help=(
-            "Which significance column to prefer for two-group outputs. "
-            "auto = sig_holm_sidak if present, otherwise sig_fdr_bh, otherwise sig."
+            "Significance result to prefer for two-group outputs. "
+            "Default: auto"
         ),
+        action=SM,
     )
-    p.add_argument(
-        "--quiet", action="store_true",
-        help="Reduce terminal output."
-    )
-    return p.parse_args()
+    opts.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
+
+    return parser.parse_args()
 
 
-def safe_float(x) -> float:
+def safe_float(value) -> float:
     try:
-        if pd.isna(x):
+        if pd.isna(value):
             return np.nan
-        return float(x)
-    except Exception:
+        return float(value)
+    except (TypeError, ValueError):
         return np.nan
 
 
-def p_to_sig(p: float) -> str:
-    p = safe_float(p)
-    if pd.isna(p):
+def p_to_sig(p_value: float) -> str:
+    p_value = safe_float(p_value)
+    if pd.isna(p_value):
         return ""
-    if p < 0.0001:
+    if p_value < 0.0001:
         return "****"
-    if p < 0.001:
+    if p_value < 0.001:
         return "***"
-    if p < 0.01:
+    if p_value < 0.01:
         return "**"
-    if p < 0.05:
+    if p_value < 0.05:
         return "*"
     return "n.s."
+
+
+def value_to_bool(value) -> Optional[bool]:
+    """Convert common CSV boolean encodings to True, False, or None."""
+    if value is None or pd.isna(value):
+        return None
+    if isinstance(value, (bool, np.bool_)):
+        return bool(value)
+    if isinstance(value, (int, float, np.integer, np.floating)):
+        if value == 1:
+            return True
+        if value == 0:
+            return False
+
+    text = str(value).strip().lower()
+    if text in {"true", "t", "yes", "y", "1"}:
+        return True
+    if text in {"false", "f", "no", "n", "0"}:
+        return False
+    return None
 
 
 def sig_to_bool(sig: object) -> Optional[bool]:
     if sig is None or pd.isna(sig):
         return None
-    s = str(sig).strip()
-    if s == "":
+    text = str(sig).strip()
+    if not text:
         return None
-    if s.lower() in {"n.s.", "ns", "n.s", "not significant", "false"}:
+    if text.lower() in {"n.s.", "ns", "n.s", "not significant", "false"}:
         return False
-    if s in {"*", "**", "***", "****"}:
+    if text in {"*", "**", "***", "****"}:
         return True
     return None
 
 
-def significant_from(row: pd.Series, p_col: Optional[str], sig_col: Optional[str], p_cutoff: float) -> tuple[Optional[bool], float, str]:
-    """Return significant?, p value, significance stars."""
-    p = np.nan
-    sig = ""
-
+def significant_from(
+    row: pd.Series,
+    reject_col: Optional[str],
+    p_col: Optional[str],
+    sig_col: Optional[str],
+    p_cutoff: float,
+) -> tuple[Optional[bool], float, str]:
+    """Return significance decision, p-value, and significance stars."""
+    p_value = np.nan
     if p_col and p_col in row.index:
-        p = safe_float(row[p_col])
-        if not pd.isna(p):
-            sig = p_to_sig(p)
-            return bool(p < p_cutoff), p, sig
+        p_value = safe_float(row[p_col])
 
-    if sig_col and sig_col in row.index:
-        sig = str(row[sig_col]) if not pd.isna(row[sig_col]) else ""
-        sig_bool = sig_to_bool(sig)
-        if sig_bool is not None:
-            return sig_bool, p, sig
+    sig = ""
+    if sig_col and sig_col in row.index and not pd.isna(row[sig_col]):
+        sig = str(row[sig_col])
+    elif not pd.isna(p_value):
+        sig = p_to_sig(p_value)
 
-    return None, p, sig
+    # The source analysis owns the multiple-comparison decision. Prefer its
+    # explicit reject column when available.
+    if reject_col and reject_col in row.index:
+        reject = value_to_bool(row[reject_col])
+        if reject is not None:
+            return reject, p_value, sig
+
+    if not pd.isna(p_value):
+        return bool(p_value < p_cutoff), p_value, sig
+
+    sig_bool = sig_to_bool(sig)
+    if sig_bool is not None:
+        return sig_bool, p_value, sig
+
+    return None, p_value, sig
 
 
-def strip_metric_prefix(dirname: str) -> Optional[str]:
-    for prefix in ["cluster_mean_z_", "cluster_mean_IF_"]:
-        if dirname.startswith(prefix):
-            return dirname[len(prefix):]
-    return None
+def extract_source_analysis_metadata(row: pd.Series) -> dict:
+    """Retain statistical-method metadata from the source results when present."""
+    return {
+        column: row[column] if column in row.index else np.nan
+        for column in SOURCE_ANALYSIS_METADATA_COLUMNS
+    }
 
 
 def cluster_set_sort_key(name: str) -> tuple:
-    # Stable human-ish order: contrast, tstat number, q value, full name.
-    tstat = re.search(r"tstat(\d+)", name)
-    q = re.search(r"q([0-9.]+)", name)
-    q_val = safe_float(q.group(1)) if q else np.nan
+    """Provide a stable order by statistic number, threshold, and name."""
+    stat_match = re.search(
+        r"(?:tstat|fstat)(\d+)",
+        name,
+        flags=re.IGNORECASE,
+    )
+    threshold_match = re.search(
+        r"(?:q|FDR)([0-9.]+)",
+        name,
+        flags=re.IGNORECASE,
+    )
+
+    stat_number = (
+        int(stat_match.group(1))
+        if stat_match
+        else 999
+    )
+    threshold = (
+        safe_float(threshold_match.group(1))
+        if threshold_match
+        else np.nan
+    )
+
     return (
         name.split("_vox_")[0],
-        int(tstat.group(1)) if tstat else 999,
-        q_val if not pd.isna(q_val) else 999,
+        stat_number,
+        threshold if not pd.isna(threshold) else 999,
         name,
     )
 
 
 def build_dir_map(base: Path, prefix: str) -> dict[str, Path]:
-    out = {}
+    """Map the suffix after the expected metric-specific directory prefix."""
     if not base.exists():
-        return out
-    for p in base.iterdir():
-        if not p.is_dir():
-            continue
-        key = strip_metric_prefix(p.name)
-        if key is None:
-            continue
-        out[key] = p
+        return {}
+
+    out = {}
+    for path in base.iterdir():
+        if path.is_dir() and path.name.startswith(prefix):
+            out[path.name[len(prefix):]] = path
     return out
 
 
+def is_candidate_result_csv(path: Path) -> bool:
+    name = path.name.lower()
+    return (
+        path.is_file()
+        and path.suffix.lower() == ".csv"
+        and not any(part in name for part in EXCLUDED_RESULT_NAME_PARTS)
+    )
+
+
 def choose_result_csv(directory: Path, cluster_set: str = "") -> Optional[Path]:
-    # For AnS_v_AwS directories, prefer the explicit two-group t-test output
-    # over any older/accidental 2x2 ANOVA output that may also be present.
+    """Choose a full results CSV, preferring the standard out/ subdirectory."""
     if "AnS_v_AwS" in cluster_set:
         patterns = [
             "mean_IF_2group_ttest_results.csv",
@@ -235,39 +382,123 @@ def choose_result_csv(directory: Path, cluster_set: str = "") -> Optional[Path]:
     else:
         patterns = DEFAULT_RESULT_PATTERNS
 
-    for pattern in patterns:
-        matches = sorted(
-            p for p in directory.glob(pattern)
-            if p.is_file()
-            and p.name.lower().endswith(".csv")
-            and "raw_data" not in p.name.lower()
-            and "audit" not in p.name.lower()
-            and "summary" not in p.name.lower()
-        )
-        if matches:
-            return matches[0]
+    search_dirs = [
+        directory / "out",
+        directory,
+    ]
+
+    for search_dir in search_dirs:
+        if not search_dir.is_dir():
+            continue
+
+        for pattern in patterns:
+            matches = sorted(
+                path
+                for path in search_dir.glob(pattern)
+                if is_candidate_result_csv(path)
+            )
+            if matches:
+                return matches[0]
+
     return None
 
 
+def has_condition_means(result_cols: set[str], *conditions: str) -> bool:
+    for condition in conditions:
+        candidates = {
+            f"{condition}_mean_IF",
+            f"{condition}_mean",
+            f"{condition}_mean_z",
+        }
+        if not candidates.intersection(result_cols):
+            return False
+    return True
+
 def infer_contrast_spec(cluster_set: str, result_cols: set[str]) -> ContrastSpec:
-    """Infer the biologically relevant comparison from the cluster-set name."""
+    """Infer the biologically relevant contrast from the cluster-set name."""
+    cluster_set_lower = cluster_set.lower()
+
     if "AwP_v_AwS" in cluster_set:
-        return ContrastSpec("pairwise", ref="AwS", test="AwP", label="AwP_vs_AwS", source="dirname")
+        return ContrastSpec(
+            "pairwise",
+            "AwS",
+            "AwP",
+            "AwP_vs_AwS",
+            "directory_name",
+        )
+
     if "AnP_v_AnS" in cluster_set:
-        return ContrastSpec("pairwise", ref="AnS", test="AnP", label="AnP_vs_AnS", source="dirname")
+        return ContrastSpec(
+            "pairwise",
+            "AnS",
+            "AnP",
+            "AnP_vs_AnS",
+            "directory_name",
+        )
+
     if "AnS_v_AwS" in cluster_set:
-        # Prefer the explicit two-group output. If only a 2x2 output is present,
-        # fall back to the State main effect, but mark this in `source`.
         if {"higher_mean", "p"}.issubset(result_cols):
-            return ContrastSpec("two_group", ref="AwS", test="AnS", label="AnS_vs_AwS", source="dirname")
-        return ContrastSpec("state_main", ref="Awake", test="Anesthetized", label="Anesthetized_vs_Awake", source="fallback_state_main")
-    if "P_v_S" in cluster_set:
-        return ContrastSpec("drug_main", ref="Saline", test="Psilocin", label="Psilocin_vs_Saline", source="dirname")
-    return ContrastSpec("unknown", ref="", test="", label="unknown", source="unknown")
+            return ContrastSpec(
+                "two_group",
+                "AwS",
+                "AnS",
+                "AnS_vs_AwS",
+                "two_group_result",
+            )
+
+        if has_condition_means(result_cols, "AwS", "AnS"):
+            return ContrastSpec(
+                "pairwise",
+                "AwS",
+                "AnS",
+                "AnS_vs_AwS",
+                "condition_means_no_direct_test",
+            )
+
+        return ContrastSpec(
+            "unknown",
+            "AwS",
+            "AnS",
+            "AnS_vs_AwS",
+            "unknown",
+        )
+
+    if "fstat1" in cluster_set_lower or "P_v_S" in cluster_set:
+        return ContrastSpec(
+            "drug_main",
+            "Saline",
+            "Psilocin",
+            "Psilocin_vs_Saline",
+            "directory_name",
+        )
+
+    if "fstat2" in cluster_set_lower:
+        return ContrastSpec(
+            "state_main",
+            "Awake",
+            "Anesthetized",
+            "Anesthetized_vs_Awake",
+            "directory_name",
+        )
+
+    if "fstat3" in cluster_set_lower:
+        return ContrastSpec(
+            "interaction",
+            "Anes_psilocin_effect",
+            "Awake_psilocin_effect",
+            "Drug_x_State_interaction",
+            "directory_name",
+        )
+
+    return ContrastSpec("unknown", "", "", "unknown", "unknown")
+
+def choose_base_spec(z_spec: ContrastSpec, raw_spec: ContrastSpec) -> ContrastSpec:
+    if z_spec.contrast_type != "unknown":
+        return z_spec
+    return raw_spec
 
 
 def expected_direction_from_name(cluster_set: str, spec: ContrastSpec) -> str:
-    """Infer direction implied by tstat1/tstat2 in the cluster-set name."""
     if spec.contrast_type == "unknown":
         return ""
     if "tstat1" in cluster_set:
@@ -280,90 +511,116 @@ def expected_direction_from_name(cluster_set: str, spec: ContrastSpec) -> str:
 def direction_from_higher(higher: object, ref: str, test: str) -> tuple[str, int]:
     if higher is None or pd.isna(higher):
         return "", 0
-    h = str(higher).strip()
-    if h == "" or h.lower() == "tie":
+
+    value = str(higher).strip()
+    if not value or value.lower() == "tie":
         return "tie", 0
-    if h == test:
+    if value in {test, CONDITION_LABELS.get(test, "")}:
         return f"{test}>{ref}", 1
-    if h == ref:
+    if value in {ref, CONDITION_LABELS.get(ref, "")}:
         return f"{test}<{ref}", -1
-    # Handle State main effect labels even if ref/test are Awake/Anesthetized.
-    if h == CONDITION_LABELS.get(test, ""):
-        return f"{test}>{ref}", 1
-    if h == CONDITION_LABELS.get(ref, ""):
-        return f"{test}<{ref}", -1
-    return f"higher={h}", 0
+    return f"higher={value}", 0
 
 
-def direction_from_effect(effect: float, ref: str, test: str, atol: float = 1e-12) -> tuple[str, int]:
+def direction_from_effect(
+    effect: float,
+    ref: str,
+    test: str,
+    atol: float = 1e-12,
+) -> tuple[str, int]:
     effect = safe_float(effect)
     if pd.isna(effect):
         return "", 0
     if np.isclose(effect, 0, atol=atol):
         return "tie", 0
-    return (f"{test}>{ref}", 1) if effect > 0 else (f"{test}<{ref}", -1)
+    if effect > 0:
+        return f"{test}>{ref}", 1
+    return f"{test}<{ref}", -1
 
 
-def get_mean(row: pd.Series, cond: str) -> float:
-    for col in [f"{cond}_mean_IF", f"{cond}_mean", f"{cond}_mean_z"]:
+def get_mean(row: pd.Series, condition: str) -> float:
+    for col in (
+        f"{condition}_mean_IF",
+        f"{condition}_mean",
+        f"{condition}_mean_z",
+    ):
         if col in row.index:
             return safe_float(row[col])
     return np.nan
 
 
-def extract_pairwise(row: pd.Series, spec: ContrastSpec, p_cutoff: float) -> dict:
+def extract_pairwise(
+    row: pd.Series,
+    spec: ContrastSpec,
+    p_cutoff: float,
+) -> dict:
     ref, test = spec.ref, spec.test
     prefix = f"{test}_vs_{ref}"
 
-    p_col = f"{prefix}_p_holm_sidak" if f"{prefix}_p_holm_sidak" in row.index else f"{prefix}_p"
-    sig_col = f"{prefix}_sig_holm_sidak" if f"{prefix}_sig_holm_sidak" in row.index else None
-    higher_col = f"{prefix}_higher_mean"
-
+    reject_col = (
+        f"{prefix}_reject_holm_sidak"
+        if f"{prefix}_reject_holm_sidak" in row.index
+        else None
+    )
+    p_col = (
+        f"{prefix}_p_holm_sidak"
+        if f"{prefix}_p_holm_sidak" in row.index
+        else f"{prefix}_p"
+    )
     p_col = p_col if p_col in row.index else None
+    sig_col = (
+        f"{prefix}_sig_holm_sidak"
+        if f"{prefix}_sig_holm_sidak" in row.index
+        else None
+    )
+    higher_col = f"{prefix}_higher_mean"
     higher = row[higher_col] if higher_col in row.index else None
 
-    # Prefer explicit difference columns when present.
     effect_candidates = [
         f"{test}_minus_{ref}",
         f"{test}_diff_{test}_minus_{ref}",
     ]
     if test == "AwP" and ref == "AwS":
         effect_candidates.insert(0, "awake_diff_AwP_minus_AwS")
-    if test == "AnP" and ref == "AnS":
+    elif test == "AnP" and ref == "AnS":
         effect_candidates.insert(0, "anes_diff_AnP_minus_AnS")
 
     effect = np.nan
-    for c in effect_candidates:
-        if c in row.index:
-            effect = safe_float(row[c])
+    for col in effect_candidates:
+        if col in row.index:
+            effect = safe_float(row[col])
             break
 
-    if pd.isna(effect):
-        mean_ref = get_mean(row, ref)
-        mean_test = get_mean(row, test)
-        if not pd.isna(mean_ref) and not pd.isna(mean_test):
-            effect = mean_test - mean_ref
-    else:
-        mean_ref = get_mean(row, ref)
-        mean_test = get_mean(row, test)
+    mean_ref = get_mean(row, ref)
+    mean_test = get_mean(row, test)
+    if pd.isna(effect) and not pd.isna(mean_ref) and not pd.isna(mean_test):
+        effect = mean_test - mean_ref
 
     direction, sign = direction_from_effect(effect, ref, test)
     if sign == 0:
         direction, sign = direction_from_higher(higher, ref, test)
 
-    sig_bool, p, sig = significant_from(row, p_col=p_col, sig_col=sig_col, p_cutoff=p_cutoff)
+    significant, p_value, sig = significant_from(
+        row,
+        reject_col=reject_col,
+        p_col=p_col,
+        sig_col=sig_col,
+        p_cutoff=p_cutoff,
+    )
 
     return {
         "analysis_type": "pairwise",
+        "contrast_source": spec.source,
         "ref_group": ref,
         "test_group": test,
         "effect": effect,
         "direction": direction,
         "direction_sign": sign,
         "higher_mean": higher if higher is not None and not pd.isna(higher) else "",
-        "p": p,
+        "p": p_value,
         "sig": sig,
-        "significant": sig_bool,
+        "significant": significant,
+        "reject_column_used": reject_col or "",
         "p_column_used": p_col or "",
         "sig_column_used": sig_col or "",
         "ref_mean": mean_ref,
@@ -371,59 +628,75 @@ def extract_pairwise(row: pd.Series, spec: ContrastSpec, p_cutoff: float) -> dic
     }
 
 
-def choose_ttest_sig_cols(df_cols: set[str], ttest_sig_col: str) -> tuple[Optional[str], Optional[str]]:
+def choose_ttest_sig_cols(
+    df_cols: set[str],
+    ttest_sig_col: str,
+) -> tuple[Optional[str], Optional[str], Optional[str]]:
     if ttest_sig_col == "sig_holm_sidak":
-        return "p_holm_sidak", "sig_holm_sidak"
+        return "reject_holm_sidak", "p_holm_sidak", "sig_holm_sidak"
     if ttest_sig_col == "sig_fdr_bh":
-        return "p_fdr_bh", "sig_fdr_bh"
+        return "reject_fdr_bh", "p_fdr_bh", "sig_fdr_bh"
     if ttest_sig_col == "sig":
-        return "p", "sig"
+        return "reject", "p", "sig"
 
-    # auto
-    if "p_holm_sidak" in df_cols or "sig_holm_sidak" in df_cols:
-        return "p_holm_sidak", "sig_holm_sidak"
-    if "p_fdr_bh" in df_cols or "sig_fdr_bh" in df_cols:
-        return "p_fdr_bh", "sig_fdr_bh"
-    return "p", "sig"
+    if "reject_holm_sidak" in df_cols or "p_holm_sidak" in df_cols:
+        return "reject_holm_sidak", "p_holm_sidak", "sig_holm_sidak"
+    if "reject_fdr_bh" in df_cols or "p_fdr_bh" in df_cols:
+        return "reject_fdr_bh", "p_fdr_bh", "sig_fdr_bh"
+    return "reject", "p", "sig"
 
 
-def extract_two_group(row: pd.Series, spec: ContrastSpec, p_cutoff: float, ttest_sig_col: str) -> dict:
+def extract_two_group(
+    row: pd.Series,
+    spec: ContrastSpec,
+    p_cutoff: float,
+    ttest_sig_col: str,
+) -> dict:
     ref, test = spec.ref, spec.test
-    p_col, sig_col = choose_ttest_sig_cols(set(row.index), ttest_sig_col)
-    if p_col not in row.index:
-        p_col = "p" if "p" in row.index else None
-    if sig_col not in row.index:
-        sig_col = "sig" if "sig" in row.index else None
+    reject_col, p_col, sig_col = choose_ttest_sig_cols(
+        set(row.index),
+        ttest_sig_col,
+    )
+
+    reject_col = reject_col if reject_col in row.index else None
+    p_col = p_col if p_col in row.index else ("p" if "p" in row.index else None)
+    sig_col = (
+        sig_col if sig_col in row.index else ("sig" if "sig" in row.index else None)
+    )
 
     diff_col = f"{test}_minus_{ref}"
     effect = safe_float(row[diff_col]) if diff_col in row.index else np.nan
-    if pd.isna(effect):
-        mean_ref = get_mean(row, ref)
-        mean_test = get_mean(row, test)
-        if not pd.isna(mean_ref) and not pd.isna(mean_test):
-            effect = mean_test - mean_ref
-    else:
-        mean_ref = get_mean(row, ref)
-        mean_test = get_mean(row, test)
+    mean_ref = get_mean(row, ref)
+    mean_test = get_mean(row, test)
+    if pd.isna(effect) and not pd.isna(mean_ref) and not pd.isna(mean_test):
+        effect = mean_test - mean_ref
 
-    direction, sign = direction_from_effect(effect, ref, test)
     higher = row["higher_mean"] if "higher_mean" in row.index else ""
+    direction, sign = direction_from_effect(effect, ref, test)
     if sign == 0:
         direction, sign = direction_from_higher(higher, ref, test)
 
-    sig_bool, p, sig = significant_from(row, p_col=p_col, sig_col=sig_col, p_cutoff=p_cutoff)
+    significant, p_value, sig = significant_from(
+        row,
+        reject_col=reject_col,
+        p_col=p_col,
+        sig_col=sig_col,
+        p_cutoff=p_cutoff,
+    )
 
     return {
         "analysis_type": "two_group",
+        "contrast_source": spec.source,
         "ref_group": ref,
         "test_group": test,
         "effect": effect,
         "direction": direction,
         "direction_sign": sign,
         "higher_mean": higher if not pd.isna(higher) else "",
-        "p": p,
+        "p": p_value,
         "sig": sig,
-        "significant": sig_bool,
+        "significant": significant,
+        "reject_column_used": reject_col or "",
         "p_column_used": p_col or "",
         "sig_column_used": sig_col or "",
         "ref_mean": mean_ref,
@@ -431,72 +704,133 @@ def extract_two_group(row: pd.Series, spec: ContrastSpec, p_cutoff: float, ttest
     }
 
 
-def extract_drug_main(row: pd.Series, spec: ContrastSpec, p_cutoff: float) -> dict:
+def extract_drug_main(
+    row: pd.Series,
+    spec: ContrastSpec,
+    p_cutoff: float,
+) -> dict:
     ref, test = spec.ref, spec.test
     p_col = "Drug_p" if "Drug_p" in row.index else None
     sig_col = "Drug_sig" if "Drug_sig" in row.index else None
     higher = row["Drug_higher_mean"] if "Drug_higher_mean" in row.index else ""
 
-    # Estimate main-effect means from the condition means when available.
-    saline_vals = [get_mean(row, "AwS"), get_mean(row, "AnS")]
-    psilo_vals = [get_mean(row, "AwP"), get_mean(row, "AnP")]
-    mean_ref = np.nanmean(saline_vals) if np.any(~pd.isna(saline_vals)) else np.nan
-    mean_test = np.nanmean(psilo_vals) if np.any(~pd.isna(psilo_vals)) else np.nan
-    effect = mean_test - mean_ref if not pd.isna(mean_ref) and not pd.isna(mean_test) else np.nan
+    saline_values = [get_mean(row, "AwS"), get_mean(row, "AnS")]
+    psilocin_values = [get_mean(row, "AwP"), get_mean(row, "AnP")]
+    mean_ref = (
+        np.nanmean(saline_values)
+        if np.any(~pd.isna(saline_values))
+        else np.nan
+    )
+    mean_test = (
+        np.nanmean(psilocin_values)
+        if np.any(~pd.isna(psilocin_values))
+        else np.nan
+    )
+    effect = (
+        mean_test - mean_ref
+        if not pd.isna(mean_ref) and not pd.isna(mean_test)
+        else np.nan
+    )
 
     direction, sign = direction_from_effect(effect, ref, test)
     if sign == 0:
         direction, sign = direction_from_higher(higher, ref, test)
 
-    sig_bool, p, sig = significant_from(row, p_col=p_col, sig_col=sig_col, p_cutoff=p_cutoff)
+    significant, p_value, sig = significant_from(
+        row,
+        reject_col=None,
+        p_col=p_col,
+        sig_col=sig_col,
+        p_cutoff=p_cutoff,
+    )
 
     return {
         "analysis_type": "drug_main",
+        "contrast_source": spec.source,
         "ref_group": ref,
         "test_group": test,
         "effect": effect,
         "direction": direction,
         "direction_sign": sign,
         "higher_mean": higher if not pd.isna(higher) else "",
-        "p": p,
+        "p": p_value,
         "sig": sig,
-        "significant": sig_bool,
+        "significant": significant,
+        "reject_column_used": "",
         "p_column_used": p_col or "",
         "sig_column_used": sig_col or "",
         "ref_mean": mean_ref,
         "test_mean": mean_test,
     }
 
+def mean_of_available(values) -> float:
+    """Return the mean of available numeric values without empty-slice warnings."""
+    array = np.asarray(values, dtype=float)
+    valid = array[~np.isnan(array)]
+    return safe_float(valid.mean()) if valid.size else np.nan
 
-def extract_state_main(row: pd.Series, spec: ContrastSpec, p_cutoff: float) -> dict:
-    ref, test = spec.ref, spec.test
+
+def extract_state_main(
+    row: pd.Series,
+    spec: ContrastSpec,
+    p_cutoff: float,
+) -> dict:
+    """Extract the State main effect averaged across drug."""
     p_col = "State_p" if "State_p" in row.index else None
     sig_col = "State_sig" if "State_sig" in row.index else None
     higher = row["State_higher_mean"] if "State_higher_mean" in row.index else ""
 
-    awake_vals = [get_mean(row, "AwS"), get_mean(row, "AwP")]
-    anes_vals = [get_mean(row, "AnS"), get_mean(row, "AnP")]
-    mean_ref = np.nanmean(awake_vals) if np.any(~pd.isna(awake_vals)) else np.nan
-    mean_test = np.nanmean(anes_vals) if np.any(~pd.isna(anes_vals)) else np.nan
-    effect = mean_test - mean_ref if not pd.isna(mean_ref) and not pd.isna(mean_test) else np.nan
+    awake_values = [
+        get_mean(row, "AwS"),
+        get_mean(row, "AwP"),
+    ]
+    anes_values = [
+        get_mean(row, "AnS"),
+        get_mean(row, "AnP"),
+    ]
 
-    direction, sign = direction_from_effect(effect, ref, test)
+    mean_ref = mean_of_available(awake_values)
+    mean_test = mean_of_available(anes_values)
+
+    effect = (
+        mean_test - mean_ref
+        if not pd.isna(mean_ref) and not pd.isna(mean_test)
+        else np.nan
+    )
+
+    direction, sign = direction_from_effect(
+        effect,
+        spec.ref,
+        spec.test,
+    )
     if sign == 0:
-        direction, sign = direction_from_higher(higher, ref, test)
+        direction, sign = direction_from_higher(
+            higher,
+            spec.ref,
+            spec.test,
+        )
 
-    sig_bool, p, sig = significant_from(row, p_col=p_col, sig_col=sig_col, p_cutoff=p_cutoff)
+    significant, p_value, sig = significant_from(
+        row,
+        reject_col=None,
+        p_col=p_col,
+        sig_col=sig_col,
+        p_cutoff=p_cutoff,
+    )
 
     return {
         "analysis_type": "state_main",
-        "ref_group": ref,
-        "test_group": test,
+        "contrast_source": spec.source,
+        "ref_group": spec.ref,
+        "test_group": spec.test,
         "effect": effect,
         "direction": direction,
         "direction_sign": sign,
         "higher_mean": higher if not pd.isna(higher) else "",
-        "p": p,
+        "p": p_value,
         "sig": sig,
-        "significant": sig_bool,
+        "significant": significant,
+        "reject_column_used": "",
         "p_column_used": p_col or "",
         "sig_column_used": sig_col or "",
         "ref_mean": mean_ref,
@@ -504,17 +838,129 @@ def extract_state_main(row: pd.Series, spec: ContrastSpec, p_cutoff: float) -> d
     }
 
 
-def extract_metric_row(row: pd.Series, spec: ContrastSpec, p_cutoff: float, ttest_sig_col: str) -> dict:
-    if spec.contrast_type == "pairwise":
-        return extract_pairwise(row, spec, p_cutoff)
-    if spec.contrast_type == "two_group":
-        return extract_two_group(row, spec, p_cutoff, ttest_sig_col)
-    if spec.contrast_type == "drug_main":
-        return extract_drug_main(row, spec, p_cutoff)
-    if spec.contrast_type == "state_main":
-        return extract_state_main(row, spec, p_cutoff)
+def interaction_pattern(awake_sign: int, anes_sign: int) -> str:
+    """Describe the directions of the two simple psilocin effects."""
+    patterns = {
+        (1, 1): "increase_in_both_states",
+        (-1, -1): "decrease_in_both_states",
+        (1, -1): "awake_increase_anes_decrease",
+        (-1, 1): "awake_decrease_anes_increase",
+    }
+    return patterns.get(
+        (awake_sign, anes_sign),
+        "incomplete_or_zero_effect",
+    )
+
+
+def extract_interaction(
+    row: pd.Series,
+    spec: ContrastSpec,
+    p_cutoff: float,
+) -> dict:
+    """Extract the Drug x State interaction and both simple drug effects."""
+    p_col = "Drug_State_p" if "Drug_State_p" in row.index else None
+    sig_col = "Drug_State_sig" if "Drug_State_sig" in row.index else None
+
+    means = {
+        condition: get_mean(row, condition)
+        for condition in ("AwS", "AwP", "AnS", "AnP")
+    }
+
+    awake_effect = safe_float(
+        row.get("awake_diff_AwP_minus_AwS", np.nan)
+    )
+    anes_effect = safe_float(
+        row.get("anes_diff_AnP_minus_AnS", np.nan)
+    )
+    interaction_effect = safe_float(
+        row.get(
+            "interaction_effect_awake_diff_minus_anes_diff",
+            np.nan,
+        )
+    )
+
+    if (
+        pd.isna(awake_effect)
+        and not pd.isna(means["AwP"])
+        and not pd.isna(means["AwS"])
+    ):
+        awake_effect = means["AwP"] - means["AwS"]
+
+    if (
+        pd.isna(anes_effect)
+        and not pd.isna(means["AnP"])
+        and not pd.isna(means["AnS"])
+    ):
+        anes_effect = means["AnP"] - means["AnS"]
+
+    if (
+        pd.isna(interaction_effect)
+        and not pd.isna(awake_effect)
+        and not pd.isna(anes_effect)
+    ):
+        interaction_effect = awake_effect - anes_effect
+
+    direction, sign = direction_from_effect(
+        interaction_effect,
+        spec.ref,
+        spec.test,
+    )
+    awake_direction, awake_sign = direction_from_effect(
+        awake_effect,
+        "AwS",
+        "AwP",
+    )
+    anes_direction, anes_sign = direction_from_effect(
+        anes_effect,
+        "AnS",
+        "AnP",
+    )
+
+    significant, p_value, sig = significant_from(
+        row,
+        reject_col=None,
+        p_col=p_col,
+        sig_col=sig_col,
+        p_cutoff=p_cutoff,
+    )
+
     return {
-        "analysis_type": "unknown",
+        "analysis_type": "interaction",
+        "contrast_source": spec.source,
+        "ref_group": spec.ref,
+        "test_group": spec.test,
+        "effect": interaction_effect,
+        "direction": direction,
+        "direction_sign": sign,
+        "higher_mean": "",
+        "p": p_value,
+        "sig": sig,
+        "significant": significant,
+        "reject_column_used": "",
+        "p_column_used": p_col or "",
+        "sig_column_used": sig_col or "",
+        "ref_mean": anes_effect,
+        "test_mean": awake_effect,
+        "awake_effect": awake_effect,
+        "awake_effect_direction": awake_direction,
+        "awake_effect_direction_sign": awake_sign,
+        "anes_effect": anes_effect,
+        "anes_effect_direction": anes_direction,
+        "anes_effect_direction_sign": anes_sign,
+        "interaction_pattern": interaction_pattern(
+            awake_sign,
+            anes_sign,
+        ),
+        "AwS_mean": means["AwS"],
+        "AwP_mean": means["AwP"],
+        "AnS_mean": means["AnS"],
+        "AnP_mean": means["AnP"],
+    }
+
+def empty_extraction(spec: ContrastSpec, analysis_type: str = "unknown") -> dict:
+    out = {
+        "analysis_type": analysis_type,
+        "contrast_source": spec.source,
         "ref_group": spec.ref,
         "test_group": spec.test,
         "effect": np.nan,
@@ -524,115 +970,349 @@ def extract_metric_row(row: pd.Series, spec: ContrastSpec, p_cutoff: float, ttes
         "p": np.nan,
         "sig": "",
         "significant": None,
+        "reject_column_used": "",
         "p_column_used": "",
         "sig_column_used": "",
         "ref_mean": np.nan,
         "test_mean": np.nan,
     }
+    out.update({column: np.nan for column in SOURCE_ANALYSIS_METADATA_COLUMNS})
+    return out
+
+
+def extract_metric_row(
+    row: pd.Series,
+    spec: ContrastSpec,
+    p_cutoff: float,
+    ttest_sig_col: str,
+) -> dict:
+    if spec.contrast_type == "pairwise":
+        values = extract_pairwise(row, spec, p_cutoff)
+
+    elif spec.contrast_type == "two_group":
+        values = extract_two_group(
+            row,
+            spec,
+            p_cutoff,
+            ttest_sig_col,
+        )
+
+    elif spec.contrast_type == "drug_main":
+        values = extract_drug_main(row, spec, p_cutoff)
+
+    elif spec.contrast_type == "state_main":
+        values = extract_state_main(row, spec, p_cutoff)
+
+    elif spec.contrast_type == "interaction":
+        values = extract_interaction(row, spec, p_cutoff)
+
+    else:
+        values = empty_extraction(spec)
+
+    values.update(extract_source_analysis_metadata(row))
+    return values
+
+def normalize_cluster_id(value) -> str:
+    """Normalize 1 and 1.0 to the same key while preserving nonnumeric IDs."""
+    if pd.isna(value):
+        return ""
+
+    text = str(value).strip()
+    numeric = safe_float(text)
+    if not pd.isna(numeric) and np.isfinite(numeric) and numeric.is_integer():
+        return str(int(numeric))
+    return text
 
 
 def read_results(path: Path) -> pd.DataFrame:
     df = pd.read_csv(path)
     if "cluster_ID" not in df.columns:
         raise ValueError(f"{path} is missing cluster_ID")
+
     df = df.copy()
-    df["cluster_ID"] = df["cluster_ID"].astype(str)
+    df["cluster_ID"] = df["cluster_ID"].map(normalize_cluster_id)
+    if (df["cluster_ID"] == "").any():
+        raise ValueError(f"{path} contains missing cluster_ID values")
+
+    duplicated = df.loc[df["cluster_ID"].duplicated(), "cluster_ID"].unique()
+    if len(duplicated):
+        raise ValueError(
+            f"{path} contains duplicate cluster_ID values: {duplicated.tolist()}"
+        )
     return df
 
 
-def classify(z: dict, raw: dict) -> tuple[str, str, bool]:
-    """Return classification, concordance, include_in_main_directional_interpretation."""
-    z_sign = int(z.get("direction_sign") or 0)
-    raw_sign = int(raw.get("direction_sign") or 0)
-    z_sig = z.get("significant")
-    raw_sig = raw.get("significant")
+def classify(z_values: dict, raw_values: dict) -> tuple[str, str, Optional[bool], bool]:
+    """Classify cross-metric direction and significance support."""
+    z_sign = int(z_values.get("direction_sign") or 0)
+    raw_sign = int(raw_values.get("direction_sign") or 0)
+    z_sig = z_values.get("significant")
+    raw_sig = raw_values.get("significant")
 
     if z_sign == 0 or raw_sign == 0:
-        return "incomplete_or_ambiguous", "missing_or_tie", False
+        return "incomplete_or_ambiguous", "missing_or_tie", None, False
 
     if z_sign != raw_sign:
-        return "discordant_exclude_directional_claim", "opposite", False
+        return (
+            "discordant_exclude_directional_claim",
+            "opposite",
+            False,
+            False,
+        )
 
-    # Directionally concordant from here.
     if z_sig is True and raw_sig is True:
-        return "robust", "same", True
+        return "robust", "same", True, True
     if z_sig is True and raw_sig is not True:
-        return "supported_direction", "same", True
+        return "supported_direction", "same", True, True
     if z_sig is not True and raw_sig is True:
-        return "raw_only", "same", False
+        return "raw_only", "same", True, False
     if z_sig is False and raw_sig is False:
-        return "concordant_nonsig", "same", False
-    return "concordant_uncertain_significance", "same", False
+        return "concordant_nonsig", "same", True, False
+    return "concordant_uncertain_significance", "same", True, False
+
+def compare_direction_signs(
+    z_values: dict,
+    raw_values: dict,
+    key: str,
+) -> Optional[bool]:
+    """Compare corresponding nonzero direction signs."""
+    z_sign = int(z_values.get(key) or 0)
+    raw_sign = int(raw_values.get(key) or 0)
+
+    if z_sign == 0 or raw_sign == 0:
+        return None
+
+    return z_sign == raw_sign
+
+
+def review_interaction(
+    z_values: dict,
+    raw_values: dict,
+) -> dict:
+    """Flag interaction patterns that differ after z-scoring."""
+    same_awake = compare_direction_signs(
+        z_values,
+        raw_values,
+        "awake_effect_direction_sign",
+    )
+    same_anes = compare_direction_signs(
+        z_values,
+        raw_values,
+        "anes_effect_direction_sign",
+    )
+
+    z_pattern = z_values.get("interaction_pattern", "")
+    raw_pattern = raw_values.get("interaction_pattern", "")
+
+    pattern_is_complete = (
+        z_pattern
+        and raw_pattern
+        and "incomplete" not in z_pattern
+        and "incomplete" not in raw_pattern
+    )
+    same_pattern = (
+        z_pattern == raw_pattern
+        if pattern_is_complete
+        else None
+    )
+
+    reasons = []
+
+    if same_awake is False:
+        reasons.append("awake_drug_effect_direction_changed")
+
+    if same_anes is False:
+        reasons.append("anes_drug_effect_direction_changed")
+
+    if same_pattern is False:
+        reasons.append("interaction_pattern_changed")
+
+    same_interaction = compare_direction_signs(
+        z_values,
+        raw_values,
+        "direction_sign",
+    )
+    if same_interaction is False:
+        reasons.append("interaction_direction_changed")
+
+    incomplete = any(
+        value is None
+        for value in (
+            same_interaction,
+            same_awake,
+            same_anes,
+            same_pattern,
+        )
+    )
+
+    if reasons:
+        possible_artifact = True
+        priority = "high"
+    elif incomplete:
+        possible_artifact = None
+        priority = "incomplete"
+    elif (
+        z_values.get("significant") is True
+        and raw_values.get("significant") is not True
+    ):
+        possible_artifact = None
+        priority = "moderate"
+        reasons.append(
+            "z_interaction_significant_raw_not_significant"
+        )
+    else:
+        possible_artifact = False
+        priority = "low"
+
+    if priority == "incomplete" and not reasons:
+        reasons.append("missing_or_zero_interaction_component")
+
+    return {
+        "same_awake_effect_direction": same_awake,
+        "same_anes_effect_direction": same_anes,
+        "same_interaction_pattern": same_pattern,
+        "possible_z_scoring_interaction_artifact": possible_artifact,
+        "interaction_review_priority": priority,
+        "interaction_audit_reason": ";".join(reasons),
+    }
+
+def direction_matches_expected(
+    direction: str,
+    expected_direction: str,
+) -> Optional[bool]:
+    if not direction or direction == "tie" or not expected_direction:
+        return None
+    return direction == expected_direction
 
 
 def add_metric_prefix(metric: str, values: dict) -> dict:
-    return {f"{metric}_{k}": v for k, v in values.items()}
+    return {f"{metric}_{key}": value for key, value in values.items()}
 
 
-def audit_pair(cluster_set: str, z_csv: Path, raw_csv: Path, args: argparse.Namespace) -> pd.DataFrame:
+def cluster_id_sort_key(value: str) -> tuple:
+    numeric = safe_float(value)
+    return (
+        numeric if not pd.isna(numeric) else np.inf,
+        str(value),
+    )
+
+
+def audit_pair(
+    cluster_set: str,
+    z_csv: Path,
+    raw_csv: Path,
+    p_cutoff: float,
+    ttest_sig_col: str,
+) -> pd.DataFrame:
     z_df = read_results(z_csv)
     raw_df = read_results(raw_csv)
 
-    # Infer separately then prefer z unless z is unknown.
     z_spec = infer_contrast_spec(cluster_set, set(z_df.columns))
     raw_spec = infer_contrast_spec(cluster_set, set(raw_df.columns))
-    spec = z_spec if z_spec.contrast_type != "unknown" else raw_spec
-
-    expected_direction = expected_direction_from_name(cluster_set, spec)
+    base_spec = choose_base_spec(z_spec, raw_spec)
+    expected_direction = expected_direction_from_name(cluster_set, base_spec)
 
     z_by_cluster = z_df.set_index("cluster_ID", drop=False)
     raw_by_cluster = raw_df.set_index("cluster_ID", drop=False)
-    cluster_ids = sorted(set(z_by_cluster.index) | set(raw_by_cluster.index), key=lambda x: (safe_float(x) if not pd.isna(safe_float(x)) else np.inf, str(x)))
+    cluster_ids = sorted(
+        set(z_by_cluster.index) | set(raw_by_cluster.index),
+        key=cluster_id_sort_key,
+    )
 
     rows = []
-    for cid in cluster_ids:
-        base = {
+    for cluster_id in cluster_ids:
+        if cluster_id in z_by_cluster.index:
+            z_values = extract_metric_row(
+                z_by_cluster.loc[cluster_id],
+                z_spec,
+                p_cutoff,
+                ttest_sig_col,
+            )
+        else:
+            z_values = empty_extraction(z_spec, analysis_type="missing")
+
+        if cluster_id in raw_by_cluster.index:
+            raw_values = extract_metric_row(
+                raw_by_cluster.loc[cluster_id],
+                raw_spec,
+                p_cutoff,
+                ttest_sig_col,
+            )
+        else:
+            raw_values = empty_extraction(raw_spec, analysis_type="missing")
+
+        validation_class, concordance, same_direction, include_main = classify(
+            z_values,
+            raw_values,
+        )
+
+        interaction_review = {}
+        if base_spec.contrast_type == "interaction":
+            interaction_review = review_interaction(
+                z_values,
+                raw_values,
+            )
+
+            if (
+                interaction_review[
+                    "possible_z_scoring_interaction_artifact"
+                ]
+                is True
+            ):
+                include_main = False
+
+        z_matches_expected = direction_matches_expected(
+            z_values.get("direction", ""),
+            expected_direction,
+        )
+        raw_matches_expected = direction_matches_expected(
+            raw_values.get("direction", ""),
+            expected_direction,
+        )
+
+        notes = []
+        if z_values["analysis_type"] == "missing":
+            notes.append("missing_z_cluster")
+        if raw_values["analysis_type"] == "missing":
+            notes.append("missing_raw_cluster")
+        if z_spec.source == "condition_means_no_direct_test":
+            notes.append("z_direction_from_condition_means_significance_unknown")
+        if raw_spec.source == "condition_means_no_direct_test":
+            notes.append("raw_direction_from_condition_means_significance_unknown")
+        if z_matches_expected is False:
+            notes.append("z_direction_opposes_cluster_name")
+        if raw_matches_expected is False:
+            notes.append("raw_direction_opposes_cluster_name")
+        if validation_class == "discordant_exclude_directional_claim":
+            notes.append("do_not_claim_direction_without_qualification")
+        elif validation_class == "supported_direction":
+            notes.append("raw_direction_concordant_but_not_significant")
+
+        interaction_reason = interaction_review.get(
+            "interaction_audit_reason",
+            "",
+        )
+        if interaction_reason:
+            notes.append(interaction_reason)
+
+        rows.append({
             "cluster_set": cluster_set,
-            "cluster_ID": cid,
-            "contrast": spec.label,
-            "contrast_type": spec.contrast_type,
-            "contrast_source": spec.source,
+            "cluster_ID": cluster_id,
+            "contrast": base_spec.label,
             "expected_direction_from_cluster_name": expected_direction,
             "z_results_csv": str(z_csv),
             "raw_results_csv": str(raw_csv),
-        }
-
-        if cid in z_by_cluster.index:
-            z_vals = extract_metric_row(z_by_cluster.loc[cid], spec, args.p_cutoff, args.ttest_sig_col)
-        else:
-            z_vals = extract_metric_row(pd.Series(dtype=object), spec, args.p_cutoff, args.ttest_sig_col)
-            z_vals["analysis_type"] = "missing"
-
-        if cid in raw_by_cluster.index:
-            raw_vals = extract_metric_row(raw_by_cluster.loc[cid], spec, args.p_cutoff, args.ttest_sig_col)
-        else:
-            raw_vals = extract_metric_row(pd.Series(dtype=object), spec, args.p_cutoff, args.ttest_sig_col)
-            raw_vals["analysis_type"] = "missing"
-
-        validation_class, concordance, include_main = classify(z_vals, raw_vals)
-
-        notes = []
-        if z_vals.get("analysis_type") == "missing":
-            notes.append("missing_z_cluster")
-        if raw_vals.get("analysis_type") == "missing":
-            notes.append("missing_raw_cluster")
-        if spec.contrast_type == "state_main":
-            notes.append("state_main_fallback_used")
-        if validation_class == "discordant_exclude_directional_claim":
-            notes.append("do_not_claim_true_directional_decrease_or_increase")
-        if validation_class == "supported_direction":
-            notes.append("z_significant_raw_direction_concordant_but_not_significant")
-
-        out = {
-            **base,
-            **add_metric_prefix("z", z_vals),
-            **add_metric_prefix("raw", raw_vals),
+            **add_metric_prefix("z", z_values),
+            **add_metric_prefix("raw", raw_values),
+            "z_matches_expected_direction": z_matches_expected,
+            "raw_matches_expected_direction": raw_matches_expected,
+            "same_effect_direction": same_direction,
+             **interaction_review,
             "direction_concordance": concordance,
             "validation_class": validation_class,
             "include_in_main_directional_interpretation": include_main,
             "notes": ";".join(notes),
-        }
-        rows.append(out)
+        })
 
     return pd.DataFrame(rows)
 
@@ -642,25 +1322,47 @@ def write_summary(audit: pd.DataFrame, summary_out: Path) -> pd.DataFrame:
         summary = pd.DataFrame()
     else:
         summary = (
-            audit
-            .groupby(["cluster_set", "contrast", "validation_class"], dropna=False)
+            audit.groupby(
+                [
+                    "cluster_set",
+                    "contrast",
+                    "direction_concordance",
+                    "validation_class",
+                ],
+                dropna=False,
+            )
             .size()
             .reset_index(name="n_clusters")
-            .sort_values(["cluster_set", "validation_class"])
+            .sort_values(
+                ["cluster_set", "direction_concordance", "validation_class"]
+            )
         )
+
     summary_out.parent.mkdir(parents=True, exist_ok=True)
     summary.to_csv(summary_out, index=False)
     return summary
 
 
+def resolve_output_path(path_arg: str, root: Path) -> Path:
+    path = Path(path_arg).expanduser()
+    if not path.is_absolute():
+        path = root / path
+    return path
+
+
+@log_command
 def main() -> None:
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
     root = Path(args.root).expanduser().resolve()
     z_base = root / args.z_dir
     raw_base = root / args.raw_dir
 
-    z_dirs = build_dir_map(z_base, "cluster_mean_z_")
-    raw_dirs = build_dir_map(raw_base, "cluster_mean_IF_")
+    z_dirs = build_dir_map(z_base, Z_DIR_PREFIX)
+    raw_dirs = build_dir_map(raw_base, RAW_DIR_PREFIX)
 
     all_keys = sorted(set(z_dirs) | set(raw_dirs), key=cluster_set_sort_key)
     if not all_keys:
@@ -671,60 +1373,72 @@ def main() -> None:
     pair_tables = []
     skipped = []
 
-    for key in all_keys:
-        z_dir = z_dirs.get(key)
-        raw_dir = raw_dirs.get(key)
+    for cluster_set in all_keys:
+        z_dir = z_dirs.get(cluster_set)
+        raw_dir = raw_dirs.get(cluster_set)
         if z_dir is None or raw_dir is None:
-            skipped.append((key, "missing_z_dir" if z_dir is None else "missing_raw_dir"))
+            reason = "missing_z_dir" if z_dir is None else "missing_raw_dir"
+            skipped.append((cluster_set, reason))
             continue
 
-        z_csv = choose_result_csv(z_dir, key)
-        raw_csv = choose_result_csv(raw_dir, key)
+        z_csv = choose_result_csv(z_dir, cluster_set)
+        raw_csv = choose_result_csv(raw_dir, cluster_set)
         if z_csv is None or raw_csv is None:
-            reason = []
+            reasons = []
             if z_csv is None:
-                reason.append("missing_z_results_csv")
+                reasons.append("missing_z_results_csv")
             if raw_csv is None:
-                reason.append("missing_raw_results_csv")
-            skipped.append((key, ";".join(reason)))
+                reasons.append("missing_raw_results_csv")
+            skipped.append((cluster_set, ";".join(reasons)))
             continue
 
-        if not args.quiet:
-            print(f"Auditing {key}")
+        if args.verbose:
+            print(f"\nAuditing: {cluster_set}")
             print(f"  z:   {z_csv.relative_to(root)}")
             print(f"  raw: {raw_csv.relative_to(root)}")
 
-        pair_tables.append(audit_pair(key, z_csv, raw_csv, args))
+        pair_tables.append(
+            audit_pair(
+                cluster_set=cluster_set,
+                z_csv=z_csv,
+                raw_csv=raw_csv,
+                p_cutoff=args.p_cutoff,
+                ttest_sig_col=args.ttest_sig_col,
+            )
+        )
 
-    if pair_tables:
-        audit = pd.concat(pair_tables, ignore_index=True)
-    else:
-        audit = pd.DataFrame()
+    audit = (
+        pd.concat(pair_tables, ignore_index=True)
+        if pair_tables
+        else pd.DataFrame()
+    )
 
-    out = Path(args.out).expanduser()
-    if not out.is_absolute():
-        out = root / out
+    out = resolve_output_path(args.out, root)
     out.parent.mkdir(parents=True, exist_ok=True)
     audit.to_csv(out, index=False)
 
-    summary_out = Path(args.summary_out).expanduser()
-    if not summary_out.is_absolute():
-        summary_out = root / summary_out
+    summary_out = resolve_output_path(args.summary_out, root)
     summary = write_summary(audit, summary_out)
 
     if skipped:
-        skipped_out = out.with_name(out.stem + "_skipped.csv")
-        pd.DataFrame(skipped, columns=["cluster_set", "reason"]).to_csv(skipped_out, index=False)
+        skipped_out = out.with_name(f"{out.stem}_skipped{out.suffix}")
+        pd.DataFrame(
+            skipped,
+            columns=["cluster_set", "reason"],
+        ).to_csv(skipped_out, index=False)
     else:
         skipped_out = None
 
-    print(f"Saved audit table: {out}")
+    print(f"\nSaved audit table: {out}")
     print(f"Saved summary table: {summary_out}")
-    if skipped_out:
+    if skipped_out is not None:
         print(f"Saved skipped-pairs table: {skipped_out}")
+
     if not summary.empty:
         print("\nSummary:")
         print(summary.to_string(index=False))
+
+    verbose_end_msg()
 
 
 if __name__ == "__main__":

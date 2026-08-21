@@ -4,11 +4,15 @@
 Use ``abca_sunburst_expression`` or ``sbe`` from UNRAVEL to calculate mean expression for all cell types in the ABCA and make a sunburst plot.
 
 Prereqs: 
-    - ``abca_merfish_filter`` and ``merfish_join_expression_data.py``
-    - Or: ``RNAseq_expression.py`` and ``RNAseq_filter.py``
+    - ``abca_merfish_filter`` and ``abca_merfish_join_expression``
+    - Or: ``abca_scRNAseq_expression`` and ``abca_scRNAseq_filter``
 
 Outputs:
-    - path/input_sunburst_expression_thr<value>.csv, input_mean_expression_lut.txt, and input_percent_expression_thr<value>_lut.txt
+    - path/input_sunburst.csv
+    - path/sunburst_expression_thr<value>/input__gene-GENE_sunburst_expression_thr<value>.csv
+    - path/mean_expression_lut/input__gene-GENE_mean_expression_lut.txt
+    - path/percent_expression_thr<value>_lut/input__gene-GENE_percent_expression_thr<value>_lut.txt
+    - path/all_expression_thr<value>/input__gene-GENE_all.csv
 
 Note:
     - LUT location: unravel/core/csvs/ABCA/WMB_sunburst_colors.csv
@@ -17,6 +21,7 @@ Next steps:
     - Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (https://app.flourish.studio/)
     - It can be pasted into the Data tab (categories columns = cell type columns, Size by = percent column)
     - Preview tab: Hierarchy -> Depth to 5, Colors -> paste content of ..._colors.csv into Custom overrides
+    - ``abca_sunburst_expression_overview`` to summarize mean and percent expression for all cells and each cell type.
 
 Usage:
 ------ 
@@ -37,14 +42,13 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
-# TODO: Update docstring with commands for other scripts in prereqs. Mean for all cells not saved yet.
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/cells_filtered_exp.csv', required=True, action=SM)
-    reqs.add_argument('-g', '--gene', help='Gene to analyze', required=True, action=SM)
+    reqs.add_argument('-g', '--genes', help='Genes to analyze', required=True, nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-s', '--species', help='Species to analyze ("mouse" or "human"). Default: mouse', default='mouse', action=SM)
@@ -52,8 +56,7 @@ def parse_args():
     opts.add_argument('-c', '--color_max', help='Maximum value for the color scale. Default: 10', default=10, type=float, action=SM)
     opts.add_argument('-t', '--threshold', help='Log2(CPM+1) threshold for percent gene expression. Default: 6', default=6, type=float, action=SM)
     opts.add_argument('-o', '--output', help='Output dir path. Default: ABCA_sunburst_cmax10_thr6/', default=None, action=SM)
-    opts.add_argument('-op', '--output_prefix', help='Output file prefix. Default: input file name before the extension', default=None, action=SM)
-    opts.add_argument('-a', '--all', help='Save mean expression and percent expressing for all cells. Default: False', action='store_true', default=False)
+    opts.add_argument('-op', '--output_prefix', help='Gene-specific output file prefix. Default: input stem + __gene-GENE', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -74,9 +77,9 @@ def main():
 
     # Load the CSV file
     if species == 'mouse':
-        cols = ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster', args.gene]
+        cols = ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'] + args.genes
     elif species == 'human':
-        cols = ['neurotransmitter', 'supercluster', 'cluster', 'subcluster', args.gene]
+        cols = ['neurotransmitter', 'supercluster', 'cluster', 'subcluster'] + args.genes
     expected = set(cols)
     missing = expected - set(pd.read_csv(args.input, nrows=1).columns)
     if missing:
@@ -109,92 +112,123 @@ def main():
     # Sort by percentage
     cells_df = cells_df.sort_values('percent', ascending=False).reset_index(drop=True)
 
-    # Calculate the mean expression and percent expressing for all cells in cells_df
-    all_mean = cells_df[args.gene].mean()
-    all_percent = (cells_df[args.gene] > args.threshold).mean() * 100
+    for gene in args.genes:
+        if gene not in cells_df.columns:
+            raise ValueError(f"Gene '{gene}' not found in the input data.")
 
-    # Create the output directory
-    if args.output is None:
-        output_dir = Path(args.input).parent / f'ABCA_sunburst_cmax{args.color_max}_thr{args.threshold}'
-    else:
-        output_dir = Path(args.output)
-    output_dir.mkdir(parents=True, exist_ok=True)
+        # Calculate the mean expression and percent expressing for all cells in cells_df
+        all_mean = cells_df[gene].mean()
+        all_percent = (cells_df[gene] > args.threshold).mean() * 100
 
-    # Save the mean expression and percent expressing for all cells (.txt)
-    if args.all:
-        output_path = output_dir / str(Path(args.input).name).replace('.csv', f'_sunburst_expression_thr{args.threshold}_all.txt')
-        with open(output_path, 'w') as f:
-            f.write(f"all_mean: {all_mean}\nall_percent (threshold: {args.threshold}): {all_percent}")
-        print(f"\nSaved mean expression and percent expressing for all cells to {output_path}")
+        # Create the output directory
+        if args.output is None:
+            output_dir = Path(args.input).parent / f'ABCA_sunburst_cmax{args.color_max}_thr{args.threshold}'
+        else:
+            output_dir = Path(args.output)
+        output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Calculate mean expression and percent expressing at each hierarchy level
-    summary_df = cells_df.copy()
-    if species == 'mouse':
-        hierarchy_levels = ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster']
-    elif species == 'human':
-        hierarchy_levels = ['neurotransmitter', 'supercluster', 'cluster', 'subcluster']
-    for level in hierarchy_levels:
-        summary_df[f'{level}_mean'] = summary_df[level].map(cells_df.groupby(level)[args.gene].mean())
-        summary_df[f'{level}_percent'] = summary_df[level].map(cells_df.groupby(level)[args.gene].apply(lambda x: (x > args.threshold).mean() * 100))
+        # Set output prefixes
+        input_prefix = str(Path(args.input).stem)
+        if args.output_prefix is None:
+            output_prefix = f'{input_prefix}__gene-{gene}'
+        else:
+            output_prefix = args.output_prefix
 
-    summary_df = summary_df.drop(columns=[args.gene]).drop_duplicates()
-    
-    # Save the results
-    if args.output_prefix is None:
-        output_prefix = str(Path(args.input).stem)
-    else:
-        output_prefix = args.output_prefix
-    output_path = output_dir / f"{output_prefix}_sunburst_expression_thr{args.threshold}.csv"
-    summary_df.to_csv(output_path, index=False)
-    
-    print(f"\nSaved sunburst expression summary to {output_path}")
+        # Create subdirectories for each gene-specific output type
+        expression_dir = output_dir / f'sunburst_expression_thr{args.threshold}'
+        mean_lut_dir = output_dir / 'mean_expression_lut'
+        percent_lut_dir = output_dir / f'percent_expression_thr{args.threshold}_lut'
+        all_dir = output_dir / f'all_expression_thr{args.threshold}'
 
-    # Stack labels and values for LUT files
-    label_stack = pd.DataFrame()
-    for level in hierarchy_levels:
-        label_stack = pd.concat([label_stack, summary_df[level].rename('label')], axis=0)
+        expression_dir.mkdir(parents=True, exist_ok=True)
+        mean_lut_dir.mkdir(parents=True, exist_ok=True)
+        percent_lut_dir.mkdir(parents=True, exist_ok=True)
 
-    # Stack mean expression values and construct the mean expression LUT
-    mean_stack = pd.DataFrame()
-    for level in hierarchy_levels:
-        mean_stack = pd.concat([mean_stack, summary_df[f'{level}_mean'].rename('value')], axis=0)
-    mean_df = pd.concat([label_stack, mean_stack], axis=1) # Combine the label stack and the mean stack
-    mean_df = mean_df.drop_duplicates()
-    mean_df.columns = ['label', 'value']
+        all_dir.mkdir(parents=True, exist_ok=True)
 
-    # Replace the mean value with the hex color (magma_r)
-    mean_df['color'] = mean_df['value'].apply(lambda x: mcolors.rgb2hex(plt.cm.magma_r((x - 0) / (args.color_max - 0))))
-    mean_df = mean_df.drop(columns=['value'])
+        # Save the mean expression and percent expressing for all cells (.csv)
+        all_df = pd.DataFrame({
+            'input': [Path(args.input).name],
+            'species': [species],
+            'gene': [gene],
+            'threshold': [args.threshold],
+            'all_mean': [all_mean],
+            'all_percent': [all_percent],
+        })
+        all_path = all_dir / f'{output_prefix}_all.csv'
+        all_df.to_csv(all_path, index=False)
+        print(f"\nSaved mean expression and percent expressing for all cells to {all_path}")
 
-    # Save the mean expression LUT
-    mean_path = str(output_path).replace(f'_expression_thr{args.threshold}.csv', '_mean_expression_lut.txt')
-    for row in mean_df.itertuples(index=False):
-        with open(mean_path, 'a') as f:
-            f.write(f"{row.label}: {row.color}\n")
+        # Calculate mean expression and percent expressing at each hierarchy level
+        summary_df = cells_df.copy()
+        if species == 'mouse':
+            hierarchy_levels = ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster']
+        elif species == 'human':
+            hierarchy_levels = ['neurotransmitter', 'supercluster', 'cluster', 'subcluster']
+        for level in hierarchy_levels:
+            summary_df[f'{level}_mean'] = summary_df[level].map(cells_df.groupby(level)[gene].mean())
+            summary_df[f'{level}_percent'] = summary_df[level].map(cells_df.groupby(level)[gene].apply(lambda x: (x > args.threshold).mean() * 100))
 
-    # Stack percent expression values
-    percent_stack = pd.DataFrame()
-    for level in hierarchy_levels:
-        percent_stack = pd.concat([percent_stack, summary_df[f'{level}_percent'].rename('value')], axis=0)
-    percent_df = pd.concat([label_stack, percent_stack], axis=1)
-    percent_df = percent_df.drop_duplicates()
-    percent_df.columns = ['label', 'value']
+        summary_df = summary_df.drop(columns=[gene]).drop_duplicates()
 
-    # Replace the percent value with the hex color (viridis_r)
-    percent_df['color'] = percent_df['value'].apply(lambda x: mcolors.rgb2hex(plt.cm.viridis_r((x - 0) / (100 - 0))))
-    percent_df = percent_df.drop(columns=['value'])
+        # Save the gene-independent columns used to plot the sunburst
+        sunburst_path = output_dir / f'{input_prefix}_sunburst.csv'
+        summary_df[hierarchy_levels + ['percent']].to_csv(sunburst_path, index=False)
 
-    # Save the percent expression LUT
-    percent_path = str(output_path).replace(f'_expression_thr{args.threshold}.csv', f'_percent_expression_thr{args.threshold}_lut.txt')
-    for row in percent_df.itertuples(index=False):
-        with open(percent_path, 'a') as f:
-            f.write(f"{row.label}: {row.color}\n")
-    
+        print(f"\nSaved plot-ready sunburst data to {sunburst_path}")
+
+        # Save the gene-specific results
+        output_path = expression_dir / f"{output_prefix}_sunburst_expression_thr{args.threshold}.csv"
+        summary_df.to_csv(output_path, index=False)
+        
+        print(f"\nSaved sunburst expression summary to {output_path}")
+
+        # Stack labels and values for LUT files
+        label_stack = pd.DataFrame()
+        for level in hierarchy_levels:
+            label_stack = pd.concat([label_stack, summary_df[level].rename('label')], axis=0)
+
+        # Stack mean expression values and construct the mean expression LUT
+        mean_stack = pd.DataFrame()
+        for level in hierarchy_levels:
+            mean_stack = pd.concat([mean_stack, summary_df[f'{level}_mean'].rename('value')], axis=0)
+        mean_df = pd.concat([label_stack, mean_stack], axis=1) # Combine the label stack and the mean stack
+        mean_df = mean_df.drop_duplicates()
+        mean_df.columns = ['label', 'value']
+
+        # Replace the mean value with the hex color (magma_r)
+        mean_df['color'] = mean_df['value'].apply(lambda x: mcolors.rgb2hex(plt.cm.magma_r((x - 0) / (args.color_max - 0))))
+        mean_df = mean_df.drop(columns=['value'])
+
+        # Save the mean expression LUT
+        mean_path = mean_lut_dir / f'{output_prefix}_mean_expression_lut.txt'
+        with open(mean_path, 'w') as f:
+            for row in mean_df.itertuples(index=False):
+                f.write(f"{row.label}: {row.color}\n")
+
+        # Stack percent expression values
+        percent_stack = pd.DataFrame()
+        for level in hierarchy_levels:
+            percent_stack = pd.concat([percent_stack, summary_df[f'{level}_percent'].rename('value')], axis=0)
+        percent_df = pd.concat([label_stack, percent_stack], axis=1)
+        percent_df = percent_df.drop_duplicates()
+        percent_df.columns = ['label', 'value']
+
+        # Replace the percent value with the hex color (viridis_r)
+        percent_df['color'] = percent_df['value'].apply(lambda x: mcolors.rgb2hex(plt.cm.viridis_r((x - 0) / (100 - 0))))
+        percent_df = percent_df.drop(columns=['value'])
+
+        # Save the percent expression LUT
+        percent_path = percent_lut_dir / f'{output_prefix}_percent_expression_thr{args.threshold}_lut.txt'
+        with open(percent_path, 'w') as f:
+            for row in percent_df.itertuples(index=False):
+                f.write(f"{row.label}: {row.color}\n")
+        
     if species == 'mouse':
         lut_path = Path(__file__).parent.parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WMB_sunburst_colors.csv'
     elif species == 'human':
         lut_path = Path(__file__).parent.parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_sunburst_colors.csv'
-    shutil.copy(lut_path, output_path.parent / lut_path.name)
+    shutil.copy(lut_path, output_dir / lut_path.name)
     
     verbose_end_msg()
 

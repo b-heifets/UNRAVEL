@@ -77,6 +77,19 @@ Getting started
 * :doc:`guide_mms`
 * :doc:`unravel/toc`
 
+Developers
+----------
+* **Daniel Ryskamp Rijsketic** (developer and maintainer) - `danrijs@stanford.edu <mailto:danrijs@stanford.edu>`_
+* **Austen Casey** (developer) - `abcasey@stanford.edu <mailto:abcasey@stanford.edu>`_
+* **Boris Heifets** (PI) - `bheifets@stanford.edu <mailto:bheifets@stanford.edu>`_
+
+Additional guidance/support from
+--------------------------------
+* **Mehrdad Shamloo** (PI) - `shamloo@stanford.edu <mailto:shamloo@stanford.edu>`_
+
+Contact us
+----------
+If you have any questions, suggestions, or are interested in collaborations and contributions, please reach out to us. 
 
 UNRAVEL visualizer
 -------------------
@@ -91,28 +104,6 @@ UNRAVEL visualizer
             <img id="unravel-visualizer" src="_static/UNRAVEL_visualizer.png" alt="UNRAVEL visualizer">
         </a>
     </div>
-
-
-Contact us
-----------
-If you have any questions, suggestions, or are interested in collaborations and contributions, please reach out to us. 
-
-
-Developers
-----------
-* **Daniel Ryskamp Rijsketic** (developer and maintainer) - `danrijs@stanford.edu <mailto:danrijs@stanford.edu>`_
-* **Austen Casey** (developer) - `abcasey@stanford.edu <mailto:abcasey@stanford.edu>`_
-* **MetaCell** (UNRAVEL visualizer developers) - `info@metacell.us <info@metacell.us>`_
-* **Boris Heifets** (PI) - `bheifets@stanford.edu <mailto:bheifets@stanford.edu>`_
-
-
-Additional contributions from
------------------------------
-* **Mehrdad Shamloo** (PI) - `shamloo@stanford.edu <mailto:shamloo@stanford.edu>`_
-* **Daniel Barbosa** (early contributer and guidance) - `Dbarbosa@pennmedicine.upenn.edu <mailto:Dbarbosa@pennmedicine.upenn.edu>`_
-* **Wesley Zhao** (guidance) - `weszhao@stanford.edu <mailto:weszhao@stanford.edu>`_
-* **Nick Gregory** (guidance) - `ngregory@stanford.edu <mailto:ngregory@stanford.edu>`_
-
 
 Main dependencies
 -----------------

@@ -4,7 +4,7 @@
 Use ``cstats_legend`` (``legend``) from UNRAVEL to summarize regional abbreviations from _valid_clusters_table.xlsx files.
 
 Inputs:
-    - <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cstats_table``
+    - One or more `*`_valid_clusters_table.xlsx files or glob patterns output from ``cstats_table``
 
 Outputs:
     - legend.xlsx
@@ -16,7 +16,7 @@ Note:
 
 Usage:
 ------
-    cstats_legend [-p path/dir/with/xlsx_files] [-csv CCFv3-2020_info.csv] [-v]
+    cstats_legend [-i path/glob_pattern] [-csv CCFv3-2020_info.csv] [-v]
 """
 
 from pathlib import Path
@@ -39,7 +39,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-p', '--path', help='Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory', action=SM)
+    opts.add_argument('-i', '--input', help="One or more xlsx paths or glob patterns (space-separated). Default: '*_valid_clusters_table.xlsx'", default='*_valid_clusters_table.xlsx', nargs='*', action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -83,8 +83,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    path = Path(args.path) if args.path else Path.cwd()
-    xlsx_files = match_files(['*_valid_clusters_table.xlsx'], base_path=path)
+    xlsx_files = match_files(args.input)
 
     # Filter out files starting with '~$'
     xlsx_files = [f for f in xlsx_files if not str(f).split('/')[-1].startswith('~$')]
@@ -93,9 +92,10 @@ def main():
     xlsx_files = [f for f in xlsx_files if not str(f).split('/')[-1].startswith('legend')]
 
     if xlsx_files == []:
-        print("\n    [red1]No *_valid_clusters_table.xlsx files found in the specified directory. Exiting...\n")
+        print("\n    [red1]No matching xlsx files found. Exiting...\n")
         import sys ; sys.exit()
     else:
+        path = xlsx_files[0].parent
         print(f'\nProcessing:')
         for file in xlsx_files:
             print(f'    {file}')

@@ -1,6 +1,6 @@
 [project]
 name = "heifetslab-unravel"
-version = "1.0.0b13"
+version = "1.0.0b14"
 description = "UNRAVEL: UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images"
 readme = "README.md"
 license = "GPL-3.0-or-later"
@@ -15,6 +15,7 @@ maintainers = [
 dependencies = [
     "aicspylibczi>=3.1.2,<4.0.0",
     "antspyx>=0.4.2,<1.0.0",
+    "anndata==0.10.9,<1.0.0",
     "boto3==1.28.17",
     "botocore==1.31.17",
     "connected_components_3d>=3.24.0,<4.0.0",
@@ -34,9 +35,11 @@ dependencies = [
     "rich>=13.7.1,<14.0.0",
     "rich_argparse>=1.4.0,<2.0.0",
     "s3transfer==0.6.1",
-    "scipy>=1.13.1,<2.0.0",
+    # "scipy>=1.13.1,<2.0.0", # This was causing an issue with loading h5ad files with backed mode and then ad[cell_filtered.index, gene_filtered.index].to_df()
+    "scipy==1.14.1",
     "seaborn>=0.13.2,<1.0.0",
     "setuptools>=77.0.0",
+    "SimpleITK>=2.4.0,<3.0.0",
     "statsmodels>=0.14.0,<1.0.0",
     "termcolor>=2.4.0,<3.0.0",
     "tifffile>=2023.8.30,<2024.0.0",
@@ -62,6 +65,7 @@ dev = [
     "myst-parser",
     "python-cfonts",
     "pydata_sphinx_theme",
+    "ruff",
     "sphinx",
     "sphinx-autobuild", 
     "sphinx-togglebutton", 
@@ -83,6 +87,9 @@ license-files = []
 [build-system]
 requires = ["setuptools>=77.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 120
 
 [project.scripts]
 unravel_commands = "unravel.unravel_commands:main"
@@ -326,12 +333,14 @@ abca_mean_expression_color_scale = "unravel.allen_institute.abca.sunburst.mean_e
 mecs = "unravel.allen_institute.abca.sunburst.mean_expression_color_scale:main"
 abca_percent_expression_color_scale = "unravel.allen_institute.abca.sunburst.percent_expression_color_scale:main"
 pecs = "unravel.allen_institute.abca.sunburst.percent_expression_color_scale:main"
-abca_scRNAseq_filter = "unravel.allen_institute.abca.scRNA_seq.filter:main"
-rna_filter = "unravel.allen_institute.abca.scRNA_seq.filter:main"
 abca_scRNAseq_expression = "unravel.allen_institute.abca.scRNA_seq.expression:main"
 rna_exp = "unravel.allen_institute.abca.scRNA_seq.expression:main"
-abca_scRNAseq_join_gene = "unravel.allen_institute.abca.scRNA_seq.join_gene:main"
-rna_jg = "unravel.allen_institute.abca.scRNA_seq.join_gene:main"
+abca_scRNAseq_filter = "unravel.allen_institute.abca.scRNA_seq.filter:main"
+rna_filter = "unravel.allen_institute.abca.scRNA_seq.filter:main"
+abca_scRNAseq_expression_summary = "unravel.allen_institute.abca.scRNA_seq.expression_summary:main"
+rna_exp_summary = "unravel.allen_institute.abca.scRNA_seq.expression_summary:main"
+abca_scRNAseq_expression_plot = "unravel.allen_institute.abca.scRNA_seq.expression_plot:main"
+rna_exp_plot = "unravel.allen_institute.abca.scRNA_seq.expression_plot:main"
 gta_download = "unravel.allen_institute.genetic_tools_atlas.download:main"
 gta_dl = "unravel.allen_institute.genetic_tools_atlas.download:main"
 gta_simplify_metadata = "unravel.allen_institute.genetic_tools_atlas.simplify_metadata:main"

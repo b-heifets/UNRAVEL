@@ -823,11 +823,29 @@ def main():
                 "common": False,
                 "alias": "pecs"
             },
+            "abca_scRNAseq_expression": {
+                "module": "unravel.allen_institute.abca.scRNA_seq.expression",
+                "description": "Extract ABCA scRNA-seq expression data for selected genes and save as CSV.",
+                "common": True,
+                "alias": "rna_exp"
+            },
             "abca_scRNAseq_filter": {
                 "module": "unravel.allen_institute.abca.scRNA_seq.filter",
-                "description": "Filter ABCA scRNA-seq cells based on columns and values in the cell metadata and save as CSV.",
+                "description": "Filter or split ABCA scRNA-seq cells by metadata columns and values and save as CSV.",
                 "common": True,
                 "alias": "rna_filter"
+            },
+            "abca_scRNAseq_expression_summary": {
+                "module": "unravel.allen_institute.abca.scRNA_seq.expression_summary",
+                "description": "Summarize ABCA scRNA-seq gene expression across cell-type ontology levels and save as CSV.",
+                "common": True,
+                "alias": "rna_exp_summary"
+            },
+            "abca_scRNAseq_expression_plot": {
+                "module": "unravel.allen_institute.abca.scRNA_seq.expression_plot",
+                "description": "Plot ABCA scRNA-seq expression summaries as dot plots or heatmaps.",
+                "common": True,
+                "alias": "rna_exp_plot"
             },
         },
         "Genetic Tools Atlas (GTA)": {

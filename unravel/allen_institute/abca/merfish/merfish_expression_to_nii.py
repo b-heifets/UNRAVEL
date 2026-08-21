@@ -4,64 +4,67 @@
 Use ``abca_merfish_expression_to_nii`` or ``me`` from UNRAVEL to make 3D .nii.gz
 images of ABCA MERFISH expression data.
 
-Parallel / in-memory version:
-    - avoids backed AnnData subsetting, which can fail or be slow for CSRDataset-backed h5ad files
-    - loads ``adata.X`` fully into memory once
-    - aligns AnnData rows to MERFISH cell metadata once
-    - subsets rows/columns only after the matrix is in memory
-    - precomputes image voxel indices once
-    - optionally processes/saves multiple requested genes in parallel with threads
+Inputs:
+    - MERFISH expression .h5ad (or use -b to find it in the ABCA download cache)
+    - MERFISH cell metadata CSV (or use -b to find it in the ABCA download cache)
+    - Reference .nii.gz for affine/header/shape info (e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)
+    - Optional: -g <gene> ... to select specific genes. If omitted, all genes in the selected MERFISH dataset are processed.
+    - Optional: -i path/cell_metadata_filtered.csv to use a pre-filtered cell metadata CSV instead of the default ABCA MERFISH metadata.
 
-Usage:
-------
-    # Selected genes
-    abca_merfish_expression_to_nii -b <abc_download_root> -g <gene> [<gene> ...] \
-        -r <ref_nii> [-n] [-o <output>] [-im] [-w <workers>] [-f] [-v]
-
-    # All genes in the selected MERFISH dataset
-    abca_merfish_expression_to_nii -b <abc_download_root> -r <ref_nii> [-n] [-im] [-w <workers>] [-f] [-v]
-
+Outputs:
+    - <gene>.nii.gz for each requested gene, with the same affine and header as the reference .nii.gz
+    - Dir: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps/
+    - Dir with -c and -val: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps_<filter_column>-<filter_value>/
+    - Dir with -i: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps_<input_stem>/
+    
 Notes:
 ------
     - ``-w`` uses threads, not processes, to avoid duplicating the loaded expression matrix.
     - Each worker still creates one full 3D output image in memory, so keep ``-w`` modest.
+
+Usage:
+------
+    abca_merfish_expression_to_nii -b <abc_download_root> -r <ref_nii> [-g <gene> ...] [-i path/cell_metadata_filtered.csv] [--imputed] [--neurons | --nonneurons] [-o <output>] [-w N] [--dense] [--no-csc] [-dt float32|float64] [-f] [-v]
+
+Usage for one gene:
+-------------------
+    abca_merfish_expression_to_nii -b <abc_download_root> -g <gene> --no-csc
+
+Usage for selected genes:
+-------------------------
+    abca_merfish_expression_to_nii -b <abc_download_root> -g <gene> <gene> ...
+
+Usage for all genes:
+--------------------
+    abca_merfish_expression_to_nii -b <abc_download_root>
 """
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 from threading import Lock
-from typing import Iterable
 
 import anndata
 import nibabel as nib
 import numpy as np
 import pandas as pd
 from rich import print
+from rich.live import Live
 from rich.traceback import install
-
-try:
-    from rich.live import Live
-except Exception:  # pragma: no cover
-    Live = None
-
-try:
-    from scipy import sparse as sp_sparse
-except Exception:  # pragma: no cover - scipy is expected in UNRAVEL, but keep import robust
-    sp_sparse = None
+from scipy import sparse as sp_sparse
 
 import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.core.config import Configuration
-from unravel.core.help_formatter import RichArgumentParser, SM, SuppressMetavar
-
-try:
-    from unravel.core.utils import initialize_progress_bar, log_command, verbose_end_msg, verbose_start_msg
-except ImportError:  # pragma: no cover - fallback for running outside the full UNRAVEL package
-    from unravel.core.utils import log_command, verbose_end_msg, verbose_start_msg
-
-    initialize_progress_bar = None
+from unravel.core.help_formatter import SM, RichArgumentParser, SuppressMetavar
+from unravel.core.utils import (
+    initialize_progress_bar,
+    log_command,
+    verbose_end_msg,
+    verbose_start_msg,
+)
 
 
 @dataclass(frozen=True)
@@ -76,81 +79,63 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group("Required arguments")
-    reqs.add_argument("-b", "--base", help="Path to the root directory of the Allen Brain Cell Atlas data", required=True, action=SM)
-    reqs.add_argument(
-        "-g",
-        "--gene",
-        help="Gene(s) to convert. If omitted, all genes in the selected MERFISH dataset are processed.",
-        required=False,
-        nargs="*",
-        default=None,
-        action=SM,
-    )
-    reqs.add_argument(
-        "-r",
-        "--ref_nii",
-        help=(
-            "Path to reference .nii.gz for header/affine/shape info "
-            "(e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)"
-        ),
-        required=True,
-        action=SM,
-    )
+    reqs.add_argument("-b", "--base", 
+                      help="Path to the root directory of the Allen Brain Cell Atlas data", 
+                      required=True, action=SM)
+    reqs.add_argument("-g", "--gene", 
+                      help="Gene(s) to convert. If omitted, all genes in the selected MERFISH dataset are processed.",
+                      required=False, nargs="*", default=None, action=SM)
+    reqs.add_argument("-r", "--ref_nii", 
+                      help=("Path to reference .nii.gz for header/affine/shape info "
+                            "(e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)"),
+                      required=True, action=SM)
 
     opts = parser.add_argument_group("Optional arguments")
-    opts.add_argument("-n", "--neurons", help="Filter out non-neuronal cells. Default: False", action="store_true", default=False)
-    opts.add_argument(
-        "-o",
-        "--output",
-        help=(
-            "Output path for the saved .nii.gz image. Only valid with one gene. "
-            "Default: \[imputed_]MERFISH[_neuronal]_expression_maps/<gene>.nii.gz"
-        ),
-        default=None,
-        action=SM,
-    )
-    opts.add_argument("-im", "--imputed", help="Use imputed expression data. Default: False", action="store_true", default=False)
-    opts.add_argument("--h5ad", help="Optional explicit expression .h5ad path. If given, bypass mf.load_expression_data().", default=None, action=SM)
-    opts.add_argument("-w", "--workers", help="Number of genes to process/save in parallel. Default: 1", type=int, default=1, action=SM)
-    opts.add_argument("-f", "--force", help="Overwrite existing outputs. Default: False", action="store_true", default=False)
-    opts.add_argument("-px", "--pixel_size", help="MERFISH in-plane pixel size in microns. Default: 10", type=float, default=10.0, action=SM)
-    opts.add_argument(
-        "-cu",
-        "--coord_unit",
-        help="Unit of x_reconstructed/y_reconstructed coordinates. Default: auto",
-        choices=["auto", "mm", "um"],
-        default="auto",
-        action=SM,
-    )
-    opts.add_argument(
-        "-dt",
-        "--dtype",
-        help="Output dtype. Default: float32",
-        choices=["float32", "float64"],
-        default="float32",
-        action=SM,
-    )
-    opts.add_argument(
-        "--dense",
-        help=(
-            "Convert the in-memory expression matrix to a dense NumPy array after row/gene subsetting. "
-            "Default: keep sparse matrices sparse. Use only if RAM is sufficient."
-        ),
-        action="store_true",
-        default=False,
-    )
-    opts.add_argument(
-        "--no-csc",
-        help=(
-            "Do not convert sparse matrices to CSC after row/gene subsetting. "
-            "Default: convert to CSC for faster repeated gene-column extraction."
-        ),
-        action="store_true",
-        default=False,
-    )
+    opts.add_argument("-i", "--input",
+                      help="Optional path to a cell metadata CSV", 
+                      default=None, action=SM)
+    cell_types = opts.add_mutually_exclusive_group()
+    cell_types.add_argument("-n", "--neurons",
+                            help="Keep neuronal cells only. Default: use all cells",
+                            action="store_true", default=False)
+    cell_types.add_argument("-nn", "--nonneurons",
+                            help="Keep non-neuronal cells only. Default: use all cells",
+                            action="store_true", default=False)
+    opts.add_argument("-o", "--output",
+                      help=("Output path for the saved .nii.gz image. Only valid with one gene. "
+                            r"Default: \[imputed_]MERFISH[_neuronal]_expression_maps/<gene>.nii.gz" ),
+                      default=None, action=SM)
+    opts.add_argument("-im", "--imputed", 
+                      help="Use imputed expression data. Default: False", 
+                      action="store_true", default=False)
+    opts.add_argument("--dense", 
+                      help=("In-memory expression matrix --> dense NumPy array after row/gene subsetting (faster) "
+                            "Default: keep sparse matrices sparse. Use only if RAM is sufficient." ),
+                      action="store_true", default=False)
+    opts.add_argument("--no-csc",
+                      help=("Don't convert sparse matrices to CSC after row/gene subsetting (skipped if --dense used). "
+                            "Default: convert to CSC for faster repeated gene-column extraction for multiple genes." ),
+                      action="store_true", default=False)
+    opts.add_argument("-c", "--filter-column",
+                  help="Cell metadata column to filter", default=None, action=SM)
+    opts.add_argument("-val", "--filter-value",
+                    help="Value to keep in --filter-column", default=None, action=SM)
+    opts.add_argument("-f", "--force", 
+                      help="Overwrite existing outputs. Default: False", 
+                      action="store_true", default=False)
+    opts.add_argument("-w", "--workers", 
+                      help="Number of genes to process/save in parallel. Default: 16", 
+                      type=int, default=16, action=SM)
+    opts.add_argument("--h5ad", 
+                      help="Optional expression .h5ad path. If given, bypass mf.load_expression_data().", 
+                      default=None, action=SM)
+    opts.add_argument("-dt", "--dtype", 
+                      help="Output dtype. Default: float32", choices=["float32", "float64"], 
+                      default="float32", action=SM)
 
     general = parser.add_argument_group("General arguments")
-    general.add_argument("-v", "--verbose", help="Increase verbosity. Default: False", action="store_true", default=False)
+    general.add_argument("-v", "--verbose",
+                         help="Increase verbosity. Default: False", action="store_true", default=False)
 
     return parser.parse_args()
 
@@ -165,8 +150,6 @@ def unique_preserve_order(values: Iterable[str]) -> list[str]:
             seen.add(value)
             out.append(value)
     return out
-
-
 
 
 def get_requested_genes_from_args(args) -> tuple[list[str], bool]:
@@ -263,26 +246,6 @@ def find_expression_h5ad(download_base: Path, imputed: bool, verbose: bool = Fal
     return selected
 
 
-def load_anndata_without_var_subsetting(download_base: Path, args, requested_genes: list[str]):
-    """Load AnnData backed/read-only without subsetting variables first."""
-    if args.h5ad:
-        h5ad_path = Path(args.h5ad)
-        print(f"\nLoading AnnData from explicit h5ad path: {h5ad_path}")
-        return anndata.read_h5ad(h5ad_path, backed="r")
-
-    h5ad_path = find_expression_h5ad(download_base, imputed=args.imputed, verbose=args.verbose)
-    if h5ad_path is not None:
-        print(f"\nLoading AnnData without backed variable subsetting: {h5ad_path}")
-        return anndata.read_h5ad(h5ad_path, backed="r")
-
-    # Fallback for unusual ABCA layouts. This preserves compatibility with the
-    # existing UNRAVEL helper, but the auto-h5ad path above is preferred because
-    # it avoids CSRDataset-backed subsetting before the matrix is loaded.
-    print("\nCould not auto-detect an expression .h5ad; falling back to mf.load_expression_data().")
-    print("If this fails with a CSRDataset subsetting error, rerun with --h5ad /path/to/expression.h5ad.")
-    return mf.load_expression_data(download_base, requested_genes, imputed=args.imputed)
-
-
 def default_output_path(gene: str, args, n_requested_genes: int) -> Path:
     """Return the default output path for one gene."""
     if args.output:
@@ -290,13 +253,24 @@ def default_output_path(gene: str, args, n_requested_genes: int) -> Path:
             raise ValueError("--output can only be used when one gene is requested.")
         return Path(args.output)
 
-    if args.imputed and args.neurons:
-        return Path.cwd() / "imputed_MERFISH_neuronal_expression_maps" / f"{gene}_imputed_neurons.nii.gz"
+    name = "MERFISH"
+    filename = gene
+
     if args.imputed:
-        return Path.cwd() / "imputed_MERFISH_expression_maps" / f"{gene}_imputed.nii.gz"
+        name = f"imputed_{name}"
+        filename += "_imputed"
     if args.neurons:
-        return Path.cwd() / "MERFISH_neuronal_expression_maps" / f"{gene}_neurons.nii.gz"
-    return Path.cwd() / "MERFISH_expression_maps" / f"{gene}.nii.gz"
+        name += "_neuronal"
+        filename += "_neurons"
+    elif args.nonneurons:
+        name += "_nonneuronal"
+        filename += "_nonneurons"
+    if args.input:
+        name += f"_{Path(args.input).stem}"
+    if args.filter_column:
+        name += f"_{args.filter_column}-{args.filter_value}"
+
+    return Path.cwd() / f"{name}_expression_maps" / f"{filename}.nii.gz"
 
 
 def get_var_symbols(adata) -> np.ndarray:
@@ -315,15 +289,36 @@ def get_gene_to_cols(adata, requested_genes: list[str]) -> dict[str, list[int]]:
     return gene_to_cols
 
 
-def load_and_prepare_cell_metadata(download_base: Path, neurons: bool) -> pd.DataFrame:
-    """Load MERFISH cell metadata, add reconstructed coords, and optionally keep neurons only."""
-    cell_df = mf.load_cell_metadata(download_base)
-    cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
+def load_and_prepare_cell_metadata(
+    download_base: Path,
+    input_path: str | None,
+    neurons: bool,
+    nonneurons: bool,
+    filter_column: str | None = None,
+    filter_value: str | None = None,
+) -> pd.DataFrame:
+    """Load and optionally filter MERFISH cell metadata."""
+    if input_path:
+        cell_df_joined = pd.read_csv(input_path, index_col=0)
+    else:
+        cell_df = mf.load_cell_metadata(download_base)
+        cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
 
-    if neurons:
-        cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
+        if neurons or nonneurons or (filter_column and filter_column not in cell_df_joined.columns):
+            cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
+
+    if neurons or nonneurons:
         class_num = cell_df_joined["class"].str.split().str[0].astype(int)
-        cell_df_joined = cell_df_joined[class_num <= 29].copy()
+        cell_df_joined = cell_df_joined[class_num <= 29 if neurons else class_num > 29].copy()
+
+    if filter_column:
+        if filter_column not in cell_df_joined.columns:
+            raise KeyError(f"Cell metadata column not found: {filter_column}")
+        cell_df_joined = cell_df_joined[
+            cell_df_joined[filter_column].astype(str) == filter_value
+        ].copy()
+        if cell_df_joined.empty:
+            raise ValueError(f"No cells matched {filter_column}={filter_value}")
 
     return cell_df_joined
 
@@ -388,42 +383,11 @@ def align_cells_to_adata(cell_df: pd.DataFrame, adata) -> tuple[pd.DataFrame, np
     return aligned_cell_df, row_indices, id_source
 
 
-def infer_pixel_size_in_coord_units(cell_df: pd.DataFrame, shape: tuple[int, int, int], pixel_size_um: float, coord_unit: str) -> tuple[float, str]:
-    """Return pixel size expressed in the same units as reconstructed x/y coordinates."""
-    if coord_unit == "mm":
-        return pixel_size_um / 1000.0, "mm"
-    if coord_unit == "um":
-        return pixel_size_um, "um"
-
-    # Auto-detect from coordinate scale. Typical image width: 1100 px * 10 um = 11 mm = 11000 um.
-    xy = cell_df[["x_reconstructed", "y_reconstructed"]].to_numpy(dtype=np.float64)
-    xy = xy[np.isfinite(xy)]
-    if xy.size == 0:
-        raise ValueError("Cannot infer coordinate units because x/y reconstructed coordinates are empty or non-finite.")
-
-    q999 = float(np.nanpercentile(np.abs(xy), 99.9))
-    expected_mm = max(shape[:2]) * pixel_size_um / 1000.0
-    expected_um = max(shape[:2]) * pixel_size_um
-
-    # Leave generous margins because coordinates may not span the whole image.
-    if q999 <= expected_mm * 2.5:
-        return pixel_size_um / 1000.0, "mm"
-    if q999 <= expected_um * 2.5:
-        return pixel_size_um, "um"
-
-    raise ValueError(
-        "Could not infer coordinate units from x/y scale. "
-        f"99.9th percentile={q999:g}; expected ~{expected_mm:g} mm or ~{expected_um:g} um. "
-        "Pass --coord_unit mm or --coord_unit um explicitly."
-    )
-
-
 def precompute_linear_indices(
     cell_df: pd.DataFrame,
     shape: tuple[int, int, int],
     pixel_size_um: float,
-    coord_unit: str,
-) -> tuple[np.ndarray, np.ndarray, str]:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Convert reconstructed MERFISH coordinates to flattened image indices once.
 
@@ -435,7 +399,7 @@ def precompute_linear_indices(
     if missing:
         raise KeyError(f"Cell metadata is missing required column(s): {missing}")
 
-    pixel_size_coord_units, inferred_unit = infer_pixel_size_in_coord_units(cell_df, shape, pixel_size_um, coord_unit)
+    pixel_size_coord_units = pixel_size_um / 1000.0
     slice_index_map = mf.slice_index_dict()
 
     # Original mf.points_to_img_sum likely uses astype(int), i.e. truncation toward zero.
@@ -459,7 +423,7 @@ def precompute_linear_indices(
         raise ValueError("No cells have valid in-bounds x/y/z coordinates for the reference image shape.")
 
     linear_idx = np.ravel_multi_index((i[in_bounds], j[in_bounds], k_int[in_bounds]), dims=shape)
-    return linear_idx.astype(np.int64, copy=False), in_bounds, inferred_unit
+    return linear_idx.astype(np.int64, copy=False), in_bounds
 
 
 def load_X_fully_into_memory(adata):
@@ -480,7 +444,7 @@ def load_X_fully_into_memory(adata):
         except Exception:
             X_mem = np.asarray(X)
 
-    if sp_sparse is not None and sp_sparse.issparse(X_mem):
+    if sp_sparse.issparse(X_mem):
         print(f"    Loaded sparse matrix: shape={X_mem.shape}, nnz={X_mem.nnz:,}, format={X_mem.getformat()}")
     else:
         print(f"    Loaded dense/array-like matrix: shape={getattr(X_mem, 'shape', None)}")
@@ -511,16 +475,16 @@ def subset_matrix_after_memory_load(
     X = X[:, all_cols]
 
     if dense:
-        if sp_sparse is not None and sp_sparse.issparse(X):
+        if sp_sparse.issparse(X):
             print("    Converting requested expression subset to dense array...")
             X = X.toarray()
         else:
             X = np.asarray(X)
-    elif convert_to_csc and sp_sparse is not None and sp_sparse.issparse(X) and X.getformat() != "csc":
+    elif convert_to_csc and sp_sparse.issparse(X) and X.getformat() != "csc":
         print("    Converting sparse requested expression subset to CSC for faster column extraction...")
         X = X.tocsc(copy=False)
 
-    if sp_sparse is not None and sp_sparse.issparse(X):
+    if sp_sparse.issparse(X):
         print(f"    Working matrix: shape={X.shape}, nnz={X.nnz:,}, format={X.getformat()}\n")
     else:
         print(f"    Working matrix: shape={X.shape}, dtype={getattr(X, 'dtype', None)}\n")
@@ -530,7 +494,7 @@ def subset_matrix_after_memory_load(
 
 def get_gene_values(X, cols: list[int], dtype: np.dtype) -> np.ndarray:
     """Return a dense 1D expression vector for one gene from the working matrix."""
-    if sp_sparse is not None and sp_sparse.issparse(X):
+    if sp_sparse.issparse(X):
         if len(cols) == 1:
             values = X[:, cols[0]]
         else:
@@ -640,24 +604,14 @@ def run_gene_jobs(
         )
         return result
 
-    if initialize_progress_bar is not None and Live is not None:
-        progress, task_id = initialize_progress_bar(len(genes_to_process), task_message="[bold green]Making MERFISH expression maps...")
-        with Live(progress):
-            with ThreadPoolExecutor(max_workers=workers) as executor:
-                futures = {executor.submit(wrapped, gene): gene for gene in genes_to_process}
-                for future in as_completed(futures):
-                    result = future.result()
-                    with lock:
-                        progress.update(task_id, advance=1)
-                    results.append(result)
-                    if verbose:
-                        print(f"    {result.gene}: nonzero cells={result.nonzero_cells:,}; expression sum={result.expression_sum:g}")
-                    print(f"    Saved image to {result.output_path}")
-    else:
+    progress, task_id = initialize_progress_bar(len(genes_to_process), task_message="[bold green]Making MERFISH expression maps...")
+    with Live(progress):
         with ThreadPoolExecutor(max_workers=workers) as executor:
             futures = {executor.submit(wrapped, gene): gene for gene in genes_to_process}
             for future in as_completed(futures):
                 result = future.result()
+                with lock:
+                    progress.update(task_id, advance=1)
                 results.append(result)
                 if verbose:
                     print(f"    {result.gene}: nonzero cells={result.nonzero_cells:,}; expression sum={result.expression_sum:g}")
@@ -688,6 +642,8 @@ def main():
         raise ValueError("--output can only be used when one gene is requested. Omit -o when processing all genes.")
     if args.workers < 1:
         raise ValueError("--workers must be >= 1.")
+    if (args.filter_column is None) != (args.filter_value is None):
+        raise ValueError("--filter-column and --filter-value must be used together.")
 
     # Load reference once and use its shape rather than hard-coding 1100 x 1100 x 76.
     ref_nii = nib.load(args.ref_nii)
@@ -714,14 +670,28 @@ def main():
         return
 
     # Load metadata once.
-    cell_df = load_and_prepare_cell_metadata(download_base, neurons=args.neurons)
+    cell_df = load_and_prepare_cell_metadata(
+        download_base,
+        input_path=args.input,
+        neurons=args.neurons,
+        nonneurons=args.nonneurons,
+        filter_column=args.filter_column,
+        filter_value=args.filter_value,
+    )
+    if args.input:
+        print(f"\nLoaded cell metadata: {args.input} ({len(cell_df):,} cells)")
+    if args.filter_column:
+        print(f"\nFiltered cells ({args.filter_column}={args.filter_value}): {len(cell_df):,}")
     if args.verbose:
         print("\nColumns in cell metadata:")
         print(cell_df.columns)
-        print(f"\nCells after metadata/neuron filtering: {len(cell_df):,}")
+        print(f"\nCells after metadata filtering: {len(cell_df):,}")
 
     # Load AnnData once. Avoid adata[...] backed variable subsetting later.
-    adata = load_anndata_without_var_subsetting(download_base, args, requested_genes=genes_to_process)
+    if args.h5ad:
+        adata = anndata.read_h5ad(Path(args.h5ad), backed="r")
+    else:
+        adata = mf.load_expression_data(download_base, requested_genes, imputed=args.imputed)
 
     # Validate genes against selected dataset.
     gene_to_cols = get_gene_to_cols(adata, genes_to_process)
@@ -741,14 +711,13 @@ def main():
     print(f"\nAligned cells: {len(row_indices):,} using metadata field: {id_source}")
 
     # Precompute coordinates once before matrix row/gene subsetting.
-    linear_idx, valid_cell_mask, inferred_unit = precompute_linear_indices(
+    linear_idx, valid_cell_mask = precompute_linear_indices(
         aligned_cell_df,
         shape=shape,
-        pixel_size_um=args.pixel_size,
-        coord_unit=args.coord_unit,
+        pixel_size_um=10, # MERFISH in-plane pixel size in microns
     )
     valid_count = int(valid_cell_mask.sum())
-    print(f"    Coordinate unit used: {inferred_unit}")
+    print(f"    Coordinate unit used: mm")
     print(f"    Cells with valid image coordinates: {valid_count:,} / {len(valid_cell_mask):,}\n")
 
     # Load full X into memory once, then subset in memory.

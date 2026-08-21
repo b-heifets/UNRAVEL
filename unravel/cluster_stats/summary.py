@@ -348,7 +348,7 @@ def main():
     # Run cstats_legend
     if Path('valid_clusters_tables_and_legend').exists():
         legend_args = [
-            '-p', 'valid_clusters_tables_and_legend',
+            '-i', 'valid_clusters_tables_and_legend/*_valid_clusters_table.xlsx',
             '-csv', cfg.index.info_csv_path
         ]
         run_script('cstats_legend', legend_args)

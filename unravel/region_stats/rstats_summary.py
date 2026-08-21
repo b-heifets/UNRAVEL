@@ -82,6 +82,7 @@ def parse_args():
     opts.add_argument('-o', '--output', help='Output directory for plots (Default: <t-test or tukey>_plots)', action=SM)
     opts.add_argument('-e', '--extension', help='File extension for plots. Choices: pdf (default), svg, eps, tiff, png)', default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
     opts.add_argument('-eh', '--exclude_hemi', help='Exclude one hemisphere for specific samples. Example: --exclude_hemi sample07:R sample12:L', nargs='*', default=[], action=SM)
+    opts.add_argument('-S', '--skip-plots', help='Save aggregated data and statistical summaries without saving plots', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -225,27 +226,28 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
             reshaped_data.append({'group': prefix, 'value': value})
     reshaped_df = pd.DataFrame(reshaped_data)
 
-    # Plotting
-    mpl.rcParams['font.family'] = 'Arial'
-    plt.figure(figsize=(4, 4))
+    if not args.skip_plots:
+        # Plotting
+        mpl.rcParams['font.family'] = 'Arial'
+        plt.figure(figsize=(4, 4))
 
-    groups = reshaped_df['group'].unique()
-    num_groups = len(groups)
+        groups = reshaped_df['group'].unique()
+        num_groups = len(groups)
 
-    # Parse the color arguments
-    bar_color = parse_color_argument(args.bar_color, num_groups, region_id, args.csv_path)
-    symbol_color = parse_color_argument(args.symbol_color, num_groups, region_id, args.csv_path)
+        # Parse the color arguments
+        bar_color = parse_color_argument(args.bar_color, num_groups, region_id, args.csv_path)
+        symbol_color = parse_color_argument(args.symbol_color, num_groups, region_id, args.csv_path)
 
-    # Coloring the bars and symbols
-    # ax = sns.barplot(x='group', y='value', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black')
-    ax = sns.barplot(x='group', y='value', hue='group', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black', legend=False)
-    sns.stripplot(x='group', y='value', hue='group', data=reshaped_df, palette=symbol_color, alpha=0.5, size=8, linewidth=0.75, edgecolor='black')
+        # Coloring the bars and symbols
+        # ax = sns.barplot(x='group', y='value', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black')
+        ax = sns.barplot(x='group', y='value', hue='group', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black', legend=False)
+        sns.stripplot(x='group', y='value', hue='group', data=reshaped_df, palette=symbol_color, alpha=0.5, size=8, linewidth=0.75, edgecolor='black')
 
-    # Calculate y_max and y_min based on the actual plot
-    y_max = ax.get_ylim()[1]
-    y_min = ax.get_ylim()[0]
-    height_diff = (y_max - y_min) * 0.05  # Adjust the height difference as needed
-    y_pos = y_max * 1.05  # Start just above the highest bar
+        # Calculate y_max and y_min based on the actual plot
+        y_max = ax.get_ylim()[1]
+        y_min = ax.get_ylim()[0]
+        height_diff = (y_max - y_min) * 0.05  # Adjust the height difference as needed
+        y_pos = y_max * 1.05  # Start just above the highest bar
 
     # Check which test to perform
     if test_type == 't-test':
@@ -323,72 +325,73 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         test_results_df.rename(columns={'p-adj': 'p-value'}, inplace=True)
         significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
 
-    # Loop for plotting comparison bars and asterisks
-    for _, row in significant_comparisons.iterrows():
-        group1, group2 = row['group1'], row['group2']
-        x1 = np.where(groups == group1)[0][0]
-        x2 = np.where(groups == group2)[0][0]
+    if not args.skip_plots:
+        # Loop for plotting comparison bars and asterisks
+        for _, row in significant_comparisons.iterrows():
+            group1, group2 = row['group1'], row['group2']
+            x1 = np.where(groups == group1)[0][0]
+            x2 = np.where(groups == group2)[0][0]
 
-        # Plotting comparison lines
-        plt.plot([x1, x1, x2, x2], [y_pos, y_pos + height_diff, y_pos + height_diff, y_pos], lw=1.5, c='black')
-        
-        # Plotting asterisks based on p-value
-        if row['p-value'] < 0.0001:
-            sig = '****'
-        elif row['p-value'] < 0.001:
-            sig = '***'
-        elif row['p-value'] < 0.01:
-            sig = '**'
+            # Plotting comparison lines
+            plt.plot([x1, x1, x2, x2], [y_pos, y_pos + height_diff, y_pos + height_diff, y_pos], lw=1.5, c='black')
+            
+            # Plotting asterisks based on p-value
+            if row['p-value'] < 0.0001:
+                sig = '****'
+            elif row['p-value'] < 0.001:
+                sig = '***'
+            elif row['p-value'] < 0.01:
+                sig = '**'
+            else:
+                sig = '*'
+            plt.text((x1 + x2) * .5, y_pos + 1 * height_diff, sig, horizontalalignment='center', size='xx-large', color='black', weight='bold')
+
+            y_pos += 3 * height_diff  # Increment y_pos for the next comparison bar
+
+        # Remove the legend only if it exists
+        if ax.get_legend():
+            ax.get_legend().remove()
+
+        # Format the plot
+        if args.ylabel == 'cell_density' and args.divide == 10000:
+            ax.set_ylabel(r'Cells*10$^{4} $/mm$^{3}$', weight='bold')
+        elif args.ylabel == 'label_density':
+            ax.set_ylabel(r'Label volume (%)', weight='bold')
         else:
-            sig = '*'
-        plt.text((x1 + x2) * .5, y_pos + 1 * height_diff, sig, horizontalalignment='center', size='xx-large', color='black', weight='bold')
+            ax.set_ylabel(args.ylabel, weight='bold')
 
-        y_pos += 3 * height_diff  # Increment y_pos for the next comparison bar
+        ax.set_xticks(range(len(ax.get_xticklabels())))  # Set ticks based on current tick labels
+        ax.set_xticklabels(ax.get_xticklabels(), weight='bold')
+        ax.tick_params(axis='both', which='major', width=2)
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['bottom'].set_linewidth(2)
+        ax.spines['left'].set_linewidth(2)
+        plt.ylim(0, y_pos) # Adjust y-axis limit to accommodate comparison bars
+        ax.set_xlabel('') ### was None
 
-    # Remove the legend only if it exists
-    if ax.get_legend():
-        ax.get_legend().remove()
+        # Check if there are any significant comparisons (for prepending '_sig__' to the filename)
+        has_significant_results = True if significant_comparisons.shape[0] > 0 else False
 
-    # Format the plot
-    if args.ylabel == 'cell_density' and args.divide == 10000:
-        ax.set_ylabel(r'Cells*10$^{4} $/mm$^{3}$', weight='bold')
-    elif args.ylabel == 'label_density':
-        ax.set_ylabel(r'Label volume (%)', weight='bold')
-    else:
-        ax.set_ylabel(args.ylabel, weight='bold')
+        # Extract the general region for the filename (output file name prefix for sorting by region)
+        if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv': 
+            regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+        else:
+            regional_summary = pd.read_csv(args.csv_path)
+        region_id = region_id if region_id < 20000 else region_id - 20000 # Adjust if left hemi
+        general_region = regional_summary.loc[regional_summary['Region_ID'] == region_id, 'General_Region'].values[0]
 
-    ax.set_xticks(range(len(ax.get_xticklabels())))  # Set ticks based on current tick labels
-    ax.set_xticklabels(ax.get_xticklabels(), weight='bold')
-    ax.tick_params(axis='both', which='major', width=2)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.spines['bottom'].set_linewidth(2)
-    ax.spines['left'].set_linewidth(2)
-    plt.ylim(0, y_pos) # Adjust y-axis limit to accommodate comparison bars
-    ax.set_xlabel('') ### was None
+        # Format the filename with '_sig__' prefix if there are significant results
+        prefix = '_sig__' if has_significant_results else ''
+        filename = f"{prefix}{general_region}__{region_id}_{region_abbr}_{side}".replace("/", "-") # Replace problematic characters
 
-    # Check if there are any significant comparisons (for prepending '_sig__' to the filename)
-    has_significant_results = True if significant_comparisons.shape[0] > 0 else False
-
-    # Extract the general region for the filename (output file name prefix for sorting by region)
-    if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv': 
-        regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
-    else:
-        regional_summary = pd.read_csv(args.csv_path)
-    region_id = region_id if region_id < 20000 else region_id - 20000 # Adjust if left hemi
-    general_region = regional_summary.loc[regional_summary['Region_ID'] == region_id, 'General_Region'].values[0]
-
-    # Format the filename with '_sig__' prefix if there are significant results
-    prefix = '_sig__' if has_significant_results else ''
-    filename = f"{prefix}{general_region}__{region_id}_{region_abbr}_{side}".replace("/", "-") # Replace problematic characters
-
-    # Save the plot for each side or pooled data
-    title = f"{region_name} ({region_abbr}, {side})"
-    wrapped_title = textwrap.fill(title, 42)
-    plt.title(wrapped_title, pad = 20).set_position([.5, 1.05])
-    plt.tight_layout()
-    plt.savefig(f"{out_dir}/{filename}.{args.extension}")
-    plt.close()
+        # Save the plot for each side or pooled data
+        title = f"{region_name} ({region_abbr}, {side})"
+        wrapped_title = textwrap.fill(title, 42)
+        plt.title(wrapped_title, pad = 20).set_position([.5, 1.05])
+        plt.tight_layout()
+        plt.savefig(f"{out_dir}/{filename}.{args.extension}")
+        plt.close()
 
     return test_results_df
 
