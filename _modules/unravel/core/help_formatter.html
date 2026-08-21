@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -877,7 +716,7 @@ window.runMermaid = runMermaid;</script>
   <h1>Source code for unravel.core.help_formatter</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">This script enhances the formatting and handling of argparse arguments by defining custom classes that improve </span>
 <span class="sd">the readability and usability of help messages, with a focus on suppressing metavar display and leveraging </span>
 <span class="sd">the Rich library for styled terminal output.</span>
@@ -889,18 +728,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">          all nargs configurations.</span>
 <span class="sd">    - RichArgumentParser: An enhanced ArgumentParser that integrates custom help message formatting and </span>
 <span class="sd">                            handling, including filtering and styling of argparse help text.</span>
-<span class="sd">    - CustomHelpAction: An argparse Action that displays a richly formatted help message, integrating the script&#39;s </span>
+<span class="sd">    - CustomHelpAction: An argparse Action that displays a richly formatted help message, integrating the script's </span>
 <span class="sd">                        docstring.</span>
 
 <span class="sd">Functions:</span>
 <span class="sd">    - format_argparse_help: Processes and applies custom styles to argparse help text, highlighting flags, </span>
 <span class="sd">                            default values, and section headers with specific colors and styles.</span>
-<span class="sd">    - format_docstring_for_terminal: Formats the script&#39;s docstring with Rich&#39;s styled output, improving readability </span>
+<span class="sd">    - format_docstring_for_terminal: Formats the script's docstring with Rich's styled output, improving readability </span>
 <span class="sd">                                     by highlighting sections, command names, and other key elements.</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">    The custom classes and functions can be used in any argparse-based script to suppress metavar display, </span>
-<span class="sd">    format help messages with Rich&#39;s styled output, and enhance the overall user experience.</span>
+<span class="sd">    format help messages with Rich's styled output, and enhance the overall user experience.</span>
 
 <span class="sd">Example:</span>
 <span class="sd">    import argparse</span>
@@ -908,8 +747,8 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)</span>
 
-<span class="sd">    reqs = parser.add_argument_group(&#39;Required arguments&#39;)</span>
-<span class="sd">    parser.add_argument(&#39;-e&#39;, &#39;--example&#39;, help=&#39;Example argument&#39;, action=SM)</span>
+<span class="sd">    reqs = parser.add_argument_group('Required arguments')</span>
+<span class="sd">    parser.add_argument('-e', '--example', help='Example argument', action=SM)</span>
 <span class="sd">    args = parser.parse_args()</span>
 
 <span class="sd">Note:</span>
@@ -917,9 +756,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    - The `SM` action ensures that metavar is consistently suppressed across different nargs configurations.</span>
 <span class="sd">    - The `CustomArgumentRich` and `CustomHelpAction` provide enhanced help message handling, integrating </span>
 <span class="sd">      formatted docstrings and filtering out unwanted lines.</span>
-<span class="sd">    - nargs=&#39;``+``&#39; with action=SM: This combination causes issues when the terminal window is small. </span>
-<span class="sd">    - Use nargs=&#39;``*``&#39; with action=SM if zero arguments are acceptable, or drop action=SM to avoid conflicts.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    - nargs='``+``' with action=SM: This combination causes issues when the terminal window is small. </span>
+<span class="sd">    - Use nargs='``*``' with action=SM if zero arguments are acceptable, or drop action=SM to avoid conflicts.</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -944,7 +783,7 @@ window.runMermaid = runMermaid;</script>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">option_string</span> <span class="ow">in</span> <span class="n">action</span><span class="o">.</span><span class="n">option_strings</span><span class="p">:</span>
                     <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">option_string</span><span class="p">)</span>
-            <span class="k">return</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CustomHelpAction">
@@ -966,7 +805,7 @@ window.runMermaid = runMermaid;</script>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">docstring</span> <span class="o">=</span> <span class="n">docstring</span>
         <span class="c1"># Automatically add the custom help action with the provided docstring</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="s1">&#39;--help&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">CustomHelpAction</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">docstring</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-h'</span><span class="p">,</span> <span class="s1">'--help'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">CustomHelpAction</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">docstring</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RichArgumentParser.print_help">
 <a class="viewcode-back" href="../../../unravel/core/help_formatter.html#unravel.core.help_formatter.RichArgumentParser.print_help">[docs]</a>
@@ -986,7 +825,7 @@ window.runMermaid = runMermaid;</script>
         
         <span class="c1"># Print the styled help text</span>
         <span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">styled_help_text</span><span class="p">)</span>  <span class="c1"># No need to call .strip() on styled_help_text since it&#39;s a Text object</span></div>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">styled_help_text</span><span class="p">)</span>  <span class="c1"># No need to call .strip() on styled_help_text since it's a Text object</span></div>
 
 
 <div class="viewcode-block" id="RichArgumentParser.filter_help_output">
@@ -994,19 +833,19 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">filter_help_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">help_output</span><span class="p">):</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">help_output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
         
-        <span class="c1"># Filter out lines that start with &#39;usage:&#39;, &#39;options:&#39;, or contain &#39;-h, --help&#39;</span>
+        <span class="c1"># Filter out lines that start with 'usage:', 'options:', or contain '-h, --help'</span>
         <span class="n">filtered_lines</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;usage:&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;-h, --help&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;options:&#39;</span><span class="p">)</span>
+            <span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'usage:'</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">'-h, --help'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'options:'</span><span class="p">)</span>
         <span class="p">]</span>
         
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filtered_lines</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filtered_lines</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RichArgumentParser.format_usage">
 <a class="viewcode-back" href="../../../unravel/core/help_formatter.html#unravel.core.help_formatter.RichArgumentParser.format_usage">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">format_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Override to suppress the usage line</span>
-        <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+        <span class="k">return</span> <span class="s1">''</span></div>
 </div>
 
     
@@ -1016,7 +855,7 @@ window.runMermaid = runMermaid;</script>
 <span class="k">class</span><span class="w"> </span><span class="nc">SM</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">Action</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option_strings</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">nargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;metavar&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">'metavar'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SM</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">option_strings</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="n">nargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">option_string</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1038,14 +877,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="format_argparse_help">
 <a class="viewcode-back" href="../../../unravel/core/help_formatter.html#unravel.core.help_formatter.format_argparse_help">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">format_argparse_help</span><span class="p">(</span><span class="n">help_text</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Apply rich formatting to the argparse help message.</span>
 
 <span class="sd">    This function processes the help text generated by argparse and applies</span>
 <span class="sd">    custom styles using the Rich library. It colors the flags according to the </span>
-<span class="sd">    section they belong to (e.g., purple3 for &quot;Required arguments:&quot;).</span>
+<span class="sd">    section they belong to (e.g., purple3 for "Required arguments:").</span>
 
-<span class="sd">    grey50 style is applied to lines containing &quot;Default:&quot; to make them less prominent.</span>
+<span class="sd">    grey50 style is applied to lines containing "Default:" to make them less prominent.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1056,12 +895,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    -------</span>
 <span class="sd">    Text</span>
 <span class="sd">        A `rich.text.Text` object containing the formatted help text.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Regex to find flags (like -i, --input)</span>
-    <span class="n">flag_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\s--[\w-]+|\s-\w+)&quot;</span>
+    <span class="n">flag_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"(\s--[\w-]+|\s-\w+)"</span>
 
     <span class="c1"># Regex to identify lines with unwanted patterns</span>
-    <span class="n">unwanted_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\[-\w+|\[-\w+&quot;</span>
+    <span class="n">unwanted_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"\[-\w+|\[-\w+"</span>
 
     <span class="c1"># Split the help text into lines</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">help_text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
@@ -1076,32 +915,32 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">unwanted_pattern</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
             <span class="k">continue</span>
 
-        <span class="c1"># Style &quot;Required arguments:&quot; with purple3</span>
-        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Required arguments:&quot;</span><span class="p">):</span>
-            <span class="n">current_style</span> <span class="o">=</span> <span class="s2">&quot;purple3&quot;</span>
-            <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold purple3&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Optional&quot;</span><span class="p">):</span>
-            <span class="n">current_style</span> <span class="o">=</span> <span class="s2">&quot;bright_blue&quot;</span>
-            <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold bright_blue&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;General&quot;</span><span class="p">):</span>
-            <span class="n">current_style</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span>
-            <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold green&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="s2">&quot;Default:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="c1"># Apply grey50 style to lines with &quot;Default:&quot;</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">flag_pattern</span><span class="p">,</span> <span class="sa">fr</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">current_style</span><span class="si">}</span><span class="s2">]\1[/]&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
-            <span class="c1"># Make &quot;Default:&quot; and the entire following text bold</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(Default:\s*.*)&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;[bold]\1[/]&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
-            <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;grey50&quot;</span><span class="p">)</span>
+        <span class="c1"># Style "Required arguments:" with purple3</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Required arguments:"</span><span class="p">):</span>
+            <span class="n">current_style</span> <span class="o">=</span> <span class="s2">"purple3"</span>
+            <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"bold purple3"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Optional"</span><span class="p">):</span>
+            <span class="n">current_style</span> <span class="o">=</span> <span class="s2">"bright_blue"</span>
+            <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"bold bright_blue"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"General"</span><span class="p">):</span>
+            <span class="n">current_style</span> <span class="o">=</span> <span class="s2">"green"</span>
+            <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"bold green"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">"Default:"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="c1"># Apply grey50 style to lines with "Default:"</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">flag_pattern</span><span class="p">,</span> <span class="sa">fr</span><span class="s2">"[</span><span class="si">{</span><span class="n">current_style</span><span class="si">}</span><span class="s2">]\1[/]"</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="c1"># Make "Default:" and the entire following text bold</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(Default:\s*.*)"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"[bold]\1[/]"</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"grey50"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Apply the current style to the flags using regex</span>
             <span class="k">if</span> <span class="n">current_style</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">flag_pattern</span><span class="p">,</span> <span class="sa">fr</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">current_style</span><span class="si">}</span><span class="s2">]\1[/]&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">flag_pattern</span><span class="p">,</span> <span class="sa">fr</span><span class="s2">"[</span><span class="si">{</span><span class="n">current_style</span><span class="si">}</span><span class="s2">]\1[/]"</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
             <span class="c1"># Default styling for other lines</span>
             <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
         <span class="c1"># Append the styled line to the final text</span>
         <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">styled_line</span><span class="p">)</span>
-        <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">final_text</span></div>
 
@@ -1109,13 +948,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="format_docstring_for_terminal">
 <a class="viewcode-back" href="../../../unravel/core/help_formatter.html#unravel.core.help_formatter.format_docstring_for_terminal">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">format_docstring_for_terminal</span><span class="p">(</span><span class="n">docstring</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Apply rich formatting to a docstring for enhanced terminal display.</span>
 
 <span class="sd">    This function processes a docstring by applying various formatting styles</span>
 <span class="sd">    using the Rich library. It handles sections like script descriptions,</span>
-<span class="sd">    usage examples, command arguments, and specific keywords like &quot;Input:&quot;,</span>
-<span class="sd">    &quot;Output&quot;, &quot;Note&quot;, &quot;Prereq&quot;, and &quot;Next&quot;. Additionally, it applies</span>
+<span class="sd">    usage examples, command arguments, and specific keywords like "Input:",</span>
+<span class="sd">    "Output", "Note", "Prereq", and "Next". Additionally, it applies</span>
 <span class="sd">    special styles to text enclosed in double backticks and command-line flags.</span>
 
 <span class="sd">    Parameters</span>
@@ -1131,48 +970,48 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    The function applies the following styles:</span>
-<span class="sd">    - &quot;UNRAVEL&quot; is styled with a custom multi-colored format.</span>
+<span class="sd">    - "UNRAVEL" is styled with a custom multi-colored format.</span>
 <span class="sd">    - Script description lines are styled as bold.</span>
-<span class="sd">    - Section headers starting with &quot;Prereq&quot;, &quot;Input&quot;, &quot;Output&quot;, &quot;Note&quot;, &quot;Next&quot;, and &quot;Usage&quot; are colored.</span>
+<span class="sd">    - Section headers starting with "Prereq", "Input", "Output", "Note", "Next", and "Usage" are colored.</span>
 <span class="sd">    - Command names enclosed in double backticks or appearing in usage examples are styled as bold bright magenta.</span>
 <span class="sd">    - Required arguments (before the first optional argument) are styled as purple3.</span>
 <span class="sd">    - Optional arguments (within square brackets) are styled as bright blue.</span>
 <span class="sd">    - Required command-line flags (e.g., `-m`, `--input`) are styled as bold in the required arg section.</span>
 <span class="sd">    - General arguments like `[-d list of paths]`, `[-p sample??]`, and `[-v]` in the Usage section are styled as green.</span>
 <span class="sd">    - The Usage section should be last and is separated by a horizontal line.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Replace ``*`` or `*` with a plain asterisk *</span>
-    <span class="n">docstring</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;``\*``&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">docstring</span><span class="p">)</span>
-    <span class="n">docstring</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;`\*`&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">docstring</span><span class="p">)</span>
+    <span class="n">docstring</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'``\*``'</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">,</span> <span class="n">docstring</span><span class="p">)</span>
+    <span class="n">docstring</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'`\*`'</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">,</span> <span class="n">docstring</span><span class="p">)</span>
 
     <span class="c1"># Replace &lt;asterisk&gt; with a plain asterisk *</span>
-    <span class="n">docstring</span> <span class="o">=</span> <span class="n">docstring</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;asterisk&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
+    <span class="n">docstring</span> <span class="o">=</span> <span class="n">docstring</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'&lt;asterisk&gt;'</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_section_style</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the appropriate style based on the section header.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Prereqs:&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Input&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;dark_orange&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Output&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;gold1&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Note&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Next&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;grey50&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Usage&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold cyan&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Apply the appropriate style based on the section header."""</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Prereqs:"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"red"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Input"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"dark_orange"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Output"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"gold1"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Note"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"green"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Next"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"grey50"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Usage"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"bold cyan"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>  <span class="c1"># Return the line as is if no match is found</span>
 
     <span class="c1"># Regex to find text enclosed in double backticks, excluding cases like ``*``</span>
-    <span class="n">command_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;``(?!\*)(.*?)``&quot;</span>
+    <span class="n">command_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"``(?!\*)(.*?)``"</span>
     
     <span class="c1"># Regex to find flags (like -m, --input, -abc)</span>
-    <span class="n">flag_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\s-\w[\w-]*|\s--\w[\w-]*)&quot;</span>
+    <span class="n">flag_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"(\s-\w[\w-]*|\s--\w[\w-]*)"</span>
 
     <span class="c1"># Regex to find general arguments in usage</span>
-    <span class="n">general_arg_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\[-d list of paths\]|\[-p sample\?\?\]|\[-v\])&quot;</span>
+    <span class="n">general_arg_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"(\[-d list of paths\]|\[-p sample\?\?\]|\[-v\])"</span>
 
     <span class="c1"># Prepare the final formatted text</span>
     <span class="n">final_text</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
@@ -1194,100 +1033,100 @@ window.runMermaid = runMermaid;</script>
     <span class="n">processing_usage</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-        <span class="c1"># Skip lines that start with &quot;---&quot;</span>
-        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">):</span>
+        <span class="c1"># Skip lines that start with "---"</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"---"</span><span class="p">):</span>
             <span class="k">continue</span>
 
         <span class="k">if</span> <span class="n">in_description</span><span class="p">:</span>
-            <span class="c1"># Style &quot;UNRAVEL&quot; with custom formatting in the description</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">command_pattern</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;[bold bright_magenta]\1[/]&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;UNRAVEL&quot;</span><span class="p">,</span> <span class="s2">&quot;[red1]U[/][dark_orange]N[/][gold1]R[/][green]A[/][bright_blue]V[/][purple3]E[/][bright_magenta]L[/]&quot;</span><span class="p">)</span>
+            <span class="c1"># Style "UNRAVEL" with custom formatting in the description</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">command_pattern</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"[bold bright_magenta]\1[/]"</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"UNRAVEL"</span><span class="p">,</span> <span class="s2">"[red1]U[/][dark_orange]N[/][gold1]R[/][green]A[/][bright_blue]V[/][purple3]E[/][bright_magenta]L[/]"</span><span class="p">)</span>
 
             <span class="c1"># Apply bold style to the script description lines</span>
-            <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+            <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"bold"</span><span class="p">)</span>
 
             <span class="c1"># Check if this line is the start of a section</span>
-            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;Usage&quot;</span><span class="p">,</span> <span class="s2">&quot;Input&quot;</span><span class="p">,</span> <span class="s2">&quot;Output&quot;</span><span class="p">,</span> <span class="s2">&quot;Note&quot;</span><span class="p">,</span> <span class="s2">&quot;Prereq&quot;</span><span class="p">,</span> <span class="s2">&quot;Next&quot;</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"Usage"</span><span class="p">,</span> <span class="s2">"Input"</span><span class="p">,</span> <span class="s2">"Output"</span><span class="p">,</span> <span class="s2">"Note"</span><span class="p">,</span> <span class="s2">"Prereq"</span><span class="p">,</span> <span class="s2">"Next"</span><span class="p">)):</span>
                 <span class="n">in_description</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="c1"># Process the section header</span>
                 <span class="n">styled_line</span> <span class="o">=</span> <span class="n">apply_section_style</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Usage&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Usage"</span><span class="p">):</span>
                     <span class="n">processing_usage</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">separator_added</span><span class="p">:</span>
                         <span class="c1"># Add a separator line before the first Usage section</span>
                         <span class="n">console_width</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span>
-                        <span class="n">separator</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">&quot;─&quot;</span> <span class="o">*</span> <span class="n">console_width</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;dim&quot;</span><span class="p">)</span>
+                        <span class="n">separator</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">"─"</span> <span class="o">*</span> <span class="n">console_width</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"dim"</span><span class="p">)</span>
                         <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">separator</span><span class="p">)</span>
-                        <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
                         <span class="n">separator_added</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Apply section styles to headers</span>
-            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;Input&quot;</span><span class="p">,</span> <span class="s2">&quot;Output&quot;</span><span class="p">,</span> <span class="s2">&quot;Note&quot;</span><span class="p">,</span> <span class="s2">&quot;Prereq&quot;</span><span class="p">,</span> <span class="s2">&quot;Next&quot;</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"Input"</span><span class="p">,</span> <span class="s2">"Output"</span><span class="p">,</span> <span class="s2">"Note"</span><span class="p">,</span> <span class="s2">"Prereq"</span><span class="p">,</span> <span class="s2">"Next"</span><span class="p">)):</span>
                 <span class="n">styled_line</span> <span class="o">=</span> <span class="n">apply_section_style</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Usage&quot;</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Usage"</span><span class="p">):</span>
                 <span class="n">processing_usage</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">styled_line</span> <span class="o">=</span> <span class="n">apply_section_style</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">separator_added</span><span class="p">:</span>
                     <span class="c1"># Add a separator line before the first Usage section</span>
                     <span class="n">console_width</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span>
-                    <span class="n">separator</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">&quot;─&quot;</span> <span class="o">*</span> <span class="n">console_width</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;dim&quot;</span><span class="p">)</span>
+                    <span class="n">separator</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">"─"</span> <span class="o">*</span> <span class="n">console_width</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"dim"</span><span class="p">)</span>
                     <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">separator</span><span class="p">)</span>
-                    <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
                     <span class="n">separator_added</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">elif</span> <span class="n">processing_usage</span><span class="p">:</span>
-                <span class="c1"># We&#39;re in a Usage section and processing subsequent lines</span>
+                <span class="c1"># We're in a Usage section and processing subsequent lines</span>
 
                 <span class="c1"># Ensure the command name is styled correctly at the start of the line</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;[bold bright_magenta]</span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s2">[/]&quot;</span><span class="p">)</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"[bold bright_magenta]</span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span>
 
                 <span class="c1"># Identify the start of optional arguments</span>
-                <span class="n">tuple_parts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\s\[-\w|\s\[--\w)&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">tuple_parts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">'(\s\[-\w|\s\[--\w)'</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tuple_parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                     <span class="n">required_part</span><span class="p">,</span> <span class="n">optional_start</span><span class="p">,</span> <span class="n">optional_part</span> <span class="o">=</span> <span class="n">tuple_parts</span>
                     <span class="n">required_part</span> <span class="o">=</span> <span class="n">required_part</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                     <span class="n">optional_part</span> <span class="o">=</span> <span class="p">(</span><span class="n">optional_start</span> <span class="o">+</span> <span class="n">optional_part</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">required_part</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                    <span class="n">optional_part</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="n">optional_part</span> <span class="o">=</span> <span class="s2">""</span>
 
                 <span class="c1"># Style the flags as bold</span>
-                <span class="n">required_part</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">flag_pattern</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;[bold]\1[/]&quot;</span><span class="p">,</span> <span class="n">required_part</span><span class="p">)</span>
-                <span class="n">optional_part</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">flag_pattern</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;[bold]\1[/]&quot;</span><span class="p">,</span> <span class="n">optional_part</span><span class="p">)</span>
+                <span class="n">required_part</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">flag_pattern</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"[bold]\1[/]"</span><span class="p">,</span> <span class="n">required_part</span><span class="p">)</span>
+                <span class="n">optional_part</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">flag_pattern</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"[bold]\1[/]"</span><span class="p">,</span> <span class="n">optional_part</span><span class="p">)</span>
 
                 <span class="c1"># Split the optional part into general arguments and others</span>
                 <span class="n">general_args</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">general_arg_pattern</span><span class="p">,</span> <span class="n">optional_part</span><span class="p">)</span>
-                <span class="n">non_general_args</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">general_arg_pattern</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">optional_part</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">non_general_args</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">general_arg_pattern</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">optional_part</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
                 <span class="c1"># Style the required arguments (before the bracket) as purple3</span>
-                <span class="n">styled_required</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[purple3]</span><span class="si">{</span><span class="n">required_part</span><span class="si">}</span><span class="s2">[/]&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">required_part</span> <span class="k">else</span> <span class="n">Text</span><span class="p">()</span>
+                <span class="n">styled_required</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[purple3]</span><span class="si">{</span><span class="n">required_part</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span> <span class="k">if</span> <span class="n">required_part</span> <span class="k">else</span> <span class="n">Text</span><span class="p">()</span>
 
                 <span class="c1"># Style the non-general optional arguments as bright_blue</span>
-                <span class="n">styled_optional</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[bright_blue]</span><span class="si">{</span><span class="n">non_general_args</span><span class="si">}</span><span class="s2">[/]&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">non_general_args</span> <span class="k">else</span> <span class="n">Text</span><span class="p">()</span>
+                <span class="n">styled_optional</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[bright_blue]</span><span class="si">{</span><span class="n">non_general_args</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span> <span class="k">if</span> <span class="n">non_general_args</span> <span class="k">else</span> <span class="n">Text</span><span class="p">()</span>
 
                 <span class="c1"># Style the general arguments as green</span>
                 <span class="n">styled_general</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">general_args</span><span class="p">:</span>
-                    <span class="n">styled_general</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[green]</span><span class="si">{</span><span class="n">arg</span><span class="si">}</span><span class="s2">[/] &quot;</span><span class="p">))</span>
+                    <span class="n">styled_general</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[green]</span><span class="si">{</span><span class="n">arg</span><span class="si">}</span><span class="s2">[/] "</span><span class="p">))</span>
                 <span class="n">styled_general</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>  <span class="c1"># Remove the trailing space</span>
 
                 <span class="c1"># Combine the styled parts together</span>
                 <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
                 <span class="n">styled_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">styled_required</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">styled_optional</span><span class="p">:</span>
-                    <span class="n">styled_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                    <span class="n">styled_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
                     <span class="n">styled_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">styled_optional</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">styled_general</span><span class="p">:</span>
-                    <span class="n">styled_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                    <span class="n">styled_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
                     <span class="n">styled_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">styled_general</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Apply command formatting within the section</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">command_pattern</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;[bold bright_magenta]\1[/]&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">command_pattern</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"[bold bright_magenta]\1[/]"</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
                 <span class="n">styled_line</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
         <span class="c1"># Add the processed line to the final text</span>
         <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">styled_line</span><span class="p">)</span>
-        <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">final_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">final_text</span></div>
 

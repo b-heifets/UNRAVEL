@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>unravel.allen_institute.abca.scRNA_seq.join_gene module &#8212; UNRAVEL docs</title>
+    <title>unravel.allen_institute.abca.scRNA_seq.expression_summary module &#8212; UNRAVEL docs</title>
   
   
   
@@ -51,13 +51,13 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/allen_institute/abca/scRNA_seq/join_gene';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/allen_institute/abca/scRNA_seq/expression_summary';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="icon" href="../../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="unravel.allen_institute.genetic_tools_atlas package" href="../../genetic_tools_atlas/toc.html" />
-    <link rel="prev" title="unravel.allen_institute.abca.scRNA_seq.expression module" href="expression.html" />
+    <link rel="next" title="unravel.allen_institute.abca.scRNA_seq.expression_plot module" href="expression_plot.html" />
+    <link rel="prev" title="unravel.allen_institute.abca.scRNA_seq.filter module" href="filter.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4 current active"><a class="current reference internal" href="#">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -601,7 +602,7 @@
     
     <li class="breadcrumb-item"><a href="toc.html" class="nav-link">unravel.allen_institute.abca.scRNA_seq package</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">unravel.allen_institute.abca.scRNA_seq.join_gene module</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">unravel.allen_institute.abca.scRNA_seq.expression_summary module</span></li>
   </ul>
 </nav>
 </div>
@@ -618,8 +619,221 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-abca-scrna-seq-join-gene-module">
-<span id="unravel-allen-institute-abca-scrna-seq-join-gene"></span><h1>unravel.allen_institute.abca.scRNA_seq.join_gene module<a class="headerlink" href="#unravel-allen-institute-abca-scrna-seq-join-gene-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.abca.scRNA_seq.expression_summary">
+<span id="unravel-allen-institute-abca-scrna-seq-expression-summary-module"></span><span id="unravel-allen-institute-abca-scrna-seq-expression-summary"></span><h1>unravel.allen_institute.abca.scRNA_seq.expression_summary module<a class="headerlink" href="#module-unravel.allen_institute.abca.scRNA_seq.expression_summary" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">abca_scRNAseq_expression_summary</span></code> or <code class="docutils literal notranslate"><span class="pre">rna_exp_summary</span></code> from UNRAVEL to summarize log2(CPM+1) expression across every level of the ABCA cell-type ontology.</p>
+<p>The input should be a CSV produced by <code class="docutils literal notranslate"><span class="pre">abca_scRNAseq_expression</span></code> / <code class="docutils literal notranslate"><span class="pre">rna_exp</span></code>
+with ABCA cell-type annotations and one or more gene-expression columns.</p>
+<dl class="simple">
+<dt>Mouse hierarchy:</dt><dd><p>neurotransmitter -&gt; class -&gt; subclass -&gt; supertype -&gt; cluster</p>
+</dd>
+<dt>Human hierarchy:</dt><dd><p>neurotransmitter -&gt; supercluster -&gt; cluster -&gt; subcluster</p>
+</dd>
+<dt>For each gene and cell type, the script calculates:</dt><dd><ul class="simple">
+<li><p>cell_count</p></li>
+<li><p>percent_cells (percentage of cells in the input assigned to the cell type at the given ontology level.)</p></li>
+<li><p>expressing_cell_count</p></li>
+<li><p>mean_expression</p></li>
+<li><p>percent_expression above the selected log2(CPM+1) threshold</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>&lt;input&gt;__LEVEL.csv
+One wide CSV per ontology level. Identical cell-type labels that occur
+under different parent ontology paths are combined into one row.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Example of collapsing: if Cell type A occurs under two different
+neurotransmitter parents, the output contains one Cell type A row
+combining cells from both parent paths.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cell_count</span></code> counts all rows assigned to a cell type.</p></li>
+<li><p>Mean expression is calculated from non-missing expression values.</p></li>
+<li><p>Percent expression uses non-missing expression values as the denominator.</p></li>
+<li><p>By default, outputs are saved to <code class="docutils literal notranslate"><span class="pre">expression_summary_thr&lt;value&gt;</span></code> in the input directory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source_path_count</span></code> is the number of unique ontology paths contributing
+to a collapsed cell-type row.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source_ontology_paths</span></code> lists those contributing ontology paths.</p></li>
+</ul>
+<dl class="simple">
+<dt>Genes:</dt><dd><ul class="simple">
+<li><p>Use -g/–genes to summarize selected genes.</p></li>
+<li><p>If -g is omitted, all columns after the last <a href="#id1"><span class="problematic" id="id2">*</span></a>_color column are
+assumed to contain gene-expression values.</p></li>
+</ul>
+</dd>
+<dt>Species:</dt><dd><ul class="simple">
+<li><p>Species is inferred automatically from the ABCA ontology columns</p></li>
+</ul>
+</dd>
+</dl>
+<section id="usage-for-mouse">
+<h2>Usage for mouse:<a class="headerlink" href="#usage-for-mouse" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>rna_exp_summary -i path/expression_data_log2.csv [-g Htr2a Htr2b Drd1 Drd2] [-t 3]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-human">
+<h2>Usage for human:<a class="headerlink" href="#usage-for-human" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>rna_exp_summary -i path/expression_data_Neurons_log2.csv [-g HTR2A HTR2B DRD1 DRD2] [-t 3]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-parallel-processing">
+<h2>Usage for parallel processing:<a class="headerlink" href="#usage-for-parallel-processing" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>fd -e csv -d 1 -j 4 -x rna_exp_summary -i {}</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression_summary.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression_summary.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression_summary.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression_summary.infer_species">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression_summary.</span></span><span class="sig-name descname"><span class="pre">infer_species</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression_summary.html#infer_species"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.infer_species" title="Link to this definition">#</a></dt>
+<dd><p>Infer species from ABCA ontology columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>columns</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression_summary.infer_genes">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression_summary.</span></span><span class="sig-name descname"><span class="pre">infer_genes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requested_genes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression_summary.html#infer_genes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.infer_genes" title="Link to this definition">#</a></dt>
+<dd><p>Return requested genes or infer gene columns from column order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>columns</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>requested_genes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>] </em><em>| </em><em>None</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression_summary.format_number">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression_summary.</span></span><span class="sig-name descname"><span class="pre">format_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression_summary.html#format_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.format_number" title="Link to this definition">#</a></dt>
+<dd><p>Format a numeric CLI value for compact file names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression_summary.natural_sort_text">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression_summary.</span></span><span class="sig-name descname"><span class="pre">natural_sort_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression_summary.html#natural_sort_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.natural_sort_text" title="Link to this definition">#</a></dt>
+<dd><p>Return a zero-padded text key for natural sorting without extra dependencies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression_summary.load_expression_data">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression_summary.</span></span><span class="sig-name descname"><span class="pre">load_expression_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression_summary.html#load_expression_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.load_expression_data" title="Link to this definition">#</a></dt>
+<dd><p>Load required ontology, color, and gene-expression columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – </p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>genes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<em>DataFrame</em>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression_summary.source_paths_dataframe">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression_summary.</span></span><span class="sig-name descname"><span class="pre">source_paths_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression_summary.html#source_paths_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.source_paths_dataframe" title="Link to this definition">#</a></dt>
+<dd><p>Summarize unique ontology paths contributing to each cell-type label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>path_columns</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression_summary.summarize_level">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression_summary.</span></span><span class="sig-name descname"><span class="pre">summarize_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hierarchy_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression_summary.html#summarize_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.summarize_level" title="Link to this definition">#</a></dt>
+<dd><p>Create one collapsed wide expression summary for an ontology level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>input_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>genes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – </p></li>
+<li><p><strong>hierarchy_levels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>level_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression_summary.save_outputs">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression_summary.</span></span><span class="sig-name descname"><span class="pre">save_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hierarchy_levels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression_summary.html#save_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.save_outputs" title="Link to this definition">#</a></dt>
+<dd><p>Save one collapsed wide CSV per ontology level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>input_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – </p></li>
+<li><p><strong>output_prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>genes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – </p></li>
+<li><p><strong>hierarchy_levels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression_summary.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression_summary.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression_summary.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -633,20 +847,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="expression.html"
+       href="filter.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.expression module</p>
+        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.filter module</p>
       </div>
     </a>
     <a class="right-next"
-       href="../../genetic_tools_atlas/toc.html"
+       href="expression_plot.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.allen_institute.genetic_tools_atlas package</p>
+        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.expression_plot module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -662,9 +876,33 @@
 
 
   <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-mouse">Usage for mouse:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-human">Usage for human:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-parallel-processing">Usage for parallel processing:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.infer_species"><code class="docutils literal notranslate"><span class="pre">infer_species()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.infer_genes"><code class="docutils literal notranslate"><span class="pre">infer_genes()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.format_number"><code class="docutils literal notranslate"><span class="pre">format_number()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.natural_sort_text"><code class="docutils literal notranslate"><span class="pre">natural_sort_text()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.load_expression_data"><code class="docutils literal notranslate"><span class="pre">load_expression_data()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.source_paths_dataframe"><code class="docutils literal notranslate"><span class="pre">source_paths_dataframe()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.summarize_level"><code class="docutils literal notranslate"><span class="pre">summarize_level()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.save_outputs"><code class="docutils literal notranslate"><span class="pre">save_outputs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../../../_sources/unravel/allen_institute/abca/scRNA_seq/join_gene.rst.txt">
+    <a href="../../../../_sources/unravel/allen_institute/abca/scRNA_seq/expression_summary.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

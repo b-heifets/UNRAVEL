@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -618,8 +619,92 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-abca-merfish-merfish-filter-module">
-<span id="unravel-allen-institute-abca-merfish-merfish-filter"></span><h1>unravel.allen_institute.abca.merfish.merfish_filter module<a class="headerlink" href="#unravel-allen-institute-abca-merfish-merfish-filter-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.abca.merfish.merfish_filter">
+<span id="unravel-allen-institute-abca-merfish-merfish-filter-module"></span><span id="unravel-allen-institute-abca-merfish-merfish-filter"></span><h1>unravel.allen_institute.abca.merfish.merfish_filter module<a class="headerlink" href="#module-unravel.allen_institute.abca.merfish.merfish_filter" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">abca_merfish_filter</span></code> or <code class="docutils literal notranslate"><span class="pre">mf_filter</span></code> from UNRAVEL to filter ABCA MERFISH cells based on columns and values in the cell metadata.
+It integrates the filtering with the generation of <code class="docutils literal notranslate"><span class="pre">exp_df</span></code> and allows optional export of filtered data or the generation of updated 3D images.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The input CSV may be previously filtered (e.g., <code class="docutils literal notranslate"><span class="pre">abca_merfish_filter_by_mask</span></code>) or it may be the full cell metadata (cell_metadata.csv).</p></li>
+<li><p>Columns to filter by: <code class="docutils literal notranslate"><span class="pre">parcellation_substructure</span></code> (default)</p></li>
+<li><p>Values to filter by: e.g., <code class="docutils literal notranslate"><span class="pre">ACB</span></code></p></li>
+<li><p>Regional columns can be printed with <code class="docutils literal notranslate"><span class="pre">cols</span> <span class="pre">-i</span> <span class="pre">&lt;ABCA_root&gt;/metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv</span></code></p></li>
+<li><p>Regional values can be printed with <code class="docutils literal notranslate"><span class="pre">vals</span> <span class="pre">-i</span> <span class="pre">&lt;ABCA_root&gt;/metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv</span> <span class="pre">-c</span> <span class="pre">substructure</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parcellation_</span></code> is prepended to the regional column names in the cell metadata, so for example <code class="docutils literal notranslate"><span class="pre">substructure</span></code> becomes <code class="docutils literal notranslate"><span class="pre">parcellation_substructure</span></code></p></li>
+</ul>
+</div>
+<dl class="simple">
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>Filtered cell metadata CSV file (default: &lt;input_stem&gt;_filtered[_&lt;first_value&gt;][_neurons].csv)</p></li>
+<li><p>With <code class="docutils literal notranslate"><span class="pre">--all_values</span></code>, one CSV per unique value for each specified column.</p></li>
+</ul>
+</dd>
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p>Use the filtered cell metadata to examine cell type prevalence or gene expression</p></li>
+<li><p>For cell type proportions like in the MapMySections data challenge, use <code class="docutils literal notranslate"><span class="pre">mms_cell_type_proportions</span></code> to calculate proportions for a given ontological level (e.g., subclass)</p></li>
+<li><p>Then use <code class="docutils literal notranslate"><span class="pre">mms_cell_type_proportions_concat</span></code> to concatenate multiple CSVs into one file (one row per input file)</p></li>
+<li><p>To visualize cell type proportions, use <code class="docutils literal notranslate"><span class="pre">abca_sunburst</span></code> to make a CSV for sunburst plotting</p></li>
+<li><p>For looking at gene expression, load the filtered cell metadata and join it with the expression data for the gene(s) of interest (<code class="docutils literal notranslate"><span class="pre">abca_merfish_join_expression</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_merfish_filter -b path/base_dir [–columns] [–values] [-o path/output.csv] [-n] [-v]
+abca_merfish_filter -b path/base_dir -a [-c column …] [-o path/output_dir] [-w workers] [-n] [-v]</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_filter.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_filter.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_filter.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_filter.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_filter.sanitize_filename">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_filter.</span></span><span class="sig-name descname"><span class="pre">sanitize_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_filter.html#sanitize_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_filter.sanitize_filename" title="Link to this definition">#</a></dt>
+<dd><p>Convert a column value to a filesystem-safe string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_filter.save_filtered_value">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_filter.</span></span><span class="sig-name descname"><span class="pre">save_filtered_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_filter.html#save_filtered_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_filter.save_filtered_value" title="Link to this definition">#</a></dt>
+<dd><p>Save rows corresponding to one column value.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_filter.filter_all_values">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_filter.</span></span><span class="sig-name descname"><span class="pre">filter_all_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neurons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_filter.html#filter_all_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_filter.filter_all_values" title="Link to this definition">#</a></dt>
+<dd><p>Write one CSV for every unique value in each specified column.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_filter.filter_dataframe">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_filter.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_filter.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_filter.filter_dataframe" title="Link to this definition">#</a></dt>
+<dd><p>Filter a DataFrame by columns and values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The DataFrame to filter.</p></li>
+<li><p><strong>columns</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Columns to filter by.</p></li>
+<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Values (or comma-separated groups of values) to include across all columns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>filtered_df</strong> – The filtered DataFrame.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_filter.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_filter.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_filter.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_filter.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -660,6 +745,24 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_filter.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_filter.sanitize_filename"><code class="docutils literal notranslate"><span class="pre">sanitize_filename()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_filter.save_filtered_value"><code class="docutils literal notranslate"><span class="pre">save_filtered_value()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_filter.filter_all_values"><code class="docutils literal notranslate"><span class="pre">filter_all_values()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_filter.filter_dataframe"><code class="docutils literal notranslate"><span class="pre">filter_dataframe()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_filter.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

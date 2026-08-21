@@ -1,0 +1,1615 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unravel.allen_institute.abca.merfish.merfish_expression_to_nii &#8212; UNRAVEL docs</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=872d93e8" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="icon" href="../../../../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../../../_static/searchtools.js"></script>
+    <script src="../../../../../_static/language_data.js"></script>
+    <script src="../../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="dark">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide.html">
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide_mms.html">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide.html">
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide_mms.html">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">unravel.allen_institute.abca.merfish.merfish_expression_to_nii</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for unravel.allen_institute.abca.merfish.merfish_expression_to_nii</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">"""</span>
+<span class="sd">Use ``abca_merfish_expression_to_nii`` or ``me`` from UNRAVEL to make 3D .nii.gz</span>
+<span class="sd">images of ABCA MERFISH expression data.</span>
+
+<span class="sd">Inputs:</span>
+<span class="sd">    - MERFISH expression .h5ad (or use -b to find it in the ABCA download cache)</span>
+<span class="sd">    - MERFISH cell metadata CSV (or use -b to find it in the ABCA download cache)</span>
+<span class="sd">    - Reference .nii.gz for affine/header/shape info (e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)</span>
+<span class="sd">    - Optional: -g &lt;gene&gt; ... to select specific genes. If omitted, all genes in the selected MERFISH dataset are processed.</span>
+<span class="sd">    - Optional: -i path/cell_metadata_filtered.csv to use a pre-filtered cell metadata CSV instead of the default ABCA MERFISH metadata.</span>
+
+<span class="sd">Outputs:</span>
+<span class="sd">    - &lt;gene&gt;.nii.gz for each requested gene, with the same affine and header as the reference .nii.gz</span>
+<span class="sd">    - Dir: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps/</span>
+<span class="sd">    - Dir with -c and -val: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps_&lt;filter_column&gt;-&lt;filter_value&gt;/</span>
+<span class="sd">    - Dir with -i: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps_&lt;input_stem&gt;/</span>
+<span class="sd">    </span>
+<span class="sd">Notes:</span>
+<span class="sd">------</span>
+<span class="sd">    - ``-w`` uses threads, not processes, to avoid duplicating the loaded expression matrix.</span>
+<span class="sd">    - Each worker still creates one full 3D output image in memory, so keep ``-w`` modest.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    abca_merfish_expression_to_nii -b &lt;abc_download_root&gt; -r &lt;ref_nii&gt; [-g &lt;gene&gt; ...] [-i path/cell_metadata_filtered.csv] [--imputed] [--neurons | --nonneurons] [-o &lt;output&gt;] [-w N] [--dense] [--no-csc] [-dt float32|float64] [-f] [-v]</span>
+
+<span class="sd">Usage for one gene:</span>
+<span class="sd">-------------------</span>
+<span class="sd">    abca_merfish_expression_to_nii -b &lt;abc_download_root&gt; -g &lt;gene&gt; --no-csc</span>
+
+<span class="sd">Usage for selected genes:</span>
+<span class="sd">-------------------------</span>
+<span class="sd">    abca_merfish_expression_to_nii -b &lt;abc_download_root&gt; -g &lt;gene&gt; &lt;gene&gt; ...</span>
+
+<span class="sd">Usage for all genes:</span>
+<span class="sd">--------------------</span>
+<span class="sd">    abca_merfish_expression_to_nii -b &lt;abc_download_root&gt;</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span> <span class="n">as_completed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">threading</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lock</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nibabel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich</span><span class="w"> </span><span class="kn">import</span> <span class="nb">print</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.live</span><span class="w"> </span><span class="kn">import</span> <span class="n">Live</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.traceback</span><span class="w"> </span><span class="kn">import</span> <span class="n">install</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span> <span class="k">as</span> <span class="n">sp_sparse</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">unravel.allen_institute.abca.merfish.merfish</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.help_formatter</span><span class="w"> </span><span class="kn">import</span> <span class="n">SM</span><span class="p">,</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">initialize_progress_bar</span><span class="p">,</span>
+    <span class="n">log_command</span><span class="p">,</span>
+    <span class="n">verbose_end_msg</span><span class="p">,</span>
+    <span class="n">verbose_start_msg</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="GeneJobResult">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GeneJobResult</span><span class="p">:</span>
+    <span class="n">gene</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">nonzero_cells</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">expression_sum</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+
+<div class="viewcode-block" id="parse_args">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.parse_args">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
+
+    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">"Required arguments"</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-b"</span><span class="p">,</span> <span class="s2">"--base"</span><span class="p">,</span> 
+                      <span class="n">help</span><span class="o">=</span><span class="s2">"Path to the root directory of the Allen Brain Cell Atlas data"</span><span class="p">,</span> 
+                      <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-g"</span><span class="p">,</span> <span class="s2">"--gene"</span><span class="p">,</span> 
+                      <span class="n">help</span><span class="o">=</span><span class="s2">"Gene(s) to convert. If omitted, all genes in the selected MERFISH dataset are processed."</span><span class="p">,</span>
+                      <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"*"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-r"</span><span class="p">,</span> <span class="s2">"--ref_nii"</span><span class="p">,</span> 
+                      <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">"Path to reference .nii.gz for header/affine/shape info "</span>
+                            <span class="s2">"(e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)"</span><span class="p">),</span>
+                      <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">"Optional arguments"</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-i"</span><span class="p">,</span> <span class="s2">"--input"</span><span class="p">,</span>
+                      <span class="n">help</span><span class="o">=</span><span class="s2">"Optional path to a cell metadata CSV"</span><span class="p">,</span> 
+                      <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">cell_types</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+    <span class="n">cell_types</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-n"</span><span class="p">,</span> <span class="s2">"--neurons"</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">"Keep neuronal cells only. Default: use all cells"</span><span class="p">,</span>
+                            <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">cell_types</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-nn"</span><span class="p">,</span> <span class="s2">"--nonneurons"</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">"Keep non-neuronal cells only. Default: use all cells"</span><span class="p">,</span>
+                            <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"--output"</span><span class="p">,</span>
+                      <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">"Output path for the saved .nii.gz image. Only valid with one gene. "</span>
+                            <span class="sa">r</span><span class="s2">"Default: \[imputed_]MERFISH[_neuronal]_expression_maps/&lt;gene&gt;.nii.gz"</span> <span class="p">),</span>
+                      <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-im"</span><span class="p">,</span> <span class="s2">"--imputed"</span><span class="p">,</span> 
+                      <span class="n">help</span><span class="o">=</span><span class="s2">"Use imputed expression data. Default: False"</span><span class="p">,</span> 
+                      <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--dense"</span><span class="p">,</span> 
+                      <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">"In-memory expression matrix --&gt; dense NumPy array after row/gene subsetting (faster) "</span>
+                            <span class="s2">"Default: keep sparse matrices sparse. Use only if RAM is sufficient."</span> <span class="p">),</span>
+                      <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--no-csc"</span><span class="p">,</span>
+                      <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">"Don't convert sparse matrices to CSC after row/gene subsetting (skipped if --dense used). "</span>
+                            <span class="s2">"Default: convert to CSC for faster repeated gene-column extraction for multiple genes."</span> <span class="p">),</span>
+                      <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--filter-column"</span><span class="p">,</span>
+                  <span class="n">help</span><span class="o">=</span><span class="s2">"Cell metadata column to filter"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-val"</span><span class="p">,</span> <span class="s2">"--filter-value"</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s2">"Value to keep in --filter-column"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-f"</span><span class="p">,</span> <span class="s2">"--force"</span><span class="p">,</span> 
+                      <span class="n">help</span><span class="o">=</span><span class="s2">"Overwrite existing outputs. Default: False"</span><span class="p">,</span> 
+                      <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-w"</span><span class="p">,</span> <span class="s2">"--workers"</span><span class="p">,</span> 
+                      <span class="n">help</span><span class="o">=</span><span class="s2">"Number of genes to process/save in parallel. Default: 16"</span><span class="p">,</span> 
+                      <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--h5ad"</span><span class="p">,</span> 
+                      <span class="n">help</span><span class="o">=</span><span class="s2">"Optional expression .h5ad path. If given, bypass mf.load_expression_data()."</span><span class="p">,</span> 
+                      <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-dt"</span><span class="p">,</span> <span class="s2">"--dtype"</span><span class="p">,</span> 
+                      <span class="n">help</span><span class="o">=</span><span class="s2">"Output dtype. Default: float32"</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">"float32"</span><span class="p">,</span> <span class="s2">"float64"</span><span class="p">],</span> 
+                      <span class="n">default</span><span class="o">=</span><span class="s2">"float32"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">"General arguments"</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"--verbose"</span><span class="p">,</span>
+                         <span class="n">help</span><span class="o">=</span><span class="s2">"Increase verbosity. Default: False"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="unique_preserve_order">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.unique_preserve_order">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">unique_preserve_order</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Return unique strings while preserving first occurrence order."""</span>
+    <span class="n">seen</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">out</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="get_requested_genes_from_args">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_requested_genes_from_args">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_requested_genes_from_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Return requested genes and whether the user omitted -g/--gene.</span>
+
+<span class="sd">    When ``-g`` is omitted, use the curated ABCA MERFISH gene-list helpers from</span>
+<span class="sd">    ``merfish.py``. These lists let us build output paths and skip existing files</span>
+<span class="sd">    before loading the large expression matrix. The final list is still validated</span>
+<span class="sd">    against ``adata.var`` after AnnData is loaded.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">unique_preserve_order</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">),</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">imputed</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="s2">"genes_in_imputed_merfish_data"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">unique_preserve_order</span><span class="p">(</span><span class="n">mf</span><span class="o">.</span><span class="n">genes_in_imputed_merfish_data</span><span class="p">()),</span> <span class="kc">True</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+            <span class="s2">"-g/--gene was omitted with --imputed, but mf.genes_in_imputed_merfish_data() "</span>
+            <span class="s2">"is not available. Provide -g explicitly or update merfish.py."</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="s2">"genes_in_merfish_data"</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">unique_preserve_order</span><span class="p">(</span><span class="n">mf</span><span class="o">.</span><span class="n">genes_in_merfish_data</span><span class="p">()),</span> <span class="kc">True</span>
+
+    <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+        <span class="s2">"-g/--gene was omitted, but mf.genes_in_merfish_data() is not available. "</span>
+        <span class="s2">"Provide -g explicitly or update merfish.py."</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="format_gene_preview">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.format_gene_preview">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_gene_preview</span><span class="p">(</span><span class="n">genes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">max_genes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return a compact gene-list preview for console output."""</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">genes</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_genes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">genes</span><span class="p">)</span>
+    <span class="n">preview</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">genes</span><span class="p">[:</span><span class="n">max_genes</span><span class="p">])</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">preview</span><span class="si">}</span><span class="s2">, ... (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">genes</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> total)"</span></div>
+
+
+
+<div class="viewcode-block" id="find_expression_h5ad">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.find_expression_h5ad">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_expression_h5ad</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">imputed</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Try to find the ABCA MERFISH expression h5ad without using backed subsetting.</span>
+
+<span class="sd">    This lets the script bypass ``mf.load_expression_data()``, which may subset a</span>
+<span class="sd">    CSRDataset-backed h5ad before loading it into memory. The selected AnnData is</span>
+<span class="sd">    opened backed/read-only, then ``adata.X`` is loaded fully into memory later.</span>
+<span class="sd">    """</span>
+    <span class="n">download_base</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
+
+    <span class="c1"># Fast path: common files are often placed directly under the MERFISH root.</span>
+    <span class="n">direct_candidates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">download_base</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*.h5ad"</span><span class="p">))</span>
+
+    <span class="c1"># If direct lookup fails, do a recursive search. This usually finds only a few</span>
+    <span class="c1"># expression-matrix files, but keep it as a fallback in case the ABCA cache</span>
+    <span class="c1"># layout changes.</span>
+    <span class="n">candidates</span> <span class="o">=</span> <span class="n">direct_candidates</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"    No .h5ad files found directly under base; searching recursively..."</span><span class="p">)</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">download_base</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">"*.h5ad"</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">rank</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">is_imputed</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"imput"</span> <span class="ow">in</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">imputed</span><span class="p">:</span>
+            <span class="c1"># Prefer explicitly imputed h5ad files.</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="n">is_imputed</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+        <span class="c1"># Non-imputed default: prefer log2 expression over raw, and avoid imputed.</span>
+        <span class="k">if</span> <span class="n">is_imputed</span><span class="p">:</span>
+            <span class="n">primary</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="k">elif</span> <span class="s2">"log2"</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="s2">"log"</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">primary</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="s2">"raw"</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">primary</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">primary</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">rank</span><span class="p">)</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">imputed</span> <span class="ow">and</span> <span class="s2">"imput"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">selected</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Selected h5ad: </span><span class="si">{</span><span class="n">selected</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"    Other h5ad candidates:"</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"      - </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">selected</span></div>
+
+
+
+<div class="viewcode-block" id="default_output_path">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.default_output_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">default_output_path</span><span class="p">(</span><span class="n">gene</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">n_requested_genes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return the default output path for one gene."""</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n_requested_genes</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"--output can only be used when one gene is requested."</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"MERFISH"</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">gene</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">imputed</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"imputed_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">filename</span> <span class="o">+=</span> <span class="s2">"_imputed"</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">neurons</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">+=</span> <span class="s2">"_neuronal"</span>
+        <span class="n">filename</span> <span class="o">+=</span> <span class="s2">"_neurons"</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">nonneurons</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">+=</span> <span class="s2">"_nonneuronal"</span>
+        <span class="n">filename</span> <span class="o">+=</span> <span class="s2">"_nonneurons"</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"_</span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">filter_column</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">filter_column</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">filter_value</span><span class="si">}</span><span class="s2">"</span>
+
+    <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_expression_maps"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.nii.gz"</span></div>
+
+
+
+<div class="viewcode-block" id="get_var_symbols">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_var_symbols">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_var_symbols</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return gene symbols aligned to ``adata.var`` columns."""</span>
+    <span class="k">if</span> <span class="s2">"gene_symbol"</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">"gene_symbol"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="get_gene_to_cols">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_to_cols">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_gene_to_cols</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">requested_genes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Map requested gene symbols to integer column positions in ``adata.X``."""</span>
+    <span class="n">symbols</span> <span class="o">=</span> <span class="n">get_var_symbols</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+    <span class="n">gene_to_cols</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">requested_genes</span><span class="p">:</span>
+        <span class="n">gene_to_cols</span><span class="p">[</span><span class="n">gene</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">symbols</span> <span class="o">==</span> <span class="n">gene</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">gene_to_cols</span></div>
+
+
+
+<div class="viewcode-block" id="load_and_prepare_cell_metadata">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_and_prepare_cell_metadata">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_and_prepare_cell_metadata</span><span class="p">(</span>
+    <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">input_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">neurons</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">nonneurons</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">filter_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">filter_value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Load and optionally filter MERFISH cell metadata."""</span>
+    <span class="k">if</span> <span class="n">input_path</span><span class="p">:</span>
+        <span class="n">cell_df_joined</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cell_df</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">load_cell_metadata</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
+        <span class="n">cell_df_joined</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">join_reconstructed_coords</span><span class="p">(</span><span class="n">cell_df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">neurons</span> <span class="ow">or</span> <span class="n">nonneurons</span> <span class="ow">or</span> <span class="p">(</span><span class="n">filter_column</span> <span class="ow">and</span> <span class="n">filter_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cell_df_joined</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+            <span class="n">cell_df_joined</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">join_cluster_details</span><span class="p">(</span><span class="n">cell_df_joined</span><span class="p">,</span> <span class="n">download_base</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">neurons</span> <span class="ow">or</span> <span class="n">nonneurons</span><span class="p">:</span>
+        <span class="n">class_num</span> <span class="o">=</span> <span class="n">cell_df_joined</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">cell_df_joined</span> <span class="o">=</span> <span class="n">cell_df_joined</span><span class="p">[</span><span class="n">class_num</span> <span class="o">&lt;=</span> <span class="mi">29</span> <span class="k">if</span> <span class="n">neurons</span> <span class="k">else</span> <span class="n">class_num</span> <span class="o">&gt;</span> <span class="mi">29</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">filter_column</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filter_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cell_df_joined</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cell metadata column not found: </span><span class="si">{</span><span class="n">filter_column</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">cell_df_joined</span> <span class="o">=</span> <span class="n">cell_df_joined</span><span class="p">[</span>
+            <span class="n">cell_df_joined</span><span class="p">[</span><span class="n">filter_column</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="n">filter_value</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cell_df_joined</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No cells matched </span><span class="si">{</span><span class="n">filter_column</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">filter_value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cell_df_joined</span></div>
+
+
+
+<div class="viewcode-block" id="infer_cell_id_column">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.infer_cell_id_column">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">infer_cell_id_column</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">obs_names</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Infer which cell metadata field matches AnnData obs_names best.</span>
+
+<span class="sd">    The original ABCA metadata generally uses cell labels as the index, but this keeps</span>
+<span class="sd">    the script robust if future exports expose them as a column instead.</span>
+<span class="sd">    """</span>
+    <span class="n">candidates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">"index"</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">cell_df</span><span class="o">.</span><span class="n">index</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"cell_label"</span><span class="p">,</span> <span class="s2">"feature_matrix_label"</span><span class="p">,</span> <span class="s2">"cell_barcode"</span><span class="p">,</span> <span class="s2">"barcoded_cell_sample_label"</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">candidates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">col</span><span class="p">,</span> <span class="n">cell_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)))</span>
+
+    <span class="n">best_name</span> <span class="o">=</span> <span class="s2">"index"</span>
+    <span class="n">best_series</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">best_overlap</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">obs_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">obs_names</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">overlap</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">obs_set</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">overlap</span> <span class="o">&gt;</span> <span class="n">best_overlap</span><span class="p">:</span>
+            <span class="n">best_name</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="n">best_series</span> <span class="o">=</span> <span class="n">series</span>
+            <span class="n">best_overlap</span> <span class="o">=</span> <span class="n">overlap</span>
+
+    <span class="k">return</span> <span class="n">best_series</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">best_name</span><span class="p">,</span> <span class="n">best_overlap</span></div>
+
+
+
+<div class="viewcode-block" id="align_cells_to_adata">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.align_cells_to_adata">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">align_cells_to_adata</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">adata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Align cell metadata to AnnData row order without subsetting backed AnnData.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    aligned_cell_df : DataFrame</span>
+<span class="sd">        Metadata rows in the same order as ``adata.X[row_indices, :]``.</span>
+<span class="sd">    row_indices : ndarray[int]</span>
+<span class="sd">        Integer AnnData row indices to keep.</span>
+<span class="sd">    id_source : str</span>
+<span class="sd">        Metadata field used for matching.</span>
+<span class="sd">    """</span>
+    <span class="n">obs_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs_names</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+    <span class="n">cell_ids</span><span class="p">,</span> <span class="n">id_source</span><span class="p">,</span> <span class="n">overlap</span> <span class="o">=</span> <span class="n">infer_cell_id_column</span><span class="p">(</span><span class="n">cell_df</span><span class="p">,</span> <span class="n">obs_names</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">overlap</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No overlap between AnnData obs_names and cell metadata cell IDs."</span><span class="p">)</span>
+
+    <span class="n">indexed</span> <span class="o">=</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">indexed</span><span class="p">[</span><span class="s2">"_merfish_cell_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell_ids</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">indexed</span> <span class="o">=</span> <span class="n">indexed</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="s2">"_merfish_cell_id"</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s2">"first"</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"_merfish_cell_id"</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">keep_mask</span> <span class="o">=</span> <span class="n">obs_names</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">indexed</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">row_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">keep_mask</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+    <span class="n">aligned_obs_names</span> <span class="o">=</span> <span class="n">obs_names</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">]</span>
+    <span class="n">aligned_cell_df</span> <span class="o">=</span> <span class="n">indexed</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">aligned_obs_names</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">aligned_cell_df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cell metadata alignment failed; aligned metadata is all NA."</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">aligned_cell_df</span><span class="p">,</span> <span class="n">row_indices</span><span class="p">,</span> <span class="n">id_source</span></div>
+
+
+
+<div class="viewcode-block" id="precompute_linear_indices">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.precompute_linear_indices">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">precompute_linear_indices</span><span class="p">(</span>
+    <span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">pixel_size_um</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert reconstructed MERFISH coordinates to flattened image indices once.</span>
+
+<span class="sd">    This mirrors ``mf.points_to_img_sum`` style accumulation, but does it in 3D:</span>
+<span class="sd">        img[int(x / pixel_size), int(y / pixel_size), z_index] += expression</span>
+<span class="sd">    """</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"x_reconstructed"</span><span class="p">,</span> <span class="s2">"y_reconstructed"</span><span class="p">,</span> <span class="s2">"brain_section_label"</span><span class="p">]</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cell metadata is missing required column(s): </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">pixel_size_coord_units</span> <span class="o">=</span> <span class="n">pixel_size_um</span> <span class="o">/</span> <span class="mf">1000.0</span>
+    <span class="n">slice_index_map</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">slice_index_dict</span><span class="p">()</span>
+
+    <span class="c1"># Original mf.points_to_img_sum likely uses astype(int), i.e. truncation toward zero.</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">cell_df</span><span class="p">[</span><span class="s2">"x_reconstructed"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">/</span> <span class="n">pixel_size_coord_units</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">cell_df</span><span class="p">[</span><span class="s2">"y_reconstructed"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">/</span> <span class="n">pixel_size_coord_units</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+    <span class="n">k_series</span> <span class="o">=</span> <span class="n">cell_df</span><span class="p">[</span><span class="s2">"brain_section_label"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">slice_index_map</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">k_series</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">finite_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">k_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+    <span class="n">k_int</span><span class="p">[</span><span class="n">finite_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="n">finite_k</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+
+    <span class="n">in_bounds</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">finite_k</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">k_int</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">k_int</span> <span class="o">&lt;</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">in_bounds</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No cells have valid in-bounds x/y/z coordinates for the reference image shape."</span><span class="p">)</span>
+
+    <span class="n">linear_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">((</span><span class="n">i</span><span class="p">[</span><span class="n">in_bounds</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="n">in_bounds</span><span class="p">],</span> <span class="n">k_int</span><span class="p">[</span><span class="n">in_bounds</span><span class="p">]),</span> <span class="n">dims</span><span class="o">=</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">linear_idx</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">in_bounds</span></div>
+
+
+
+<div class="viewcode-block" id="load_X_fully_into_memory">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_X_fully_into_memory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_X_fully_into_memory</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Load ``adata.X`` into memory once, avoiding backed slicing/subsetting.</span>
+
+<span class="sd">    For AnnData CSRDataset/CSCDataset, ``to_memory()`` should return a scipy sparse</span>
+<span class="sd">    matrix. Fallbacks cover older anndata/scipy combinations.</span>
+<span class="sd">    """</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Loading full expression matrix into memory from </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">..."</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="s2">"to_memory"</span><span class="p">):</span>
+        <span class="n">X_mem</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">to_memory</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">X_mem</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">X_mem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sp_sparse</span><span class="o">.</span><span class="n">issparse</span><span class="p">(</span><span class="n">X_mem</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Loaded sparse matrix: shape=</span><span class="si">{</span><span class="n">X_mem</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, nnz=</span><span class="si">{</span><span class="n">X_mem</span><span class="o">.</span><span class="n">nnz</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">, format=</span><span class="si">{</span><span class="n">X_mem</span><span class="o">.</span><span class="n">getformat</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Loaded dense/array-like matrix: shape=</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">X_mem</span><span class="p">,</span><span class="w"> </span><span class="s1">'shape'</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">X_mem</span></div>
+
+
+
+<div class="viewcode-block" id="subset_matrix_after_memory_load">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.subset_matrix_after_memory_load">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">subset_matrix_after_memory_load</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">row_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">valid_cell_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">gene_to_cols</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+    <span class="n">genes_to_process</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">dense</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">convert_to_csc</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Subset rows/columns after full in-memory load and return local gene-column mapping."""</span>
+    <span class="n">all_cols</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes_to_process</span><span class="p">:</span>
+        <span class="n">all_cols</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gene_to_cols</span><span class="p">[</span><span class="n">gene</span><span class="p">])</span>
+    <span class="n">all_cols</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">unique_preserve_order</span><span class="p">(</span><span class="n">all_cols</span><span class="p">)]</span>
+    <span class="n">old_to_new</span> <span class="o">=</span> <span class="p">{</span><span class="n">old</span><span class="p">:</span> <span class="n">new</span> <span class="k">for</span> <span class="n">new</span><span class="p">,</span> <span class="n">old</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_cols</span><span class="p">)}</span>
+    <span class="n">local_gene_to_cols</span> <span class="o">=</span> <span class="p">{</span><span class="n">gene</span><span class="p">:</span> <span class="p">[</span><span class="n">old_to_new</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">gene_to_cols</span><span class="p">[</span><span class="n">gene</span><span class="p">]]</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes_to_process</span><span class="p">}</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"    Subsetting in-memory matrix to aligned/valid cells and requested genes..."</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">row_indices</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">valid_cell_mask</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">all_cols</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">dense</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sp_sparse</span><span class="o">.</span><span class="n">issparse</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"    Converting requested expression subset to dense array..."</span><span class="p">)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">convert_to_csc</span> <span class="ow">and</span> <span class="n">sp_sparse</span><span class="o">.</span><span class="n">issparse</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="ow">and</span> <span class="n">X</span><span class="o">.</span><span class="n">getformat</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">"csc"</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"    Converting sparse requested expression subset to CSC for faster column extraction..."</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">tocsc</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sp_sparse</span><span class="o">.</span><span class="n">issparse</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Working matrix: shape=</span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, nnz=</span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">nnz</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">, format=</span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">getformat</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Working matrix: shape=</span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, dtype=</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="s1">'dtype'</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">local_gene_to_cols</span></div>
+
+
+
+<div class="viewcode-block" id="get_gene_values">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_values">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_gene_values</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return a dense 1D expression vector for one gene from the working matrix."""</span>
+    <span class="k">if</span> <span class="n">sp_sparse</span><span class="o">.</span><span class="n">issparse</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">toarray</span><span class="p">())</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">cols</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="expression_values_to_img">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.expression_values_to_img">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">expression_values_to_img</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">linear_idx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Accumulate per-cell expression values into a 3D image."""</span>
+    <span class="n">img_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="c1"># Skip zeros; this matters for sparse gene expression.</span>
+    <span class="n">nonzero</span> <span class="o">=</span> <span class="n">values</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">nonzero</span><span class="p">):</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">img_flat</span><span class="p">,</span> <span class="n">linear_idx</span><span class="p">[</span><span class="n">nonzero</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="n">nonzero</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">img_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="save_nii">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.save_nii">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_nii</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">affine</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Save image with reference affine/header and a floating output dtype."""</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">header</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">nii_img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">affine</span><span class="o">=</span><span class="n">affine</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">)</span>
+    <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">nii_img</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_path</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="process_gene_job">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.process_gene_job">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_gene_job</span><span class="p">(</span>
+    <span class="n">gene</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">gene_to_cols</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+    <span class="n">linear_idx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+    <span class="n">affine</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">header</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GeneJobResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Build and save one gene image from the shared in-memory expression matrix."""</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">get_gene_values</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="n">gene_to_cols</span><span class="p">[</span><span class="n">gene</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">nonzero_cells</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+    <span class="n">expression_sum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">expression_values_to_img</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">linear_idx</span><span class="o">=</span><span class="n">linear_idx</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">save_nii</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">affine</span><span class="o">=</span><span class="n">affine</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">GeneJobResult</span><span class="p">(</span><span class="n">gene</span><span class="o">=</span><span class="n">gene</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span> <span class="n">nonzero_cells</span><span class="o">=</span><span class="n">nonzero_cells</span><span class="p">,</span> <span class="n">expression_sum</span><span class="o">=</span><span class="n">expression_sum</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run_gene_jobs">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.run_gene_jobs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_gene_jobs</span><span class="p">(</span>
+    <span class="n">genes_to_process</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">gene_to_cols</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+    <span class="n">linear_idx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+    <span class="n">affine</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">header</span><span class="p">,</span>
+    <span class="n">output_paths</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">GeneJobResult</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Run gene image construction/saving sequentially or in a thread pool."""</span>
+    <span class="n">workers</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">workers</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">genes_to_process</span><span class="p">)))</span>
+    <span class="n">results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">GeneJobResult</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">workers</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes_to_process</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Processing gene: </span><span class="si">{</span><span class="n">gene</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">process_gene_job</span><span class="p">(</span>
+                <span class="n">gene</span><span class="o">=</span><span class="n">gene</span><span class="p">,</span>
+                <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+                <span class="n">gene_to_cols</span><span class="o">=</span><span class="n">gene_to_cols</span><span class="p">,</span>
+                <span class="n">linear_idx</span><span class="o">=</span><span class="n">linear_idx</span><span class="p">,</span>
+                <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+                <span class="n">affine</span><span class="o">=</span><span class="n">affine</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+                <span class="n">output_path</span><span class="o">=</span><span class="n">output_paths</span><span class="p">[</span><span class="n">gene</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"        nonzero cells=</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">nonzero_cells</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">; expression sum=</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">expression_sum</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"        Saved image to </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">output_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Processing/saving </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">genes_to_process</span><span class="p">)</span><span class="si">}</span><span class="s2"> gene(s) with </span><span class="si">{</span><span class="n">workers</span><span class="si">}</span><span class="s2"> worker threads..."</span><span class="p">)</span>
+
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapped</span><span class="p">(</span><span class="n">gene</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GeneJobResult</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">process_gene_job</span><span class="p">(</span>
+            <span class="n">gene</span><span class="o">=</span><span class="n">gene</span><span class="p">,</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+            <span class="n">gene_to_cols</span><span class="o">=</span><span class="n">gene_to_cols</span><span class="p">,</span>
+            <span class="n">linear_idx</span><span class="o">=</span><span class="n">linear_idx</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+            <span class="n">affine</span><span class="o">=</span><span class="n">affine</span><span class="p">,</span>
+            <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+            <span class="n">output_path</span><span class="o">=</span><span class="n">output_paths</span><span class="p">[</span><span class="n">gene</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="n">progress</span><span class="p">,</span> <span class="n">task_id</span> <span class="o">=</span> <span class="n">initialize_progress_bar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">genes_to_process</span><span class="p">),</span> <span class="n">task_message</span><span class="o">=</span><span class="s2">"[bold green]Making MERFISH expression maps..."</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">Live</span><span class="p">(</span><span class="n">progress</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">{</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">gene</span><span class="p">):</span> <span class="n">gene</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes_to_process</span><span class="p">}</span>
+            <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                <span class="k">with</span> <span class="n">lock</span><span class="p">:</span>
+                    <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">: nonzero cells=</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">nonzero_cells</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">; expression sum=</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">expression_sum</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Saved image to </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">output_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Preserve input order in returned results.</span>
+    <span class="n">result_by_gene</span> <span class="o">=</span> <span class="p">{</span><span class="n">result</span><span class="o">.</span><span class="n">gene</span><span class="p">:</span> <span class="n">result</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">result_by_gene</span><span class="p">[</span><span class="n">gene</span><span class="p">]</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes_to_process</span> <span class="k">if</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">result_by_gene</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.main">[docs]</a>
+<span class="nd">@log_command</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">install</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+    <span class="n">verbose_start_msg</span><span class="p">()</span>
+
+    <span class="n">download_base</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
+    <span class="n">requested_genes</span><span class="p">,</span> <span class="n">processing_all_genes</span> <span class="o">=</span> <span class="n">get_requested_genes_from_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">processing_all_genes</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">-g/--gene was omitted; processing all selected MERFISH genes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">requested_genes</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Requested genes: </span><span class="si">{</span><span class="n">format_gene_preview</span><span class="p">(</span><span class="n">requested_genes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">requested_genes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"--output can only be used when one gene is requested. Omit -o when processing all genes."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">workers</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"--workers must be &gt;= 1."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">filter_column</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">filter_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"--filter-column and --filter-value must be used together."</span><span class="p">)</span>
+
+    <span class="c1"># Load reference once and use its shape rather than hard-coding 1100 x 1100 x 76.</span>
+    <span class="n">ref_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ref_nii</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ref_nii</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">affine</span> <span class="o">=</span> <span class="n">ref_nii</span><span class="o">.</span><span class="n">affine</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">ref_nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Reference image shape: </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Build output paths up front and skip already-existing images before loading expression data.</span>
+    <span class="n">output_paths</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">genes_to_process</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">requested_genes</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">default_output_path</span><span class="p">(</span><span class="n">gene</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">n_requested_genes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">requested_genes</span><span class="p">))</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">output_paths</span><span class="p">[</span><span class="n">gene</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span>
+        <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">force</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Output file already exists, skipping: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">genes_to_process</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">genes_to_process</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">All requested outputs already exist.</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">verbose_end_msg</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Load metadata once.</span>
+    <span class="n">cell_df</span> <span class="o">=</span> <span class="n">load_and_prepare_cell_metadata</span><span class="p">(</span>
+        <span class="n">download_base</span><span class="p">,</span>
+        <span class="n">input_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span>
+        <span class="n">neurons</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">neurons</span><span class="p">,</span>
+        <span class="n">nonneurons</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">nonneurons</span><span class="p">,</span>
+        <span class="n">filter_column</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">filter_column</span><span class="p">,</span>
+        <span class="n">filter_value</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">filter_value</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Loaded cell metadata: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cell_df</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> cells)"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">filter_column</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Filtered cells (</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">filter_column</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">filter_value</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cell_df</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Columns in cell metadata:"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Cells after metadata filtering: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cell_df</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Load AnnData once. Avoid adata[...] backed variable subsetting later.</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">h5ad</span><span class="p">:</span>
+        <span class="n">adata</span> <span class="o">=</span> <span class="n">anndata</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">h5ad</span><span class="p">),</span> <span class="n">backed</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">adata</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">load_expression_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">,</span> <span class="n">requested_genes</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">imputed</span><span class="p">)</span>
+
+    <span class="c1"># Validate genes against selected dataset.</span>
+    <span class="n">gene_to_cols</span> <span class="o">=</span> <span class="n">get_gene_to_cols</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">genes_to_process</span><span class="p">)</span>
+    <span class="n">missing_genes</span> <span class="o">=</span> <span class="p">[</span><span class="n">gene</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes_to_process</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">gene_to_cols</span><span class="p">[</span><span class="n">gene</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="n">missing_genes</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Skipping </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">missing_genes</span><span class="p">)</span><span class="si">}</span><span class="s2"> gene(s) not found in the selected expression dataset:"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">missing_genes</span><span class="p">)</span>
+    <span class="n">genes_to_process</span> <span class="o">=</span> <span class="p">[</span><span class="n">gene</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes_to_process</span> <span class="k">if</span> <span class="n">gene_to_cols</span><span class="p">[</span><span class="n">gene</span><span class="p">]]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">genes_to_process</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">No requested genes were found in the selected expression dataset.</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">verbose_end_msg</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Align metadata to AnnData row order, still without subsetting backed X.</span>
+    <span class="n">aligned_cell_df</span><span class="p">,</span> <span class="n">row_indices</span><span class="p">,</span> <span class="n">id_source</span> <span class="o">=</span> <span class="n">align_cells_to_adata</span><span class="p">(</span><span class="n">cell_df</span><span class="p">,</span> <span class="n">adata</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Aligned cells: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">row_indices</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> using metadata field: </span><span class="si">{</span><span class="n">id_source</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Precompute coordinates once before matrix row/gene subsetting.</span>
+    <span class="n">linear_idx</span><span class="p">,</span> <span class="n">valid_cell_mask</span> <span class="o">=</span> <span class="n">precompute_linear_indices</span><span class="p">(</span>
+        <span class="n">aligned_cell_df</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+        <span class="n">pixel_size_um</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="c1"># MERFISH in-plane pixel size in microns</span>
+    <span class="p">)</span>
+    <span class="n">valid_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">valid_cell_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Coordinate unit used: mm"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Cells with valid image coordinates: </span><span class="si">{</span><span class="n">valid_count</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">valid_cell_mask</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Load full X into memory once, then subset in memory.</span>
+    <span class="n">X_full</span> <span class="o">=</span> <span class="n">load_X_fully_into_memory</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+    <span class="n">X_work</span><span class="p">,</span> <span class="n">local_gene_to_cols</span> <span class="o">=</span> <span class="n">subset_matrix_after_memory_load</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X_full</span><span class="p">,</span>
+        <span class="n">row_indices</span><span class="o">=</span><span class="n">row_indices</span><span class="p">,</span>
+        <span class="n">valid_cell_mask</span><span class="o">=</span><span class="n">valid_cell_mask</span><span class="p">,</span>
+        <span class="n">gene_to_cols</span><span class="o">=</span><span class="n">gene_to_cols</span><span class="p">,</span>
+        <span class="n">genes_to_process</span><span class="o">=</span><span class="n">genes_to_process</span><span class="p">,</span>
+        <span class="n">dense</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dense</span><span class="p">,</span>
+        <span class="n">convert_to_csc</span><span class="o">=</span><span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_csc</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">del</span> <span class="n">X_full</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Processing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">genes_to_process</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> gene(s): </span><span class="si">{</span><span class="n">format_gene_preview</span><span class="p">(</span><span class="n">genes_to_process</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">workers</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">bytes_per_img</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">itemsize</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">"[yellow]Note:[/yellow] each worker creates one full output image in memory "</span>
+            <span class="sa">f</span><span class="s2">"(~</span><span class="si">{</span><span class="n">bytes_per_img</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MiB per worker for </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">).</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+    <span class="n">run_gene_jobs</span><span class="p">(</span>
+        <span class="n">genes_to_process</span><span class="o">=</span><span class="n">genes_to_process</span><span class="p">,</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X_work</span><span class="p">,</span>
+        <span class="n">gene_to_cols</span><span class="o">=</span><span class="n">local_gene_to_cols</span><span class="p">,</span>
+        <span class="n">linear_idx</span><span class="o">=</span><span class="n">linear_idx</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+        <span class="n">affine</span><span class="o">=</span><span class="n">affine</span><span class="p">,</span>
+        <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+        <span class="n">output_paths</span><span class="o">=</span><span class="n">output_paths</span><span class="p">,</span>
+        <span class="n">workers</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">workers</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">verbose_end_msg</span><span class="p">()</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, the UNRAVEL team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

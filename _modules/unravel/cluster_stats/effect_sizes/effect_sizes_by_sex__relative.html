@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -877,7 +716,7 @@ window.runMermaid = runMermaid;</script>
   <h1>Source code for unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Use ``effect_sizes_sex_rel`` (``esr``) from UNRAVEL to calculate the relative effect size for (comparing sexes) for a comparison between two groups for each cluster [or a valid cluster list].</span>
 
 <span class="sd">Prereqs:</span>
@@ -893,9 +732,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">Note:</span>
 <span class="sd">    - -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.</span>
-<span class="sd">    - The effect size is calculated as the unbiased Hedge\&#39;s g effect sizes (corrected for sample size).</span>
-<span class="sd">    - Hedges&#39; g = ((c2-c1)/spooled*corr_factor)</span>
-<span class="sd">    - CI = Hedges&#39; g +/- t * SE</span>
+<span class="sd">    - The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected for sample size).</span>
+<span class="sd">    - Hedges' g = ((c2-c1)/spooled*corr_factor)</span>
+<span class="sd">    - CI = Hedges' g +/- t * SE</span>
 <span class="sd">    - 0.2-0.5 = small effect; 0.5-0.8 = medium; 0.8+ = large</span>
 <span class="sd">    - The CI is based on a two-tailed t-test with alpha = 0.05.</span>
 <span class="sd">    - More more info, see: https://pubmed.ncbi.nlm.nih.gov/37248402/</span>
@@ -903,7 +742,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">Usage</span>
 <span class="sd">-----</span>
 <span class="sd">    effect_sizes_sex_rel -i densities.csv -c1 saline -c2 psilocybin [-c 1 2 3 4 5] [-v]</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -922,16 +761,16 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
-    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input_csv&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c1&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_1&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;First condition of interest from csv (e.g., saline [data matching prefix pooled])&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c2&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_2&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Second condition (e.g, psilocybin [data matching prefix pooled])&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Required arguments'</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'--input_csv'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)'</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-c1'</span><span class="p">,</span> <span class="s1">'--condition_1'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'First condition of interest from csv (e.g., saline [data matching prefix pooled])'</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-c2'</span><span class="p">,</span> <span class="s1">'--condition_2'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Second condition (e.g, psilocybin [data matching prefix pooled])'</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args&#39;</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--clusters&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Space separated list of valid cluster IDs (default: process all clusters)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Optional args'</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-c'</span><span class="p">,</span> <span class="s1">'--clusters'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Space separated list of valid cluster IDs (default: process all clusters)'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">'*'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
-    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'General arguments'</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-v'</span><span class="p">,</span> <span class="s1">'--verbose'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Increase verbosity. Default: False'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
@@ -940,27 +779,27 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="condition_selector">
 <a class="viewcode-back" href="../../../../unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">condition_selector</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">unique_conditions</span><span class="p">,</span> <span class="n">condition_column</span><span class="o">=</span><span class="s1">&#39;Conditions&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.</span>
-<span class="sd">    This function checks if the &#39;condition&#39; is exactly present in the &#39;Conditions&#39; column or is a prefix of any condition in this column. </span>
+<span class="k">def</span><span class="w"> </span><span class="nf">condition_selector</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">unique_conditions</span><span class="p">,</span> <span class="n">condition_column</span><span class="o">=</span><span class="s1">'Conditions'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.</span>
+<span class="sd">    This function checks if the 'condition' is exactly present in the 'Conditions' column or is a prefix of any condition in this column. </span>
 <span class="sd">    If the exact condition is found, it selects those rows.</span>
-<span class="sd">    If the condition is a prefix (e.g., &#39;saline&#39; matches &#39;saline-1&#39;, &#39;saline-2&#39;), it selects all rows where the &#39;Conditions&#39; column starts with this prefix.</span>
+<span class="sd">    If the condition is a prefix (e.g., 'saline' matches 'saline-1', 'saline-2'), it selects all rows where the 'Conditions' column starts with this prefix.</span>
 <span class="sd">    An error is raised if the condition is neither found as an exact match nor as a prefix.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
-<span class="sd">        df (pd.DataFrame): DataFrame whose &#39;Conditions&#39; column contains the conditions of interest.</span>
+<span class="sd">        df (pd.DataFrame): DataFrame whose 'Conditions' column contains the conditions of interest.</span>
 <span class="sd">        condition (str): The condition or prefix of interest.</span>
-<span class="sd">        unique_conditions (list): List of unique conditions in the &#39;Conditions&#39; column to validate against.</span>
+<span class="sd">        unique_conditions (list): List of unique conditions in the 'Conditions' column to validate against.</span>
 <span class="sd">        </span>
 <span class="sd">    Returns:</span>
-<span class="sd">        pd.Series: A boolean Series to select rows based on the condition.&quot;&quot;&quot;</span>
+<span class="sd">        pd.Series: A boolean Series to select rows based on the condition."""</span>
     
     <span class="k">if</span> <span class="n">condition</span> <span class="ow">in</span> <span class="n">unique_conditions</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">condition_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">condition</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">cond</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span> <span class="k">for</span> <span class="n">cond</span> <span class="ow">in</span> <span class="n">unique_conditions</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">condition_column</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Condition </span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2"> not recognized!&quot;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">))</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Condition </span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2"> not recognized!"</span><span class="p">,</span> <span class="s1">'red'</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="filter_dataframe">
@@ -970,17 +809,17 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="n">cluster_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">df</span>
     
-    <span class="c1"># Keep only rows where &#39;Cluster&#39; value after removing &quot;Cluster_&quot; matches an integer in the cluster list</span>
-    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Cluster_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cluster_list</span><span class="p">)]</span></div>
+    <span class="c1"># Keep only rows where 'Cluster' value after removing "Cluster_" matches an integer in the cluster list</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'Cluster'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'Cluster_'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cluster_list</span><span class="p">)]</span></div>
 
 
 <span class="c1"># Create a series with the mean, std, and count for each cluster</span>
 <div class="viewcode-block" id="mean_std_count">
 <a class="viewcode-back" href="../../../../unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">mean_std_count</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">sex</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">cluster_columns</span><span class="p">):</span>
-    <span class="n">mean</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Sex&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">sex</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">selector</span><span class="p">][</span><span class="n">cluster_columns</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-    <span class="n">std</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Sex&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">sex</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">selector</span><span class="p">][</span><span class="n">cluster_columns</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
-    <span class="n">count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Sex&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">sex</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">selector</span><span class="p">][</span><span class="n">cluster_columns</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">'Sex'</span><span class="p">]</span> <span class="o">==</span> <span class="n">sex</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">selector</span><span class="p">][</span><span class="n">cluster_columns</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">'Sex'</span><span class="p">]</span> <span class="o">==</span> <span class="n">sex</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">selector</span><span class="p">][</span><span class="n">cluster_columns</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">'Sex'</span><span class="p">]</span> <span class="o">==</span> <span class="n">sex</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">selector</span><span class="p">][</span><span class="n">cluster_columns</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">count</span></div>
 
 
@@ -990,20 +829,20 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">relative_hedges_g</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition_1</span><span class="p">,</span> <span class="n">condition_2</span><span class="p">):</span> 
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-    <span class="n">cluster_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Cluster&#39;</span><span class="p">)]</span>
+    <span class="n">cluster_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'Cluster'</span><span class="p">)]</span>
     
-    <span class="c1"># Create a list of unique values in &#39;Conditions&#39;</span>
-    <span class="n">unique_conditions</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Conditions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="c1"># Create a list of unique values in 'Conditions'</span>
+    <span class="n">unique_conditions</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'Conditions'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
     <span class="c1"># Adjust condition selectors based on potential pooling</span>
     <span class="n">cond1_selector</span> <span class="o">=</span> <span class="n">condition_selector</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition_1</span><span class="p">,</span> <span class="n">unique_conditions</span><span class="p">)</span>
     <span class="n">cond2_selector</span> <span class="o">=</span> <span class="n">condition_selector</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition_2</span><span class="p">,</span> <span class="n">unique_conditions</span><span class="p">)</span>
 
     <span class="c1"># Create a series with the mean, std, and count for each cluster</span>
-    <span class="n">mean_F_cond1</span><span class="p">,</span> <span class="n">std_F_cond1</span><span class="p">,</span> <span class="n">count_F_cond1</span> <span class="o">=</span> <span class="n">mean_std_count</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">cond1_selector</span><span class="p">,</span> <span class="n">cluster_columns</span><span class="p">)</span>
-    <span class="n">mean_M_cond1</span><span class="p">,</span> <span class="n">std_M_cond1</span><span class="p">,</span> <span class="n">count_M_cond1</span> <span class="o">=</span> <span class="n">mean_std_count</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="n">cond1_selector</span><span class="p">,</span> <span class="n">cluster_columns</span><span class="p">)</span>
-    <span class="n">mean_F_cond2</span><span class="p">,</span> <span class="n">std_F_cond2</span><span class="p">,</span> <span class="n">count_F_cond2</span> <span class="o">=</span> <span class="n">mean_std_count</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">cond2_selector</span><span class="p">,</span> <span class="n">cluster_columns</span><span class="p">)</span>
-    <span class="n">mean_M_cond2</span><span class="p">,</span> <span class="n">std_M_cond2</span><span class="p">,</span> <span class="n">count_M_cond2</span> <span class="o">=</span> <span class="n">mean_std_count</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="n">cond2_selector</span><span class="p">,</span> <span class="n">cluster_columns</span><span class="p">)</span>
+    <span class="n">mean_F_cond1</span><span class="p">,</span> <span class="n">std_F_cond1</span><span class="p">,</span> <span class="n">count_F_cond1</span> <span class="o">=</span> <span class="n">mean_std_count</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">'F'</span><span class="p">,</span> <span class="n">cond1_selector</span><span class="p">,</span> <span class="n">cluster_columns</span><span class="p">)</span>
+    <span class="n">mean_M_cond1</span><span class="p">,</span> <span class="n">std_M_cond1</span><span class="p">,</span> <span class="n">count_M_cond1</span> <span class="o">=</span> <span class="n">mean_std_count</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">'M'</span><span class="p">,</span> <span class="n">cond1_selector</span><span class="p">,</span> <span class="n">cluster_columns</span><span class="p">)</span>
+    <span class="n">mean_F_cond2</span><span class="p">,</span> <span class="n">std_F_cond2</span><span class="p">,</span> <span class="n">count_F_cond2</span> <span class="o">=</span> <span class="n">mean_std_count</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">'F'</span><span class="p">,</span> <span class="n">cond2_selector</span><span class="p">,</span> <span class="n">cluster_columns</span><span class="p">)</span>
+    <span class="n">mean_M_cond2</span><span class="p">,</span> <span class="n">std_M_cond2</span><span class="p">,</span> <span class="n">count_M_cond2</span> <span class="o">=</span> <span class="n">mean_std_count</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">'M'</span><span class="p">,</span> <span class="n">cond2_selector</span><span class="p">,</span> <span class="n">cluster_columns</span><span class="p">)</span>
     
     <span class="c1"># Calculate the N for each sex</span>
     <span class="n">n_F</span> <span class="o">=</span> <span class="n">count_F_cond1</span> <span class="o">+</span> <span class="n">count_F_cond2</span>
@@ -1020,16 +859,16 @@ window.runMermaid = runMermaid;</script>
     <span class="n">F_diff</span> <span class="o">=</span> <span class="n">mean_F_cond2</span> <span class="o">-</span> <span class="n">mean_F_cond1</span>
     <span class="n">M_diff</span> <span class="o">=</span> <span class="n">mean_M_cond2</span> <span class="o">-</span> <span class="n">mean_M_cond1</span>
 
-    <span class="c1"># Calculate Hedges&#39; g</span>
+    <span class="c1"># Calculate Hedges' g</span>
     <span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="n">F_diff</span> <span class="o">-</span> <span class="n">M_diff</span><span class="p">)</span> <span class="o">/</span> <span class="n">spooled</span>
 
     <span class="c1"># Calculate the correction factor</span>
     <span class="n">correction_factor</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_F</span> <span class="o">+</span> <span class="n">n_M</span><span class="p">)</span> <span class="o">-</span> <span class="mi">9</span><span class="p">)</span>
 
-    <span class="c1"># Apply the correction factor to Hedges&#39; g</span>
+    <span class="c1"># Apply the correction factor to Hedges' g</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">g</span> <span class="o">*</span> <span class="n">correction_factor</span>
 
-    <span class="c1"># Calculate the standard error of Hedges&#39; g</span>
+    <span class="c1"># Calculate the standard error of Hedges' g</span>
     <span class="n">se</span> <span class="o">=</span> <span class="p">(((</span><span class="n">n_F</span> <span class="o">+</span> <span class="n">n_M</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_F</span> <span class="o">*</span> <span class="n">n_M</span><span class="p">))</span> <span class="o">+</span> <span class="p">((</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_F</span> <span class="o">+</span> <span class="n">n_M</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))))</span> <span class="o">**</span> <span class="mf">0.5</span>
 
     <span class="c1"># For a two-tailed t-test, you want the critical value for alpha/2 in one tail</span>
@@ -1046,16 +885,16 @@ window.runMermaid = runMermaid;</script>
     <span class="n">lower</span> <span class="o">=</span> <span class="n">d</span> <span class="o">-</span> <span class="n">ci</span>
     <span class="n">upper</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="n">ci</span>
 
-    <span class="c1"># Create a dataframe combining Hedges&#39; g, lower and upper CIs (organized for plotting w/ Prism --&gt; Grouped data)</span>
+    <span class="c1"># Create a dataframe combining Hedges' g, lower and upper CIs (organized for plotting w/ Prism --&gt; Grouped data)</span>
     <span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;Cluster&#39;</span><span class="p">:</span> <span class="n">cluster_columns</span><span class="p">,</span>
-    <span class="s1">&#39;Hedges_g&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
-    <span class="s1">&#39;Upper_Limit&#39;</span><span class="p">:</span> <span class="n">upper</span><span class="p">,</span>
-    <span class="s1">&#39;Lower_Limit&#39;</span><span class="p">:</span> <span class="n">lower</span><span class="p">,</span>
+    <span class="s1">'Cluster'</span><span class="p">:</span> <span class="n">cluster_columns</span><span class="p">,</span>
+    <span class="s1">'Hedges_g'</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
+    <span class="s1">'Upper_Limit'</span><span class="p">:</span> <span class="n">upper</span><span class="p">,</span>
+    <span class="s1">'Lower_Limit'</span><span class="p">:</span> <span class="n">lower</span><span class="p">,</span>
     <span class="p">})</span>
 
-    <span class="c1"># Replace &quot;Cluster_&quot; with an empty string in the &quot;Cluster&quot; column</span>
-    <span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Cluster_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="c1"># Replace "Cluster_" with an empty string in the "Cluster" column</span>
+    <span class="n">results_df</span><span class="p">[</span><span class="s1">'Cluster'</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_df</span><span class="p">[</span><span class="s1">'Cluster'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'Cluster_'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
 
     <span class="c1"># Reverse the order of the rows (so that the first cluster is at the top when graphed in Prism)</span>
     <span class="n">results_df</span> <span class="o">=</span> <span class="n">results_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -1075,20 +914,20 @@ window.runMermaid = runMermaid;</script>
 
     <span class="c1"># Generate CSVs with relative sex effect sizes</span>
     <span class="n">f_gt_m_effect_sizes</span> <span class="o">=</span> <span class="n">relative_hedges_g</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input_csv</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition_1</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition_2</span><span class="p">)</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input_csv</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_Hedges_g_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition_1</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition_2</span><span class="si">}</span><span class="s2">_F_gt_M.csv&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input_csv</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_Hedges_g_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition_1</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition_2</span><span class="si">}</span><span class="s2">_F_gt_M.csv"</span>
     <span class="n">f_gt_m_effect_sizes</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">clusters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Filter DataFrame based on valid clusters list</span>
         <span class="n">relative_effect_sizes_filtered</span> <span class="o">=</span> <span class="n">filter_dataframe</span><span class="p">(</span><span class="n">f_gt_m_effect_sizes</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">clusters</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input_csv</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_Hedges_g_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition_1</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition_2</span><span class="si">}</span><span class="s2">_F_gt_M_valid_clusters.csv&quot;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input_csv</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_Hedges_g_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition_1</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition_2</span><span class="si">}</span><span class="s2">_F_gt_M_valid_clusters.csv"</span>
         <span class="n">relative_effect_sizes_filtered</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

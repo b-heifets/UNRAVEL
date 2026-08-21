@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -618,8 +619,43 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-abca-merfish-merfish-check-genes-module">
-<span id="unravel-allen-institute-abca-merfish-merfish-check-genes"></span><h1>unravel.allen_institute.abca.merfish.merfish_check_genes module<a class="headerlink" href="#unravel-allen-institute-abca-merfish-merfish-check-genes-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.abca.merfish.merfish_check_genes">
+<span id="unravel-allen-institute-abca-merfish-merfish-check-genes-module"></span><span id="unravel-allen-institute-abca-merfish-merfish-check-genes"></span><h1>unravel.allen_institute.abca.merfish.merfish_check_genes module<a class="headerlink" href="#module-unravel.allen_institute.abca.merfish.merfish_check_genes" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">abca_merfish_check_genes</span></code> (alias <code class="docutils literal notranslate"><span class="pre">mcg</span></code>) from UNRAVEL to check which of the specified genes
+are present in the regular and/or imputed MERFISH expression datasets from the Allen Brain Cell Atlas (ABCA).</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_merfish_check_genes -g Slc32a1 Htr2a … [-v]</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_check_genes.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_check_genes.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_check_genes.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_check_genes.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_check_genes.normalize_gene_names">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_check_genes.</span></span><span class="sig-name descname"><span class="pre">normalize_gene_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gene_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_check_genes.html#normalize_gene_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_check_genes.normalize_gene_names" title="Link to this definition">#</a></dt>
+<dd><p>Normalize gene names based on species conventions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gene_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><em>List</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_check_genes.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_check_genes.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_check_genes.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_check_genes.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -660,6 +696,21 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_check_genes.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_check_genes.normalize_gene_names"><code class="docutils literal notranslate"><span class="pre">normalize_gene_names()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_check_genes.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

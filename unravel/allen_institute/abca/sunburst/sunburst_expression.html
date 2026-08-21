@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -623,12 +624,16 @@
 <p>Use <code class="docutils literal notranslate"><span class="pre">abca_sunburst_expression</span></code> or <code class="docutils literal notranslate"><span class="pre">sbe</span></code> from UNRAVEL to calculate mean expression for all cell types in the ABCA and make a sunburst plot.</p>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">abca_merfish_filter</span></code> and <code class="docutils literal notranslate"><span class="pre">merfish_join_expression_data.py</span></code></p></li>
-<li><p>Or: <code class="docutils literal notranslate"><span class="pre">RNAseq_expression.py</span></code> and <code class="docutils literal notranslate"><span class="pre">RNAseq_filter.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">abca_merfish_filter</span></code> and <code class="docutils literal notranslate"><span class="pre">abca_merfish_join_expression</span></code></p></li>
+<li><p>Or: <code class="docutils literal notranslate"><span class="pre">abca_scRNAseq_expression</span></code> and <code class="docutils literal notranslate"><span class="pre">abca_scRNAseq_filter</span></code></p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>path/input_sunburst_expression_thr&lt;value&gt;.csv, input_mean_expression_lut.txt, and input_percent_expression_thr&lt;value&gt;_lut.txt</p></li>
+<li><p>path/input_sunburst.csv</p></li>
+<li><p>path/sunburst_expression_thr&lt;value&gt;/input__gene-GENE_sunburst_expression_thr&lt;value&gt;.csv</p></li>
+<li><p>path/mean_expression_lut/input__gene-GENE_mean_expression_lut.txt</p></li>
+<li><p>path/percent_expression_thr&lt;value&gt;_lut/input__gene-GENE_percent_expression_thr&lt;value&gt;_lut.txt</p></li>
+<li><p>path/all_expression_thr&lt;value&gt;/input__gene-GENE_all.csv</p></li>
 </ul>
 </dd>
 </dl>
@@ -643,6 +648,7 @@
 <li><p>Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (<a class="reference external" href="https://app.flourish.studio/">https://app.flourish.studio/</a>)</p></li>
 <li><p>It can be pasted into the Data tab (categories columns = cell type columns, Size by = percent column)</p></li>
 <li><p>Preview tab: Hierarchy -&gt; Depth to 5, Colors -&gt; paste content of …_colors.csv into Custom overrides</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">abca_sunburst_expression_overview</span></code> to summarize mean and percent expression for all cells and each cell type.</p></li>
 </ul>
 </dd>
 </dl>

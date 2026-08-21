@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -894,6 +733,8 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/coordinates/points_to_labeled_voxel_img.html#unravel.coordinates.points_to_labeled_voxel_img.aggregate_values">aggregate_values() (in module unravel.coordinates.points_to_labeled_voxel_img)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.align_cells_to_adata">align_cells_to_adata() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.apply_2D_mean_filter">apply_2D_mean_filter() (in module unravel.image_tools.spatial_averaging)</a>
@@ -911,6 +752,8 @@ window.runMermaid = runMermaid;</script>
       <li><a href="unravel/core/config.html#unravel.core.config.AttrDict">AttrDict (class in unravel.core.config)</a>
 </li>
       <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.auto_zoom">auto_zoom() (in module unravel.allen_institute.abca.merfish.utils)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.automatic_figure_size">automatic_figure_size() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
 </li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.AverageTimePerIterationColumn">AverageTimePerIterationColumn (class in unravel.core.utils)</a>
 </li>
@@ -976,6 +819,8 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/allen_institute/mapmysections/cell_type_proportions.html#unravel.allen_institute.mapmysections.cell_type_proportions.cell_type_proportions">cell_type_proportions() (in module unravel.allen_institute.mapmysections.cell_type_proportions)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_filter_by_mask.html#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.check_cells_in_mask">check_cells_in_mask() (in module unravel.allen_institute.abca.merfish.merfish_filter_by_mask)</a>
+</li>
       <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.check_fdr_command">check_fdr_command() (in module unravel.voxel_stats.vstats)</a>
 </li>
       <li><a href="unravel/coordinates/refine_catchall_regions.html#unravel.coordinates.refine_catchall_regions.choose_catchall_row">choose_catchall_row() (in module unravel.coordinates.refine_catchall_regions)</a>
@@ -995,6 +840,8 @@ window.runMermaid = runMermaid;</script>
       <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.cluster_validation_data_df">cluster_validation_data_df() (in module unravel.cluster_stats.cstats)</a>
 </li>
       <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.collapse_hierarchy">collapse_hierarchy() (in module unravel.cluster_stats.table)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.color_cell_type_tick_labels">color_cell_type_tick_labels() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
 </li>
       <li><a href="unravel/image_io/zarr_compress.html#unravel.image_io.zarr_compress.compress_or_decompress_zarr">compress_or_decompress_zarr() (in module unravel.image_io.zarr_compress)</a>
 </li>
@@ -1042,6 +889,8 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.create_design_ttest2">create_design_ttest2() (in module unravel.voxel_stats.vstats)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.create_expression_dataframe">create_expression_dataframe() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+</li>
       <li><a href="unravel/allen_institute/genetic_tools_atlas/auto_crop.html#unravel.allen_institute.genetic_tools_atlas.auto_crop.create_outline">create_outline() (in module unravel.allen_institute.genetic_tools_atlas.auto_crop)</a>
 </li>
       <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.crop">crop() (in module unravel.core.img_tools)</a>
@@ -1062,12 +911,18 @@ window.runMermaid = runMermaid;</script>
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.default_output_path">default_output_path() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.default_title">default_title() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
+</li>
       <li><a href="unravel/image_io/zarr_to_nii.html#unravel.image_io.zarr_to_nii.define_zarr_to_nii_output">define_zarr_to_nii_output() (in module unravel.image_io.zarr_to_nii)</a>
 </li>
-      <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.detect_metric_schema">detect_metric_schema() (in module unravel.cluster_stats.cstats)</a>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.detect_genes">detect_genes() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.detect_metric_schema">detect_metric_schema() (in module unravel.cluster_stats.cstats)</a>
+</li>
       <li><a href="unravel/voxel_stats/other/IF_outliers.html#unravel.voxel_stats.other.IF_outliers.detect_outliers">detect_outliers() (in module unravel.voxel_stats.other.IF_outliers)</a>
 </li>
       <li><a href="unravel/cluster_stats/reshape.html#unravel.cluster_stats.reshape.detect_simple_metric_schema">detect_simple_metric_schema() (in module unravel.cluster_stats.reshape)</a>
@@ -1082,10 +937,16 @@ window.runMermaid = runMermaid;</script>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/tabular/edit_columns.html#unravel.tabular.edit_columns.edit_columns">edit_columns() (in module unravel.tabular.edit_columns)</a>
 </li>
-      <li><a href="unravel/image_tools/extend.html#unravel.image_tools.extend.extend_one_side_3d_array">extend_one_side_3d_array() (in module unravel.image_tools.extend)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.expression_sum">expression_sum (unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult attribute)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.expression_values_to_img">expression_values_to_img() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/image_tools/extend.html#unravel.image_tools.extend.extend_one_side_3d_array">extend_one_side_3d_array() (in module unravel.image_tools.extend)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression.html#unravel.allen_institute.abca.scRNA_seq.expression.extract_gene_expression">extract_gene_expression() (in module unravel.allen_institute.abca.scRNA_seq.expression)</a>
+</li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.extract_resolution">extract_resolution() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/cluster_stats/legend.html#unravel.cluster_stats.legend.extract_unique_regions_from_file">extract_unique_regions_from_file() (in module unravel.cluster_stats.legend)</a>
@@ -1100,16 +961,28 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/cluster_stats/fdr_range.html#unravel.cluster_stats.fdr_range.fdr_range">fdr_range() (in module unravel.cluster_stats.fdr_range)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.filter_brain_section">filter_brain_section() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.filter_all_values">filter_all_values() (in module unravel.allen_institute.abca.merfish.merfish_filter)</a>
 </li>
-      <li><a href="unravel/cluster_stats/effect_sizes/effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.filter_dataframe">filter_dataframe() (in module unravel.cluster_stats.effect_sizes.effect_sizes)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.filter_brain_section">filter_brain_section() (in module unravel.allen_institute.abca.merfish.merfish)</a>
 
       <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.filter_brain_section">(in module unravel.allen_institute.abca.merfish.utils)</a>
+</li>
+      </ul></li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/filter.html#unravel.allen_institute.abca.scRNA_seq.filter.filter_by_cell_type">filter_by_cell_type() (in module unravel.allen_institute.abca.scRNA_seq.filter)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.filter_dataframe">filter_dataframe() (in module unravel.allen_institute.abca.merfish.merfish_filter)</a>
+
+      <ul>
+        <li><a href="unravel/cluster_stats/effect_sizes/effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.filter_dataframe">(in module unravel.cluster_stats.effect_sizes.effect_sizes)</a>
+</li>
         <li><a href="unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.filter_dataframe">(in module unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute)</a>
 </li>
         <li><a href="unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe">(in module unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative)</a>
 </li>
       </ul></li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.filter_expression_data">filter_expression_data() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+</li>
       <li><a href="unravel/core/help_formatter.html#unravel.core.help_formatter.RichArgumentParser.filter_help_output">filter_help_output() (unravel.core.help_formatter.RichArgumentParser method)</a>
 </li>
       <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.filter_neurons">filter_neurons() (in module unravel.allen_institute.abca.merfish.utils)</a>
@@ -1118,10 +991,10 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.filter_region_ids">filter_region_ids() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
-      <li><a href="unravel/utilities/region_info.html#unravel.utilities.region_info.filter_region_summary">filter_region_summary() (in module unravel.utilities.region_info)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/utilities/region_info.html#unravel.utilities.region_info.filter_region_summary">filter_region_summary() (in module unravel.utilities.region_info)</a>
+</li>
       <li><a href="unravel/tabular/filter_rows.html#unravel.tabular.filter_rows.filter_table">filter_table() (in module unravel.tabular.filter_rows)</a>
 </li>
       <li><a href="unravel/tabular/unique_values.html#unravel.tabular.unique_values.filter_values">filter_values() (in module unravel.tabular.unique_values)</a>
@@ -1130,15 +1003,23 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.find_bounding_box">find_bounding_box() (in module unravel.core.img_tools)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.find_expression_h5ad">find_expression_h5ad() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
       <li><a href="unravel/cluster_stats/find_incongruent_clusters.html#unravel.cluster_stats.find_incongruent_clusters.find_incongruent_clusters">find_incongruent_clusters() (in module unravel.cluster_stats.find_incongruent_clusters)</a>
 </li>
       <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.find_matching_directory">find_matching_directory() (in module unravel.cluster_stats.org_data)</a>
 </li>
       <li><a href="unravel/image_tools/max.html#unravel.image_tools.max.find_max_intensity">find_max_intensity() (in module unravel.image_tools.max)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.finite_max">finite_max() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
+</li>
       <li><a href="unravel/core/help_formatter.html#unravel.core.help_formatter.format_argparse_help">format_argparse_help() (in module unravel.core.help_formatter)</a>
 </li>
       <li><a href="unravel/core/help_formatter.html#unravel.core.help_formatter.format_docstring_for_terminal">format_docstring_for_terminal() (in module unravel.core.help_formatter)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.format_gene_preview">format_gene_preview() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.format_number">format_number() (in module unravel.allen_institute.abca.scRNA_seq.expression_summary)</a>
 </li>
       <li><a href="unravel/core/help_formatter.html#unravel.core.help_formatter.RichArgumentParser.format_usage">format_usage() (unravel.core.help_formatter.RichArgumentParser method)</a>
 </li>
@@ -1150,16 +1031,28 @@ window.runMermaid = runMermaid;</script>
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.gene">gene (unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult attribute)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult">GeneJobResult (class in unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
       <li><a href="unravel/cluster_stats/prism.html#unravel.cluster_stats.prism.generate_summary_table">generate_summary_table() (in module unravel.cluster_stats.prism)</a>
 </li>
       <li><a href="unravel/cluster_stats/mean_IF.html#unravel.cluster_stats.index.generate_sunburst">generate_sunburst() (in module unravel.cluster_stats.index)</a>
 </li>
       <li><a href="unravel/image_tools/atlas/wireframe.html#unravel.image_tools.atlas.wireframe.generate_wireframe">generate_wireframe() (in module unravel.image_tools.atlas.wireframe)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.genes_in_imputed_merfish_data">genes_in_imputed_merfish_data() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.genes_in_imputed_merfish_data">genes_in_imputed_merfish_data() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.genes_in_imputed_merfish_data">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.genes_in_merfish_data">genes_in_merfish_data() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      </ul></li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.genes_in_merfish_data">genes_in_merfish_data() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.genes_in_merfish_data">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
+      </ul></li>
       <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_all_region_ids">get_all_region_ids() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
       <li><a href="unravel/region_stats/rstats.html#unravel.region_stats.rstats.get_atlas_region_at_coords">get_atlas_region_at_coords() (in module unravel.region_stats.rstats)</a>
@@ -1172,10 +1065,16 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.get_fill_color">get_fill_color() (in module unravel.cluster_stats.table)</a>
 </li>
-      <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.get_groups_info">get_groups_info() (in module unravel.voxel_stats.vstats)</a>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression.html#unravel.allen_institute.abca.scRNA_seq.expression.get_gene_data_wo_cache_and_chunking">get_gene_data_wo_cache_and_chunking() (in module unravel.allen_institute.abca.scRNA_seq.expression)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_to_cols">get_gene_to_cols() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_values">get_gene_values() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
+      <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.get_groups_info">get_groups_info() (in module unravel.voxel_stats.vstats)</a>
+</li>
       <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.get_matching_input_csvs">get_matching_input_csvs() (in module unravel.cluster_stats.cstats)</a>
 </li>
       <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_max_region_id_from_csvs">get_max_region_id_from_csvs() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
@@ -1194,6 +1093,8 @@ window.runMermaid = runMermaid;</script>
       </ul></li>
       <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.get_region_info">get_region_info() (in module unravel.cluster_stats.mean_IF_summary)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_requested_genes_from_args">get_requested_genes_from_args() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.get_samples">get_samples() (in module unravel.core.utils)</a>
 </li>
       <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#unravel.allen_institute.mapmysections.segmentation_summary.get_seg_voxel_counts">get_seg_voxel_counts() (in module unravel.allen_institute.mapmysections.segmentation_summary)</a>
@@ -1201,6 +1102,8 @@ window.runMermaid = runMermaid;</script>
       <li><a href="unravel/core/utils.html#unravel.core.utils.get_stem">get_stem() (in module unravel.core.utils)</a>
 </li>
       <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.get_top_regions_and_percent_vols">get_top_regions_and_percent_vols() (in module unravel.cluster_stats.table)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_var_symbols">get_var_symbols() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
 </li>
       <li><a href="unravel/cluster_stats/group_bilateral_data.html#unravel.cluster_stats.group_bilateral_data.group_hemisphere_data">group_hemisphere_data() (in module unravel.cluster_stats.group_bilateral_data)</a>
 </li>
@@ -1228,10 +1131,16 @@ window.runMermaid = runMermaid;</script>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/coordinates/img_to_points.html#unravel.coordinates.img_to_points.img_to_points">img_to_points() (in module unravel.coordinates.img_to_points)</a>
 </li>
-      <li><a href="unravel/core/utils.html#unravel.core.utils.initialize_progress_bar">initialize_progress_bar() (in module unravel.core.utils)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.infer_cell_id_column">infer_cell_id_column() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.infer_genes">infer_genes() (in module unravel.allen_institute.abca.scRNA_seq.expression_summary)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.infer_species">infer_species() (in module unravel.allen_institute.abca.scRNA_seq.expression_summary)</a>
+</li>
+      <li><a href="unravel/core/utils.html#unravel.core.utils.initialize_progress_bar">initialize_progress_bar() (in module unravel.core.utils)</a>
+</li>
       <li><a href="unravel/region_stats/rstats.html#unravel.region_stats.rstats.interleave_blank_slices">interleave_blank_slices() (in module unravel.region_stats.rstats)</a>
 </li>
       <li><a href="unravel/image_tools/invert.html#unravel.image_tools.invert.invert_img">invert_img() (in module unravel.image_tools.invert)</a>
@@ -1243,21 +1152,45 @@ window.runMermaid = runMermaid;</script>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/allen_institute/abca/merfish/merfish_slice.html#unravel.allen_institute.abca.merfish.merfish_slice.join_cell_metadata">join_cell_metadata() (in module unravel.allen_institute.abca.merfish.merfish_slice)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression.html#unravel.allen_institute.abca.scRNA_seq.expression.join_cell_metadata">(in module unravel.allen_institute.abca.scRNA_seq.expression)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_cluster_colors">join_cluster_colors() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      </ul></li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.join_cluster_colors">join_cluster_colors() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_cluster_colors">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_cluster_details">join_cluster_details() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      </ul></li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.join_cluster_details">join_cluster_details() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_cluster_details">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_expression_to_section">join_expression_to_section() (in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_parcellation_annotation">join_parcellation_annotation() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.join_parcellation_annotation">join_parcellation_annotation() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_parcellation_annotation">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_parcellation_color">join_parcellation_color() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      </ul></li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.join_parcellation_color">join_parcellation_color() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_parcellation_color">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_reconstructed_coords">join_reconstructed_coords() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      </ul></li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.join_reconstructed_coords">join_reconstructed_coords() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_reconstructed_coords">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1276,12 +1209,20 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.load_all_data">load_all_data() (in module unravel.cluster_stats.mean_IF_summary)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_and_prepare_cell_metadata">load_and_prepare_cell_metadata() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
       <li><a href="unravel/coordinates/points_to_img.html#unravel.coordinates.points_to_img.load_and_prepare_points">load_and_prepare_points() (in module unravel.coordinates.points_to_img)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression.html#unravel.allen_institute.abca.scRNA_seq.expression.load_annotated_cell_metadata">load_annotated_cell_metadata() (in module unravel.allen_institute.abca.scRNA_seq.expression)</a>
 </li>
       <li><a href="unravel/cluster_stats/validation.html#unravel.cluster_stats.validation.load_ccfv3_lookup">load_ccfv3_lookup() (in module unravel.cluster_stats.validation)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_cell_metadata">load_cell_metadata() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.load_cell_metadata">load_cell_metadata() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_cell_metadata">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
+      </ul></li>
       <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_cell_metadata_og">load_cell_metadata_og() (in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.load_config">load_config() (in module unravel.core.utils)</a>
@@ -1290,8 +1231,14 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.load_data">load_data() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_expression_data">load_expression_data() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.load_expression_data">load_expression_data() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_expression_data">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.load_expression_data">(in module unravel.allen_institute.abca.scRNA_seq.expression_summary)</a>
+</li>
+      </ul></li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_h5">load_h5() (in module unravel.core.img_io)</a>
 
       <ul>
@@ -1310,8 +1257,12 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_nii_subset">load_nii_subset() (in module unravel.core.img_io)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_region_boundaries">load_region_boundaries() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.load_region_boundaries">load_region_boundaries() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_region_boundaries">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
+      </ul></li>
       <li><a href="unravel/coordinates/refine_catchall_regions.html#unravel.coordinates.refine_catchall_regions.load_region_info">load_region_info() (in module unravel.coordinates.refine_catchall_regions)</a>
 </li>
       <li><a href="unravel/cluster_stats/index.html#unravel.cluster_stats.mean_IF.load_region_lut">load_region_lut() (in module unravel.cluster_stats.mean_IF)</a>
@@ -1320,6 +1271,10 @@ window.runMermaid = runMermaid;</script>
         <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.load_region_lut">(in module unravel.cluster_stats.mean_IF_summary)</a>
 </li>
       </ul></li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression.html#unravel.allen_institute.abca.scRNA_seq.expression.load_RNAseq_cell_metadata">load_RNAseq_cell_metadata() (in module unravel.allen_institute.abca.scRNA_seq.expression)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression.html#unravel.allen_institute.abca.scRNA_seq.expression.load_RNAseq_gene_metadata">load_RNAseq_gene_metadata() (in module unravel.allen_institute.abca.scRNA_seq.expression)</a>
+</li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_single_tif">load_single_tif() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/tabular/utils.html#unravel.tabular.utils.load_tabular_file">load_tabular_file() (in module unravel.tabular.utils)</a>
@@ -1333,6 +1288,8 @@ window.runMermaid = runMermaid;</script>
 </li>
       </ul></li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_tifs">load_tifs() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_X_fully_into_memory">load_X_fully_into_memory() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
 </li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_zarr">load_zarr() (in module unravel.core.img_io)</a>
 </li>
@@ -1348,12 +1305,32 @@ window.runMermaid = runMermaid;</script>
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#unravel.allen_institute.abca.merfish.merfish_cells_to_nii.main">main() (in module unravel.allen_institute.abca.merfish.merfish_cells_to_nii)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.main">main() (in module unravel.allen_institute.abca.merfish.merfish)</a>
 
       <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#unravel.allen_institute.abca.merfish.merfish_cells_to_nii.main">(in module unravel.allen_institute.abca.merfish.merfish_cells_to_nii)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_check_genes.html#unravel.allen_institute.abca.merfish.merfish_check_genes.main">(in module unravel.allen_institute.abca.merfish.merfish_check_genes)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.main">(in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.main">(in module unravel.allen_institute.abca.merfish.merfish_filter)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_filter_by_mask.html#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.main">(in module unravel.allen_institute.abca.merfish.merfish_filter_by_mask)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_join_expression.html#unravel.allen_institute.abca.merfish.merfish_join_expression.main">(in module unravel.allen_institute.abca.merfish.merfish_join_expression)</a>
+</li>
         <li><a href="unravel/allen_institute/abca/merfish/merfish_regions.html#unravel.allen_institute.abca.merfish.merfish_regions.main">(in module unravel.allen_institute.abca.merfish.merfish_regions)</a>
 </li>
         <li><a href="unravel/allen_institute/abca/merfish/merfish_slice.html#unravel.allen_institute.abca.merfish.merfish_slice.main">(in module unravel.allen_institute.abca.merfish.merfish_slice)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression.html#unravel.allen_institute.abca.scRNA_seq.expression.main">(in module unravel.allen_institute.abca.scRNA_seq.expression)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.main">(in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.main">(in module unravel.allen_institute.abca.scRNA_seq.expression_summary)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/filter.html#unravel.allen_institute.abca.scRNA_seq.filter.main">(in module unravel.allen_institute.abca.scRNA_seq.filter)</a>
 </li>
         <li><a href="unravel/allen_institute/abca/sunburst/mean_expression_color_scale.html#unravel.allen_institute.abca.sunburst.mean_expression_color_scale.main">(in module unravel.allen_institute.abca.sunburst.mean_expression_color_scale)</a>
 </li>
@@ -1382,6 +1359,8 @@ window.runMermaid = runMermaid;</script>
         <li><a href="unravel/allen_institute/mapmysections/csv_concat_with_source.html#unravel.allen_institute.mapmysections.csv_concat_with_source.main">(in module unravel.allen_institute.mapmysections.csv_concat_with_source)</a>
 </li>
         <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#unravel.allen_institute.mapmysections.segmentation_summary.main">(in module unravel.allen_institute.mapmysections.segmentation_summary)</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/soma_in_grey.html#unravel.allen_institute.mapmysections.soma_ratio.main">(in module unravel.allen_institute.mapmysections.soma_ratio)</a>
 </li>
         <li><a href="unravel/cluster_stats/brain_model.html#unravel.cluster_stats.brain_model.main">(in module unravel.cluster_stats.brain_model)</a>
 </li>
@@ -1644,6 +1623,8 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.match_files">match_files() (in module unravel.core.utils)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.matrix_for_metric">matrix_for_metric() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
+</li>
       <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.mean_intensity_in_brain">mean_intensity_in_brain() (in module unravel.voxel_stats.apply_mask)</a>
 </li>
       <li><a href="unravel/voxel_stats/other/IF_outliers.html#unravel.voxel_stats.other.IF_outliers.mean_intensity_within_mask">mean_intensity_within_mask() (in module unravel.voxel_stats.other.IF_outliers)</a>
@@ -1652,14 +1633,16 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#unravel.allen_institute.abca.merfish.merfish_cells_to_nii.merfish_cells_to_img">merfish_cells_to_img() (in module unravel.allen_institute.abca.merfish.merfish_cells_to_nii)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_filter_by_mask.html#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.merfish_filter_by_mask">merfish_filter_by_mask() (in module unravel.allen_institute.abca.merfish.merfish_filter_by_mask)</a>
+</li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.metadata">metadata() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.metadata_from_h5">metadata_from_h5() (in module unravel.image_io.h5_to_tifs)</a>
 </li>
-      <li><a href="unravel/cluster_stats/validation.html#unravel.cluster_stats.validation.metric_in_cluster">metric_in_cluster() (in module unravel.cluster_stats.validation)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/cluster_stats/validation.html#unravel.cluster_stats.validation.metric_in_cluster">metric_in_cluster() (in module unravel.cluster_stats.validation)</a>
+</li>
       <li><a href="unravel/cluster_stats/validation.html#unravel.cluster_stats.validation.metric_in_cluster_parallel">metric_in_cluster_parallel() (in module unravel.cluster_stats.validation)</a>
 </li>
       <li><a href="unravel/cluster_stats/validation.html#unravel.cluster_stats.validation.metric_in_subregions_of_cluster">metric_in_subregions_of_cluster() (in module unravel.cluster_stats.validation)</a>
@@ -1672,13 +1655,33 @@ window.runMermaid = runMermaid;</script>
     module
 
       <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish.html#module-unravel.allen_institute.abca.merfish.merfish">unravel.allen_institute.abca.merfish.merfish</a>
+</li>
         <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#module-unravel.allen_institute.abca.merfish.merfish_cells_to_nii">unravel.allen_institute.abca.merfish.merfish_cells_to_nii</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_check_genes.html#module-unravel.allen_institute.abca.merfish.merfish_check_genes">unravel.allen_institute.abca.merfish.merfish_check_genes</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#module-unravel.allen_institute.abca.merfish.merfish_expression_to_nii">unravel.allen_institute.abca.merfish.merfish_expression_to_nii</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_filter.html#module-unravel.allen_institute.abca.merfish.merfish_filter">unravel.allen_institute.abca.merfish.merfish_filter</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_filter_by_mask.html#module-unravel.allen_institute.abca.merfish.merfish_filter_by_mask">unravel.allen_institute.abca.merfish.merfish_filter_by_mask</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_join_expression.html#module-unravel.allen_institute.abca.merfish.merfish_join_expression">unravel.allen_institute.abca.merfish.merfish_join_expression</a>
 </li>
         <li><a href="unravel/allen_institute/abca/merfish/merfish_regions.html#module-unravel.allen_institute.abca.merfish.merfish_regions">unravel.allen_institute.abca.merfish.merfish_regions</a>
 </li>
         <li><a href="unravel/allen_institute/abca/merfish/merfish_slice.html#module-unravel.allen_institute.abca.merfish.merfish_slice">unravel.allen_institute.abca.merfish.merfish_slice</a>
 </li>
         <li><a href="unravel/allen_institute/abca/merfish/utils.html#module-unravel.allen_institute.abca.merfish.utils">unravel.allen_institute.abca.merfish.utils</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression.html#module-unravel.allen_institute.abca.scRNA_seq.expression">unravel.allen_institute.abca.scRNA_seq.expression</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#module-unravel.allen_institute.abca.scRNA_seq.expression_plot">unravel.allen_institute.abca.scRNA_seq.expression_plot</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#module-unravel.allen_institute.abca.scRNA_seq.expression_summary">unravel.allen_institute.abca.scRNA_seq.expression_summary</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/filter.html#module-unravel.allen_institute.abca.scRNA_seq.filter">unravel.allen_institute.abca.scRNA_seq.filter</a>
 </li>
         <li><a href="unravel/allen_institute/abca/sunburst/mean_expression_color_scale.html#module-unravel.allen_institute.abca.sunburst.mean_expression_color_scale">unravel.allen_institute.abca.sunburst.mean_expression_color_scale</a>
 </li>
@@ -1707,6 +1710,8 @@ window.runMermaid = runMermaid;</script>
         <li><a href="unravel/allen_institute/mapmysections/csv_concat_with_source.html#module-unravel.allen_institute.mapmysections.csv_concat_with_source">unravel.allen_institute.mapmysections.csv_concat_with_source</a>
 </li>
         <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#module-unravel.allen_institute.mapmysections.segmentation_summary">unravel.allen_institute.mapmysections.segmentation_summary</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/soma_in_grey.html#module-unravel.allen_institute.mapmysections.soma_ratio">unravel.allen_institute.mapmysections.soma_ratio</a>
 </li>
         <li><a href="unravel/cluster_stats/brain_model.html#module-unravel.cluster_stats.brain_model">unravel.cluster_stats.brain_model</a>
 </li>
@@ -1979,6 +1984,12 @@ window.runMermaid = runMermaid;</script>
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.natural_sort_text">natural_sort_text() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.natural_sort_text">(in module unravel.allen_institute.abca.scRNA_seq.expression_summary)</a>
+</li>
+      </ul></li>
       <li><a href="unravel/coordinates/refine_catchall_regions.html#unravel.coordinates.refine_catchall_regions.nearest_descendant_region_id">nearest_descendant_region_id() (in module unravel.coordinates.refine_catchall_regions)</a>
 </li>
       <li><a href="unravel/image_io/nii_info.html#unravel.image_io.nii_info.nii_axis_codes">nii_axis_codes() (in module unravel.image_io.nii_info)</a>
@@ -1997,6 +2008,10 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.nii_voxel_size">nii_voxel_size() (in module unravel.core.img_io)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.nonzero_cells">nonzero_cells (unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult attribute)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_check_genes.html#unravel.allen_institute.abca.merfish.merfish_check_genes.normalize_gene_names">normalize_gene_names() (in module unravel.allen_institute.abca.merfish.merfish_check_genes)</a>
+</li>
       <li><a href="unravel/utilities/region_info.html#unravel.utilities.region_info.normalize_text">normalize_text() (in module unravel.utilities.region_info)</a>
 </li>
   </ul></td>
@@ -2011,6 +2026,8 @@ window.runMermaid = runMermaid;</script>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.organize_validation_data">organize_validation_data() (in module unravel.cluster_stats.org_data)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.output_path">output_path (unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -2021,12 +2038,32 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.pad">pad() (in module unravel.core.img_tools)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#unravel.allen_institute.abca.merfish.merfish_cells_to_nii.parse_args">parse_args() (in module unravel.allen_institute.abca.merfish.merfish_cells_to_nii)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.parse_args">parse_args() (in module unravel.allen_institute.abca.merfish.merfish)</a>
 
       <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#unravel.allen_institute.abca.merfish.merfish_cells_to_nii.parse_args">(in module unravel.allen_institute.abca.merfish.merfish_cells_to_nii)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_check_genes.html#unravel.allen_institute.abca.merfish.merfish_check_genes.parse_args">(in module unravel.allen_institute.abca.merfish.merfish_check_genes)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.parse_args">(in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.parse_args">(in module unravel.allen_institute.abca.merfish.merfish_filter)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_filter_by_mask.html#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.parse_args">(in module unravel.allen_institute.abca.merfish.merfish_filter_by_mask)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_join_expression.html#unravel.allen_institute.abca.merfish.merfish_join_expression.parse_args">(in module unravel.allen_institute.abca.merfish.merfish_join_expression)</a>
+</li>
         <li><a href="unravel/allen_institute/abca/merfish/merfish_regions.html#unravel.allen_institute.abca.merfish.merfish_regions.parse_args">(in module unravel.allen_institute.abca.merfish.merfish_regions)</a>
 </li>
         <li><a href="unravel/allen_institute/abca/merfish/merfish_slice.html#unravel.allen_institute.abca.merfish.merfish_slice.parse_args">(in module unravel.allen_institute.abca.merfish.merfish_slice)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression.html#unravel.allen_institute.abca.scRNA_seq.expression.parse_args">(in module unravel.allen_institute.abca.scRNA_seq.expression)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.parse_args">(in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.parse_args">(in module unravel.allen_institute.abca.scRNA_seq.expression_summary)</a>
+</li>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/filter.html#unravel.allen_institute.abca.scRNA_seq.filter.parse_args">(in module unravel.allen_institute.abca.scRNA_seq.filter)</a>
 </li>
         <li><a href="unravel/allen_institute/abca/sunburst/mean_expression_color_scale.html#unravel.allen_institute.abca.sunburst.mean_expression_color_scale.parse_args">(in module unravel.allen_institute.abca.sunburst.mean_expression_color_scale)</a>
 </li>
@@ -2055,6 +2092,8 @@ window.runMermaid = runMermaid;</script>
         <li><a href="unravel/allen_institute/mapmysections/csv_concat_with_source.html#unravel.allen_institute.mapmysections.csv_concat_with_source.parse_args">(in module unravel.allen_institute.mapmysections.csv_concat_with_source)</a>
 </li>
         <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#unravel.allen_institute.mapmysections.segmentation_summary.parse_args">(in module unravel.allen_institute.mapmysections.segmentation_summary)</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/soma_in_grey.html#unravel.allen_institute.mapmysections.soma_ratio.parse_args">(in module unravel.allen_institute.mapmysections.soma_ratio)</a>
 </li>
         <li><a href="unravel/cluster_stats/brain_model.html#unravel.cluster_stats.brain_model.parse_args">(in module unravel.cluster_stats.brain_model)</a>
 </li>
@@ -2345,6 +2384,12 @@ window.runMermaid = runMermaid;</script>
         <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.plot_data">(in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
       </ul></li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.plot_dotplot">plot_dotplot() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.plot_heatmap">plot_heatmap() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.plot_section">plot_section() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+</li>
       <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.plot_slice_color">plot_slice_color() (in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
       <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.plot_slice_gene">plot_slice_gene() (in module unravel.allen_institute.abca.merfish.utils)</a>
@@ -2353,11 +2398,17 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/coordinates/points_to_img.html#unravel.coordinates.points_to_img.points_to_img">points_to_img() (in module unravel.coordinates.points_to_img)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.points_to_img_sum">points_to_img_sum() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+</li>
       <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.pool_sample_metric">pool_sample_metric() (in module unravel.cluster_stats.cstats)</a>
 </li>
       <li><a href="unravel/cluster_stats/prism.html#unravel.cluster_stats.prism.pool_sample_rows">pool_sample_rows() (in module unravel.cluster_stats.prism)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.precompute_linear_indices">precompute_linear_indices() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
       <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.prepare_cells_table">prepare_cells_table() (in module unravel.allen_institute.abca.merfish.utils)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.prepare_plot_dataframe">prepare_plot_dataframe() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
 </li>
       <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.prepare_plot_df">prepare_plot_df() (in module unravel.cluster_stats.mean_IF_summary)</a>
 </li>
@@ -2378,6 +2429,8 @@ window.runMermaid = runMermaid;</script>
       <li><a href="unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.process_fdr_and_clusters">process_fdr_and_clusters() (in module unravel.cluster_stats.fdr)</a>
 </li>
       <li><a href="unravel/cluster_stats/recursively_mirror_rev_cluster_indices.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.process_file">process_file() (in module unravel.cluster_stats.recursively_mirror_rev_cluster_indices)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.process_gene_job">process_gene_job() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
 </li>
       <li><a href="unravel/image_tools/atlas/wireframe.html#unravel.image_tools.atlas.wireframe.process_intensity">process_intensity() (in module unravel.image_tools.atlas.wireframe)</a>
 </li>
@@ -2433,10 +2486,10 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/tabular/key_value_to_table.html#unravel.tabular.key_value_to_table.reshape_key_value_blocks">reshape_key_value_blocks() (in module unravel.tabular.key_value_to_table)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.resolve_cluster_correction_dir">resolve_cluster_correction_dir() (in module unravel.cluster_stats.org_data)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/cluster_stats/index.html#unravel.cluster_stats.mean_IF.resolve_lut_path">resolve_lut_path() (in module unravel.cluster_stats.mean_IF)</a>
 
       <ul>
@@ -2463,6 +2516,10 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel">rolling_ball_subtraction_opencv_parallel() (in module unravel.core.img_tools)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.row_rank">row_rank() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.run_gene_jobs">run_gene_jobs() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
       <li><a href="unravel/image_io/zarr_compress.html#unravel.image_io.zarr_compress.run_in_parallel">run_in_parallel() (in module unravel.image_io.zarr_compress)</a>
 </li>
       <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.run_randomise_parallel">run_randomise_parallel() (in module unravel.voxel_stats.vstats)</a>
@@ -2485,8 +2542,14 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.safe_filename">safe_filename() (in module unravel.cluster_stats.mean_IF_summary)</a>
 </li>
-      <li><a href="unravel/coordinates/points_to_sphere_masks.html#unravel.coordinates.points_to_sphere_masks.sanitize_filename">sanitize_filename() (in module unravel.coordinates.points_to_sphere_masks)</a>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.safe_name">safe_name() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.sanitize_filename">sanitize_filename() (in module unravel.allen_institute.abca.merfish.merfish_filter)</a>
+
+      <ul>
+        <li><a href="unravel/coordinates/points_to_sphere_masks.html#unravel.coordinates.points_to_sphere_masks.sanitize_filename">(in module unravel.coordinates.points_to_sphere_masks)</a>
+</li>
+      </ul></li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.save_3D_img">save_3D_img() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.save_as_h5">save_as_h5() (in module unravel.core.img_io)</a>
@@ -2511,6 +2574,10 @@ window.runMermaid = runMermaid;</script>
       </ul></li>
       <li><a href="unravel/cluster_stats/crop.html#unravel.cluster_stats.crop.save_cropped_img">save_cropped_img() (in module unravel.cluster_stats.crop)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.save_figure">save_figure() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.save_filtered_value">save_filtered_value() (in module unravel.allen_institute.abca.merfish.merfish_filter)</a>
+</li>
       <li><a href="unravel/segment/ilastik_pixel_classification.html#unravel.segment.ilastik_pixel_classification.save_labels_as_masks">save_labels_as_masks() (in module unravel.segment.ilastik_pixel_classification)</a>
 
       <ul>
@@ -2518,6 +2585,10 @@ window.runMermaid = runMermaid;</script>
 </li>
       </ul></li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.save_metadata_to_file">save_metadata_to_file() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.save_nii">save_nii() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.save_outputs">save_outputs() (in module unravel.allen_institute.abca.scRNA_seq.expression_summary)</a>
 </li>
       <li><a href="unravel/tabular/utils.html#unravel.tabular.utils.save_tabular_file">save_tabular_file() (in module unravel.tabular.utils)</a>
 </li>
@@ -2531,6 +2602,8 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/warp/to_native.html#unravel.warp.to_native.scale_to_full_res">scale_to_full_res() (in module unravel.warp.to_native)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.section_to_zindex">section_to_zindex() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.select_gene">select_gene() (in module unravel.allen_institute.abca.merfish.utils)</a>
@@ -2541,8 +2614,12 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/cluster_stats/reshape.html#unravel.cluster_stats.reshape.simple_metric_data_df">simple_metric_data_df() (in module unravel.cluster_stats.reshape)</a>
 </li>
-      <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.slice_index_dict">slice_index_dict() (in module unravel.allen_institute.abca.merfish.utils)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish.html#unravel.allen_institute.abca.merfish.merfish.slice_index_dict">slice_index_dict() (in module unravel.allen_institute.abca.merfish.merfish)</a>
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.slice_index_dict">(in module unravel.allen_institute.abca.merfish.utils)</a>
 </li>
+      </ul></li>
       <li><a href="unravel/core/help_formatter.html#unravel.core.help_formatter.SM">SM (class in unravel.core.help_formatter)</a>
 </li>
       <li><a href="unravel/cluster_stats/fdr_range.html#unravel.cluster_stats.fdr_range.smart_float_format">smart_float_format() (in module unravel.cluster_stats.fdr_range)</a>
@@ -2553,7 +2630,11 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/image_tools/smooth.html#unravel.image_tools.smooth.smooth_w_sigma_in_voxels">smooth_w_sigma_in_voxels() (in module unravel.image_tools.smooth)</a>
 </li>
+      <li><a href="unravel/allen_institute/mapmysections/soma_in_grey.html#unravel.allen_institute.mapmysections.soma_ratio.soma_ratio">soma_ratio() (in module unravel.allen_institute.mapmysections.soma_ratio)</a>
+</li>
       <li><a href="unravel/cluster_stats/prism.html#unravel.cluster_stats.prism.sort_samples">sort_samples() (in module unravel.cluster_stats.prism)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.source_paths_dataframe">source_paths_dataframe() (in module unravel.allen_institute.abca.scRNA_seq.expression_summary)</a>
 </li>
       <li><a href="unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.spatial_average_2D">spatial_average_2D() (in module unravel.image_tools.spatial_averaging)</a>
 </li>
@@ -2563,13 +2644,19 @@ window.runMermaid = runMermaid;</script>
 </li>
       <li><a href="unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.split_clusters_based_on_effect">split_clusters_based_on_effect() (in module unravel.cluster_stats.fdr)</a>
 </li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.subset_matrix_after_memory_load">subset_matrix_after_memory_load() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
       <li><a href="unravel/coordinates/labeled_voxel_img_to_points.html#unravel.coordinates.labeled_voxel_img_to_points.summarize_label_coords">summarize_label_coords() (in module unravel.coordinates.labeled_voxel_img_to_points)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.summarize_level">summarize_level() (in module unravel.allen_institute.abca.scRNA_seq.expression_summary)</a>
 </li>
       <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.summarize_pair">summarize_pair() (in module unravel.cluster_stats.mean_IF_summary)</a>
 </li>
       <li><a href="unravel/coordinates/points_compressor.html#unravel.coordinates.points_compressor.summarize_points">summarize_points() (in module unravel.coordinates.points_compressor)</a>
 </li>
       <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.summarize_significance">summarize_significance() (in module unravel.region_stats.rstats_summary)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.summary_context">summary_context() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
 </li>
       <li><a href="unravel/cluster_stats/sunburst.html#unravel.cluster_stats.sunburst.sunburst">sunburst() (in module unravel.cluster_stats.sunburst)</a>
 </li>
@@ -2605,13 +2692,57 @@ window.runMermaid = runMermaid;</script>
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.unique_preserve_order">unique_preserve_order() (in module unravel.allen_institute.abca.merfish.merfish_expression_to_nii)</a>
+</li>
       <li><a href="unravel/coordinates/points_compressor.html#unravel.coordinates.points_compressor.unpack_points">unpack_points() (in module unravel.coordinates.points_compressor)</a>
 </li>
+      <li>
+    unravel.allen_institute.abca.merfish.merfish
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish.html#module-unravel.allen_institute.abca.merfish.merfish">module</a>
+</li>
+      </ul></li>
       <li>
     unravel.allen_institute.abca.merfish.merfish_cells_to_nii
 
       <ul>
         <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#module-unravel.allen_institute.abca.merfish.merfish_cells_to_nii">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.abca.merfish.merfish_check_genes
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_check_genes.html#module-unravel.allen_institute.abca.merfish.merfish_check_genes">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.abca.merfish.merfish_expression_to_nii
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#module-unravel.allen_institute.abca.merfish.merfish_expression_to_nii">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.abca.merfish.merfish_filter
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_filter.html#module-unravel.allen_institute.abca.merfish.merfish_filter">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.abca.merfish.merfish_filter_by_mask
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_filter_by_mask.html#module-unravel.allen_institute.abca.merfish.merfish_filter_by_mask">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.abca.merfish.merfish_join_expression
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_join_expression.html#module-unravel.allen_institute.abca.merfish.merfish_join_expression">module</a>
 </li>
       </ul></li>
       <li>
@@ -2633,6 +2764,34 @@ window.runMermaid = runMermaid;</script>
 
       <ul>
         <li><a href="unravel/allen_institute/abca/merfish/utils.html#module-unravel.allen_institute.abca.merfish.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.abca.scRNA_seq.expression
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression.html#module-unravel.allen_institute.abca.scRNA_seq.expression">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.abca.scRNA_seq.expression_plot
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#module-unravel.allen_institute.abca.scRNA_seq.expression_plot">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.abca.scRNA_seq.expression_summary
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_summary.html#module-unravel.allen_institute.abca.scRNA_seq.expression_summary">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.abca.scRNA_seq.filter
+
+      <ul>
+        <li><a href="unravel/allen_institute/abca/scRNA_seq/filter.html#module-unravel.allen_institute.abca.scRNA_seq.filter">module</a>
 </li>
       </ul></li>
       <li>
@@ -2731,6 +2890,13 @@ window.runMermaid = runMermaid;</script>
 
       <ul>
         <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#module-unravel.allen_institute.mapmysections.segmentation_summary">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.mapmysections.soma_ratio
+
+      <ul>
+        <li><a href="unravel/allen_institute/mapmysections/soma_in_grey.html#module-unravel.allen_institute.mapmysections.soma_ratio">module</a>
 </li>
       </ul></li>
       <li>
@@ -3090,6 +3256,8 @@ window.runMermaid = runMermaid;</script>
         <li><a href="unravel/image_io/nii_info.html#module-unravel.image_io.nii_info">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     unravel.image_io.nii_to_tifs
 
@@ -3132,8 +3300,6 @@ window.runMermaid = runMermaid;</script>
         <li><a href="unravel/image_io/zarr_to_nii.html#module-unravel.image_io.zarr_to_nii">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     unravel.image_tools.atlas.relabel_nii
 
@@ -3667,12 +3833,14 @@ window.runMermaid = runMermaid;</script>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.valid_clusters_t_test">valid_clusters_t_test() (in module unravel.cluster_stats.cstats)</a>
 </li>
-      <li><a href="unravel/coordinates/physical_points_to_img.html#unravel.coordinates.physical_points_to_img.validate_columns">validate_columns() (in module unravel.coordinates.physical_points_to_img)</a>
+      <li><a href="unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.validate_and_select_genes">validate_and_select_genes() (in module unravel.allen_institute.abca.scRNA_seq.expression_plot)</a>
 </li>
-      <li><a href="unravel/core/config.html#unravel.core.config.Configuration.verbose">verbose (unravel.core.config.Configuration attribute)</a>
+      <li><a href="unravel/coordinates/physical_points_to_img.html#unravel.coordinates.physical_points_to_img.validate_columns">validate_columns() (in module unravel.coordinates.physical_points_to_img)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/core/config.html#unravel.core.config.Configuration.verbose">verbose (unravel.core.config.Configuration attribute)</a>
+</li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.verbose_end_msg">verbose_end_msg() (in module unravel.core.utils)</a>
 </li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.verbose_start_msg">verbose_start_msg() (in module unravel.core.utils)</a>

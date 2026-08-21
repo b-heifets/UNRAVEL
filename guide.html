@@ -561,14 +561,14 @@ nano<span class="w"> </span>~/.bashrc<span class="w">  </span><span class="c1">#
 </div>
 </li>
 <li><p>Add alias definitions in the format:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">shortname</span><span class="o">=</span><span class="s1">&#39;full command&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">shortname</span><span class="o">=</span><span class="s1">'full command'</span>
 </pre></div>
 </div>
 <p>For example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">ll</span><span class="o">=</span><span class="s1">&#39;ls -l&#39;</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ilastik</span><span class="o">=</span><span class="s1">&#39;path/to/ilastik_executable&#39;</span><span class="w">  </span><span class="c1"># For launching Ilastik via the terminal by running: ilastik</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">i</span><span class="o">=</span><span class="s2">&quot;io_nii_info -i &quot;</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">gs</span><span class="o">=</span><span class="s1">&#39;git status&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">ll</span><span class="o">=</span><span class="s1">'ls -l'</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ilastik</span><span class="o">=</span><span class="s1">'path/to/ilastik_executable'</span><span class="w">  </span><span class="c1"># For launching Ilastik via the terminal by running: ilastik</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">i</span><span class="o">=</span><span class="s2">"io_nii_info -i "</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gs</span><span class="o">=</span><span class="s1">'git status'</span>
 </pre></div>
 </div>
 </li>
@@ -1092,7 +1092,7 @@ cat<span class="w"> </span>.command_log.txt<span class="w"> </span><span class="
 <li><p>Copy /UNRAVEL/unravel/env_var.sh to your experiment directory and update each variable with a code editor (e.g., <strong><a class="reference external" href="https://code.visualstudio.com/download">VS Code</a></strong> or <strong><a class="reference external" href="https://www.youtube.com/watch?v=DLeATFgGM-A">nano</a></strong>)</p></li>
 <li><p>Using your editor, add this line to your terminal config file (.bashrc or .zshrc) to easily load variables:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">exp</span><span class="o">=</span><span class="s2">&quot;. /path/to/env_var.sh&quot;</span><span class="w">  </span><span class="c1"># Update the path. Use a short name for `exp`.</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">exp</span><span class="o">=</span><span class="s2">". /path/to/env_var.sh"</span><span class="w">  </span><span class="c1"># Update the path. Use a short name for `exp`.</span>
 </pre></div>
 </div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reopen the terminal or source your terminal config file to apply changes</span>
@@ -1242,7 +1242,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;path<span class
 
 <span class="c1"># If -x and -z are omitted, io_metadata will attempt to extract this information from the image metadata.</span>
 io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/full_res_img&gt;<span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span>
-<span class="c1"># &#39;rel_path&#39; refers to the relative path from within the sample?? folders.</span>
+<span class="c1"># 'rel_path' refers to the relative path from within the sample?? folders.</span>
 <span class="c1"># Glob patterns can be used for -i (e.g., *.czi).</span>
 </pre></div>
 </div>
@@ -1454,10 +1454,10 @@ vstats_prep<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/image&
 vstats_z_score<span class="w"> </span>-i<span class="w"> </span>atlas_space/sample??_cFos_rb4_atlas_space.nii.gz<span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span><span class="w"> </span>
 
 <span class="c1"># Z-scoring using an atlas mask</span>
-vstats_z_score<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;atlas_space/*.nii.gz&#39;</span><span class="w"> </span>-amas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span><span class="w"> </span>
+vstats_z_score<span class="w"> </span>-i<span class="w"> </span><span class="s1">'atlas_space/*.nii.gz'</span><span class="w"> </span>-amas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span><span class="w"> </span>
 
 <span class="c1"># Using a tissue mask and an atlas mask</span>
-vstats_z_score<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;atlas_space/*.nii.gz&#39;</span><span class="w"> </span>-tmas<span class="w"> </span>reg_inputs/autofl_50um_brain_mask.nii.gz<span class="w"> </span>-amas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span><span class="w"> </span>
+vstats_z_score<span class="w"> </span>-i<span class="w"> </span><span class="s1">'atlas_space/*.nii.gz'</span><span class="w"> </span>-tmas<span class="w"> </span>reg_inputs/autofl_50um_brain_mask.nii.gz<span class="w"> </span>-amas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span><span class="w"> </span>
 
 <span class="c1"># Alternatively, use `vstats_z_score_cwd` to z-score images in the current working directory</span>
 vstats_z_score_cwd<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span>
@@ -1487,7 +1487,7 @@ vstats_whole_to_avg<span class="w"> </span>-k<span class="w"> </span><span class
 vstats_whole_to_avg<span class="w"> </span><span class="o">[</span>-tp<span class="o">]</span><span class="w"> </span><span class="o">[</span>-amas<span class="w"> </span><span class="nv">$MASK</span><span class="o">]</span><span class="w"> </span><span class="c1"># Provide -tp for parallel processing.</span>
 
 <span class="c1"># Process files matching the pattern with smoothing:</span>
-vstats_whole_to_avg<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*_cFos_rb4_atlas_space_z.nii.gz.nii.gz&#39;</span><span class="w"> </span>-k<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span><span class="o">[</span>-tp<span class="o">]</span><span class="w"> </span><span class="o">[</span>-amas<span class="w"> </span><span class="nv">$MASK</span><span class="o">]</span>
+vstats_whole_to_avg<span class="w"> </span>-i<span class="w"> </span><span class="s1">'*_cFos_rb4_atlas_space_z.nii.gz.nii.gz'</span><span class="w"> </span>-k<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span><span class="o">[</span>-tp<span class="o">]</span><span class="w"> </span><span class="o">[</span>-amas<span class="w"> </span><span class="nv">$MASK</span><span class="o">]</span>
 <span class="c1"># A 0.1 mm kernel radius is recommended for smoothing (-k)</span>
 </pre></div>
 </div>
@@ -1622,7 +1622,7 @@ vstats_whole_to_avg<span class="w"> </span>-i<span class="w"> </span><span class
 vstats<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span>-a<span class="w"> </span><span class="nv">$ATLAS</span><span class="w"> </span><span class="o">[</span>-p<span class="w"> </span><span class="m">18000</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>-k<span class="w"> </span><span class="m">0</span>.1<span class="o">]</span>
 <span class="c1"># -p sets the number of permutations.</span>
 <span class="c1"># -k is for smoothing if inputs have not yet been smoothed (-k is the kernel size in mm)</span>
-<span class="c1"># See the vstats help for providing additional arguments to FSL&#39;s randomise_parallel</span>
+<span class="c1"># See the vstats help for providing additional arguments to FSL's randomise_parallel</span>
 </pre></div>
 </div>
 <div class="note admonition">
@@ -1762,7 +1762,7 @@ cstats_validation<span class="w"> </span>-m<span class="w"> </span>&lt;path/rev_
 <li><p>group1 and group2 must match conditions in the sample_key.csv</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Usage if running directly after ``cstats_validation``</span>
-cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster_summary.ini&gt;<span class="w"> </span>-cvd<span class="w"> </span><span class="s1">&#39;psilocybin_v_saline_tstat1_q*&#39;</span><span class="w"> </span>-vd<span class="w"> </span>&lt;path/vstats_dir&gt;<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w"> </span>--groups<span class="w"> </span>&lt;group1&gt;<span class="w"> </span>&lt;group2&gt;<span class="w"> </span>-hg<span class="w"> </span>&lt;higher_group&gt;<span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span>
+cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster_summary.ini&gt;<span class="w"> </span>-cvd<span class="w"> </span><span class="s1">'psilocybin_v_saline_tstat1_q*'</span><span class="w"> </span>-vd<span class="w"> </span>&lt;path/vstats_dir&gt;<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w"> </span>--groups<span class="w"> </span>&lt;group1&gt;<span class="w"> </span>&lt;group2&gt;<span class="w"> </span>-hg<span class="w"> </span>&lt;higher_group&gt;<span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span>
 
 <span class="c1"># Usage if running after ``cstats_validation`` and ``cstats_org_data``:</span>
 cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster_summary.ini&gt;<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w">  </span>--groups<span class="w"> </span>&lt;group1&gt;<span class="w"> </span>&lt;group2&gt;<span class="w"> </span>-hg<span class="w"> </span>&lt;higher_group&gt;<span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span>

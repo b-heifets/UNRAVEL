@@ -56,7 +56,7 @@
     <link rel="icon" href="../../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="unravel.allen_institute.abca.scRNA_seq.filter module" href="filter.html" />
+    <link rel="next" title="unravel.allen_institute.abca.scRNA_seq.expression module" href="expression.html" />
     <link rel="prev" title="unravel.allen_institute.abca.sunburst.percent_expression_color_scale module" href="../sunburst/percent_expression_color_scale.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 current active has-children"><a class="current reference internal" href="#">unravel.allen_institute.abca.scRNA_seq package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -619,9 +620,67 @@
 <h1>unravel.allen_institute.abca.scRNA_seq package<a class="headerlink" href="#unravel-allen-institute-abca-scrna-seq-package" title="Link to this heading">#</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#usage-for-humans">Usage for humans:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#usage-for-mice">Usage for mice:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#unravel.allen_institute.abca.scRNA_seq.expression.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#unravel.allen_institute.abca.scRNA_seq.expression.load_RNAseq_cell_metadata"><code class="docutils literal notranslate"><span class="pre">load_RNAseq_cell_metadata()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#unravel.allen_institute.abca.scRNA_seq.expression.load_RNAseq_gene_metadata"><code class="docutils literal notranslate"><span class="pre">load_RNAseq_gene_metadata()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#unravel.allen_institute.abca.scRNA_seq.expression.extract_gene_expression"><code class="docutils literal notranslate"><span class="pre">extract_gene_expression()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#unravel.allen_institute.abca.scRNA_seq.expression.get_gene_data_wo_cache_and_chunking"><code class="docutils literal notranslate"><span class="pre">get_gene_data_wo_cache_and_chunking()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#unravel.allen_institute.abca.scRNA_seq.expression.load_annotated_cell_metadata"><code class="docutils literal notranslate"><span class="pre">load_annotated_cell_metadata()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#unravel.allen_institute.abca.scRNA_seq.expression.join_cell_metadata"><code class="docutils literal notranslate"><span class="pre">join_cell_metadata()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression.html#unravel.allen_institute.abca.scRNA_seq.expression.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filter.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filter.html#unravel.allen_institute.abca.scRNA_seq.filter.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="filter.html#unravel.allen_institute.abca.scRNA_seq.filter.filter_by_cell_type"><code class="docutils literal notranslate"><span class="pre">filter_by_cell_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="filter.html#unravel.allen_institute.abca.scRNA_seq.filter.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#usage-for-mouse">Usage for mouse:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#usage-for-human">Usage for human:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#usage-for-parallel-processing">Usage for parallel processing:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.infer_species"><code class="docutils literal notranslate"><span class="pre">infer_species()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.infer_genes"><code class="docutils literal notranslate"><span class="pre">infer_genes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.format_number"><code class="docutils literal notranslate"><span class="pre">format_number()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.natural_sort_text"><code class="docutils literal notranslate"><span class="pre">natural_sort_text()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.load_expression_data"><code class="docutils literal notranslate"><span class="pre">load_expression_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.source_paths_dataframe"><code class="docutils literal notranslate"><span class="pre">source_paths_dataframe()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.summarize_level"><code class="docutils literal notranslate"><span class="pre">summarize_level()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.save_outputs"><code class="docutils literal notranslate"><span class="pre">save_outputs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_summary.html#unravel.allen_institute.abca.scRNA_seq.expression_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#usage-sorting-by-mean-expression-by-default">Usage (sorting by mean expression by default):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#usage-for-selected-cell-types-and-genes-ranked-by-mean-expression-and-sorted-by-cell-count">Usage for selected cell types and genes (ranked by mean expression and sorted by cell count):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#usage-for-the-50-most-abundant-cell-types-sorted-by-abundance">Usage for the 50 most abundant cell types sorted by abundance:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#usage-for-parallel-processing">Usage for parallel processing:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.safe_name"><code class="docutils literal notranslate"><span class="pre">safe_name()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.natural_sort_text"><code class="docutils literal notranslate"><span class="pre">natural_sort_text()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.color_cell_type_tick_labels"><code class="docutils literal notranslate"><span class="pre">color_cell_type_tick_labels()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.detect_genes"><code class="docutils literal notranslate"><span class="pre">detect_genes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.validate_and_select_genes"><code class="docutils literal notranslate"><span class="pre">validate_and_select_genes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.row_rank"><code class="docutils literal notranslate"><span class="pre">row_rank()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.prepare_plot_dataframe"><code class="docutils literal notranslate"><span class="pre">prepare_plot_dataframe()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.summary_context"><code class="docutils literal notranslate"><span class="pre">summary_context()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.default_title"><code class="docutils literal notranslate"><span class="pre">default_title()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.automatic_figure_size"><code class="docutils literal notranslate"><span class="pre">automatic_figure_size()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.matrix_for_metric"><code class="docutils literal notranslate"><span class="pre">matrix_for_metric()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.finite_max"><code class="docutils literal notranslate"><span class="pre">finite_max()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.save_figure"><code class="docutils literal notranslate"><span class="pre">save_figure()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.plot_dotplot"><code class="docutils literal notranslate"><span class="pre">plot_dotplot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.plot_heatmap"><code class="docutils literal notranslate"><span class="pre">plot_heatmap()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -646,11 +705,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="filter.html"
+       href="expression.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.filter module</p>
+        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.expression module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

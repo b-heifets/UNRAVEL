@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -876,9 +715,9 @@ window.runMermaid = runMermaid;</script>
                   
   <h1>Source code for unravel.allen_institute.abca.merfish.utils</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Utilities for processing Allen Brain Cell Atlas (ABCA) MERFISH cells metadata and visualizing a brain slice with cells or gene expression data.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Tuple</span>
@@ -898,16 +737,16 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="filter_neurons">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.filter_neurons">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">filter_neurons</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Filter cells to neuronal classes (class index ≤ 29), based on integer prefix of &#39;class&#39;.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;class&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot filter neurons: &#39;class&#39; column not found.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Filter cells to neuronal classes (class index ≤ 29), based on integer prefix of 'class'.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"class"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot filter neurons: 'class' column not found."</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">class_idx</span> <span class="o">=</span> <span class="n">cell_df</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">class_idx</span> <span class="o">=</span> <span class="n">cell_df</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cell_df</span><span class="p">[</span><span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to parse &#39;class&#39; column as integers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to parse 'class' column as integers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <span class="c1"># ----------------------------- core joins -------------------------------------</span>
@@ -915,24 +754,24 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="load_cell_metadata">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_cell_metadata">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_cell_metadata</span><span class="p">(</span><span class="n">download_base_or_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load MERFISH cell metadata (index: cell_label).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Load MERFISH cell metadata (index: cell_label)."""</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">download_base_or_file</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
         <span class="n">cell_metadata_path</span> <span class="o">=</span> <span class="n">p</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">cell_metadata_path</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;metadata/MERFISH-C57BL6J-638850/20231215/cell_metadata.csv&quot;</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"metadata/MERFISH-C57BL6J-638850/20231215/cell_metadata.csv"</span>
         <span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cell_metadata_path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cell_label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;x_section&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;y_section&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="s2">&quot;z_section&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cell_label&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cell_metadata_path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s2">"cell_label"</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="s2">"x_section"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">:</span> <span class="s2">"y_section"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">:</span> <span class="s2">"z_section"</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"cell_label"</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span></div>
 
 
 <div class="viewcode-block" id="load_cell_metadata_og">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_cell_metadata_og">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_cell_metadata_og</span><span class="p">(</span><span class="n">download_base</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Load the cell metadata DataFrame from the MERFISH data (using cell_label as the index).</span>
 
 <span class="sd">    Parameters:</span>
@@ -943,20 +782,20 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
 <span class="sd">    cell_df : pd.DataFrame</span>
-<span class="sd">        The cell metadata. Columns: &#39;brain_section_label&#39;, &#39;cluster_alias&#39;, &#39;average_correlation_score&#39;, &#39;feature_matrix_label&#39;, &#39;donor_label&#39;, &#39;donor_genotype&#39;, &#39;donor_sex&#39;, &#39;x_section&#39;, &#39;y_section&#39;, &#39;z_section&#39;</span>
+<span class="sd">        The cell metadata. Columns: 'brain_section_label', 'cluster_alias', 'average_correlation_score', 'feature_matrix_label', 'donor_label', 'donor_genotype', 'donor_sex', 'x_section', 'y_section', 'z_section'</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
         <span class="n">cell_metadata_path</span> <span class="o">=</span> <span class="n">download_base</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">cell_metadata_path</span> <span class="o">=</span> <span class="n">download_base</span> <span class="o">/</span> <span class="s1">&#39;metadata/MERFISH-C57BL6J-638850/20231215/cell_metadata.csv&#39;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Loading cell metadata from </span><span class="si">{</span><span class="n">cell_metadata_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">cell_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cell_metadata_path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;cell_label&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
-    <span class="n">cell_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="s1">&#39;x_section&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="s1">&#39;y_section&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="s1">&#39;z_section&#39;</span><span class="p">},</span>
+        <span class="n">cell_metadata_path</span> <span class="o">=</span> <span class="n">download_base</span> <span class="o">/</span> <span class="s1">'metadata/MERFISH-C57BL6J-638850/20231215/cell_metadata.csv'</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    Loading cell metadata from </span><span class="si">{</span><span class="n">cell_metadata_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">cell_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cell_metadata_path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">'cell_label'</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
+    <span class="n">cell_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'x'</span><span class="p">:</span> <span class="s1">'x_section'</span><span class="p">,</span>
+                        <span class="s1">'y'</span><span class="p">:</span> <span class="s1">'y_section'</span><span class="p">,</span>
+                        <span class="s1">'z'</span><span class="p">:</span> <span class="s1">'z_section'</span><span class="p">},</span>
                 <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">cell_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;cell_label&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">cell_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'cell_label'</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cell_df</span></div>
 
 
@@ -966,107 +805,107 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="join_reconstructed_coords">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_reconstructed_coords">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">join_reconstructed_coords</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join reconstructed coordinates + parcellation_index.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="p">{</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;y_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;z_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;parcellation_index&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">"""Join reconstructed coordinates + parcellation_index."""</span>
+    <span class="k">if</span> <span class="p">{</span><span class="s2">"x_reconstructed"</span><span class="p">,</span> <span class="s2">"y_reconstructed"</span><span class="p">,</span> <span class="s2">"z_reconstructed"</span><span class="p">,</span> <span class="s2">"parcellation_index"</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span>
         <span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="n">cell_df</span>
     <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
-        <span class="o">/</span> <span class="s2">&quot;metadata/MERFISH-C57BL6J-638850-CCF/20231215/reconstructed_coordinates.csv&quot;</span>
+        <span class="o">/</span> <span class="s2">"metadata/MERFISH-C57BL6J-638850-CCF/20231215/reconstructed_coordinates.csv"</span>
     <span class="p">)</span>
     <span class="n">rc</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cell_label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s2">"cell_label"</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
         <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-            <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;x_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;y_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="s2">&quot;z_reconstructed&quot;</span><span class="p">}</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="s2">"x_reconstructed"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">:</span> <span class="s2">"y_reconstructed"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">:</span> <span class="s2">"z_reconstructed"</span><span class="p">}</span>
         <span class="p">)</span>
-        <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cell_label&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"cell_label"</span><span class="p">)</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rc</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rc</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"inner"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="join_cluster_details">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_cluster_details">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">join_cluster_details</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
-                         <span class="n">species</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;human&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mouse&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join cluster annotations (class/subclass/etc.).&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;subclass&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster_alias&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+                         <span class="n">species</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"mouse"</span><span class="p">,</span> <span class="s2">"human"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"mouse"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Join cluster annotations (class/subclass/etc.)."""</span>
+    <span class="k">if</span> <span class="p">{</span><span class="s2">"class"</span><span class="p">,</span> <span class="s2">"subclass"</span><span class="p">,</span> <span class="s2">"cluster_alias"</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cell_df</span>
-    <span class="k">if</span> <span class="n">species</span> <span class="o">!=</span> <span class="s2">&quot;mouse&quot;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only &#39;mouse&#39; supported; extend as needed.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">species</span> <span class="o">!=</span> <span class="s2">"mouse"</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only 'mouse' supported; extend as needed."</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
-        <span class="o">/</span> <span class="s2">&quot;metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_pivoted.csv&quot;</span>
+        <span class="o">/</span> <span class="s2">"metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_pivoted.csv"</span>
     <span class="p">)</span>
-    <span class="n">ann</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cluster_alias&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ann</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;cluster_alias&quot;</span><span class="p">)</span></div>
+    <span class="n">ann</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"cluster_alias"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ann</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"cluster_alias"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="join_cluster_colors">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_cluster_colors">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">join_cluster_colors</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
-                        <span class="n">species</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;human&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mouse&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join cluster color columns.&quot;&quot;&quot;</span>
+                        <span class="n">species</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"mouse"</span><span class="p">,</span> <span class="s2">"human"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"mouse"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Join cluster color columns."""</span>
     <span class="n">expected</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;neurotransmitter_color&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;class_color&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;subclass_color&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;supertype_color&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;cluster_color&quot;</span><span class="p">,</span>
+        <span class="s2">"neurotransmitter_color"</span><span class="p">,</span>
+        <span class="s2">"class_color"</span><span class="p">,</span>
+        <span class="s2">"subclass_color"</span><span class="p">,</span>
+        <span class="s2">"supertype_color"</span><span class="p">,</span>
+        <span class="s2">"cluster_color"</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">if</span> <span class="n">expected</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cell_df</span>
-    <span class="k">if</span> <span class="n">species</span> <span class="o">!=</span> <span class="s2">&quot;mouse&quot;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only &#39;mouse&#39; supported; extend as needed.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">species</span> <span class="o">!=</span> <span class="s2">"mouse"</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only 'mouse' supported; extend as needed."</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
-        <span class="o">/</span> <span class="s2">&quot;metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_color.csv&quot;</span>
+        <span class="o">/</span> <span class="s2">"metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_color.csv"</span>
     <span class="p">)</span>
-    <span class="n">col</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cluster_alias&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;cluster_alias&quot;</span><span class="p">)</span></div>
+    <span class="n">col</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"cluster_alias"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"cluster_alias"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="join_parcellation_annotation">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_parcellation_annotation">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">join_parcellation_annotation</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join parcellation term acronyms.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="p">{</span><span class="s2">&quot;parcellation_structure&quot;</span><span class="p">,</span> <span class="s2">&quot;parcellation_substructure&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Join parcellation term acronyms."""</span>
+    <span class="k">if</span> <span class="p">{</span><span class="s2">"parcellation_structure"</span><span class="p">,</span> <span class="s2">"parcellation_substructure"</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cell_df</span>
     <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
-        <span class="o">/</span> <span class="s2">&quot;metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv&quot;</span>
+        <span class="o">/</span> <span class="s2">"metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv"</span>
     <span class="p">)</span>
-    <span class="n">ann</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;parcellation_index&quot;</span><span class="p">)</span>
-    <span class="n">ann</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;parcellation_</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ann</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ann</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;parcellation_index&quot;</span><span class="p">)</span></div>
+    <span class="n">ann</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"parcellation_index"</span><span class="p">)</span>
+    <span class="n">ann</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"parcellation_</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ann</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ann</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"parcellation_index"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="join_parcellation_color">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_parcellation_color">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">join_parcellation_color</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join parcellation color columns.&quot;&quot;&quot;</span>
-    <span class="n">expected</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;parcellation_structure_color&quot;</span><span class="p">,</span> <span class="s2">&quot;parcellation_substructure_color&quot;</span><span class="p">}</span>
+<span class="w">    </span><span class="sd">"""Join parcellation color columns."""</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"parcellation_structure_color"</span><span class="p">,</span> <span class="s2">"parcellation_substructure_color"</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">expected</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">cell_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cell_df</span>
     <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
-        <span class="o">/</span> <span class="s2">&quot;metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_color.csv&quot;</span>
+        <span class="o">/</span> <span class="s2">"metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_color.csv"</span>
     <span class="p">)</span>
-    <span class="n">col</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;parcellation_index&quot;</span><span class="p">)</span>
-    <span class="n">col</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;parcellation_</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">col</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;parcellation_index&quot;</span><span class="p">)</span></div>
+    <span class="n">col</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"parcellation_index"</span><span class="p">)</span>
+    <span class="n">col</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"parcellation_</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">col</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"parcellation_index"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="filter_brain_section">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.filter_brain_section">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">filter_brain_section</span><span class="p">(</span><span class="n">cell_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">slice_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subset to a single-section label by numeric slice index.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">cell_df</span><span class="p">[</span><span class="n">cell_df</span><span class="p">[</span><span class="s2">&quot;brain_section_label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="sa">f</span><span class="s2">&quot;C57BL6J-638850.</span><span class="si">{</span><span class="n">slice_index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span></div>
+<span class="w">    </span><span class="sd">"""Subset to a single-section label by numeric slice index."""</span>
+    <span class="k">return</span> <span class="n">cell_df</span><span class="p">[</span><span class="n">cell_df</span><span class="p">[</span><span class="s2">"brain_section_label"</span><span class="p">]</span> <span class="o">==</span> <span class="sa">f</span><span class="s2">"C57BL6J-638850.</span><span class="si">{</span><span class="n">slice_index</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span></div>
 
 
 
@@ -1075,27 +914,27 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="load_expression_data">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_expression_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_expression_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">imputed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Open the (imputed or raw) log2 expression matrix .h5ad (backed=&#39;r&#39;).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Open the (imputed or raw) log2 expression matrix .h5ad (backed='r')."""</span>
     <span class="k">if</span> <span class="n">anndata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Please install `anndata` to enable gene-expression plots.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">"Please install `anndata` to enable gene-expression plots."</span><span class="p">)</span>
     <span class="n">base</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
     <span class="n">path</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">base</span> <span class="o">/</span> <span class="s2">&quot;expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad&quot;</span>
+        <span class="n">base</span> <span class="o">/</span> <span class="s2">"expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad"</span>
         <span class="k">if</span> <span class="n">imputed</span>
-        <span class="k">else</span> <span class="n">base</span> <span class="o">/</span> <span class="s2">&quot;expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad&quot;</span>
+        <span class="k">else</span> <span class="n">base</span> <span class="o">/</span> <span class="s2">"expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad"</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">anndata</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">backed</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">anndata</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">backed</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="select_gene">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.select_gene">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">select_gene</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">gene</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return (adata_subset_in_memory, gene_symbol) for a single gene.&quot;&quot;&quot;</span>
-    <span class="n">sym</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gene_symbol&quot;</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Return (adata_subset_in_memory, gene_symbol) for a single gene."""</span>
+    <span class="n">sym</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"gene_symbol"</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="o">==</span> <span class="n">gene</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">sym</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gene &#39;</span><span class="si">{</span><span class="n">gene</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Gene '</span><span class="si">{</span><span class="n">gene</span><span class="si">}</span><span class="s2">' not found."</span><span class="p">)</span>
     <span class="n">sub</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">to_memory</span><span class="p">()</span>
     <span class="n">gene_symbol</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sym</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]])</span>
     <span class="k">return</span> <span class="n">sub</span><span class="p">,</span> <span class="n">gene_symbol</span></div>
@@ -1105,28 +944,28 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="join_expression_to_section">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.join_expression_to_section">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">join_expression_to_section</span><span class="p">(</span><span class="n">adata_sub</span><span class="p">,</span> <span class="n">gene_symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">section_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join single-gene expression to a section-level metadata table by cell_label.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Join single-gene expression to a section-level metadata table by cell_label."""</span>
     <span class="n">gdf</span> <span class="o">=</span> <span class="n">adata_sub</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
     <span class="n">gdf</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">gene_symbol</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">section_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">section_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"inner"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="genes_in_merfish_data">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.genes_in_merfish_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">genes_in_merfish_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return list of gene symbols in the raw MERFISH log2 matrix.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return list of gene symbols in the raw MERFISH log2 matrix."""</span>
     <span class="n">ad</span> <span class="o">=</span> <span class="n">load_expression_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gene_symbol&quot;</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">var_names</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"gene_symbol"</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">var_names</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="genes_in_imputed_merfish_data">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.genes_in_imputed_merfish_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">genes_in_imputed_merfish_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return list of gene symbols in the imputed MERFISH log2 matrix.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return list of gene symbols in the imputed MERFISH log2 matrix."""</span>
     <span class="n">ad</span> <span class="o">=</span> <span class="n">load_expression_data</span><span class="p">(</span><span class="n">download_base</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gene_symbol&quot;</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">var_names</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"gene_symbol"</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">var_names</span><span class="p">))</span></div>
 
 
 
@@ -1135,43 +974,43 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="prepare_cells_table">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.prepare_cells_table">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">prepare_cells_table</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
-                        <span class="n">species</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;human&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mouse&quot;</span><span class="p">,</span>
-                        <span class="n">include</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;coords&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;colors&quot;</span><span class="p">,</span> <span class="s2">&quot;parcellation&quot;</span><span class="p">,</span> <span class="s2">&quot;parcellation_color&quot;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+                        <span class="n">species</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"mouse"</span><span class="p">,</span> <span class="s2">"human"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"mouse"</span><span class="p">,</span>
+                        <span class="n">include</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"coords"</span><span class="p">,</span> <span class="s2">"cluster"</span><span class="p">,</span> <span class="s2">"colors"</span><span class="p">,</span> <span class="s2">"parcellation"</span><span class="p">,</span> <span class="s2">"parcellation_color"</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run the frequent sequence of joins and return a fully enriched cell table.</span>
 
 <span class="sd">    include flags:</span>
-<span class="sd">      &#39;coords&#39; → reconstructed coords + parcellation_index</span>
-<span class="sd">      &#39;cluster&#39; → cluster annotations (class/subclass/etc.)</span>
-<span class="sd">      &#39;colors&#39; → cluster colors</span>
-<span class="sd">      &#39;parcellation&#39; → parcellation term acronyms</span>
-<span class="sd">      &#39;parcellation_color&#39; → parcellation colors</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">      'coords' → reconstructed coords + parcellation_index</span>
+<span class="sd">      'cluster' → cluster annotations (class/subclass/etc.)</span>
+<span class="sd">      'colors' → cluster colors</span>
+<span class="sd">      'parcellation' → parcellation term acronyms</span>
+<span class="sd">      'parcellation_color' → parcellation colors</span>
+<span class="sd">    """</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">load_cell_metadata</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;coords&quot;</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"coords"</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">join_reconstructed_coords</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;cluster&quot;</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"cluster"</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">join_cluster_details</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;colors&quot;</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"colors"</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">join_cluster_colors</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;parcellation&quot;</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"parcellation"</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">join_parcellation_annotation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;parcellation_color&quot;</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"parcellation_color"</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">join_parcellation_color</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">download_base</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span></div>
 
 
 <div class="viewcode-block" id="build_neuron_subset">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.build_neuron_subset">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">build_neuron_subset</span><span class="p">(</span><span class="n">base</span><span class="p">:</span> <span class="s2">&quot;Path&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_neuron_subset</span><span class="p">(</span><span class="n">base</span><span class="p">:</span> <span class="s2">"Path"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Return a metadata dataframe subset containing ONLY neurons</span>
-<span class="sd">    (rows where the integer prefix of the &#39;class&#39; column &lt;= 29)</span>
+<span class="sd">    (rows where the integer prefix of the 'class' column &lt;= 29)</span>
 
 <span class="sd">    Notes:</span>
-<span class="sd">      - Requires a &#39;class&#39; column like &#39;12 IT-L2/3 ...&#39;.</span>
+<span class="sd">      - Requires a 'class' column like '12 IT-L2/3 ...'.</span>
 <span class="sd">      - Adds the standard joins so downstream plotting has colors and labels.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">load_cell_metadata</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
@@ -1181,14 +1020,14 @@ window.runMermaid = runMermaid;</script>
     <span class="n">df</span> <span class="o">=</span> <span class="n">join_parcellation_annotation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">join_parcellation_color</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;class&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"class"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="c1"># Parse the integer code at the start of &#39;class&#39;</span>
+    <span class="c1"># Parse the integer code at the start of 'class'</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">class_idx</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">class_idx</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to parse &#39;class&#39; column as integers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to parse 'class' column as integers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">neuron_mask</span> <span class="o">=</span> <span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span>
     <span class="n">subset</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">neuron_mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -1202,81 +1041,81 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="slice_index_dict">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.slice_index_dict">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">slice_index_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Mapping from brain section labels (e.g. &#39;C57BL6J-638850.40&#39;)</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Mapping from brain section labels (e.g. 'C57BL6J-638850.40')</span>
 <span class="sd">    to corresponding slice indices in the 3D boundary volume.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dict</span>
 <span class="sd">        Keys are section labels, values are z indices.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;C57BL6J-638850.05&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.06&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.08&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.09&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.10&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.11&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.12&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.13&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.14&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.15&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.16&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.17&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.18&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.19&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.24&quot;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.25&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.26&quot;</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.27&quot;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.28&quot;</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.29&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.30&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.31&quot;</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.32&quot;</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.33&quot;</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.35&quot;</span><span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.36&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.37&quot;</span><span class="p">:</span> <span class="mi">33</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.38&quot;</span><span class="p">:</span> <span class="mi">34</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.39&quot;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.40&quot;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.42&quot;</span><span class="p">:</span> <span class="mi">38</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.43&quot;</span><span class="p">:</span> <span class="mi">39</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.44&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.45&quot;</span><span class="p">:</span> <span class="mi">41</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.46&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.47&quot;</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.48&quot;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.49&quot;</span><span class="p">:</span> <span class="mi">46</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.50&quot;</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.51&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.52&quot;</span><span class="p">:</span> <span class="mi">49</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.54&quot;</span><span class="p">:</span> <span class="mi">51</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.55&quot;</span><span class="p">:</span> <span class="mi">52</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.56&quot;</span><span class="p">:</span> <span class="mi">54</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.57&quot;</span><span class="p">:</span> <span class="mi">55</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.58&quot;</span><span class="p">:</span> <span class="mi">56</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.59&quot;</span><span class="p">:</span> <span class="mi">57</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.60&quot;</span><span class="p">:</span> <span class="mi">59</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.61&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.62&quot;</span><span class="p">:</span> <span class="mi">61</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.64&quot;</span><span class="p">:</span> <span class="mi">65</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.66&quot;</span><span class="p">:</span> <span class="mi">69</span><span class="p">,</span>
-        <span class="s2">&quot;C57BL6J-638850.67&quot;</span><span class="p">:</span> <span class="mi">71</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.05"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.06"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.08"</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.09"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.10"</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.11"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.12"</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.13"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.14"</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.15"</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.16"</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.17"</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.18"</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.19"</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.24"</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.25"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.26"</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.27"</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.28"</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.29"</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.30"</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.31"</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.32"</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.33"</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.35"</span><span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.36"</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.37"</span><span class="p">:</span> <span class="mi">33</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.38"</span><span class="p">:</span> <span class="mi">34</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.39"</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.40"</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.42"</span><span class="p">:</span> <span class="mi">38</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.43"</span><span class="p">:</span> <span class="mi">39</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.44"</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.45"</span><span class="p">:</span> <span class="mi">41</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.46"</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.47"</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.48"</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.49"</span><span class="p">:</span> <span class="mi">46</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.50"</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.51"</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.52"</span><span class="p">:</span> <span class="mi">49</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.54"</span><span class="p">:</span> <span class="mi">51</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.55"</span><span class="p">:</span> <span class="mi">52</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.56"</span><span class="p">:</span> <span class="mi">54</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.57"</span><span class="p">:</span> <span class="mi">55</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.58"</span><span class="p">:</span> <span class="mi">56</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.59"</span><span class="p">:</span> <span class="mi">57</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.60"</span><span class="p">:</span> <span class="mi">59</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.61"</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.62"</span><span class="p">:</span> <span class="mi">61</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.64"</span><span class="p">:</span> <span class="mi">65</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.66"</span><span class="p">:</span> <span class="mi">69</span><span class="p">,</span>
+        <span class="s2">"C57BL6J-638850.67"</span><span class="p">:</span> <span class="mi">71</span><span class="p">,</span>
     <span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="load_region_boundaries">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.load_region_boundaries">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_region_boundaries</span><span class="p">(</span><span class="n">download_base</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Load the boundary NIfTI and return (array[z,y,x], extent) suitable for imshow.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span>
-        <span class="o">/</span> <span class="s2">&quot;image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation_boundary.nii.gz&quot;</span>
+        <span class="o">/</span> <span class="s2">"image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation_boundary.nii.gz"</span>
     <span class="p">)</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
@@ -1291,7 +1130,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">extent</span>
 
 <span class="c1"># def load_region_boundaries(download_base):</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     """</span>
 <span class="c1">#     Load the region boundaries from the MERFISH data.</span>
 
 <span class="c1">#     Parameters:</span>
@@ -1305,9 +1144,9 @@ window.runMermaid = runMermaid;</script>
 <span class="c1">#         The region boundaries.</span>
 <span class="c1">#     extent : tuple</span>
 <span class="c1">#         The extent of the image in mm coordinates for plotting with matplotlib.</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     annotation_boundary_image_path = download_base / &#39;image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation_boundary.nii.gz&#39;</span>
-<span class="c1">#     print(f&quot;\n    Loading annotation boundary image from {annotation_boundary_image_path}\n&quot;)</span>
+<span class="c1">#     """</span>
+<span class="c1">#     annotation_boundary_image_path = download_base / 'image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation_boundary.nii.gz'</span>
+<span class="c1">#     print(f"\n    Loading annotation boundary image from {annotation_boundary_image_path}\n")</span>
 <span class="c1">#     annotation_boundary_image = sitk.ReadImage(annotation_boundary_image_path)</span>
 <span class="c1">#     annotation_boundary_array = sitk.GetArrayViewFromImage(annotation_boundary_image)</span>
 
@@ -1322,24 +1161,24 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="auto_zoom">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/utils.html#unravel.allen_institute.abca.merfish.utils.auto_zoom">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">auto_zoom</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">section_df</span><span class="p">,</span> <span class="n">pad</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Tighten axes to the bounding box of x_reconstructed/y_reconstructed</span>
 <span class="sd">    for the given section (plus a small padding).</span>
 
 <span class="sd">    Note: y-axis is inverted (top=small y), so we set ylim with (top, bottom).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">section_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">,</span> <span class="s2">&quot;y_reconstructed&quot;</span><span class="p">])</span>
+<span class="sd">    """</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">section_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">"x_reconstructed"</span><span class="p">,</span> <span class="s2">"y_reconstructed"</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span>
-    <span class="n">xs</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-    <span class="n">ys</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;y_reconstructed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"x_reconstructed"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"y_reconstructed"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 
     <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">xs</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="n">pad</span><span class="p">,</span> <span class="n">xs</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">pad</span>
     <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ys</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="n">pad</span><span class="p">,</span> <span class="n">ys</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">pad</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">)</span>   <span class="c1"># inverted y</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">)</span></div>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s2">"box"</span><span class="p">)</span></div>
 
 
 
@@ -1354,22 +1193,22 @@ window.runMermaid = runMermaid;</script>
     <span class="n">s_subset</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">alpha_all</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">alpha_subset</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">df</span><span class="p">:</span> <span class="s2">&quot;pd.DataFrame | None&quot;</span><span class="p">,</span>   <span class="c1"># already fully joined by caller (or None)</span>
+    <span class="n">df</span><span class="p">:</span> <span class="s2">"pd.DataFrame | None"</span><span class="p">,</span>   <span class="c1"># already fully joined by caller (or None)</span>
     <span class="n">neurons</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Color mode: plots all cells for the slice using a categorical/hex color column,</span>
 <span class="sd">    optionally overlays a subset, and adds boundary wireframe on top.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
     <span class="c1"># 1) Build full table (coords + cluster + colors + parcellation + parcellation_color)</span>
     <span class="n">all_df</span> <span class="o">=</span> <span class="n">prepare_cells_table</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
 
     <span class="c1"># 2) Optional neuron filter (opt-in only)</span>
-    <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">all_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">"class"</span> <span class="ow">in</span> <span class="n">all_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">class_idx</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">class_idx</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
             <span class="n">all_df</span> <span class="o">=</span> <span class="n">all_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">pass</span>  <span class="c1"># if parsing fails, fall back to unfiltered</span>
@@ -1384,11 +1223,11 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># 5) Plot</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-        <span class="n">all_section</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">],</span>
-        <span class="n">all_section</span><span class="p">[</span><span class="s2">&quot;y_reconstructed&quot;</span><span class="p">],</span>
+        <span class="n">all_section</span><span class="p">[</span><span class="s2">"x_reconstructed"</span><span class="p">],</span>
+        <span class="n">all_section</span><span class="p">[</span><span class="s2">"y_reconstructed"</span><span class="p">],</span>
         <span class="n">s</span><span class="o">=</span><span class="n">s_all</span><span class="p">,</span>
         <span class="n">c</span><span class="o">=</span><span class="n">all_section</span><span class="p">[</span><span class="n">color_col</span><span class="p">],</span>
-        <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span>
         <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_all</span><span class="p">,</span>
         <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="p">)</span>
@@ -1402,9 +1241,9 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># 6) Optional subset overlay (larger markers / higher alpha)</span>
     <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">sub</span> <span class="o">=</span> <span class="n">df</span>
-        <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">sub</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">"class"</span> <span class="ow">in</span> <span class="n">sub</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">class_idx</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="n">class_idx</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
                 <span class="n">sub</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">pass</span>
@@ -1412,18 +1251,18 @@ window.runMermaid = runMermaid;</script>
         <span class="n">subset_section</span> <span class="o">=</span> <span class="n">filter_brain_section</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">slice_index</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">subset_section</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-                <span class="n">subset_section</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">],</span>
-                <span class="n">subset_section</span><span class="p">[</span><span class="s2">&quot;y_reconstructed&quot;</span><span class="p">],</span>
+                <span class="n">subset_section</span><span class="p">[</span><span class="s2">"x_reconstructed"</span><span class="p">],</span>
+                <span class="n">subset_section</span><span class="p">[</span><span class="s2">"y_reconstructed"</span><span class="p">],</span>
                 <span class="n">s</span><span class="o">=</span><span class="n">s_subset</span><span class="p">,</span>
                 <span class="n">c</span><span class="o">=</span><span class="n">subset_section</span><span class="p">[</span><span class="n">color_col</span><span class="p">],</span>
-                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span>
                 <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_subset</span><span class="p">,</span>
                 <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
             <span class="p">)</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
     <span class="n">section_for_bbox</span> <span class="o">=</span> <span class="n">all_section</span> <span class="k">if</span> <span class="n">all_section</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">all_section</span><span class="o">.</span><span class="n">empty</span> <span class="k">else</span> <span class="n">subset_section</span>
@@ -1443,15 +1282,15 @@ window.runMermaid = runMermaid;</script>
     <span class="n">s_subset</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">alpha_all</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">alpha_subset</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">subset_df</span><span class="p">:</span> <span class="s2">&quot;pd.DataFrame | None&quot;</span><span class="p">,</span>
+    <span class="n">subset_df</span><span class="p">:</span> <span class="s2">"pd.DataFrame | None"</span><span class="p">,</span>
     <span class="n">imputed</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">neurons</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Gene mode: colors *all* cells by continuous expression (magma_r), adds a colorbar,</span>
 <span class="sd">    optionally overlays a subset (also colored by expression), and adds the boundary wireframe.</span>
 <span class="sd">    Highest-expressing cells are drawn last (on top).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -1460,9 +1299,9 @@ window.runMermaid = runMermaid;</script>
     <span class="n">all_df</span> <span class="o">=</span> <span class="n">prepare_cells_table</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
 
     <span class="c1"># 2) Optional neuron filter</span>
-    <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">all_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">"class"</span> <span class="ow">in</span> <span class="n">all_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">class_idx</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">class_idx</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
             <span class="n">all_df</span> <span class="o">=</span> <span class="n">all_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">pass</span>
@@ -1483,17 +1322,17 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">all_section</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">all_sorted</span> <span class="o">=</span> <span class="n">all_section</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">gene_symbol</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># low→high</span>
         <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-            <span class="n">all_sorted</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">],</span>
-            <span class="n">all_sorted</span><span class="p">[</span><span class="s2">&quot;y_reconstructed&quot;</span><span class="p">],</span>
+            <span class="n">all_sorted</span><span class="p">[</span><span class="s2">"x_reconstructed"</span><span class="p">],</span>
+            <span class="n">all_sorted</span><span class="p">[</span><span class="s2">"y_reconstructed"</span><span class="p">],</span>
             <span class="n">s</span><span class="o">=</span><span class="n">s_all</span><span class="p">,</span>
             <span class="n">c</span><span class="o">=</span><span class="n">all_sorted</span><span class="p">[</span><span class="n">gene_symbol</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
-            <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;magma_r&quot;</span><span class="p">,</span>
-            <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="s2">"magma_r"</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span>
             <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_all</span><span class="p">,</span>
             <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
-        <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gene_symbol</span><span class="si">}</span><span class="s2"> log2 expression&quot;</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">gene_symbol</span><span class="si">}</span><span class="s2"> log2 expression"</span><span class="p">)</span>
 
     <span class="c1"># 6) Boundaries</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
@@ -1508,9 +1347,9 @@ window.runMermaid = runMermaid;</script>
     <span class="n">subset_section</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># ensure defined for later</span>
     <span class="k">if</span> <span class="n">subset_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">subset_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">sub</span> <span class="o">=</span> <span class="n">subset_df</span>
-        <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">sub</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">neurons</span> <span class="ow">and</span> <span class="s2">"class"</span> <span class="ow">in</span> <span class="n">sub</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">class_idx</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="n">class_idx</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
                 <span class="n">sub</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">class_idx</span> <span class="o">&lt;=</span> <span class="mi">29</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">pass</span>
@@ -1520,18 +1359,18 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">subset_section</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="n">sub_sorted</span> <span class="o">=</span> <span class="n">subset_section</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">gene_symbol</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-                <span class="n">sub_sorted</span><span class="p">[</span><span class="s2">&quot;x_reconstructed&quot;</span><span class="p">],</span>
-                <span class="n">sub_sorted</span><span class="p">[</span><span class="s2">&quot;y_reconstructed&quot;</span><span class="p">],</span>
+                <span class="n">sub_sorted</span><span class="p">[</span><span class="s2">"x_reconstructed"</span><span class="p">],</span>
+                <span class="n">sub_sorted</span><span class="p">[</span><span class="s2">"y_reconstructed"</span><span class="p">],</span>
                 <span class="n">s</span><span class="o">=</span><span class="n">s_subset</span><span class="p">,</span>
                 <span class="n">c</span><span class="o">=</span><span class="n">sub_sorted</span><span class="p">[</span><span class="n">gene_symbol</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
-                <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;magma_r&quot;</span><span class="p">,</span>
-                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                <span class="n">cmap</span><span class="o">=</span><span class="s2">"magma_r"</span><span class="p">,</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span>
                 <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_subset</span><span class="p">,</span>
                 <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
             <span class="p">)</span>
 
     <span class="c1"># Axes style (no fixed limits; use auto_zoom if data exists)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
 

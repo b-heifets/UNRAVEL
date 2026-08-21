@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -877,15 +716,15 @@ window.runMermaid = runMermaid;</script>
   <h1>Source code for unravel.voxel_stats.vstats</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``vstats`` (``vs``) from UNRAVEL to run voxel-wise stats using FSL&#39;s randomise_parallel command.</span>
+<span class="sd">"""</span>
+<span class="sd">Use ``vstats`` (``vs``) from UNRAVEL to run voxel-wise stats using FSL's randomise_parallel command.</span>
 
 <span class="sd">Prereqs: </span>
 <span class="sd">    - Input images from ``vstats_prep``, ``vstats_z_score``, or ``vstats_whole_to_avg``.</span>
 
 <span class="sd">Inputs:</span>
 <span class="sd">    - `*`.nii.gz files in the current directory with conditions as prefixes (e.g., saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz)</span>
-<span class="sd">    - Files are merged in the order returned by Python&#39;s `sorted()` function, and this order determines group assignment in the design matrix.</span>
+<span class="sd">    - Files are merged in the order returned by Python's `sorted()` function, and this order determines group assignment in the design matrix.</span>
 <span class="sd">    - Sorting is case-sensitive and follows Unicode code-point order: A &lt; Z &lt; a &lt; z</span>
 <span class="sd">    - Examples: </span>
 <span class="sd">    - saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz → drug_1.nii.gz, drug_2.nii.gz, saline_1.nii.gz, saline_2.nii.gz</span>
@@ -913,7 +752,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
 <span class="sd">    vstats [-mas mask.nii.gz] [-p 18000] [--kernel 0] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-v] [--options --seed=1]</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
@@ -934,15 +773,15 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
-    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mas&#39;</span><span class="p">,</span> <span class="s1">&#39;--mask&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/mask.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--permutations&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of permutations (divisible by 300). Default: 18000&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">18000</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-k&#39;</span><span class="p">,</span> <span class="s1">&#39;--kernel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Smoothing kernel radius in mm if &gt; 0. Default: 0 &#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atlas&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/atlas.nii.gz (copied to stats/ for viewing; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;atlas/atlas_CCFv3_2020_30um.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-opt&#39;</span><span class="p">,</span> <span class="s1">&#39;--options&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Additional options for randomise, specified like &quot;--seed=1 -T&quot;&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">REMAINDER</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Optional arguments'</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-mas'</span><span class="p">,</span> <span class="s1">'--mask'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'path/mask.nii.gz'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-p'</span><span class="p">,</span> <span class="s1">'--permutations'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Number of permutations (divisible by 300). Default: 18000'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">18000</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-k'</span><span class="p">,</span> <span class="s1">'--kernel'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Smoothing kernel radius in mm if &gt; 0. Default: 0 '</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-a'</span><span class="p">,</span> <span class="s1">'--atlas'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'path/atlas.nii.gz (copied to stats/ for viewing; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'atlas/atlas_CCFv3_2020_30um.nii.gz'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-opt'</span><span class="p">,</span> <span class="s1">'--options'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Additional options for randomise, specified like "--seed=1 -T"'</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">REMAINDER</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
 
-    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
-    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'General arguments'</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-v'</span><span class="p">,</span> <span class="s1">'--verbose'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Increase verbosity. Default: False'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
@@ -954,17 +793,17 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="check_fdr_command">
 <a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.check_fdr_command">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_fdr_command</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the &#39;fdr&#39; command is available in the system&#39;s path.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">&#39;fdr&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: The &#39;fdr&#39; command is not available. Please ensure that it is installed and in your PATH.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Check if the 'fdr' command is available in the system's path."""</span>
+    <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">'fdr'</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Error: The 'fdr' command is not available. Please ensure that it is installed and in your PATH."</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="create_design_ttest2">
 <a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.create_design_ttest2">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_design_ttest2</span><span class="p">(</span><span class="n">mat_file</span><span class="p">,</span> <span class="n">group1_size</span><span class="p">,</span> <span class="n">group2_size</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create design matrix for a two-group unpaired t-test.&quot;&quot;&quot;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;design_ttest2&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mat_file</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">group1_size</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">group2_size</span><span class="p">)]</span>
+<span class="w">    </span><span class="sd">"""Create design matrix for a two-group unpaired t-test."""</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"design_ttest2"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mat_file</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">group1_size</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">group2_size</span><span class="p">)]</span>
     <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span></div>
 
 
@@ -972,16 +811,16 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.get_groups_info">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_groups_info</span><span class="p">():</span>
     <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">files</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">&#39;*.nii.gz&#39;</span><span class="p">)</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">'*.nii.gz'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="n">prefix</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'_'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
             <span class="n">groups</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">groups</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">groups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> members&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> members"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">groups</span></div>
 
@@ -989,9 +828,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="calculate_fragments">
 <a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.calculate_fragments">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_fragments</span><span class="p">(</span><span class="n">num_contrasts</span><span class="p">,</span> <span class="n">total_permutations_per_contrast</span><span class="o">=</span><span class="mi">18000</span><span class="p">,</span> <span class="n">permutations_per_fragment</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the total number of fragments based on the number of contrasts.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Calculate the total number of fragments based on the number of contrasts."""</span>
     <span class="k">if</span> <span class="n">num_contrasts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;Number of contrasts not determined.&quot;</span>
+        <span class="k">return</span> <span class="s2">"Number of contrasts not determined."</span>
     <span class="n">total_fragments</span> <span class="o">=</span> <span class="p">(</span><span class="n">total_permutations_per_contrast</span> <span class="o">*</span> <span class="n">num_contrasts</span><span class="p">)</span> <span class="o">//</span> <span class="n">permutations_per_fragment</span>
     <span class="k">return</span> <span class="n">total_fragments</span></div>
 
@@ -1003,19 +842,19 @@ window.runMermaid = runMermaid;</script>
     
     <span class="c1"># Construct the base command</span>
     <span class="n">command</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;randomise_parallel&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">input_image_path</span><span class="p">),</span>
-        <span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">permutations</span><span class="p">),</span>
-        <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_name</span><span class="p">),</span>
-        <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;stats/design.mat&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;stats/design.con&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--uncorrp&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;-x&quot;</span>
+        <span class="s2">"randomise_parallel"</span><span class="p">,</span>
+        <span class="s2">"-i"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">input_image_path</span><span class="p">),</span>
+        <span class="s2">"-n"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">permutations</span><span class="p">),</span>
+        <span class="s2">"-o"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_name</span><span class="p">),</span>
+        <span class="s2">"-d"</span><span class="p">,</span> <span class="s2">"stats/design.mat"</span><span class="p">,</span>
+        <span class="s2">"-t"</span><span class="p">,</span> <span class="s2">"stats/design.con"</span><span class="p">,</span>
+        <span class="s2">"--uncorrp"</span><span class="p">,</span>
+        <span class="s2">"-x"</span>
     <span class="p">]</span>
     
     <span class="c1"># Add the mask argument if provided</span>
     <span class="k">if</span> <span class="n">mask_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mask_path</span><span class="p">)])</span>
+        <span class="n">command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"-m"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mask_path</span><span class="p">)])</span>
 
     <span class="c1"># Append any additional options</span>
     <span class="k">if</span> <span class="n">options</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1023,31 +862,31 @@ window.runMermaid = runMermaid;</script>
 
     <span class="n">design_fts_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">design_fts_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">design_fts_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">design_fts_path</span><span class="p">:</span>
-        <span class="n">command</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="n">design_fts_path</span><span class="p">]</span>
+        <span class="n">command</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">"-f"</span><span class="p">,</span> <span class="n">design_fts_path</span><span class="p">]</span>
 
-    <span class="n">command_line</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold]</span><span class="si">{</span><span class="n">command_line</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">command_line</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">[bold]</span><span class="si">{</span><span class="n">command_line</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="c1"># Execute the command and stream output</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bufsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">as</span> <span class="n">proc</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>  <span class="c1"># Print each line as it comes</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>  <span class="c1"># Print each line as it comes</span>
             <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error executing command.&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Error executing command."</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error during command execution: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error during command execution: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Execute the command silently and capture output</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;randomise_parallel executed successfully</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"randomise_parallel executed successfully</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error executing randomise_parallel:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">process</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Error executing randomise_parallel:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">process</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error during command execution:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Error during command execution:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
 
 
@@ -1061,43 +900,43 @@ window.runMermaid = runMermaid;</script>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
-    <span class="n">stats_dir</span> <span class="o">=</span> <span class="n">cwd</span> <span class="o">/</span> <span class="s1">&#39;stats&#39;</span>
+    <span class="n">stats_dir</span> <span class="o">=</span> <span class="n">cwd</span> <span class="o">/</span> <span class="s1">'stats'</span>
     <span class="n">stats_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Copy the mask and the atlas to the stats directory using shutil</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">mask</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">stats_dir</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">stats_dir</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">mask</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [yellow]</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">mask</span><span class="si">}</span><span class="s2"> does not exist. Please provide a valid mask file. Skipping masking and copying to stats/</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    [yellow]</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">mask</span><span class="si">}</span><span class="s2"> does not exist. Please provide a valid mask file. Skipping masking and copying to stats/</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">stats_dir</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="p">,</span> <span class="n">stats_dir</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [yellow]</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="si">}</span><span class="s2"> does not exist. Skipping copying to stats/</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    [yellow]</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="si">}</span><span class="s2"> does not exist. Skipping copying to stats/</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Get the input images and save the order of the images being merged for reference</span>
-    <span class="n">images</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">&#39;*.nii.gz&#39;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">&#39;merged_image_order.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;index,group,filename</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">'*.nii.gz'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">'merged_image_order.csv'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"index,group,filename</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">image</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
-            <span class="n">group</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">image</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'_'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">image</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Merge and smooth the input images</span>
-    <span class="n">merged_file</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">&#39;all.nii.gz&#39;</span>
+    <span class="n">merged_file</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">'all.nii.gz'</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">merged_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    Merging *.nii.gz into ./stats/all.nii.gz with this order of files:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">    Merging *.nii.gz into ./stats/all.nii.gz with this order of files:'</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">images</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">avwutils</span><span class="o">.</span><span class="n">fslmerge</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">merged_file</span><span class="p">),</span> <span class="o">*</span><span class="n">images</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'    </span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">avwutils</span><span class="o">.</span><span class="n">fslmerge</span><span class="p">(</span><span class="s1">'t'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">merged_file</span><span class="p">),</span> <span class="o">*</span><span class="n">images</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span> 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    ./stats/all.nii.gz exists. Skipping merge of 3D images...</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">    ./stats/all.nii.gz exists. Skipping merge of 3D images...</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
  
     <span class="c1"># Smooth the image with a kernel</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">kernel</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">kernel_in_um</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">kernel</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
-        <span class="n">smoothed_file</span> <span class="o">=</span> <span class="n">merged_file</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;all_s</span><span class="si">{</span><span class="n">kernel_in_um</span><span class="si">}</span><span class="s1">.nii.gz&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    Smoothing all.nii.gz w/ fslmaths stats/all -s </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">kernel</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">smoothed_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">smoothed_file</span> <span class="o">=</span> <span class="n">merged_file</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="sa">f</span><span class="s1">'all_s</span><span class="si">{</span><span class="n">kernel_in_um</span><span class="si">}</span><span class="s1">.nii.gz'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">    Smoothing all.nii.gz w/ fslmaths stats/all -s </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">kernel</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">smoothed_file</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">fslmaths</span><span class="p">(</span><span class="n">merged_file</span><span class="p">)</span><span class="o">.</span><span class="n">s</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">smoothed_file</span><span class="p">)</span>
         <span class="n">glm_input_file</span> <span class="o">=</span> <span class="n">smoothed_file</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1106,18 +945,18 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># Set up required design files or check that they exist</span>
     <span class="n">groups_info</span> <span class="o">=</span> <span class="n">get_groups_info</span><span class="p">()</span>
     <span class="n">group_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">groups_info</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">design_fts_path</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">&#39;design.fts&#39;</span>
+    <span class="n">design_fts_path</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">'design.fts'</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">design_path_and_prefix</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">&#39;design&#39;</span>
+        <span class="n">design_path_and_prefix</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">'design'</span>
         <span class="n">create_design_ttest2</span><span class="p">(</span><span class="n">design_path_and_prefix</span><span class="p">,</span> <span class="n">groups_info</span><span class="p">[</span><span class="n">group_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">groups_info</span><span class="p">[</span><span class="n">group_keys</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Running t-test for groups </span><span class="si">{</span><span class="n">group_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">group_keys</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    Running t-test for groups </span><span class="si">{</span><span class="n">group_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">group_keys</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Running ANOVA</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    Running ANOVA</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">design_fts_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    [red1]</span><span class="si">{</span><span class="n">design_fts_path</span><span class="si">}</span><span class="s1"> does not exist. See extended help for setting up files for the ANOVA</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">    [red1]</span><span class="si">{</span><span class="n">design_fts_path</span><span class="si">}</span><span class="s1"> does not exist. See extended help for setting up files for the ANOVA</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
             <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span> 
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]There should be at least two groups with different prefixes in the input .nii.gz files.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    [red1]There should be at least two groups with different prefixes in the input .nii.gz files.</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">output_prefix</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="n">cwd</span><span class="o">.</span><span class="n">name</span>
 
@@ -1128,7 +967,7 @@ window.runMermaid = runMermaid;</script>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

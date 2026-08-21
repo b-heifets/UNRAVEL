@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -877,15 +716,19 @@ window.runMermaid = runMermaid;</script>
   <h1>Source code for unravel.allen_institute.abca.sunburst.sunburst_expression</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Use ``abca_sunburst_expression`` or ``sbe`` from UNRAVEL to calculate mean expression for all cell types in the ABCA and make a sunburst plot.</span>
 
 <span class="sd">Prereqs: </span>
-<span class="sd">    - ``abca_merfish_filter`` and ``merfish_join_expression_data.py``</span>
-<span class="sd">    - Or: ``RNAseq_expression.py`` and ``RNAseq_filter.py``</span>
+<span class="sd">    - ``abca_merfish_filter`` and ``abca_merfish_join_expression``</span>
+<span class="sd">    - Or: ``abca_scRNAseq_expression`` and ``abca_scRNAseq_filter``</span>
 
 <span class="sd">Outputs:</span>
-<span class="sd">    - path/input_sunburst_expression_thr&lt;value&gt;.csv, input_mean_expression_lut.txt, and input_percent_expression_thr&lt;value&gt;_lut.txt</span>
+<span class="sd">    - path/input_sunburst.csv</span>
+<span class="sd">    - path/sunburst_expression_thr&lt;value&gt;/input__gene-GENE_sunburst_expression_thr&lt;value&gt;.csv</span>
+<span class="sd">    - path/mean_expression_lut/input__gene-GENE_mean_expression_lut.txt</span>
+<span class="sd">    - path/percent_expression_thr&lt;value&gt;_lut/input__gene-GENE_percent_expression_thr&lt;value&gt;_lut.txt</span>
+<span class="sd">    - path/all_expression_thr&lt;value&gt;/input__gene-GENE_all.csv</span>
 
 <span class="sd">Note:</span>
 <span class="sd">    - LUT location: unravel/core/csvs/ABCA/WMB_sunburst_colors.csv</span>
@@ -894,11 +737,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    - Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (https://app.flourish.studio/)</span>
 <span class="sd">    - It can be pasted into the Data tab (categories columns = cell type columns, Size by = percent column)</span>
 <span class="sd">    - Preview tab: Hierarchy -&gt; Depth to 5, Colors -&gt; paste content of ..._colors.csv into Custom overrides</span>
+<span class="sd">    - ``abca_sunburst_expression_overview`` to summarize mean and percent expression for all cells and each cell type.</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">------ </span>
 <span class="sd">    abca_sunburst_expression -i path/VTA_DA_cells_Th_expression.csv -g gene [-o path/out_dir] [-n] [-v]</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
@@ -914,28 +758,26 @@ window.runMermaid = runMermaid;</script>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span> 
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 
-<span class="c1"># TODO: Update docstring with commands for other scripts in prereqs. Mean for all cells not saved yet.</span>
 
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/sunburst/sunburst_expression.html#unravel.allen_institute.abca.sunburst.sunburst_expression.parse_args">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
-    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/cells_filtered_exp.csv&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;--gene&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Gene to analyze&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Required arguments'</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'--input'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'path/cells_filtered_exp.csv'</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-g'</span><span class="p">,</span> <span class="s1">'--genes'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Genes to analyze'</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">'*'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args&#39;</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--species&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Species to analyze (&quot;mouse&quot; or &quot;human&quot;). Default: mouse&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;mouse&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--neurons&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Filter out non-neuronal cells. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--color_max&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum value for the color scale. Default: 10&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--threshold&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Log2(CPM+1) threshold for percent gene expression. Default: 6&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output dir path. Default: ABCA_sunburst_cmax10_thr6/&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-op&#39;</span><span class="p">,</span> <span class="s1">&#39;--output_prefix&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output file prefix. Default: input file name before the extension&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--all&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Save mean expression and percent expressing for all cells. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Optional args'</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-s'</span><span class="p">,</span> <span class="s1">'--species'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Species to analyze ("mouse" or "human"). Default: mouse'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'mouse'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-n'</span><span class="p">,</span> <span class="s1">'--neurons'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Filter out non-neuronal cells. Default: False'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-c'</span><span class="p">,</span> <span class="s1">'--color_max'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Maximum value for the color scale. Default: 10'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-t'</span><span class="p">,</span> <span class="s1">'--threshold'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Log2(CPM+1) threshold for percent gene expression. Default: 6'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-o'</span><span class="p">,</span> <span class="s1">'--output'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Output dir path. Default: ABCA_sunburst_cmax10_thr6/'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-op'</span><span class="p">,</span> <span class="s1">'--output_prefix'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Gene-specific output file prefix. Default: input stem + __gene-GENE'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
-    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'General arguments'</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-v'</span><span class="p">,</span> <span class="s1">'--verbose'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Increase verbosity. Default: False'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
@@ -950,37 +792,37 @@ window.runMermaid = runMermaid;</script>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
     <span class="n">species</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">species</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">species</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mouse&#39;</span><span class="p">,</span> <span class="s1">&#39;human&#39;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Species &#39;</span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2">&#39; not recognized. Please use &#39;mouse&#39; or &#39;human&#39;.&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Using species: </span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">species</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'mouse'</span><span class="p">,</span> <span class="s1">'human'</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Species '</span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2">' not recognized. Please use 'mouse' or 'human'."</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Using species: </span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Load the CSV file</span>
-    <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">&#39;mouse&#39;</span><span class="p">:</span>
-        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;neurotransmitter&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;subclass&#39;</span><span class="p">,</span> <span class="s1">&#39;supertype&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">&#39;human&#39;</span><span class="p">:</span>
-        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;neurotransmitter&#39;</span><span class="p">,</span> <span class="s1">&#39;supercluster&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="s1">&#39;subcluster&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">'mouse'</span><span class="p">:</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'neurotransmitter'</span><span class="p">,</span> <span class="s1">'class'</span><span class="p">,</span> <span class="s1">'subclass'</span><span class="p">,</span> <span class="s1">'supertype'</span><span class="p">,</span> <span class="s1">'cluster'</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">genes</span>
+    <span class="k">elif</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">'human'</span><span class="p">:</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'neurotransmitter'</span><span class="p">,</span> <span class="s1">'supercluster'</span><span class="p">,</span> <span class="s1">'cluster'</span><span class="p">,</span> <span class="s1">'subcluster'</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">genes</span>
     <span class="n">expected</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
     <span class="n">missing</span> <span class="o">=</span> <span class="n">expected</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing expected columns for </span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2"> data: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Missing expected columns for </span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2"> data: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">cells_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
 
-    <span class="c1"># Replace blank values in &#39;neurotransmitter&#39; column with &#39;NA&#39;</span>
-    <span class="n">cells_df</span><span class="p">[</span><span class="s1">&#39;neurotransmitter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cells_df</span><span class="p">[</span><span class="s1">&#39;neurotransmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;NA&#39;</span><span class="p">)</span>
+    <span class="c1"># Replace blank values in 'neurotransmitter' column with 'NA'</span>
+    <span class="n">cells_df</span><span class="p">[</span><span class="s1">'neurotransmitter'</span><span class="p">]</span> <span class="o">=</span> <span class="n">cells_df</span><span class="p">[</span><span class="s1">'neurotransmitter'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">'NA'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">neurons</span><span class="p">:</span>
         <span class="n">cells_df</span> <span class="o">=</span> <span class="n">filter_non_neuronal_cells</span><span class="p">(</span><span class="n">cells_df</span><span class="p">,</span> <span class="n">species</span><span class="p">)</span>
 
     <span class="c1"># Groupby the finest cell types to calculate the percentage of cells</span>
-    <span class="n">fine_level_col</span> <span class="o">=</span> <span class="s1">&#39;subcluster&#39;</span> <span class="k">if</span> <span class="s1">&#39;subcluster&#39;</span> <span class="ow">in</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="s1">&#39;cluster&#39;</span>
-    <span class="n">fine_df</span> <span class="o">=</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">fine_level_col</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;counts&#39;</span><span class="p">)</span>  <span class="c1"># Count the number of cells for each cell type</span>
-    <span class="n">fine_df</span> <span class="o">=</span> <span class="n">fine_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;counts&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Sort the cell types by the number of cells</span>
+    <span class="n">fine_level_col</span> <span class="o">=</span> <span class="s1">'subcluster'</span> <span class="k">if</span> <span class="s1">'subcluster'</span> <span class="ow">in</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="s1">'cluster'</span>
+    <span class="n">fine_df</span> <span class="o">=</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">fine_level_col</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'counts'</span><span class="p">)</span>  <span class="c1"># Count the number of cells for each cell type</span>
+    <span class="n">fine_df</span> <span class="o">=</span> <span class="n">fine_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'counts'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Sort the cell types by the number of cells</span>
 
     <span class="c1"># Add a column for the percentage of cells</span>
-    <span class="n">fine_df</span><span class="p">[</span><span class="s1">&#39;percent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fine_df</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">fine_df</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="n">fine_df</span><span class="p">[</span><span class="s1">'percent'</span><span class="p">]</span> <span class="o">=</span> <span class="n">fine_df</span><span class="p">[</span><span class="s1">'counts'</span><span class="p">]</span> <span class="o">/</span> <span class="n">fine_df</span><span class="p">[</span><span class="s1">'counts'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
 
-    <span class="c1"># Drop the &#39;counts&#39; column</span>
-    <span class="n">fine_df</span> <span class="o">=</span> <span class="n">fine_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+    <span class="c1"># Drop the 'counts' column</span>
+    <span class="n">fine_df</span> <span class="o">=</span> <span class="n">fine_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">'counts'</span><span class="p">)</span>
 
     <span class="c1"># Join the cells_df with the fine_df</span>
     <span class="n">cells_df</span> <span class="o">=</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fine_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">fine_level_col</span><span class="p">)</span>
@@ -989,100 +831,131 @@ window.runMermaid = runMermaid;</script>
     <span class="n">cells_df</span> <span class="o">=</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
 
     <span class="c1"># Sort by percentage</span>
-    <span class="n">cells_df</span> <span class="o">=</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;percent&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">cells_df</span> <span class="o">=</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'percent'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># Calculate the mean expression and percent expressing for all cells in cells_df</span>
-    <span class="n">all_mean</span> <span class="o">=</span> <span class="n">cells_df</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-    <span class="n">all_percent</span> <span class="o">=</span> <span class="p">(</span><span class="n">cells_df</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">genes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">gene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Gene '</span><span class="si">{</span><span class="n">gene</span><span class="si">}</span><span class="s2">' not found in the input data."</span><span class="p">)</span>
 
-    <span class="c1"># Create the output directory</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;ABCA_sunburst_cmax</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">color_max</span><span class="si">}</span><span class="s1">_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s1">&#39;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
-    <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Calculate the mean expression and percent expressing for all cells in cells_df</span>
+        <span class="n">all_mean</span> <span class="o">=</span> <span class="n">cells_df</span><span class="p">[</span><span class="n">gene</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">all_percent</span> <span class="o">=</span> <span class="p">(</span><span class="n">cells_df</span><span class="p">[</span><span class="n">gene</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
 
-    <span class="c1"># Save the mean expression and percent expressing for all cells (.txt)</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">all</span><span class="p">:</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;_sunburst_expression_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s1">_all.txt&#39;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;all_mean: </span><span class="si">{</span><span class="n">all_mean</span><span class="si">}</span><span class="se">\n</span><span class="s2">all_percent (threshold: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">all_percent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved mean expression and percent expressing for all cells to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Create the output directory</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'ABCA_sunburst_cmax</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">color_max</span><span class="si">}</span><span class="s1">_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s1">'</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># Calculate mean expression and percent expressing at each hierarchy level</span>
-    <span class="n">summary_df</span> <span class="o">=</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">&#39;mouse&#39;</span><span class="p">:</span>
-        <span class="n">hierarchy_levels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;neurotransmitter&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;subclass&#39;</span><span class="p">,</span> <span class="s1">&#39;supertype&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster&#39;</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">&#39;human&#39;</span><span class="p">:</span>
-        <span class="n">hierarchy_levels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;neurotransmitter&#39;</span><span class="p">,</span> <span class="s1">&#39;supercluster&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="s1">&#39;subcluster&#39;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">hierarchy_levels</span><span class="p">:</span>
-        <span class="n">summary_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s1">_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">cells_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="p">)[</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
-        <span class="n">summary_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s1">_percent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">cells_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="p">)[</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+        <span class="c1"># Set output prefixes</span>
+        <span class="n">input_prefix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output_prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">input_prefix</span><span class="si">}</span><span class="s1">__gene-</span><span class="si">{</span><span class="n">gene</span><span class="si">}</span><span class="s1">'</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_prefix</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">output_prefix</span>
 
-    <span class="n">summary_df</span> <span class="o">=</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">])</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
-    
-    <span class="c1"># Save the results</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output_prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">output_prefix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">output_prefix</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">output_prefix</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_sunburst_expression_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s2">.csv&quot;</span>
-    <span class="n">summary_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saved sunburst expression summary to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Create subdirectories for each gene-specific output type</span>
+        <span class="n">expression_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'sunburst_expression_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s1">'</span>
+        <span class="n">mean_lut_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">'mean_expression_lut'</span>
+        <span class="n">percent_lut_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'percent_expression_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s1">_lut'</span>
+        <span class="n">all_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'all_expression_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s1">'</span>
 
-    <span class="c1"># Stack labels and values for LUT files</span>
-    <span class="n">label_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">hierarchy_levels</span><span class="p">:</span>
-        <span class="n">label_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">label_stack</span><span class="p">,</span> <span class="n">summary_df</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">expression_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">mean_lut_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">percent_lut_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># Stack mean expression values and construct the mean expression LUT</span>
-    <span class="n">mean_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">hierarchy_levels</span><span class="p">:</span>
-        <span class="n">mean_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">mean_stack</span><span class="p">,</span> <span class="n">summary_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s1">_mean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">mean_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">label_stack</span><span class="p">,</span> <span class="n">mean_stack</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Combine the label stack and the mean stack</span>
-    <span class="n">mean_df</span> <span class="o">=</span> <span class="n">mean_df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
-    <span class="n">mean_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">all_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># Replace the mean value with the hex color (magma_r)</span>
-    <span class="n">mean_df</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">rgb2hex</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">magma_r</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">color_max</span> <span class="o">-</span> <span class="mi">0</span><span class="p">))))</span>
-    <span class="n">mean_df</span> <span class="o">=</span> <span class="n">mean_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+        <span class="c1"># Save the mean expression and percent expressing for all cells (.csv)</span>
+        <span class="n">all_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">'input'</span><span class="p">:</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+            <span class="s1">'species'</span><span class="p">:</span> <span class="p">[</span><span class="n">species</span><span class="p">],</span>
+            <span class="s1">'gene'</span><span class="p">:</span> <span class="p">[</span><span class="n">gene</span><span class="p">],</span>
+            <span class="s1">'threshold'</span><span class="p">:</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="p">],</span>
+            <span class="s1">'all_mean'</span><span class="p">:</span> <span class="p">[</span><span class="n">all_mean</span><span class="p">],</span>
+            <span class="s1">'all_percent'</span><span class="p">:</span> <span class="p">[</span><span class="n">all_percent</span><span class="p">],</span>
+        <span class="p">})</span>
+        <span class="n">all_path</span> <span class="o">=</span> <span class="n">all_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s1">_all.csv'</span>
+        <span class="n">all_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">all_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Saved mean expression and percent expressing for all cells to </span><span class="si">{</span><span class="n">all_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="c1"># Save the mean expression LUT</span>
-    <span class="n">mean_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;_expression_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;_mean_expression_lut.txt&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">mean_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mean_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">color</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Calculate mean expression and percent expressing at each hierarchy level</span>
+        <span class="n">summary_df</span> <span class="o">=</span> <span class="n">cells_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">'mouse'</span><span class="p">:</span>
+            <span class="n">hierarchy_levels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'neurotransmitter'</span><span class="p">,</span> <span class="s1">'class'</span><span class="p">,</span> <span class="s1">'subclass'</span><span class="p">,</span> <span class="s1">'supertype'</span><span class="p">,</span> <span class="s1">'cluster'</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">'human'</span><span class="p">:</span>
+            <span class="n">hierarchy_levels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'neurotransmitter'</span><span class="p">,</span> <span class="s1">'supercluster'</span><span class="p">,</span> <span class="s1">'cluster'</span><span class="p">,</span> <span class="s1">'subcluster'</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">hierarchy_levels</span><span class="p">:</span>
+            <span class="n">summary_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s1">_mean'</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">cells_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="p">)[</span><span class="n">gene</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+            <span class="n">summary_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s1">_percent'</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">cells_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="p">)[</span><span class="n">gene</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
 
-    <span class="c1"># Stack percent expression values</span>
-    <span class="n">percent_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">hierarchy_levels</span><span class="p">:</span>
-        <span class="n">percent_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">percent_stack</span><span class="p">,</span> <span class="n">summary_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s1">_percent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">percent_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">label_stack</span><span class="p">,</span> <span class="n">percent_stack</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">percent_df</span> <span class="o">=</span> <span class="n">percent_df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
-    <span class="n">percent_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">summary_df</span> <span class="o">=</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">gene</span><span class="p">])</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
 
-    <span class="c1"># Replace the percent value with the hex color (viridis_r)</span>
-    <span class="n">percent_df</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">percent_df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">rgb2hex</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis_r</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="mi">0</span><span class="p">))))</span>
-    <span class="n">percent_df</span> <span class="o">=</span> <span class="n">percent_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+        <span class="c1"># Save the gene-independent columns used to plot the sunburst</span>
+        <span class="n">sunburst_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">input_prefix</span><span class="si">}</span><span class="s1">_sunburst.csv'</span>
+        <span class="n">summary_df</span><span class="p">[</span><span class="n">hierarchy_levels</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'percent'</span><span class="p">]]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sunburst_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="c1"># Save the percent expression LUT</span>
-    <span class="n">percent_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;_expression_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;_percent_expression_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s1">_lut.txt&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">percent_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">percent_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">color</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">&#39;mouse&#39;</span><span class="p">:</span>
-        <span class="n">lut_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;unravel&#39;</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="s1">&#39;ABCA&#39;</span> <span class="o">/</span> <span class="s1">&#39;WMB_sunburst_colors.csv&#39;</span>
-    <span class="k">elif</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">&#39;human&#39;</span><span class="p">:</span>
-        <span class="n">lut_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;unravel&#39;</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="s1">&#39;ABCA&#39;</span> <span class="o">/</span> <span class="s1">&#39;WHB_sunburst_colors.csv&#39;</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">lut_path</span><span class="p">,</span> <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">lut_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Saved plot-ready sunburst data to </span><span class="si">{</span><span class="n">sunburst_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="c1"># Save the gene-specific results</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">expression_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_sunburst_expression_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s2">.csv"</span>
+        <span class="n">summary_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Saved sunburst expression summary to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="c1"># Stack labels and values for LUT files</span>
+        <span class="n">label_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">hierarchy_levels</span><span class="p">:</span>
+            <span class="n">label_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">label_stack</span><span class="p">,</span> <span class="n">summary_df</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'label'</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Stack mean expression values and construct the mean expression LUT</span>
+        <span class="n">mean_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">hierarchy_levels</span><span class="p">:</span>
+            <span class="n">mean_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">mean_stack</span><span class="p">,</span> <span class="n">summary_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s1">_mean'</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'value'</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">mean_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">label_stack</span><span class="p">,</span> <span class="n">mean_stack</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Combine the label stack and the mean stack</span>
+        <span class="n">mean_df</span> <span class="o">=</span> <span class="n">mean_df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+        <span class="n">mean_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'label'</span><span class="p">,</span> <span class="s1">'value'</span><span class="p">]</span>
+
+        <span class="c1"># Replace the mean value with the hex color (magma_r)</span>
+        <span class="n">mean_df</span><span class="p">[</span><span class="s1">'color'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_df</span><span class="p">[</span><span class="s1">'value'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">rgb2hex</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">magma_r</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">color_max</span> <span class="o">-</span> <span class="mi">0</span><span class="p">))))</span>
+        <span class="n">mean_df</span> <span class="o">=</span> <span class="n">mean_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'value'</span><span class="p">])</span>
+
+        <span class="c1"># Save the mean expression LUT</span>
+        <span class="n">mean_path</span> <span class="o">=</span> <span class="n">mean_lut_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s1">_mean_expression_lut.txt'</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mean_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">mean_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">color</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="c1"># Stack percent expression values</span>
+        <span class="n">percent_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">hierarchy_levels</span><span class="p">:</span>
+            <span class="n">percent_stack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">percent_stack</span><span class="p">,</span> <span class="n">summary_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s1">_percent'</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'value'</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">percent_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">label_stack</span><span class="p">,</span> <span class="n">percent_stack</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">percent_df</span> <span class="o">=</span> <span class="n">percent_df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+        <span class="n">percent_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'label'</span><span class="p">,</span> <span class="s1">'value'</span><span class="p">]</span>
+
+        <span class="c1"># Replace the percent value with the hex color (viridis_r)</span>
+        <span class="n">percent_df</span><span class="p">[</span><span class="s1">'color'</span><span class="p">]</span> <span class="o">=</span> <span class="n">percent_df</span><span class="p">[</span><span class="s1">'value'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">rgb2hex</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis_r</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="mi">0</span><span class="p">))))</span>
+        <span class="n">percent_df</span> <span class="o">=</span> <span class="n">percent_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'value'</span><span class="p">])</span>
+
+        <span class="c1"># Save the percent expression LUT</span>
+        <span class="n">percent_path</span> <span class="o">=</span> <span class="n">percent_lut_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s1">_percent_expression_thr</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s1">_lut.txt'</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">percent_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">percent_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">color</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">'mouse'</span><span class="p">:</span>
+        <span class="n">lut_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">'unravel'</span> <span class="o">/</span> <span class="s1">'core'</span> <span class="o">/</span> <span class="s1">'csvs'</span> <span class="o">/</span> <span class="s1">'ABCA'</span> <span class="o">/</span> <span class="s1">'WMB_sunburst_colors.csv'</span>
+    <span class="k">elif</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">'human'</span><span class="p">:</span>
+        <span class="n">lut_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">'unravel'</span> <span class="o">/</span> <span class="s1">'core'</span> <span class="o">/</span> <span class="s1">'csvs'</span> <span class="o">/</span> <span class="s1">'ABCA'</span> <span class="o">/</span> <span class="s1">'WHB_sunburst_colors.csv'</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">lut_path</span><span class="p">,</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">lut_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
     
     <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

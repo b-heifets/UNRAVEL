@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -877,7 +716,7 @@ window.runMermaid = runMermaid;</script>
   <h1>Source code for unravel.core.img_tools</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">""" </span>
 <span class="sd">This module contains functions processing 3D images: </span>
 <span class="sd">    - resample: Resample a 3D ndarray.</span>
 <span class="sd">    - reorient_axes: Reorient an ndarray for registration or warping to atlas space</span>
@@ -888,7 +727,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    - rolling_ball_subtraction_opencv_parallel: Subtract background from a 3D ndarray using OpenCV.</span>
 <span class="sd">    - label_IDs: Prints label IDs &gt; min_voxel_count (and optionally their sizes) in a 3D ndarray.</span>
 <span class="sd">    - find_bounding_box: Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -909,7 +748,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.resample">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">resample</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample a 3D ndarray using target resolution, dimensions, or scale.</span>
+<span class="w">    </span><span class="sd">"""Resample a 3D ndarray using target resolution, dimensions, or scale.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -937,7 +776,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    -----</span>
 <span class="sd">    - This function assumes that the axes of the ndarray are ordered as (x, y, z).</span>
 <span class="sd">    - The units of measurement should match for xy_res, z_res, and target_res.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -945,20 +784,20 @@ window.runMermaid = runMermaid;</script>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">zoom_factors</span> <span class="o">=</span> <span class="n">scale</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scale must be a float or list of 3 floats.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Scale must be a float or list of 3 floats."</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">target_dims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">zoom_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">new</span> <span class="o">/</span> <span class="n">old</span> <span class="k">for</span> <span class="n">new</span><span class="p">,</span> <span class="n">old</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">)]</span>
     <span class="k">elif</span> <span class="n">target_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">z_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xy_res and z_res must be provided if using target_res.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"xy_res and z_res must be provided if using target_res."</span><span class="p">)</span>
         <span class="n">target_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">target_res</span> <span class="o">=</span> <span class="p">[</span><span class="n">target_res</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="mi">3</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;target_res must be a float or a list of 3 floats.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"target_res must be a float or a list of 3 floats."</span><span class="p">)</span>
         <span class="n">zoom_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">xy_res</span> <span class="o">/</span> <span class="n">target_res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xy_res</span> <span class="o">/</span> <span class="n">target_res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">z_res</span> <span class="o">/</span> <span class="n">target_res</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must provide either scale, target_res, or target_dims.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Must provide either scale, target_res, or target_dims."</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">zoom_factors</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">zoom_order</span><span class="p">)</span></div>
 
@@ -967,9 +806,9 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reorient_axes">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">reorient_axes</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorient resampled ndarray for registration or warping to atlas space </span>
-<span class="sd">    (mimics orientation change from MIRACL&#39;s tif to .nii.gz conversion)&quot;&quot;&quot;</span>
-    <span class="n">img_reoriented</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;zyx-&gt;xzy&#39;</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Reorient resampled ndarray for registration or warping to atlas space </span>
+<span class="sd">    (mimics orientation change from MIRACL's tif to .nii.gz conversion)"""</span>
+    <span class="n">img_reoriented</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'zyx-&gt;xzy'</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">img_reoriented</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
 
 
@@ -977,12 +816,12 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reverse_reorient_axes">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">reverse_reorient_axes</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorient an ndarray by rotating and flipping to correct axis order for image conversion.</span>
+<span class="w">    </span><span class="sd">"""Reorient an ndarray by rotating and flipping to correct axis order for image conversion.</span>
 
 <span class="sd">    Rotates 90 degrees to the right and flips horizontally.</span>
 <span class="sd">    </span>
 <span class="sd">    This can reverse the reorientation done by reorient_axes().</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">rotated_img</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="n">reshape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Rotate 90 degrees to the right</span>
     <span class="n">flipped_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fliplr</span><span class="p">(</span><span class="n">rotated_img</span><span class="p">)</span> <span class="c1"># Flip horizontally</span>
     <span class="k">return</span> <span class="n">flipped_img</span></div>
@@ -992,37 +831,37 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.pixel_classification">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">pixel_classification</span><span class="p">(</span><span class="n">tif_dir</span><span class="p">,</span> <span class="n">ilastik_project</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">ilastik_executable</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Segment tif series with Ilastik using pixel classification.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Segment tif series with Ilastik using pixel classification."""</span>
 
     <span class="k">if</span> <span class="n">ilastik_executable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]Ilastik executable path not provided. Please provide the path to the Ilastik executable.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    [red1]Ilastik executable path not provided. Please provide the path to the Ilastik executable.</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span>
 
-    <span class="n">tif_list</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">,</span> <span class="n">base_path</span><span class="o">=</span><span class="n">tif_dir</span><span class="p">)</span>
+    <span class="n">tif_list</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">'*.tif'</span><span class="p">,</span> <span class="n">base_path</span><span class="o">=</span><span class="n">tif_dir</span><span class="p">)</span>
     <span class="n">tif_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">tif</span><span class="p">)</span> <span class="k">for</span> <span class="n">tif</span> <span class="ow">in</span> <span class="n">tif_list</span><span class="p">]</span>
     
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">ilastik_executable</span><span class="p">,</span> <span class="c1"># Path to ilastik executable as a string</span>
-        <span class="s1">&#39;--headless&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;--project&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ilastik_project</span><span class="p">),</span>
-        <span class="s1">&#39;--export_source&#39;</span><span class="p">,</span> <span class="s1">&#39;Simple Segmentation&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;--output_format&#39;</span><span class="p">,</span> <span class="s1">&#39;tif&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;--output_filename_format&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span><span class="si">}</span><span class="s1">/</span><span class="se">{{</span><span class="s1">nickname</span><span class="se">}}</span><span class="s1">.tif&#39;</span>
+        <span class="s1">'--headless'</span><span class="p">,</span>
+        <span class="s1">'--project'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ilastik_project</span><span class="p">),</span>
+        <span class="s1">'--export_source'</span><span class="p">,</span> <span class="s1">'Simple Segmentation'</span><span class="p">,</span>
+        <span class="s1">'--output_format'</span><span class="p">,</span> <span class="s1">'tif'</span><span class="p">,</span>
+        <span class="s1">'--output_filename_format'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span><span class="si">}</span><span class="s1">/</span><span class="se">{{</span><span class="s1">nickname</span><span class="se">}}</span><span class="s1">.tif'</span>
     <span class="p">]</span> <span class="o">+</span> <span class="n">tif_list</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cmd</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Running Ilastik with command:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">[:</span><span class="mi">10</span><span class="p">]),</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tif_list</span><span class="p">[:</span><span class="mi">3</span><span class="p">]),</span> <span class="sa">f</span><span class="s1">&#39;[default bold]...</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    Running Ilastik with command:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">[:</span><span class="mi">10</span><span class="p">]),</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tif_list</span><span class="p">[:</span><span class="mi">3</span><span class="p">]),</span> <span class="sa">f</span><span class="s1">'[default bold]...</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">'nt'</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Ilastik failed with error:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    Ilastik failed with error:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Ilastik completed successfully.&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"    Ilastik completed successfully."</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="pad">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.pad">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">pad</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pad_percent</span><span class="o">=</span><span class="mf">0.25</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pads ndarray by a specified percentage.</span>
+<span class="w">    </span><span class="sd">"""Pads ndarray by a specified percentage.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
@@ -1036,34 +875,34 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    --------</span>
 <span class="sd">    padded_ndarray : numpy.ndarray</span>
 <span class="sd">        Padded 3D ndarray.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">pad_factor</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pad_percent</span>
     <span class="n">pad_width_x</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">pad_factor</span><span class="p">)</span> <span class="o">-</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">pad_width_y</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">pad_factor</span><span class="p">)</span> <span class="o">-</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">pad_width_z</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">pad_factor</span><span class="p">)</span> <span class="o">-</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">((</span><span class="n">pad_width_x</span><span class="p">,</span> <span class="n">pad_width_x</span><span class="p">),</span> <span class="p">(</span><span class="n">pad_width_y</span><span class="p">,</span> <span class="n">pad_width_y</span><span class="p">),</span> <span class="p">(</span><span class="n">pad_width_z</span><span class="p">,</span> <span class="n">pad_width_z</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">((</span><span class="n">pad_width_x</span><span class="p">,</span> <span class="n">pad_width_x</span><span class="p">),</span> <span class="p">(</span><span class="n">pad_width_y</span><span class="p">,</span> <span class="n">pad_width_y</span><span class="p">),</span> <span class="p">(</span><span class="n">pad_width_z</span><span class="p">,</span> <span class="n">pad_width_z</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'constant'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="reorient_ndarray">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reorient_ndarray">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">reorient_ndarray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">orientation_string</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention)."""</span>
     
     <span class="c1"># Orientation reference for RAS system</span>
-    <span class="n">ref_orient</span> <span class="o">=</span> <span class="s2">&quot;RAS&quot;</span> <span class="c1"># R=Right, A=Anterior, S=Superior (conventional orientation of NIFTI images)</span>
+    <span class="n">ref_orient</span> <span class="o">=</span> <span class="s2">"RAS"</span> <span class="c1"># R=Right, A=Anterior, S=Superior (conventional orientation of NIFTI images)</span>
 
     <span class="c1"># Ensure valid orientation_string</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">orientation_string</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ref_orient</span> <span class="o">+</span> <span class="s2">&quot;LIP&quot;</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid orientation code. Must be a 3-letter code consisting of RLAPSI.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">orientation_string</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ref_orient</span> <span class="o">+</span> <span class="s2">"LIP"</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid orientation code. Must be a 3-letter code consisting of RLAPSI."</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">orientation_string</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid orientation code. Must be a 3-letter code consisting of RLAPSI.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid orientation code. Must be a 3-letter code consisting of RLAPSI."</span><span class="p">)</span>
 
     <span class="c1"># Compute the permutation indices and flips</span>
     <span class="n">permutation</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_orient</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">orient</span><span class="p">)</span> <span class="k">for</span> <span class="n">orient</span> <span class="ow">in</span> <span class="n">orientation_string</span><span class="p">]</span>
-    <span class="n">flips</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">orient</span> <span class="ow">in</span> <span class="s2">&quot;LIP&quot;</span> <span class="k">else</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">))</span> <span class="k">for</span> <span class="n">orient</span> <span class="ow">in</span> <span class="n">orientation_string</span><span class="p">]</span>
+    <span class="n">flips</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">orient</span> <span class="ow">in</span> <span class="s2">"LIP"</span> <span class="k">else</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">))</span> <span class="k">for</span> <span class="n">orient</span> <span class="ow">in</span> <span class="n">orientation_string</span><span class="p">]</span>
 
-    <span class="c1"># Reorient the data using numpy&#39;s advanced indexing</span>
+    <span class="c1"># Reorient the data using numpy's advanced indexing</span>
     <span class="n">reoriented_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">flips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">flips</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">flips</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
     <span class="n">reoriented_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">reoriented_data</span><span class="p">,</span> <span class="n">permutation</span><span class="p">)</span>
 
@@ -1074,30 +913,30 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reorient_ndarray2">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">reorient_ndarray2</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">orientation_string</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention)."""</span>
 
     <span class="c1"># Define the anatomical direction mapping. The first letter is the direction of the first axis, etc.</span>
     <span class="n">direction_map</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;R&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;P&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="mi">2</span>
+        <span class="s1">'R'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'L'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">'A'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'P'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">'I'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'S'</span><span class="p">:</span> <span class="mi">2</span>
     <span class="p">}</span>
 
     <span class="c1"># Define the flip direction</span>
     <span class="n">flip_map</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;R&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;P&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="s1">'R'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">'L'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s1">'A'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">'P'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s1">'I'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">'S'</span><span class="p">:</span> <span class="kc">False</span>
     <span class="p">}</span>
 
     <span class="c1"># Orientation reference for RAS system</span>
-    <span class="n">ref_orient</span> <span class="o">=</span> <span class="s2">&quot;RAS&quot;</span>
+    <span class="n">ref_orient</span> <span class="o">=</span> <span class="s2">"RAS"</span>
 
     <span class="c1"># Ensure valid orientation_string</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">orientation_string</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ref_orient</span> <span class="o">+</span> <span class="s2">&quot;LIP&quot;</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid orientation code. Must be a 3-letter code consisting of RLAPSI.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">orientation_string</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ref_orient</span> <span class="o">+</span> <span class="s2">"LIP"</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid orientation code. Must be a 3-letter code consisting of RLAPSI."</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">orientation_string</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid orientation code. Must be a 3-letter code consisting of RLAPSI.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid orientation code. Must be a 3-letter code consisting of RLAPSI."</span><span class="p">)</span>
 
     <span class="c1"># Determine new orientation based on the code</span>
     <span class="n">new_axes_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">direction_map</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">orientation_string</span><span class="p">]</span>
@@ -1119,7 +958,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="process_slice">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.process_slice">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">process_slice</span><span class="p">(</span><span class="nb">slice</span><span class="p">,</span> <span class="n">struct_element</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subtract background from &lt;slice&gt; using OpenCV.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Subtract background from &lt;slice&gt; using OpenCV."""</span>
     <span class="n">smoothed_slice</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">morphologyEx</span><span class="p">(</span><span class="nb">slice</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_OPEN</span><span class="p">,</span> <span class="n">struct_element</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">slice</span> <span class="o">-</span> <span class="n">smoothed_slice</span></div>
 
@@ -1128,11 +967,11 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">rolling_ball_subtraction_opencv_parallel</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subtract background from &lt;ndarray&gt; using OpenCV. </span>
+<span class="w">    </span><span class="sd">"""Subtract background from &lt;ndarray&gt; using OpenCV. </span>
 <span class="sd">    Uses multiple threads to process slices in parallel.</span>
 <span class="sd">    Radius is the radius of the rolling ball in pixels.</span>
 <span class="sd">    Returns ndarray with background subtracted.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">struct_element</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getStructuringElement</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_ELLIPSE</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">radius</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">radius</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># 2D disk</span>
     <span class="n">bkg_subtracted_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">ndarray</span><span class="p">)</span> <span class="c1"># Preallocate the result array</span>
     <span class="n">num_cores</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ndarray</span><span class="p">),</span> <span class="n">threads</span><span class="p">)</span> <span class="c1"># Number of available CPU cores</span>
@@ -1150,7 +989,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="label_IDs">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.label_IDs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">label_IDs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">min_voxel_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">print_IDs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_sizes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    This finds and prints unique intensities in the ndarry with more than min_voxel_count voxels (does not check for connectedness).</span>
 
 <span class="sd">    Optionally, it also prints the number of voxels for each label ID (intensity).</span>
@@ -1187,7 +1026,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    ID: 1, Size: 2</span>
 <span class="sd">    ID: 2, Size: 2</span>
 <span class="sd">    ID: 3, Size: 3</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Get unique intensities and their counts</span>
     <span class="n">unique_intensities</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">ndarray</span><span class="p">[</span><span class="n">ndarray</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1197,12 +1036,12 @@ window.runMermaid = runMermaid;</script>
     
     <span class="c1"># Print cluster IDs</span>
     <span class="k">if</span> <span class="n">print_sizes</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ID,Size&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">ID,Size"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">cluster_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">clusters_above_minextent</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">print_sizes</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">)</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">counts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">)</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">counts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">print_IDs</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">' '</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">print_IDs</span><span class="p">:</span> <span class="c1"># Removes trailing %</span>
         <span class="nb">print</span><span class="p">()</span>
     
@@ -1215,14 +1054,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="find_bounding_box">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.find_bounding_box">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_bounding_box</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cluster_ID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        ndarray: 3D numpy array to search within.</span>
 <span class="sd">        cluster_ID (int): Cluster intensity to find bbox for. If None, return bbox for all clusters.</span>
 <span class="sd">        output_file_path (str): File path to write the bounding box.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="c1"># Initialize views based on whether we are looking for a specific cluster_ID or any cluster</span>
     <span class="k">if</span> <span class="n">cluster_ID</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1258,8 +1097,8 @@ window.runMermaid = runMermaid;</script>
 
     <span class="c1"># Write to file if specified</span>
     <span class="k">if</span> <span class="n">output_file_path</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">xmin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">xmax</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ymin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">ymax</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">zmin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">zmax</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file_path</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">xmin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">xmax</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ymin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">ymax</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">zmin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">zmax</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span></div>
 
@@ -1268,12 +1107,12 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="crop">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.crop">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">crop</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bbox</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Crop an ndarray to the specified bounding box (xmin:xmax, ymin:ymax, zmin:zmax)&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Crop an ndarray to the specified bounding box (xmin:xmax, ymin:ymax, zmin:zmax)"""</span>
     <span class="c1"># Split the bounding box string into coordinates</span>
-    <span class="n">bbox_coords</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bbox_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
-    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">bbox_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
-    <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">bbox_coords</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
+    <span class="n">bbox_coords</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bbox_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)]</span>
+    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">bbox_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)]</span>
+    <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">bbox_coords</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)]</span>
 
     <span class="c1"># Crop and return the ndarray</span>
     <span class="k">return</span> <span class="n">ndarray</span><span class="p">[</span><span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">zmin</span><span class="p">:</span><span class="n">zmax</span><span class="p">]</span></div>

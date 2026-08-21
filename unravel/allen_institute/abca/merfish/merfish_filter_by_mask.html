@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -618,8 +619,97 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-abca-merfish-merfish-filter-by-mask-module">
-<span id="unravel-allen-institute-abca-merfish-merfish-filter-by-mask"></span><h1>unravel.allen_institute.abca.merfish.merfish_filter_by_mask module<a class="headerlink" href="#unravel-allen-institute-abca-merfish-merfish-filter-by-mask-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.abca.merfish.merfish_filter_by_mask">
+<span id="unravel-allen-institute-abca-merfish-merfish-filter-by-mask-module"></span><span id="unravel-allen-institute-abca-merfish-merfish-filter-by-mask"></span><h1>unravel.allen_institute.abca.merfish.merfish_filter_by_mask module<a class="headerlink" href="#module-unravel.allen_institute.abca.merfish.merfish_filter_by_mask" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">abca_merfish_filter_by_mask</span></code> or <code class="docutils literal notranslate"><span class="pre">mf_filter_mask</span></code>  from UNRAVEL to spatially filter MERFISH cell metadata using a mask image in MERFISH-CCF space.</p>
+<dl class="simple">
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">warp_ccf30_to_merfish</span></code> to warp the mask image to MERFISH-CCF space</p></li>
+</ul>
+</dd>
+<dt>Processing steps:</dt><dd><ul class="simple">
+<li><ol class="arabic simple">
+<li><p>Binarize the mask image</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>Determine the bounding box of the mask image and filter the cell metadata by the bounding box</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p>Loop through each cell and filter out cells whose reconstructed coordinates are external to the mask</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="4">
+<li><p>Save the filtered cell metadata to a new CSV file</p></li>
+</ol>
+</li>
+</ul>
+</dd>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>path/to/mask.nii.gz file(s) or glob patterns (e.g., <cite>*.nii.gz</cite>)</p></li>
+<li><p>Path to the root directory of the Allen Brain Cell Atlas data (downloaded from Allen Brain Atlas)</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>Each CSV will be named like &lt;input_mask_name&gt;_cells.csv</p></li>
+</ul>
+</dd>
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p>Use the filtered cell metadata to examine cell type prevalence or gene expression</p></li>
+<li><p>For cell type proportions like in the MapMySections data challenge, use <code class="docutils literal notranslate"><span class="pre">mms_cell_type_proportions</span></code> to calculate proportions for a given ontological level (e.g., subclass)</p></li>
+<li><p>Then use <code class="docutils literal notranslate"><span class="pre">mms_cell_type_proportions_concat</span></code> to concatenate multiple CSVs into one file (one row per input file)</p></li>
+<li><p>To visualize cell type proportions, use <code class="docutils literal notranslate"><span class="pre">abca_sunburst</span></code> to make a CSV for sunburst plotting</p></li>
+<li><p>For looking at gene expression, load the filtered cell metadata and join it with the expression data for the gene(s) of interest (<code class="docutils literal notranslate"><span class="pre">abca_merfish_join_expression</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_merfish_filter_by_mask -b path/to/root_dir -i mask.nii.gz [-o path/cells_filtered_by_cluster.csv] [-v]</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_filter_by_mask.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_filter_by_mask.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_filter_by_mask.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_filter_by_mask.check_cells_in_mask">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_filter_by_mask.</span></span><span class="sig-name descname"><span class="pre">check_cells_in_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df_bbox_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_filter_by_mask.html#check_cells_in_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.check_cells_in_mask" title="Link to this definition">#</a></dt>
+<dd><p>Determines whether each cell is within the mask using a 3D image representation.</p>
+<p>This function converts cell coordinates to voxel indices and stores them in a dictionary,
+allowing multiple cells per voxel. The function then filters out cells that do not belong
+to the mask by checking if the voxel indices are present in the mask image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df_bbox_filter</strong> (<em>pd.DataFrame</em>) – DataFrame containing filtered cell metadata, including reconstructed coordinates.</p></li>
+<li><p><strong>mask_image</strong> (<em>np.ndarray</em>) – A 3D binary NumPy array</p></li>
+<li><p><strong>xy_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Resolution of the x-y plane in microns (µm).</p></li>
+<li><p><strong>z_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Resolution of the z-plane in microns (µm).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered DataFrame containing only the cells that fall within the mask.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_filter_by_mask.merfish_filter_by_mask">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_filter_by_mask.</span></span><span class="sig-name descname"><span class="pre">merfish_filter_by_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res_mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res_mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_df_joined</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_filter_by_mask.html#merfish_filter_by_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.merfish_filter_by_mask" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_filter_by_mask.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_filter_by_mask.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_filter_by_mask.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -660,6 +750,22 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.check_cells_in_mask"><code class="docutils literal notranslate"><span class="pre">check_cells_in_mask()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.merfish_filter_by_mask"><code class="docutils literal notranslate"><span class="pre">merfish_filter_by_mask()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

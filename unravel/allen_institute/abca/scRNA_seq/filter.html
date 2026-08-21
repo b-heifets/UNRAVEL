@@ -56,8 +56,8 @@
     <link rel="icon" href="../../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="unravel.allen_institute.abca.scRNA_seq.expression module" href="expression.html" />
-    <link rel="prev" title="unravel.allen_institute.abca.scRNA_seq package" href="toc.html" />
+    <link rel="next" title="unravel.allen_institute.abca.scRNA_seq.expression_summary module" href="expression_summary.html" />
+    <link rel="prev" title="unravel.allen_institute.abca.scRNA_seq.expression module" href="expression.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l4 current active"><a class="current reference internal" href="#">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -618,8 +619,56 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-abca-scrna-seq-filter-module">
-<span id="unravel-allen-institute-abca-scrna-seq-filter"></span><h1>unravel.allen_institute.abca.scRNA_seq.filter module<a class="headerlink" href="#unravel-allen-institute-abca-scrna-seq-filter-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.abca.scRNA_seq.filter">
+<span id="unravel-allen-institute-abca-scrna-seq-filter-module"></span><span id="unravel-allen-institute-abca-scrna-seq-filter"></span><h1>unravel.allen_institute.abca.scRNA_seq.filter module<a class="headerlink" href="#module-unravel.allen_institute.abca.scRNA_seq.filter" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">abca_scRNAseq_filter</span></code> or <code class="docutils literal notranslate"><span class="pre">rna_filter</span></code> from UNRAVEL to filter ABCA scRNA-seq cells based on columns and values in the cell metadata.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>region_of_interest_acronym: ACA, AI, AUD, AUD-TEa-PERI-ECT, CB, CTXsp, ENT, HIP, HY, LSX, MB, MO-FRP, MOp, MY, OLF, P, PAL, PL-ILA-ORB, RHP, RSP, sAMY, SS-GU-VISC, SSp, STRd, STRv, TEa-PERI-ECT, TH, VIS, VIS-PTLp</p></li>
+<li><p>mouse columns: cell_label, feature_matrix_label, region_of_interest_acronym, x, y, cluster_alias, neurotransmitter, class, subclass, supertype, cluster, …, &lt;genes&gt;</p></li>
+<li><p>human columns: cell_label, feature_matrix_label, region_of_interest_acronym, x, y, cluster_alias, neurotransmitter, supercluster, cluster, subcluster, …, &lt;genes&gt;</p></li>
+<li><p>For multiple columns and values, the number of columns must match the number of values.</p></li>
+</ul>
+<dl class="simple">
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">abca_sunburst_expression</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_scRNAseq_filter -i path/expression.csv [-c column1 column2 … -val value1 value2 …] [-s mouse | human] [-ct Neurons | Nonneurons] [-split split_column] [-o output] [-v]</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.filter.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.filter.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/filter.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.filter.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.filter.filter_by_cell_type">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.filter.</span></span><span class="sig-name descname"><span class="pre">filter_by_cell_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/filter.html#filter_by_cell_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.filter.filter_by_cell_type" title="Link to this definition">#</a></dt>
+<dd><p>Filter cells by species and cell type (neurons vs nonneurons).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>cell_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.filter.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.filter.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/filter.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.filter.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -633,20 +682,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="toc.html"
+       href="expression.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq package</p>
+        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.expression module</p>
       </div>
     </a>
     <a class="right-next"
-       href="expression.html"
+       href="expression_summary.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.expression module</p>
+        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.expression_summary module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -660,6 +709,21 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.filter.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.filter.filter_by_cell_type"><code class="docutils literal notranslate"><span class="pre">filter_by_cell_type()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.filter.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

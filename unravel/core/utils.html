@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -646,15 +647,15 @@ and enhancing command-line scripts with progress bars and detailed function exec
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load the configuration from a file</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">&quot;path/to/config.ini&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">"path/to/config.ini"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get a list of sample directories</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">samples</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">([</span><span class="s2">&quot;path/to/dir1&quot;</span><span class="p">,</span> <span class="s2">&quot;path/to/dir2&quot;</span><span class="p">],</span> <span class="n">dir_pattern</span><span class="o">=</span><span class="s2">&quot;sample??&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">samples</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">([</span><span class="s2">"path/to/dir1"</span><span class="p">,</span> <span class="s2">"path/to/dir2"</span><span class="p">],</span> <span class="n">dir_pattern</span><span class="o">=</span><span class="s2">"sample??"</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize a progress bar</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">progress</span><span class="p">,</span> <span class="n">task_id</span> <span class="o">=</span> <span class="n">initialize_progress_bar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span> <span class="n">task_message</span><span class="o">=</span><span class="s2">&quot;[red]Processing samples...&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">progress</span><span class="p">,</span> <span class="n">task_id</span> <span class="o">=</span> <span class="n">initialize_progress_bar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span> <span class="n">task_message</span><span class="o">=</span><span class="s2">"[red]Processing samples..."</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="py function">
@@ -696,7 +697,7 @@ it is included in the results and not searched for subdirectories.</p></li>
 </ul>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_paths</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">()</span>  <span class="c1"># Search the current working directory for sample?? directories</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sample_paths</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">([</span><span class="n">path1</span><span class="p">,</span> <span class="n">path2</span><span class="p">],</span> <span class="n">dir_pattern</span><span class="o">=</span><span class="s2">&quot;sample???&quot;</span><span class="p">)</span>  <span class="c1"># Search path1 and path2 for sample??? directories</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample_paths</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">([</span><span class="n">path1</span><span class="p">,</span> <span class="n">path2</span><span class="p">],</span> <span class="n">dir_pattern</span><span class="o">=</span><span class="s2">"sample???"</span><span class="p">)</span>  <span class="c1"># Search path1 and path2 for sample??? directories</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -961,16 +962,16 @@ It ensures all parent directories exist so workers can write immediately.</p>
 </section>
 <section id="example-usage">
 <h2>Example usage<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;data/a.nrrd&quot;</span><span class="p">,</span> <span class="s2">&quot;data/b.nrrd&quot;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">outputs</span> <span class="o">=</span> <span class="n">resolve_output_paths</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="s2">&quot;results/:_aligned&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s2">&quot;.nii.gz&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"data/a.nrrd"</span><span class="p">,</span> <span class="s2">"data/b.nrrd"</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">outputs</span> <span class="o">=</span> <span class="n">resolve_output_paths</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="s2">"results/:_aligned"</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s2">".nii.gz"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="go">data/a.nrrd → results/a.nii.gz</span>
 <span class="go">data/b.nrrd → results/b.nii.gz</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Same format and name → &#39;_out&#39; added</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">outputs</span> <span class="o">=</span> <span class="n">resolve_output_paths</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="s2">&quot;results/&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Same format and name → '_out' added</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">outputs</span> <span class="o">=</span> <span class="n">resolve_output_paths</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="s2">"results/"</span><span class="p">)</span>
 <span class="go">data/a.nrrd → results/a_out.nrrd</span>
 </pre></div>
 </div>

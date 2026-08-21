@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -877,7 +716,7 @@ window.runMermaid = runMermaid;</script>
   <h1>Source code for unravel.cluster_stats.mean_IF_summary</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Use ``cstats_mean_IF_summary`` (``cmis``) from UNRAVEL to plot and summarize mean IF intensities.</span>
 
 <span class="sd">This script handles two input schemas:</span>
@@ -896,7 +735,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">Note:</span>
 <span class="sd">    - The first word of each CSV filename is used as the group name.</span>
 <span class="sd">      Example: Control_sample01_cFos_z.csv -&gt; group = Control</span>
-<span class="sd">    - If significant differences are found, a prefix &#39;_&#39; is added to the plot filename.</span>
+<span class="sd">    - If significant differences are found, a prefix '_' is added to the plot filename.</span>
 
 <span class="sd">Usage for cluster-only t-tests:</span>
 <span class="sd">-------------------------------</span>
@@ -921,10 +760,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        -t dunnett \\</span>
 <span class="sd">        -l CCFv3-2020__regionID_side_IDpath_region_abbr.csv \\</span>
 <span class="sd">        -v</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
-<span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">'Agg'</span><span class="p">)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -943,7 +782,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="c1"># Set Arial as the font</span>
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'font.family'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Arial'</span>
 
 
 <div class="viewcode-block" id="parse_args">
@@ -951,78 +790,78 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
-    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
+    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Required arguments'</span><span class="p">)</span>
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">&#39;--order&#39;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group order for plotting and stats. Must match first word of CSV filenames.&#39;</span><span class="p">,</span>
+        <span class="s1">'--order'</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s1">'*'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Group order for plotting and stats. Must match first word of CSV filenames.'</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">&#39;--labels&#39;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group labels in the same order as --order.&#39;</span><span class="p">,</span>
+        <span class="s1">'--labels'</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s1">'*'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Group labels in the same order as --order.'</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args&#39;</span><span class="p">)</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Optional args'</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--cluster_ids&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of cluster IDs to process. Default: all clusters.&#39;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
+        <span class="s1">'-c'</span><span class="p">,</span> <span class="s1">'--cluster_ids'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'List of cluster IDs to process. Default: all clusters.'</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s1">'*'</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--region_ids&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of region IDs to process when input CSVs contain region_ID. Default: all regions.&#39;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
+        <span class="s1">'-r'</span><span class="p">,</span> <span class="s1">'--region_ids'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'List of region IDs to process when input CSVs contain region_ID. Default: all regions.'</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s1">'*'</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--test&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Choose between &quot;tukey&quot;, &quot;dunnett&quot;, and &quot;ttest&quot;. Default: ttest for 2 groups, tukey for &gt;2 groups.&#39;</span><span class="p">,</span>
+        <span class="s1">'-t'</span><span class="p">,</span> <span class="s1">'--test'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Choose between "tukey", "dunnett", and "ttest". Default: ttest for 2 groups, tukey for &gt;2 groups.'</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tukey&#39;</span><span class="p">,</span> <span class="s1">&#39;dunnett&#39;</span><span class="p">,</span> <span class="s1">&#39;ttest&#39;</span><span class="p">],</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">'tukey'</span><span class="p">,</span> <span class="s1">'dunnett'</span><span class="p">,</span> <span class="s1">'ttest'</span><span class="p">],</span>
         <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">&#39;-alt&#39;</span><span class="p">,</span> <span class="s1">&#39;--alternate&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Alternative for Dunnett&#39;s test: {&#39;two-sided&#39;, &#39;less&#39;, &#39;greater&#39;}. Default: two-sided.&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span><span class="p">,</span>
+        <span class="s1">'-alt'</span><span class="p">,</span> <span class="s1">'--alternate'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Alternative for Dunnett's test: {'two-sided', 'less', 'greater'}. Default: two-sided."</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">'two-sided'</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">&#39;-y&#39;</span><span class="p">,</span> <span class="s1">&#39;--ylabel&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Y-axis label for plots. Default: Mean IF Intensity.&#39;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;Mean IF Intensity&#39;</span><span class="p">,</span>
+        <span class="s1">'-y'</span><span class="p">,</span> <span class="s1">'--ylabel'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Y-axis label for plots. Default: Mean IF Intensity.'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">'Mean IF Intensity'</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--lut&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Optional region LUT CSV path or CSV name in unravel/core/csvs/. Expected columns: Region_ID, Region, Abbr.&#39;</span><span class="p">,</span>
+        <span class="s1">'-l'</span><span class="p">,</span> <span class="s1">'--lut'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Optional region LUT CSV path or CSV name in unravel/core/csvs/. Expected columns: Region_ID, Region, Abbr.'</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">&#39;-sa&#39;</span><span class="p">,</span> <span class="s1">&#39;--symbol_alpha&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Opacity of individual data-point symbols. Default: 1.0&#39;</span><span class="p">,</span>
+        <span class="s1">'-sa'</span><span class="p">,</span> <span class="s1">'--symbol_alpha'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Opacity of individual data-point symbols. Default: 1.0'</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--skip_plots&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Only write summary CSVs; do not generate PDF plots.&#39;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+        <span class="s1">'-s'</span><span class="p">,</span> <span class="s1">'--skip_plots'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Only write summary CSVs; do not generate PDF plots.'</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
-    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'General arguments'</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-v'</span><span class="p">,</span> <span class="s1">'--verbose'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Increase verbosity. Default: False.'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
@@ -1031,31 +870,31 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="significance_label">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.significance_label">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">significance_label</span><span class="p">(</span><span class="n">p_value</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return significance stars from a p-value.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return significance stars from a p-value."""</span>
     <span class="k">if</span> <span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.0001</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;****&#39;</span>
+        <span class="k">return</span> <span class="s1">'****'</span>
     <span class="k">if</span> <span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;***&#39;</span>
+        <span class="k">return</span> <span class="s1">'***'</span>
     <span class="k">if</span> <span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.01</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;**&#39;</span>
+        <span class="k">return</span> <span class="s1">'**'</span>
     <span class="k">if</span> <span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;*&#39;</span>
-    <span class="k">return</span> <span class="s1">&#39;n.s.&#39;</span></div>
+        <span class="k">return</span> <span class="s1">'*'</span>
+    <span class="k">return</span> <span class="s1">'n.s.'</span></div>
 
 
 
 <div class="viewcode-block" id="safe_filename">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.safe_filename">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">safe_filename</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make text safe for file names.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span></div>
+<span class="w">    </span><span class="sd">"""Make text safe for file names."""</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="resolve_lut_path">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.resolve_lut_path">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">resolve_lut_path</span><span class="p">(</span><span class="n">lut</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve LUT path from explicit path or unravel/core/csvs/.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Resolve LUT path from explicit path or unravel/core/csvs/."""</span>
     <span class="k">if</span> <span class="n">lut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
@@ -1063,18 +902,18 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="n">lut_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">lut_path</span>
 
-    <span class="n">core_lut</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">lut</span>
+    <span class="n">core_lut</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">'core'</span> <span class="o">/</span> <span class="s1">'csvs'</span> <span class="o">/</span> <span class="n">lut</span>
     <span class="k">if</span> <span class="n">core_lut</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">core_lut</span>
 
-    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find LUT CSV: </span><span class="si">{</span><span class="n">lut</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not find LUT CSV: </span><span class="si">{</span><span class="n">lut</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="load_region_lut">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.load_region_lut">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_region_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load optional region LUT.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Load optional region LUT."""</span>
     <span class="n">lut_path</span> <span class="o">=</span> <span class="n">resolve_lut_path</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">lut_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1082,14 +921,14 @@ window.runMermaid = runMermaid;</script>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">lut_path</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;Region_ID&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;LUT must contain a Region_ID column.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"Region_ID"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">"LUT must contain a Region_ID column."</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;Region&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;Name&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="s2">&quot;Region&quot;</span><span class="p">})</span>
+    <span class="k">if</span> <span class="s2">"Region"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s2">"Name"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"Name"</span><span class="p">:</span> <span class="s2">"Region"</span><span class="p">})</span>
 
-    <span class="n">keep_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Region&quot;</span><span class="p">,</span> <span class="s2">&quot;Abbr&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">keep_cols</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">])</span>
+    <span class="n">keep_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"Region_ID"</span><span class="p">,</span> <span class="s2">"Region"</span><span class="p">,</span> <span class="s2">"Abbr"</span><span class="p">]</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">keep_cols</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">"Region_ID"</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">df</span></div>
 
@@ -1098,18 +937,18 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_region_info">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.get_region_info">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_region_info</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">region_lut</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return region name and abbreviation if available.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return region name and abbreviation if available."""</span>
     <span class="k">if</span> <span class="n">region_lut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
 
-    <span class="n">match</span> <span class="o">=</span> <span class="n">region_lut</span><span class="p">[</span><span class="n">region_lut</span><span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span><span class="p">]</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">region_lut</span><span class="p">[</span><span class="n">region_lut</span><span class="p">[</span><span class="s2">"Region_ID"</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
 
     <span class="n">row</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">region</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Region&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;Region&quot;</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">abbr</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Abbr&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;Abbr&quot;</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">"Region"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"Region"</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">abbr</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">"Abbr"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"Abbr"</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="k">return</span> <span class="n">region</span><span class="p">,</span> <span class="n">abbr</span></div>
 
@@ -1118,31 +957,31 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="load_all_data">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.load_all_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_all_data</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load all CSVs once and add group names from filenames.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Load all CSVs once and add group names from filenames."""</span>
     <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">):</span>
-            <span class="n">group_name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".csv"</span><span class="p">):</span>
+            <span class="n">group_name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_name</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_name</span>
             <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">dfs</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;No CSV files found in the working directory.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">"No CSV files found in the working directory."</span><span class="p">)</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;cluster_ID&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Input CSVs must contain cluster_ID.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"cluster_ID"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">"Input CSVs must contain cluster_ID."</span><span class="p">)</span>
 
     <span class="c1"># For backward compatibility</span>
-    <span class="k">if</span> <span class="s2">&quot;mean_intensity&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;mean_IF_intensity&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;mean_IF_intensity&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"mean_intensity"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"mean_IF_intensity"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">"mean_intensity"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"mean_IF_intensity"</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
-                <span class="s2">&quot;Input CSVs must contain mean_intensity or mean_IF_intensity.&quot;</span>
+                <span class="s2">"Input CSVs must contain mean_intensity or mean_IF_intensity."</span>
             <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">df</span></div>
@@ -1152,23 +991,23 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="perform_t_tests">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.perform_t_tests">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">perform_t_tests</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform pairwise t-tests between groups.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Perform pairwise t-tests between groups."""</span>
     <span class="n">comparisons</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)):</span>
             <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span> <span class="o">=</span> <span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">order</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-            <span class="n">data1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group1</span><span class="p">][</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">]</span>
-            <span class="n">data2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group2</span><span class="p">][</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">]</span>
+            <span class="n">data1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span> <span class="o">==</span> <span class="n">group1</span><span class="p">][</span><span class="s2">"mean_intensity"</span><span class="p">]</span>
+            <span class="n">data2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span> <span class="o">==</span> <span class="n">group2</span><span class="p">][</span><span class="s2">"mean_intensity"</span><span class="p">]</span>
 
             <span class="n">t_stat</span><span class="p">,</span> <span class="n">p_value</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">)</span>
 
             <span class="n">comparisons</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                <span class="s2">&quot;group1&quot;</span><span class="p">:</span> <span class="n">group1</span><span class="p">,</span>
-                <span class="s2">&quot;group2&quot;</span><span class="p">:</span> <span class="n">group2</span><span class="p">,</span>
-                <span class="s2">&quot;statistic&quot;</span><span class="p">:</span> <span class="n">t_stat</span><span class="p">,</span>
-                <span class="s2">&quot;p-adj&quot;</span><span class="p">:</span> <span class="n">p_value</span><span class="p">,</span>
-                <span class="s2">&quot;reject&quot;</span><span class="p">:</span> <span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
+                <span class="s2">"group1"</span><span class="p">:</span> <span class="n">group1</span><span class="p">,</span>
+                <span class="s2">"group2"</span><span class="p">:</span> <span class="n">group2</span><span class="p">,</span>
+                <span class="s2">"statistic"</span><span class="p">:</span> <span class="n">t_stat</span><span class="p">,</span>
+                <span class="s2">"p-adj"</span><span class="p">:</span> <span class="n">p_value</span><span class="p">,</span>
+                <span class="s2">"reject"</span><span class="p">:</span> <span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
             <span class="p">})</span>
 
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">comparisons</span><span class="p">)</span></div>
@@ -1178,24 +1017,24 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="perform_dunnett">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.perform_dunnett">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">perform_dunnett</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">alt</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Dunnett&#39;s tests comparing each non-control group to the first group in order.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Perform Dunnett's tests comparing each non-control group to the first group in order."""</span>
     <span class="n">control_group</span> <span class="o">=</span> <span class="n">order</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">treatment_groups</span> <span class="o">=</span> <span class="n">order</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
-    <span class="n">control_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">control_group</span><span class="p">][</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">control_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span> <span class="o">==</span> <span class="n">control_group</span><span class="p">][</span><span class="s2">"mean_intensity"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
     <span class="n">experimental_data</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">][</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">][</span><span class="s2">"mean_intensity"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">treatment_groups</span>
     <span class="p">]</span>
 
     <span class="n">test_stats</span> <span class="o">=</span> <span class="n">dunnett</span><span class="p">(</span><span class="o">*</span><span class="n">experimental_data</span><span class="p">,</span> <span class="n">control</span><span class="o">=</span><span class="n">control_data</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alt</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-        <span class="s2">&quot;group1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">control_group</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_stats</span><span class="o">.</span><span class="n">pvalue</span><span class="p">),</span>
-        <span class="s2">&quot;group2&quot;</span><span class="p">:</span> <span class="n">treatment_groups</span><span class="p">,</span>
-        <span class="s2">&quot;statistic&quot;</span><span class="p">:</span> <span class="n">test_stats</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span>
-        <span class="s2">&quot;p-adj&quot;</span><span class="p">:</span> <span class="n">test_stats</span><span class="o">.</span><span class="n">pvalue</span><span class="p">,</span>
-        <span class="s2">&quot;reject&quot;</span><span class="p">:</span> <span class="n">test_stats</span><span class="o">.</span><span class="n">pvalue</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="s2">"group1"</span><span class="p">:</span> <span class="p">[</span><span class="n">control_group</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_stats</span><span class="o">.</span><span class="n">pvalue</span><span class="p">),</span>
+        <span class="s2">"group2"</span><span class="p">:</span> <span class="n">treatment_groups</span><span class="p">,</span>
+        <span class="s2">"statistic"</span><span class="p">:</span> <span class="n">test_stats</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span>
+        <span class="s2">"p-adj"</span><span class="p">:</span> <span class="n">test_stats</span><span class="o">.</span><span class="n">pvalue</span><span class="p">,</span>
+        <span class="s2">"reject"</span><span class="p">:</span> <span class="n">test_stats</span><span class="o">.</span><span class="n">pvalue</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
     <span class="p">})</span></div>
 
 
@@ -1203,14 +1042,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="safe_col_name">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.safe_col_name">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">safe_col_name</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make text safe for CSV column names.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Make text safe for CSV column names."""</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"("</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">")"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
@@ -1218,22 +1057,22 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="write_dunnett_wide_csv">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.write_dunnett_wide_csv">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">write_dunnett_wide_csv</span><span class="p">(</span><span class="n">test_df_all</span><span class="p">,</span> <span class="n">output_folder</span><span class="p">,</span> <span class="n">output_prefix</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Write a wide-format Dunnett summary CSV.</span>
 
 <span class="sd">    One row per cluster or cluster-region pair.</span>
 <span class="sd">    Columns include group means, n values, treatment-control diffs,</span>
 <span class="sd">    adjusted p-values, and significance labels.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">control_group</span> <span class="o">=</span> <span class="n">order</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">control_col</span> <span class="o">=</span> <span class="n">safe_col_name</span><span class="p">(</span><span class="n">control_group</span><span class="p">)</span>
 
-    <span class="n">id_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">&quot;region_ID&quot;</span> <span class="ow">in</span> <span class="n">test_df_all</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">id_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;region_ID&quot;</span><span class="p">)</span>
+    <span class="n">id_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"cluster_ID"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"region_ID"</span> <span class="ow">in</span> <span class="n">test_df_all</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">id_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"region_ID"</span><span class="p">)</span>
 
-    <span class="n">metadata_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;region&quot;</span><span class="p">,</span> <span class="s2">&quot;abbr&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">test_df_all</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">metadata_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"region"</span><span class="p">,</span> <span class="s2">"abbr"</span><span class="p">]</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">test_df_all</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
 
     <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1245,83 +1084,83 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">metadata_cols</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-            <span class="n">row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">""</span>
 
-        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;control_group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_group</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">"control_group"</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_group</span>
 
         <span class="c1"># Add n and mean columns for the control group.</span>
-        <span class="n">control_rows</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;group1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">control_group</span><span class="p">]</span>
+        <span class="n">control_rows</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"group1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">control_group</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">control_rows</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;n_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_rows</span><span class="p">[</span><span class="s2">&quot;n_group1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;mean_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_rows</span><span class="p">[</span><span class="s2">&quot;mean_group1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"n_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_rows</span><span class="p">[</span><span class="s2">"n_group1"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"mean_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_rows</span><span class="p">[</span><span class="s2">"mean_group1"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;n_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-            <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;mean_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"n_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"mean_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
         <span class="c1"># Add n and mean columns for each treatment group.</span>
         <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">order</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="n">group_col</span> <span class="o">=</span> <span class="n">safe_col_name</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;group2&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">]</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"group2"</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;n_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;mean_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"n_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"mean_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">match</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;n_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;n_group2&quot;</span><span class="p">]</span>
-                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;mean_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;mean_group2&quot;</span><span class="p">]</span>
+                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"n_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">"n_group2"</span><span class="p">]</span>
+                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"mean_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">"mean_group2"</span><span class="p">]</span>
 
         <span class="c1"># Add treatment-control differences.</span>
         <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">order</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="n">group_col</span> <span class="o">=</span> <span class="n">safe_col_name</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;group2&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">]</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"group2"</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;diff_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">_minus_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"diff_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">_minus_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;diff_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">_minus_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;diff_group2_minus_group1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"diff_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">_minus_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">"diff_group2_minus_group1"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Add Dunnett-adjusted p-values and significance labels.</span>
         <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">order</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="n">group_col</span> <span class="o">=</span> <span class="n">safe_col_name</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;group2&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">]</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"group2"</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;p_adj_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">_v_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;sig_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">_v_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"p_adj_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">_v_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"sig_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">_v_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">""</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">match</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;p_adj_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">_v_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;p-adj&quot;</span><span class="p">]</span>
-                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;sig_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">_v_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;significance&quot;</span><span class="p">]</span>
+                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"p_adj_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">_v_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">"p-adj"</span><span class="p">]</span>
+                <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"sig_</span><span class="si">{</span><span class="n">control_col</span><span class="si">}</span><span class="s2">_v_</span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">"significance"</span><span class="p">]</span>
 
         <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
     <span class="n">wide_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
 
-    <span class="n">output_csv</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_dunnett_wide.csv&quot;</span>
+    <span class="n">output_csv</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_dunnett_wide.csv"</span>
     <span class="n">wide_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_csv</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wide Dunnett summary CSV saved to ./</span><span class="si">{</span><span class="n">output_csv</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Wide Dunnett summary CSV saved to ./</span><span class="si">{</span><span class="n">output_csv</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="perform_tukey">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.perform_tukey">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">perform_tukey</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Tukey&#39;s HSD test.&quot;&quot;&quot;</span>
-    <span class="n">test_results</span> <span class="o">=</span> <span class="n">pairwise_tukeyhsd</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">"""Perform Tukey's HSD test."""</span>
+    <span class="n">test_results</span> <span class="o">=</span> <span class="n">pairwise_tukeyhsd</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"mean_intensity"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">"group"</span><span class="p">])</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
     <span class="n">test_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">test_results</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">columns</span><span class="o">=</span><span class="n">test_results</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="s2">&quot;meandiff&quot;</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">test_df</span> <span class="o">=</span> <span class="n">test_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;meandiff&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_diff&quot;</span><span class="p">})</span>
+    <span class="k">if</span> <span class="s2">"meandiff"</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">test_df</span> <span class="o">=</span> <span class="n">test_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"meandiff"</span><span class="p">:</span> <span class="s2">"mean_diff"</span><span class="p">})</span>
 
-    <span class="k">if</span> <span class="s2">&quot;p-adj&quot;</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;p-adj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;p-adj&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"p-adj"</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">test_df</span><span class="p">[</span><span class="s2">"p-adj"</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s2">"p-adj"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;reject&quot;</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;reject&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;reject&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"reject"</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">test_df</span><span class="p">[</span><span class="s2">"reject"</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s2">"reject"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;statistic&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;statistic&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">if</span> <span class="s2">"statistic"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">test_df</span><span class="p">[</span><span class="s2">"statistic"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
     <span class="k">return</span> <span class="n">test_df</span></div>
 
@@ -1330,24 +1169,24 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="add_group_summary_columns">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.add_group_summary_columns">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_group_summary_columns</span><span class="p">(</span><span class="n">test_df</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add n, means, and mean differences to the stats table.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Add n, means, and mean differences to the stats table."""</span>
     <span class="n">group_stats</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">)[</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">]</span>
-        <span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">])</span>
-        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="s2">&quot;mean&quot;</span><span class="p">})</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"group"</span><span class="p">)[</span><span class="s2">"mean_intensity"</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">"count"</span><span class="p">,</span> <span class="s2">"mean"</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"count"</span><span class="p">:</span> <span class="s2">"n"</span><span class="p">,</span> <span class="s2">"mean"</span><span class="p">:</span> <span class="s2">"mean"</span><span class="p">})</span>
     <span class="p">)</span>
 
     <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
         <span class="n">row</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-        <span class="n">group1</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;group1&quot;</span><span class="p">]</span>
-        <span class="n">group2</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;group2&quot;</span><span class="p">]</span>
+        <span class="n">group1</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">"group1"</span><span class="p">]</span>
+        <span class="n">group2</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">"group2"</span><span class="p">]</span>
 
-        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;n_group1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">group_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">group1</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">group1</span> <span class="ow">in</span> <span class="n">group_stats</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;n_group2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">group_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">group2</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">group2</span> <span class="ow">in</span> <span class="n">group_stats</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;mean_group1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">group_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">group1</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">group1</span> <span class="ow">in</span> <span class="n">group_stats</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;mean_group2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">group_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">group2</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">group2</span> <span class="ow">in</span> <span class="n">group_stats</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;diff_group2_minus_group1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;mean_group2&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;mean_group1&quot;</span><span class="p">]</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">"n_group1"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">group_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">group1</span><span class="p">,</span> <span class="s2">"n"</span><span class="p">])</span> <span class="k">if</span> <span class="n">group1</span> <span class="ow">in</span> <span class="n">group_stats</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">"n_group2"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">group_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">group2</span><span class="p">,</span> <span class="s2">"n"</span><span class="p">])</span> <span class="k">if</span> <span class="n">group2</span> <span class="ow">in</span> <span class="n">group_stats</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">"mean_group1"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">group_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">group1</span><span class="p">,</span> <span class="s2">"mean"</span><span class="p">])</span> <span class="k">if</span> <span class="n">group1</span> <span class="ow">in</span> <span class="n">group_stats</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">"mean_group2"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">group_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">group2</span><span class="p">,</span> <span class="s2">"mean"</span><span class="p">])</span> <span class="k">if</span> <span class="n">group2</span> <span class="ow">in</span> <span class="n">group_stats</span><span class="o">.</span><span class="n">index</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">"diff_group2_minus_group1"</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">"mean_group2"</span><span class="p">]</span> <span class="o">-</span> <span class="n">row</span><span class="p">[</span><span class="s2">"mean_group1"</span><span class="p">]</span>
 
         <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
@@ -1358,22 +1197,22 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="run_stats">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.run_stats">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">run_stats</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">test_type</span><span class="p">,</span> <span class="n">alt</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the selected statistical test.&quot;&quot;&quot;</span>
-    <span class="n">missing_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">group</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">order</span> <span class="k">if</span> <span class="n">group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()]</span>
+<span class="w">    </span><span class="sd">"""Run the selected statistical test."""</span>
+    <span class="n">missing_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">group</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">order</span> <span class="k">if</span> <span class="n">group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()]</span>
     <span class="k">if</span> <span class="n">missing_groups</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing group(s) for this comparison: </span><span class="si">{</span><span class="n">missing_groups</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Missing group(s) for this comparison: </span><span class="si">{</span><span class="n">missing_groups</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;tukey&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s2">"tukey"</span><span class="p">:</span>
         <span class="n">test_df</span> <span class="o">=</span> <span class="n">perform_tukey</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;dunnett&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s2">"dunnett"</span><span class="p">:</span>
         <span class="n">test_df</span> <span class="o">=</span> <span class="n">perform_dunnett</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">alt</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;ttest&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s2">"ttest"</span><span class="p">:</span>
         <span class="n">test_df</span> <span class="o">=</span> <span class="n">perform_t_tests</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown test type: </span><span class="si">{</span><span class="n">test_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown test type: </span><span class="si">{</span><span class="n">test_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">test_df</span> <span class="o">=</span> <span class="n">add_group_summary_columns</span><span class="p">(</span><span class="n">test_df</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-    <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;significance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;p-adj&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">significance_label</span><span class="p">)</span>
+    <span class="n">test_df</span><span class="p">[</span><span class="s2">"significance"</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s2">"p-adj"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">significance_label</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">test_df</span></div>
 
@@ -1382,13 +1221,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="prepare_plot_df">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.prepare_plot_df">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">prepare_plot_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply group order and labels for plotting.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Apply group order and labels for plotting."""</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">CategoricalDtype</span><span class="p">(</span><span class="n">categories</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">CategoricalDtype</span><span class="p">(</span><span class="n">categories</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"group"</span><span class="p">)</span>
 
     <span class="n">labels_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">labels</span><span class="p">))</span>
-    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">labels_mapping</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"group_label"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">labels_mapping</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">df</span></div>
 
@@ -1397,7 +1236,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="add_significance_bars">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.add_significance_bars">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_significance_bars</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">significant_comparisons</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add significance bars to the plot.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Add significance bars to the plot."""</span>
     <span class="n">data_range</span> <span class="o">=</span> <span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span>
 
     <span class="k">if</span> <span class="n">data_range</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1407,7 +1246,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">y_pos</span> <span class="o">=</span> <span class="n">y_max</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">height_diff</span>
 
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">significant_comparisons</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;group1&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;group2&quot;</span><span class="p">]</span>
+        <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">"group1"</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">"group2"</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">group1</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">groups</span> <span class="ow">or</span> <span class="n">group2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
             <span class="k">continue</span>
@@ -1419,17 +1258,17 @@ window.runMermaid = runMermaid;</script>
             <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span>
             <span class="p">[</span><span class="n">y_pos</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">+</span> <span class="n">height_diff</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">+</span> <span class="n">height_diff</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">],</span>
             <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-            <span class="n">c</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+            <span class="n">c</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
             <span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span>
             <span class="n">y_pos</span> <span class="o">+</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="n">height_diff</span><span class="p">,</span>
-            <span class="n">significance_label</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;p-adj&quot;</span><span class="p">]),</span>
-            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
-            <span class="n">size</span><span class="o">=</span><span class="s2">&quot;xx-large&quot;</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
-            <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span>
+            <span class="n">significance_label</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"p-adj"</span><span class="p">]),</span>
+            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="s2">"xx-large"</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
+            <span class="n">weight</span><span class="o">=</span><span class="s2">"bold"</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">y_pos</span> <span class="o">+=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">height_diff</span>
@@ -1440,14 +1279,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_pair_df">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.get_pair_df">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_pair_df</span><span class="p">(</span><span class="n">all_df</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="n">region_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subset data for one cluster or cluster-region pair.&quot;&quot;&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="n">all_df</span><span class="p">[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster_id</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">"""Subset data for one cluster or cluster-region pair."""</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="n">all_df</span><span class="p">[</span><span class="s2">"cluster_ID"</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster_id</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">region_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;region_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"region_ID"</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No data found for cluster </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">, region </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No data found for cluster </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">, region </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">df</span></div>
 
@@ -1460,26 +1299,26 @@ window.runMermaid = runMermaid;</script>
     <span class="n">region_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">test_type</span><span class="o">=</span><span class="s2">&quot;tukey&quot;</span><span class="p">,</span>
-    <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">,</span>
+    <span class="n">test_type</span><span class="o">=</span><span class="s2">"tukey"</span><span class="p">,</span>
+    <span class="n">alt</span><span class="o">=</span><span class="s2">"two-sided"</span><span class="p">,</span>
     <span class="n">region_lut</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run stats for one cluster or cluster-region pair without plotting.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Run stats for one cluster or cluster-region pair without plotting."""</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">get_pair_df</span><span class="p">(</span><span class="n">all_df</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">prepare_plot_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
 
     <span class="n">test_df</span> <span class="o">=</span> <span class="n">run_stats</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">test_type</span><span class="p">,</span> <span class="n">alt</span><span class="p">)</span>
 
-    <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_id</span>
+    <span class="n">test_df</span><span class="p">[</span><span class="s2">"cluster_ID"</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_id</span>
 
     <span class="k">if</span> <span class="n">region_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">region_name</span><span class="p">,</span> <span class="n">region_abbr</span> <span class="o">=</span> <span class="n">get_region_info</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">region_lut</span><span class="p">)</span>
-        <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;region_ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_id</span>
+        <span class="n">test_df</span><span class="p">[</span><span class="s2">"region_ID"</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_id</span>
 
         <span class="k">if</span> <span class="n">region_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;region&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_name</span>
+            <span class="n">test_df</span><span class="p">[</span><span class="s2">"region"</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_name</span>
         <span class="k">if</span> <span class="n">region_abbr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;abbr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_abbr</span>
+            <span class="n">test_df</span><span class="p">[</span><span class="s2">"abbr"</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_abbr</span>
 
     <span class="k">return</span> <span class="n">test_df</span></div>
 
@@ -1492,49 +1331,49 @@ window.runMermaid = runMermaid;</script>
     <span class="n">region_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">test_type</span><span class="o">=</span><span class="s2">&quot;tukey&quot;</span><span class="p">,</span>
-    <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">,</span>
-    <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Mean IF Intensity&quot;</span><span class="p">,</span>
+    <span class="n">test_type</span><span class="o">=</span><span class="s2">"tukey"</span><span class="p">,</span>
+    <span class="n">alt</span><span class="o">=</span><span class="s2">"two-sided"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Mean IF Intensity"</span><span class="p">,</span>
     <span class="n">region_lut</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">symbol_alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot data and return stats for one cluster or cluster-region pair.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Plot data and return stats for one cluster or cluster-region pair."""</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">get_pair_df</span><span class="p">(</span><span class="n">all_df</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">prepare_plot_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
     <span class="n">test_df</span> <span class="o">=</span> <span class="n">run_stats</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">test_type</span><span class="p">,</span> <span class="n">alt</span><span class="p">)</span>
 
     <span class="n">predefined_colors</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;#2D67C8&quot;</span><span class="p">,</span>  <span class="c1"># blue</span>
-        <span class="s2">&quot;#D32525&quot;</span><span class="p">,</span>  <span class="c1"># red</span>
-        <span class="s2">&quot;#27AF2E&quot;</span><span class="p">,</span>  <span class="c1"># green</span>
-        <span class="s2">&quot;#FFD700&quot;</span><span class="p">,</span>  <span class="c1"># gold</span>
-        <span class="s2">&quot;#FF6347&quot;</span><span class="p">,</span>  <span class="c1"># tomato</span>
-        <span class="s2">&quot;#8A2BE2&quot;</span><span class="p">,</span>  <span class="c1"># blueviolet</span>
+        <span class="s2">"#2D67C8"</span><span class="p">,</span>  <span class="c1"># blue</span>
+        <span class="s2">"#D32525"</span><span class="p">,</span>  <span class="c1"># red</span>
+        <span class="s2">"#27AF2E"</span><span class="p">,</span>  <span class="c1"># green</span>
+        <span class="s2">"#FFD700"</span><span class="p">,</span>  <span class="c1"># gold</span>
+        <span class="s2">"#FF6347"</span><span class="p">,</span>  <span class="c1"># tomato</span>
+        <span class="s2">"#8A2BE2"</span><span class="p">,</span>  <span class="c1"># blueviolet</span>
     <span class="p">]</span>
     <span class="n">selected_colors</span> <span class="o">=</span> <span class="n">predefined_colors</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)]</span>
     <span class="n">group_colors</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">selected_colors</span><span class="p">))</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span>
-        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;group_label&quot;</span><span class="p">,</span>
-        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">"group_label"</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">"mean_intensity"</span><span class="p">,</span>
         <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
-        <span class="n">errorbar</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;se&quot;</span><span class="p">),</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span>
+        <span class="n">errorbar</span><span class="o">=</span><span class="p">(</span><span class="s2">"se"</span><span class="p">),</span>
         <span class="n">capsize</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
         <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span>
-        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;group_label&quot;</span><span class="p">,</span>
-        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">,</span>
-        <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">"group_label"</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">"mean_intensity"</span><span class="p">,</span>
+        <span class="n">hue</span><span class="o">=</span><span class="s2">"group"</span><span class="p">,</span>
         <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
         <span class="n">palette</span><span class="o">=</span><span class="n">group_colors</span><span class="p">,</span>
         <span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
         <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
         <span class="n">jitter</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
         <span class="n">alpha</span><span class="o">=</span><span class="n">symbol_alpha</span><span class="p">,</span>
     <span class="p">)</span>
@@ -1542,20 +1381,20 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend_</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">legend_</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;group_label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())))</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;major&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">"bold"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"group_label"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span> <span class="n">weight</span><span class="o">=</span><span class="s2">"bold"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">"both"</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">"major"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">"top"</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">"right"</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">"bottom"</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">"left"</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="n">y_max</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-    <span class="n">y_min</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;mean_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">y_max</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"mean_intensity"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">y_min</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"mean_intensity"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
 
-    <span class="n">significant_comparisons</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;reject&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
+    <span class="n">significant_comparisons</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="n">test_df</span><span class="p">[</span><span class="s2">"reject"</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
     <span class="n">groups</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
 
     <span class="n">y_pos</span><span class="p">,</span> <span class="n">height_diff</span> <span class="o">=</span> <span class="n">add_significance_bars</span><span class="p">(</span>
@@ -1568,39 +1407,39 @@ window.runMermaid = runMermaid;</script>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">y_min</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">height_diff</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">height_diff</span><span class="p">)</span>
 
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;cluster_region_mean_IF_summary&quot;</span> <span class="k">if</span> <span class="n">region_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;cluster_mean_IF_summary&quot;</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"cluster_region_mean_IF_summary"</span> <span class="k">if</span> <span class="n">region_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"cluster_mean_IF_summary"</span><span class="p">)</span>
     <span class="n">output_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">region_name</span><span class="p">,</span> <span class="n">region_abbr</span> <span class="o">=</span> <span class="n">get_region_info</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">region_lut</span><span class="p">)</span> <span class="k">if</span> <span class="n">region_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">region_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Cluster: </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">file_stem</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cluster_</span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Cluster: </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">file_stem</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"cluster_</span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">"</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">region_abbr</span><span class="p">:</span>
             <span class="n">safe_abbr</span> <span class="o">=</span> <span class="n">safe_filename</span><span class="p">(</span><span class="n">region_abbr</span><span class="p">)</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Cluster: </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">, Region: </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">region_abbr</span><span class="si">}</span><span class="s2">)&quot;</span>
-            <span class="n">file_stem</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cluster_</span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">safe_abbr</span><span class="si">}</span><span class="s2">_region_</span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Cluster: </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">, Region: </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">region_abbr</span><span class="si">}</span><span class="s2">)"</span>
+            <span class="n">file_stem</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"cluster_</span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">safe_abbr</span><span class="si">}</span><span class="s2">_region_</span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Cluster: </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">, Region: </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="n">file_stem</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cluster_</span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">_region_</span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Cluster: </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">, Region: </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">file_stem</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"cluster_</span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">_region_</span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="n">wrapped_title</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="mi">42</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">wrapped_title</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
-    <span class="n">file_prefix</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">significant_comparisons</span><span class="o">.</span><span class="n">empty</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_prefix</span><span class="si">}{</span><span class="n">file_stem</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">)</span>
+    <span class="n">file_prefix</span> <span class="o">=</span> <span class="s2">"_"</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">significant_comparisons</span><span class="o">.</span><span class="n">empty</span> <span class="k">else</span> <span class="s2">""</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">file_prefix</span><span class="si">}{</span><span class="n">file_stem</span><span class="si">}</span><span class="s2">.pdf"</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_id</span>
+    <span class="n">test_df</span><span class="p">[</span><span class="s2">"cluster_ID"</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_id</span>
 
     <span class="k">if</span> <span class="n">region_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;region_ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_id</span>
+        <span class="n">test_df</span><span class="p">[</span><span class="s2">"region_ID"</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_id</span>
         <span class="k">if</span> <span class="n">region_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;region&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_name</span>
+            <span class="n">test_df</span><span class="p">[</span><span class="s2">"region"</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_name</span>
         <span class="k">if</span> <span class="n">region_abbr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;abbr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_abbr</span>
+            <span class="n">test_df</span><span class="p">[</span><span class="s2">"abbr"</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_abbr</span>
 
     <span class="k">return</span> <span class="n">test_df</span></div>
 
@@ -1616,69 +1455,69 @@ window.runMermaid = runMermaid;</script>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">order</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">order</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Both --order and --labels must be provided together.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Both --order and --labels must be provided together."</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">order</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The number of entries in --order and --labels must match.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The number of entries in --order and --labels must match."</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">order</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;At least two groups are required for comparison.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"At least two groups are required for comparison."</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">order</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">test_type</span> <span class="o">=</span> <span class="s2">&quot;ttest&quot;</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span>
+        <span class="n">test_type</span> <span class="o">=</span> <span class="s2">"ttest"</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">order</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">test_type</span> <span class="o">=</span> <span class="s2">&quot;tukey&quot;</span>
+        <span class="n">test_type</span> <span class="o">=</span> <span class="s2">"tukey"</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">test_type</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span>
     
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">symbol_alpha</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">symbol_alpha</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;--symbol_alpha must be between 0 and 1.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"--symbol_alpha must be between 0 and 1."</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold]CSVs in the working dir to process (the first word defines the groups):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">[bold]CSVs in the working dir to process (the first word defines the groups):</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".csv"</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
 
     <span class="n">all_df</span> <span class="o">=</span> <span class="n">load_all_data</span><span class="p">()</span>
-    <span class="n">has_regions</span> <span class="o">=</span> <span class="s2">&quot;region_ID&quot;</span> <span class="ow">in</span> <span class="n">all_df</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">has_regions</span> <span class="o">=</span> <span class="s2">"region_ID"</span> <span class="ow">in</span> <span class="n">all_df</span><span class="o">.</span><span class="n">columns</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_ids</span><span class="p">:</span>
-        <span class="n">all_df</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="n">all_df</span><span class="p">[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">cluster_ids</span><span class="p">)]</span>
+        <span class="n">all_df</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="n">all_df</span><span class="p">[</span><span class="s2">"cluster_ID"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">cluster_ids</span><span class="p">)]</span>
 
     <span class="k">if</span> <span class="n">has_regions</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">region_ids</span><span class="p">:</span>
-        <span class="n">all_df</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="n">all_df</span><span class="p">[</span><span class="s2">&quot;region_ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">region_ids</span><span class="p">)]</span>
+        <span class="n">all_df</span> <span class="o">=</span> <span class="n">all_df</span><span class="p">[</span><span class="n">all_df</span><span class="p">[</span><span class="s2">"region_ID"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">region_ids</span><span class="p">)]</span>
 
     <span class="k">if</span> <span class="n">all_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No data left after filtering by cluster_ID and/or region_ID.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No data left after filtering by cluster_ID and/or region_ID."</span><span class="p">)</span>
 
     <span class="n">region_lut</span> <span class="o">=</span> <span class="n">load_region_lut</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">lut</span><span class="p">)</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">has_regions</span><span class="p">:</span>
         <span class="n">pairs_to_process</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">all_df</span><span class="p">[[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">,</span> <span class="s2">&quot;region_ID&quot;</span><span class="p">]]</span>
+            <span class="n">all_df</span><span class="p">[[</span><span class="s2">"cluster_ID"</span><span class="p">,</span> <span class="s2">"region_ID"</span><span class="p">]]</span>
             <span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
-            <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">,</span> <span class="s2">&quot;region_ID&quot;</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">"cluster_ID"</span><span class="p">,</span> <span class="s2">"region_ID"</span><span class="p">])</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pairs_to_process</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">all_df</span><span class="p">[[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">]]</span>
+            <span class="n">all_df</span><span class="p">[[</span><span class="s2">"cluster_ID"</span><span class="p">]]</span>
             <span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
-            <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"cluster_ID"</span><span class="p">)</span>
         <span class="p">)</span>
-        <span class="n">pairs_to_process</span><span class="p">[</span><span class="s2">&quot;region_ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">pairs_to_process</span><span class="p">[</span><span class="s2">"region_ID"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">test_df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">pairs_to_process</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="n">cluster_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">])</span>
-        <span class="n">region_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">&quot;region_ID&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">cluster_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"cluster_ID"</span><span class="p">])</span>
+        <span class="n">region_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"region_ID"</span><span class="p">])</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">has_regions</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Summarizing cluster </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">, region </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Summarizing cluster </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">, region </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Summarizing cluster </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Summarizing cluster </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">test_df</span> <span class="o">=</span> <span class="n">summarize_pair</span><span class="p">(</span>
             <span class="n">all_df</span><span class="p">,</span>
@@ -1693,36 +1532,36 @@ window.runMermaid = runMermaid;</script>
 
         <span class="n">test_df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">test_df_all</span><span class="p">,</span> <span class="n">test_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">id_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s2">&quot;region_ID&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="p">[])</span>
-    <span class="n">optional_region_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;region&quot;</span><span class="p">,</span> <span class="s2">&quot;abbr&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">test_df_all</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">id_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"cluster_ID"</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s2">"region_ID"</span><span class="p">]</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="p">[])</span>
+    <span class="n">optional_region_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"region"</span><span class="p">,</span> <span class="s2">"abbr"</span><span class="p">]</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">test_df_all</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="n">stats_cols</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;group1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;group2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;statistic&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;p-adj&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reject&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;significance&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;n_group1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;n_group2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;mean_group1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;mean_group2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;diff_group2_minus_group1&quot;</span><span class="p">,</span>
+        <span class="s2">"group1"</span><span class="p">,</span>
+        <span class="s2">"group2"</span><span class="p">,</span>
+        <span class="s2">"statistic"</span><span class="p">,</span>
+        <span class="s2">"p-adj"</span><span class="p">,</span>
+        <span class="s2">"reject"</span><span class="p">,</span>
+        <span class="s2">"significance"</span><span class="p">,</span>
+        <span class="s2">"n_group1"</span><span class="p">,</span>
+        <span class="s2">"n_group2"</span><span class="p">,</span>
+        <span class="s2">"mean_group1"</span><span class="p">,</span>
+        <span class="s2">"mean_group2"</span><span class="p">,</span>
+        <span class="s2">"diff_group2_minus_group1"</span><span class="p">,</span>
     <span class="p">]</span>
 
     <span class="n">keep_cols</span> <span class="o">=</span> <span class="n">id_cols</span> <span class="o">+</span> <span class="n">optional_region_cols</span> <span class="o">+</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">stats_cols</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">test_df_all</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="n">test_df_all</span> <span class="o">=</span> <span class="n">test_df_all</span><span class="p">[</span><span class="n">keep_cols</span><span class="p">]</span>
 
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;cluster_region_mean_IF_summary&quot;</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="s2">&quot;cluster_mean_IF_summary&quot;</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"cluster_region_mean_IF_summary"</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="s2">"cluster_mean_IF_summary"</span><span class="p">)</span>
     <span class="n">output_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">output_prefix</span> <span class="o">=</span> <span class="s2">&quot;cluster_region_mean_IF_summary&quot;</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="s2">&quot;cluster_mean_IF_summary&quot;</span>
-    <span class="n">output_csv</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">test_type</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+    <span class="n">output_prefix</span> <span class="o">=</span> <span class="s2">"cluster_region_mean_IF_summary"</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="s2">"cluster_mean_IF_summary"</span>
+    <span class="n">output_csv</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">test_type</span><span class="si">}</span><span class="s2">.csv"</span>
     <span class="n">test_df_all</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_csv</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">test_df_all</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Summary CSV saved to ./</span><span class="si">{</span><span class="n">output_csv</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="n">test_df_all</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Summary CSV saved to ./</span><span class="si">{</span><span class="n">output_csv</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;dunnett&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s2">"dunnett"</span><span class="p">:</span>
         <span class="n">write_dunnett_wide_csv</span><span class="p">(</span>
             <span class="n">test_df_all</span><span class="p">,</span>
             <span class="n">output_folder</span><span class="p">,</span>
@@ -1732,14 +1571,14 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">skip_plots</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">pairs_to_process</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">cluster_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">])</span>
-            <span class="n">region_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">&quot;region_ID&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">cluster_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"cluster_ID"</span><span class="p">])</span>
+            <span class="n">region_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"region_ID"</span><span class="p">])</span> <span class="k">if</span> <span class="n">has_regions</span> <span class="k">else</span> <span class="kc">None</span>
 
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">has_regions</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plotting cluster </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">, region </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Plotting cluster </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">, region </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plotting cluster </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Plotting cluster </span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="n">plot_data</span><span class="p">(</span>
                 <span class="n">all_df</span><span class="p">,</span>
@@ -1758,7 +1597,7 @@ window.runMermaid = runMermaid;</script>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

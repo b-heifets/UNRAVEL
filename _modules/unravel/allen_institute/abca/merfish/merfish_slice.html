@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -876,7 +715,7 @@ window.runMermaid = runMermaid;</script>
                   
   <h1>Source code for unravel.allen_institute.abca.merfish.merfish_slice</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Use ``abca_merfish_slice`` or ``mf_slice`` from UNRAVEL to plot a MERFISH slice from the Allen Brain Cell Atlas (ABCA).</span>
 
 <span class="sd">Note:</span>
@@ -895,7 +734,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">Usage for overlaying neurons:</span>
 <span class="sd">-----------------------------</span>
 <span class="sd">    abca_merfish_slice -b path/to/base_dir -s 40 -g Htr2a --neurons -o slice40_Htr2a_neurons.png</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -917,37 +756,37 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
-    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="s2">&quot;--base&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;ABCA root directory&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--slice&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Slice index (e.g., 40)&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Required arguments'</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-b"</span><span class="p">,</span> <span class="s2">"--base"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"ABCA root directory"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-s"</span><span class="p">,</span> <span class="s2">"--slice"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Slice index (e.g., 40)"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="n">mode</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments: mode selection (choose one)&#39;</span><span class="p">)</span>
-    <span class="n">mode</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--color&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Metadata color column (e.g., subclass_color)&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">mode</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-g&quot;</span><span class="p">,</span> <span class="s2">&quot;--gene&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Gene symbol for expression coloring&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Required arguments: mode selection (choose one)'</span><span class="p">)</span>
+    <span class="n">mode</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--color"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Metadata color column (e.g., subclass_color)"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">mode</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-g"</span><span class="p">,</span> <span class="s2">"--gene"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Gene symbol for expression coloring"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args&#39;</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-csv&quot;</span><span class="p">,</span> <span class="s2">&quot;--csv&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Filtered cell_metadata.csv to highlight specific cells. Default: all cells&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="s2">&quot;--neurons&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Restrict cells to neuronal classes (class code ≤ 29).&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-im&quot;</span><span class="p">,</span> <span class="s2">&quot;--imputed&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use imputed expression data. Default: False&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Optional args'</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-csv"</span><span class="p">,</span> <span class="s2">"--csv"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Filtered cell_metadata.csv to highlight specific cells. Default: all cells"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-n"</span><span class="p">,</span> <span class="s2">"--neurons"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Restrict cells to neuronal classes (class code ≤ 29)."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-im"</span><span class="p">,</span> <span class="s2">"--imputed"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Use imputed expression data. Default: False"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># Style/plotting options</span>
-    <span class="n">style</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args: style/plotting&#39;</span><span class="p">)</span>
-    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-aa&quot;</span><span class="p">,</span> <span class="s2">&quot;--alpha_all&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Opacity for all cells (default 1.00)&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-as&quot;</span><span class="p">,</span> <span class="s2">&quot;--alpha_subset&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Opacity for subset cells (default 1.00)&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-sa&quot;</span><span class="p">,</span> <span class="s2">&quot;--size_all&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Marker size for all cells (default 8.0)&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-ss&quot;</span><span class="p">,</span> <span class="s2">&quot;--size_subset&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Marker size for subset cells (default 8.0)&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="s2">&quot;--legend&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Draw legend (color mode only)&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-ll&quot;</span><span class="p">,</span> <span class="s2">&quot;--legend-loc&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Legend location. Default: upper right&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--dpi&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Figure DPI when saving (default: 300).&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--title&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Custom plot title. Default: MERFISH-CCF Slice &lt;slice&gt; - &lt;gene&gt; Expression&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">style</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Optional args: style/plotting'</span><span class="p">)</span>
+    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-aa"</span><span class="p">,</span> <span class="s2">"--alpha_all"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Opacity for all cells (default 1.00)"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-as"</span><span class="p">,</span> <span class="s2">"--alpha_subset"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Opacity for subset cells (default 1.00)"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-sa"</span><span class="p">,</span> <span class="s2">"--size_all"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Marker size for all cells (default 8.0)"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-ss"</span><span class="p">,</span> <span class="s2">"--size_subset"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Marker size for subset cells (default 8.0)"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-l"</span><span class="p">,</span> <span class="s2">"--legend"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Draw legend (color mode only)"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-ll"</span><span class="p">,</span> <span class="s2">"--legend-loc"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Legend location. Default: upper right"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"upper right"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-d"</span><span class="p">,</span> <span class="s2">"--dpi"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Figure DPI when saving (default: 300)."</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">style</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-t"</span><span class="p">,</span> <span class="s2">"--title"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Custom plot title. Default: MERFISH-CCF Slice &lt;slice&gt; - &lt;gene&gt; Expression"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="c1"># Output and misc</span>
-    <span class="n">out_misc</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args: output and misc&#39;</span><span class="p">)</span>
-    <span class="n">out_misc</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Save figure to this path; otherwise show.&quot;</span><span class="p">)</span>
-    <span class="n">out_misc</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--check_gene&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print whether GENE exists in raw/imputed catalogs and exit.&quot;</span><span class="p">)</span>
+    <span class="n">out_misc</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Optional args: output and misc'</span><span class="p">)</span>
+    <span class="n">out_misc</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"--output"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Save figure to this path; otherwise show."</span><span class="p">)</span>
+    <span class="n">out_misc</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--check_gene"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Print whether GENE exists in raw/imputed catalogs and exit."</span><span class="p">)</span>
 
-    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
-    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'General arguments'</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-v'</span><span class="p">,</span> <span class="s1">'--verbose'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Increase verbosity. Default: False'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
@@ -957,7 +796,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="join_cell_metadata">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_slice.html#unravel.allen_institute.abca.merfish.merfish_slice.join_cell_metadata">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">join_cell_metadata</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">neurons_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span> 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a fully-joined cell metadata DataFrame.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return a fully-joined cell metadata DataFrame."""</span>
     <span class="k">if</span> <span class="n">csv_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_cell_metadata</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>  <span class="c1"># default behavior</span>
     <span class="k">else</span><span class="p">:</span>
@@ -975,17 +814,17 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="legend_prep">
 <a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/merfish/merfish_slice.html#unravel.allen_institute.abca.merfish.merfish_slice.legend_prep">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">legend_prep</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">df_section</span><span class="p">,</span> <span class="n">color_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">legend_loc</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a categorical legend using the label column associated with &lt;color_col&gt;.&quot;&quot;&quot;</span>
-    <span class="n">label_col</span> <span class="o">=</span> <span class="n">color_col</span><span class="p">[:</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span> <span class="k">if</span> <span class="n">color_col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_color&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">color_col</span>
+<span class="w">    </span><span class="sd">"""Build a categorical legend using the label column associated with &lt;color_col&gt;."""</span>
+    <span class="n">label_col</span> <span class="o">=</span> <span class="n">color_col</span><span class="p">[:</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span> <span class="k">if</span> <span class="n">color_col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"_color"</span><span class="p">)</span> <span class="k">else</span> <span class="n">color_col</span>
     <span class="k">if</span> <span class="n">label_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df_section</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[yellow]Legend skipped: &#39;</span><span class="si">{</span><span class="n">label_col</span><span class="si">}</span><span class="s2">&#39; column not found in data[/yellow]&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[yellow]Legend skipped: '</span><span class="si">{</span><span class="n">label_col</span><span class="si">}</span><span class="s2">' column not found in data[/yellow]"</span><span class="p">)</span>
         <span class="k">return</span>
     <span class="n">unique_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">df_section</span><span class="p">[</span><span class="n">label_col</span><span class="p">])</span>
     <span class="n">handles</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">unique_labels</span><span class="p">:</span>
         <span class="n">cols</span> <span class="o">=</span> <span class="n">df_section</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_section</span><span class="p">[</span><span class="n">label_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span><span class="p">,</span> <span class="n">color_col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-        <span class="n">col</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">cols</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;black&quot;</span>
-        <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">Line2D</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">cols</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">"black"</span>
+        <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">Line2D</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
                                   <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">)))</span>
     <span class="k">if</span> <span class="n">handles</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">handles</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">label_col</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">legend_loc</span><span class="p">)</span></div>
@@ -1002,7 +841,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must provide exactly one of --color or --gene.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"You must provide exactly one of --color or --gene."</span><span class="p">)</span>
 
     <span class="n">base</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
 
@@ -1010,7 +849,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">check_gene</span><span class="p">:</span>
         <span class="n">raw_ok</span> <span class="o">=</span> <span class="n">gene_catalog</span><span class="o">.</span><span class="n">gene_exists</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">check_gene</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">imp_ok</span> <span class="o">=</span> <span class="n">gene_catalog</span><span class="o">.</span><span class="n">gene_exists</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">check_gene</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">({</span><span class="s2">&quot;gene&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">check_gene</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="n">raw_ok</span><span class="p">,</span> <span class="s2">&quot;imputed&quot;</span><span class="p">:</span> <span class="n">imp_ok</span><span class="p">})</span>
+        <span class="nb">print</span><span class="p">({</span><span class="s2">"gene"</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">check_gene</span><span class="p">,</span> <span class="s2">"raw"</span><span class="p">:</span> <span class="n">raw_ok</span><span class="p">,</span> <span class="s2">"imputed"</span><span class="p">:</span> <span class="n">imp_ok</span><span class="p">})</span>
         <span class="n">verbose_end_msg</span><span class="p">()</span>
         <span class="k">return</span>
 
@@ -1018,7 +857,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">df</span> <span class="o">=</span> <span class="n">join_cell_metadata</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csv</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">neurons_only</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">neurons</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[red]No cells matched your filter criteria.[/red]&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"[red]No cells matched your filter criteria.[/red]"</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">color</span><span class="p">:</span>
@@ -1036,22 +875,22 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">legend</span> <span class="ow">and</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="n">legend_prep</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">filter_brain_section</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">slice</span><span class="p">),</span>
                         <span class="n">args</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">legend_loc</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">title</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">title</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;MERFISH-CCF Slice </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">slice</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">color</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">title</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">title</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"MERFISH-CCF Slice </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">slice</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">color</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Gene expression mode</span>
 
         <span class="c1"># Check if the gene exists in raw or imputed catalogs</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">imputed</span> <span class="ow">and</span> <span class="n">gene_catalog</span><span class="o">.</span><span class="n">gene_exists</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using imputed MERFISH data for gene &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Using imputed MERFISH data for gene '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
             <span class="n">use_imputed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="n">gene_catalog</span><span class="o">.</span><span class="n">gene_exists</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using raw MERFISH data for gene &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Using raw MERFISH data for gene '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
             <span class="n">use_imputed</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">elif</span> <span class="n">gene_catalog</span><span class="o">.</span><span class="n">gene_exists</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="p">,</span> <span class="n">imputed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using imputed MERFISH data for gene &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Using imputed MERFISH data for gene '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
             <span class="n">use_imputed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gene &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">&#39; not found in MERFISH raw or imputed catalogs&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Gene '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">' not found in MERFISH raw or imputed catalogs"</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_slice_gene</span><span class="p">(</span>
@@ -1067,9 +906,9 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">neurons</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">neurons</span><span class="p">,</span> 
             <span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to plot slice for gene </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to plot slice for gene </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">title</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">title</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;MERFISH-CCF Slice </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">slice</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2"> Expression&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">title</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">title</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"MERFISH-CCF Slice </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">slice</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">gene</span><span class="si">}</span><span class="s2"> Expression"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
         <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1081,7 +920,7 @@ window.runMermaid = runMermaid;</script>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

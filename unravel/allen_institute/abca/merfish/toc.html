@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -643,7 +644,30 @@
 <li class="toctree-l2"><a class="reference internal" href="utils.html#unravel.allen_institute.abca.merfish.utils.plot_slice_gene"><code class="docutils literal notranslate"><span class="pre">plot_slice_gene()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="merfish.html">unravel.allen_institute.abca.merfish.merfish module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merfish.html">unravel.allen_institute.abca.merfish.merfish module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#usage-for-gene-expression">Usage for gene expression:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#usage-for-color">Usage for color:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.load_cell_metadata"><code class="docutils literal notranslate"><span class="pre">load_cell_metadata()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.join_reconstructed_coords"><code class="docutils literal notranslate"><span class="pre">join_reconstructed_coords()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.join_cluster_details"><code class="docutils literal notranslate"><span class="pre">join_cluster_details()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.join_cluster_colors"><code class="docutils literal notranslate"><span class="pre">join_cluster_colors()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.join_parcellation_annotation"><code class="docutils literal notranslate"><span class="pre">join_parcellation_annotation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.join_parcellation_color"><code class="docutils literal notranslate"><span class="pre">join_parcellation_color()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.filter_brain_section"><code class="docutils literal notranslate"><span class="pre">filter_brain_section()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.load_region_boundaries"><code class="docutils literal notranslate"><span class="pre">load_region_boundaries()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.load_expression_data"><code class="docutils literal notranslate"><span class="pre">load_expression_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.filter_expression_data"><code class="docutils literal notranslate"><span class="pre">filter_expression_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.create_expression_dataframe"><code class="docutils literal notranslate"><span class="pre">create_expression_dataframe()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.genes_in_merfish_data"><code class="docutils literal notranslate"><span class="pre">genes_in_merfish_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.genes_in_imputed_merfish_data"><code class="docutils literal notranslate"><span class="pre">genes_in_imputed_merfish_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.slice_index_dict"><code class="docutils literal notranslate"><span class="pre">slice_index_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.section_to_zindex"><code class="docutils literal notranslate"><span class="pre">section_to_zindex()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.plot_section"><code class="docutils literal notranslate"><span class="pre">plot_section()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.points_to_img_sum"><code class="docutils literal notranslate"><span class="pre">points_to_img_sum()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish.html#unravel.allen_institute.abca.merfish.merfish.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="merfish_slice.html">unravel.allen_institute.abca.merfish.merfish_slice module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="merfish_slice.html#usage-for-color-mode-choose-cell-metadata-csv-color-column">Usage for color mode (choose cell_metadata.csv color column):</a></li>
 <li class="toctree-l2"><a class="reference internal" href="merfish_slice.html#usage-for-gene-expression-mode">Usage for gene expression mode:</a></li>
@@ -654,8 +678,24 @@
 <li class="toctree-l2"><a class="reference internal" href="merfish_slice.html#unravel.allen_institute.abca.merfish.merfish_slice.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="merfish_filter.html">unravel.allen_institute.abca.merfish.merfish_filter module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="merfish_filter_by_mask.html">unravel.allen_institute.abca.merfish.merfish_filter_by_mask module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merfish_filter.html">unravel.allen_institute.abca.merfish.merfish_filter module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.sanitize_filename"><code class="docutils literal notranslate"><span class="pre">sanitize_filename()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.save_filtered_value"><code class="docutils literal notranslate"><span class="pre">save_filtered_value()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.filter_all_values"><code class="docutils literal notranslate"><span class="pre">filter_all_values()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.filter_dataframe"><code class="docutils literal notranslate"><span class="pre">filter_dataframe()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter.html#unravel.allen_institute.abca.merfish.merfish_filter.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="merfish_filter_by_mask.html">unravel.allen_institute.abca.merfish.merfish_filter_by_mask module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter_by_mask.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter_by_mask.html#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter_by_mask.html#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.check_cells_in_mask"><code class="docutils literal notranslate"><span class="pre">check_cells_in_mask()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter_by_mask.html#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.merfish_filter_by_mask"><code class="docutils literal notranslate"><span class="pre">merfish_filter_by_mask()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_filter_by_mask.html#unravel.allen_institute.abca.merfish.merfish_filter_by_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="merfish_cells_to_nii.html">unravel.allen_institute.abca.merfish.merfish_cells_to_nii module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="merfish_cells_to_nii.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="merfish_cells_to_nii.html#unravel.allen_institute.abca.merfish.merfish_cells_to_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
@@ -663,9 +703,48 @@
 <li class="toctree-l2"><a class="reference internal" href="merfish_cells_to_nii.html#unravel.allen_institute.abca.merfish.merfish_cells_to_nii.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="merfish_expression_to_nii.html">unravel.allen_institute.abca.merfish.merfish_expression_to_nii module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="merfish_join_expression.html">unravel.allen_institute.abca.merfish.merfish_join_expression module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="merfish_check_genes.html">unravel.allen_institute.abca.merfish.merfish_check_genes module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merfish_expression_to_nii.html">unravel.allen_institute.abca.merfish.merfish_expression_to_nii module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#notes">Notes:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#usage-for-one-gene">Usage for one gene:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#usage-for-selected-genes">Usage for selected genes:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#usage-for-all-genes">Usage for all genes:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult"><code class="docutils literal notranslate"><span class="pre">GeneJobResult</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.unique_preserve_order"><code class="docutils literal notranslate"><span class="pre">unique_preserve_order()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_requested_genes_from_args"><code class="docutils literal notranslate"><span class="pre">get_requested_genes_from_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.format_gene_preview"><code class="docutils literal notranslate"><span class="pre">format_gene_preview()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.find_expression_h5ad"><code class="docutils literal notranslate"><span class="pre">find_expression_h5ad()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.default_output_path"><code class="docutils literal notranslate"><span class="pre">default_output_path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_var_symbols"><code class="docutils literal notranslate"><span class="pre">get_var_symbols()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_to_cols"><code class="docutils literal notranslate"><span class="pre">get_gene_to_cols()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_and_prepare_cell_metadata"><code class="docutils literal notranslate"><span class="pre">load_and_prepare_cell_metadata()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.infer_cell_id_column"><code class="docutils literal notranslate"><span class="pre">infer_cell_id_column()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.align_cells_to_adata"><code class="docutils literal notranslate"><span class="pre">align_cells_to_adata()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.precompute_linear_indices"><code class="docutils literal notranslate"><span class="pre">precompute_linear_indices()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_X_fully_into_memory"><code class="docutils literal notranslate"><span class="pre">load_X_fully_into_memory()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.subset_matrix_after_memory_load"><code class="docutils literal notranslate"><span class="pre">subset_matrix_after_memory_load()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_values"><code class="docutils literal notranslate"><span class="pre">get_gene_values()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.expression_values_to_img"><code class="docutils literal notranslate"><span class="pre">expression_values_to_img()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.save_nii"><code class="docutils literal notranslate"><span class="pre">save_nii()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.process_gene_job"><code class="docutils literal notranslate"><span class="pre">process_gene_job()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.run_gene_jobs"><code class="docutils literal notranslate"><span class="pre">run_gene_jobs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_expression_to_nii.html#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="merfish_join_expression.html">unravel.allen_institute.abca.merfish.merfish_join_expression module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="merfish_join_expression.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_join_expression.html#unravel.allen_institute.abca.merfish.merfish_join_expression.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_join_expression.html#unravel.allen_institute.abca.merfish.merfish_join_expression.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="merfish_check_genes.html">unravel.allen_institute.abca.merfish.merfish_check_genes module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="merfish_check_genes.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_check_genes.html#unravel.allen_institute.abca.merfish.merfish_check_genes.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_check_genes.html#unravel.allen_institute.abca.merfish.merfish_check_genes.normalize_gene_names"><code class="docutils literal notranslate"><span class="pre">normalize_gene_names()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="merfish_check_genes.html#unravel.allen_institute.abca.merfish.merfish_check_genes.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="merfish_regions.html">unravel.allen_institute.abca.merfish.merfish_regions module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="merfish_regions.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="merfish_regions.html#usage-with-piping-to-grep">Usage with piping to grep:</a></li>

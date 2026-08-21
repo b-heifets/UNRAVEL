@@ -56,8 +56,8 @@
     <link rel="icon" href="../../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="unravel.allen_institute.abca.scRNA_seq.join_gene module" href="join_gene.html" />
-    <link rel="prev" title="unravel.allen_institute.abca.scRNA_seq.filter module" href="filter.html" />
+    <link rel="next" title="unravel.allen_institute.abca.scRNA_seq.filter module" href="filter.html" />
+    <link rel="prev" title="unravel.allen_institute.abca.scRNA_seq package" href="toc.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -618,8 +619,141 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-abca-scrna-seq-expression-module">
-<span id="unravel-allen-institute-abca-scrna-seq-expression"></span><h1>unravel.allen_institute.abca.scRNA_seq.expression module<a class="headerlink" href="#unravel-allen-institute-abca-scrna-seq-expression-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.abca.scRNA_seq.expression">
+<span id="unravel-allen-institute-abca-scrna-seq-expression-module"></span><span id="unravel-allen-institute-abca-scrna-seq-expression"></span><h1>unravel.allen_institute.abca.scRNA_seq.expression module<a class="headerlink" href="#module-unravel.allen_institute.abca.scRNA_seq.expression" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">abca_scRNAseq_expression</span></code> (<code class="docutils literal notranslate"><span class="pre">rna_exp</span></code>) from UNRAVEL to extract expression data for specific genes from the ABCA.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>Cell metadata from the Allen Brain Cell Atlas (use <code class="docutils literal notranslate"><span class="pre">abca_cache</span></code> to download).</p></li>
+<li><p>Gene metadata from the Allen Brain Cell Atlas (use <code class="docutils literal notranslate"><span class="pre">abca_cache</span></code> to download).</p></li>
+<li><p>Expression data from the Allen Brain Cell Atlas (use <code class="docutils literal notranslate"><span class="pre">abca_cache</span></code> to download).</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>A CSV file with the expression data for the selected genes, indexed by cell_label.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.html">https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.html</a></p></li>
+<li><p>Only the first gene in the list will be used to name the output file.</p></li>
+<li><p>For humans, the cell type must be specified (Neurons or Nonneurons).</p></li>
+<li><p>For mice, optionally filter neurons or nonneurons with <code class="docutils literal notranslate"><span class="pre">abca_scRNAseq_filter</span></code> after joining cell metadata and expression data using <code class="docutils literal notranslate"><span class="pre">abca_scRNAseq_join_cell_metadata</span></code>.</p></li>
+<li><p>The output will be a CSV file with the expression data for the selected genes, indexed by cell_label.</p></li>
+</ul>
+</div>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_scRNAseq_expression -b path/base_dir -g genes [-s mouse | human] [-c Neurons | Nonneurons] [-o output] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-humans">
+<h2>Usage for humans:<a class="headerlink" href="#usage-for-humans" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_scRNAseq_expression -b path/base_dir -g genes -c Neurons [-o output_dir] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-mice">
+<h2>Usage for mice:<a class="headerlink" href="#usage-for-mice" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_scRNAseq_expression -b path/base_dir -g genes [-o output_dir] [-v]</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression.load_RNAseq_cell_metadata">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression.</span></span><span class="sig-name descname"><span class="pre">load_RNAseq_cell_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression.html#load_RNAseq_cell_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression.load_RNAseq_cell_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Load the cell metadata from the RNA-seq data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>download_base</strong> (<em>Path</em>) – The base directory where the data is downloaded.</p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The species to use (human or mouse). Default: ‘human’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>cell_df</strong> – The cell metadata dataframe. Index: cell_label. Columns: feature_matrix_label, region_of_interest_acronym, x, y, cluster_alias.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression.load_RNAseq_gene_metadata">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression.</span></span><span class="sig-name descname"><span class="pre">load_RNAseq_gene_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression.html#load_RNAseq_gene_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression.load_RNAseq_gene_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Load the gene metadata from the RNA-seq data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>download_base</strong> (<em>Path</em>) – The base directory where the data is downloaded.</p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The species to use (human or mouse). Default: ‘human’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>gene_df</strong> – The gene metadata dataframe. Index: gene_identifier. Columns: gene_symbol, biotype, name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression.extract_gene_expression">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression.</span></span><span class="sig-name descname"><span class="pre">extract_gene_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_indexes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_filtered</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression.html#extract_gene_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression.extract_gene_expression" title="Link to this definition">#</a></dt>
+<dd><p>Load an h5ad file and extract selected cells and genes.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression.get_gene_data_wo_cache_and_chunking">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression.</span></span><span class="sig-name descname"><span class="pre">get_gene_data_wo_cache_and_chunking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'human'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression.html#get_gene_data_wo_cache_and_chunking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression.get_gene_data_wo_cache_and_chunking" title="Link to this definition">#</a></dt>
+<dd><p>Load and structure gene expression data directly from RNA-seq data for specific genes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>download_base</strong> (<em>Path</em>) – The base directory where the data is located.</p></li>
+<li><p><strong>cell_df</strong> (<em>pandas.DataFrame</em>) – Cell metadata indexed on cell_label.</p></li>
+<li><p><strong>all_genes</strong> (<em>pandas.DataFrame</em>) – Gene metadata indexed on gene_identifier.</p></li>
+<li><p><strong>selected_genes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><em>strings</em>) – List of gene_symbols that are a subset of those in the full genes DataFrame.</p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The species to use (human or mouse). Default: ‘human’.</p></li>
+<li><p><strong>cell_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The cell type to use for humans (Neurons or Nonneurons). Default: None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>output_gene_data</strong> – Subset of gene data indexed by cell.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression.load_annotated_cell_metadata">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression.</span></span><span class="sig-name descname"><span class="pre">load_annotated_cell_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression.html#load_annotated_cell_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression.load_annotated_cell_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Load cell metadata if needed, then add annotations and colors.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression.join_cell_metadata">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression.</span></span><span class="sig-name descname"><span class="pre">join_cell_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression.html#join_cell_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression.join_cell_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Join cell metadata to an expression DataFrame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.scRNA_seq.expression.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.scRNA_seq.expression.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/scRNA_seq/expression.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.scRNA_seq.expression.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -633,20 +767,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="filter.html"
+       href="toc.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.filter module</p>
+        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq package</p>
       </div>
     </a>
     <a class="right-next"
-       href="join_gene.html"
+       href="filter.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.join_gene module</p>
+        <p class="prev-next-title">unravel.allen_institute.abca.scRNA_seq.filter module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -660,6 +794,28 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-humans">Usage for humans:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-mice">Usage for mice:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression.load_RNAseq_cell_metadata"><code class="docutils literal notranslate"><span class="pre">load_RNAseq_cell_metadata()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression.load_RNAseq_gene_metadata"><code class="docutils literal notranslate"><span class="pre">load_RNAseq_gene_metadata()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression.extract_gene_expression"><code class="docutils literal notranslate"><span class="pre">extract_gene_expression()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression.get_gene_data_wo_cache_and_chunking"><code class="docutils literal notranslate"><span class="pre">get_gene_data_wo_cache_and_chunking()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression.load_annotated_cell_metadata"><code class="docutils literal notranslate"><span class="pre">load_annotated_cell_metadata()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression.join_cell_metadata"><code class="docutils literal notranslate"><span class="pre">join_cell_metadata()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.scRNA_seq.expression.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

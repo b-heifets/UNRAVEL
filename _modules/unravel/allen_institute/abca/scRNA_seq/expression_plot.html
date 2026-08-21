@@ -1,0 +1,1717 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unravel.allen_institute.abca.scRNA_seq.expression_plot &#8212; UNRAVEL docs</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=872d93e8" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/allen_institute/abca/scRNA_seq/expression_plot';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="icon" href="../../../../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../../../_static/searchtools.js"></script>
+    <script src="../../../../../_static/language_data.js"></script>
+    <script src="../../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="dark">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide.html">
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide_mms.html">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide.html">
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../guide_mms.html">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">unravel.allen_institute.abca.scRNA_seq.expression_plot</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for unravel.allen_institute.abca.scRNA_seq.expression_plot</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">"""</span>
+<span class="sd">Use ``abca_scRNAseq_expression_plot`` (``rna_exp_plot``) from UNRAVEL to plot expression summary CSVs.</span>
+
+<span class="sd">Inputs: </span>
+<span class="sd">    - Wide CSVs produced by ``abca_scRNAseq_expression_summary`` (``rna_exp_summary``).</span>
+
+<span class="sd">Plots:</span>
+<span class="sd">    - Dot plot (default): dot color = mean log2(CPM+1) expression; dot size = percent</span>
+<span class="sd">      expression above the threshold used by expression_summary.py.</span>
+<span class="sd">    - Heatmap: mean expression, percent expression, or both.</span>
+
+<span class="sd">The script auto-detects genes from columns ending in ``_mean_expression``.</span>
+
+<span class="sd"># Top 50 by expression, ordered by expression</span>
+<span class="sd">--rank-by mean</span>
+
+<span class="sd"># Top 50 by expression, then reorder those 50 by prevalence</span>
+<span class="sd">--rank-by mean --sort-by cells</span>
+
+
+<span class="sd">Usage (sorting by mean expression by default):</span>
+<span class="sd">----------------------------------------------</span>
+<span class="sd">    rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv [-ct cell_type1 cell_type2 ...] [-g gene1 gene2 ...] [-n 50] [--rank-by ...] [--sort-by ...] [--no-cell-stats] [-p dotplot|heatmap|both] [--heatmap-metric &lt;value&gt;] [--mean-max &lt;value&gt;] [--percent-max &lt;value&gt;] [--size-min &lt;value&gt;] [--size-max &lt;value&gt;] [--mean-cmap &lt;cmap&gt;] [--percent-cmap &lt;cmap&gt;] [--annotate] [-o output_dir] [-op output_prefix] [-f png|pdf|svg] [--dpi &lt;value&gt;] [-v]</span>
+
+<span class="sd">Usage for selected cell types and genes (ranked by mean expression and sorted by cell count):</span>
+<span class="sd">---------------------------------------------------------------------------------------------</span>
+<span class="sd">    rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv -ct "Medium spiny neuron" "Eccentric medium spiny neuron" -g DRD1 DRD2 --sort-by cells</span>
+
+<span class="sd">Usage for the 50 most abundant cell types sorted by abundance:</span>
+<span class="sd">--------------------------------------------------------------</span>
+<span class="sd">    rna_exp_plot -i file.csv --rank-by cells</span>
+
+<span class="sd">Usage for parallel processing:</span>
+<span class="sd">------------------------------</span>
+<span class="sd">    fd -e csv -d 1 -j 4 -x rna_exp_plot -i {}</span>
+<span class="sd">"""</span>
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">argparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">SUPPRESS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich</span><span class="w"> </span><span class="kn">import</span> <span class="nb">print</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.traceback</span><span class="w"> </span><span class="kn">import</span> <span class="n">install</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.help_formatter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
+
+
+<span class="n">MEAN_SUFFIX</span> <span class="o">=</span> <span class="s1">'_mean_expression'</span>
+<span class="n">PERCENT_SUFFIX</span> <span class="o">=</span> <span class="s1">'_percent_expression'</span>
+
+
+<div class="viewcode-block" id="parse_args">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.parse_args">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span>
+        <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">usage</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">,</span>
+        <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Required arguments'</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'--input'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Wide CSV produced by ``abca_scRNAseq_expression_summary`` (``rna_exp_summary``).'</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Plot selection'</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-p'</span><span class="p">,</span> <span class="s1">'--plot'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Plot type. Default: dotplot'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">'dotplot'</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s1">'dotplot'</span><span class="p">,</span> <span class="s1">'heatmap'</span><span class="p">,</span> <span class="s1">'both'</span><span class="p">),</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-m'</span><span class="p">,</span> <span class="s1">'--heatmap-metric'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Heatmap metric. Default: both'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">'both'</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s1">'mean'</span><span class="p">,</span> <span class="s1">'percent'</span><span class="p">,</span> <span class="s1">'both'</span><span class="p">),</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-g'</span><span class="p">,</span> <span class="s1">'--genes'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Genes to plot. Default: all detected genes.'</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s1">'*'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-ct'</span><span class="p">,</span> <span class="s1">'--cell-types'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Exact cell_type labels to include.'</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s1">'*'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--contains'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Keep rows whose cell_type contains any supplied text.'</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s1">'*'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-n'</span><span class="p">,</span> <span class="s1">'--top'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Maximum cell types to plot after filtering. Use 0 for all. Default: 50'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--min-cells'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Minimum cell_count required. Default: 0'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--min-percent-cells'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Minimum percent_cells required. Default: 0'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--rank-by'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Metric used to choose top cell types. Default: mean'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s1">'mean'</span><span class="p">,</span> <span class="s1">'percent'</span><span class="p">,</span> <span class="s1">'cells'</span><span class="p">),</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--sort-by'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Final row order. Default: rank'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">'rank'</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s1">'rank'</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">,</span> <span class="s1">'cells'</span><span class="p">,</span> <span class="s1">'input'</span><span class="p">),</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-ns'</span><span class="p">,</span> <span class="s1">'--no-cell-stats'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Do not append percent of cells to row labels. Default: show percent.'</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s1">'show_cell_stats'</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">appearance</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Appearance'</span><span class="p">)</span>
+    <span class="n">appearance</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--mean-max'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Maximum mean-expression color value. Default: data maximum'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">appearance</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--percent-max'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Maximum percent-expression color/size value. Default: 100'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">appearance</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--size-min'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Minimum dot area. Default: 12'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">appearance</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--size-max'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Maximum dot area. Default: 240'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">240</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">appearance</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--mean-cmap'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Matplotlib colormap for mean expression. Default: magma_r'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">'magma_r'</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">appearance</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--percent-cmap'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Matplotlib colormap for percent expression. Default: viridis_r'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">'viridis_r'</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">appearance</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--annotate'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Write values inside heatmap cells. Default: False'</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">appearance</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--width'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Figure width in inches. Default: automatic'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">appearance</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--height'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Figure height in inches. Default: automatic'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">appearance</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--title'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Base plot title. Default: derived from the input.'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Output'</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-o'</span><span class="p">,</span> <span class="s1">'--output'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Output directory. Default: input_dir/expression_plots'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-op'</span><span class="p">,</span> <span class="s1">'--output-prefix'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Output file prefix. Default: input stem'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-f'</span><span class="p">,</span> <span class="s1">'--format'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Output format. Default: png'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">'png'</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s1">'png'</span><span class="p">,</span> <span class="s1">'pdf'</span><span class="p">,</span> <span class="s1">'svg'</span><span class="p">),</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'--dpi'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Raster output resolution. Default: 300'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'General arguments'</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">'-v'</span><span class="p">,</span> <span class="s1">'--verbose'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'Increase verbosity. Default: False'</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="safe_name">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.safe_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">safe_name</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Convert text to a file-name-safe string."""</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'[^A-Za-z0-9._-]+'</span><span class="p">,</span> <span class="s1">'_'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">'_'</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="natural_sort_text">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.natural_sort_text">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">natural_sort_text</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return a zero-padded natural-sort key."""</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s1">''</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'\d+'</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span><span class="si">:</span><span class="s1">012d</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="color_cell_type_tick_labels">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.color_cell_type_tick_labels">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">color_cell_type_tick_labels</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Bold and color y-axis cell-type labels."""</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">'cell_type_color'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">'cell_type_color'</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">tick_label</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span>
+        <span class="n">colors</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">tick_label</span><span class="o">.</span><span class="n">set_fontweight</span><span class="p">(</span><span class="s1">'bold'</span><span class="p">)</span>
+
+        <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s1">'#[0-9A-Fa-f]</span><span class="si">{6}</span><span class="s1">'</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+            <span class="n">tick_label</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">color</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="detect_genes">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.detect_genes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">detect_genes</span><span class="p">(</span><span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Detect genes from wide mean-expression column names."""</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">column</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">MEAN_SUFFIX</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span>
+        <span class="k">if</span> <span class="n">column</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">MEAN_SUFFIX</span><span class="p">)</span>
+    <span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="validate_and_select_genes">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.validate_and_select_genes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_and_select_genes</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">requested_genes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Return requested or detected genes and validate plot metrics."""</span>
+    <span class="n">detected</span> <span class="o">=</span> <span class="n">detect_genes</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">detected</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">'No gene columns ending in "_mean_expression" were found. '</span>
+            <span class="s1">'Use a CSV produced by rna_exp_summary.'</span>
+        <span class="p">)</span>
+
+    <span class="n">genes</span> <span class="o">=</span> <span class="n">requested_genes</span> <span class="k">if</span> <span class="n">requested_genes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">detected</span>
+    <span class="n">genes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">genes</span><span class="p">))</span>
+
+    <span class="n">missing_genes</span> <span class="o">=</span> <span class="p">[</span><span class="n">gene</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes</span> <span class="k">if</span> <span class="n">gene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">detected</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing_genes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'Genes not found in the input summary: </span><span class="si">{</span><span class="n">missing_genes</span><span class="si">}</span><span class="s1">. '</span>
+            <span class="sa">f</span><span class="s1">'Available genes: </span><span class="si">{</span><span class="n">detected</span><span class="si">}</span><span class="s1">'</span>
+        <span class="p">)</span>
+
+    <span class="n">missing_columns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="p">(</span><span class="n">MEAN_SUFFIX</span><span class="p">,</span> <span class="n">PERCENT_SUFFIX</span><span class="p">):</span>
+            <span class="n">column</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">gene</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">'</span>
+            <span class="k">if</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">missing_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">missing_columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Missing required plotting columns: </span><span class="si">{</span><span class="n">missing_columns</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">genes</span></div>
+
+
+
+<div class="viewcode-block" id="row_rank">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.row_rank">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">row_rank</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">genes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">rank_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Calculate the metric used to select and sort cell types."""</span>
+    <span class="k">if</span> <span class="n">rank_by</span> <span class="o">==</span> <span class="s1">'cells'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'cell_count'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">suffix</span> <span class="o">=</span> <span class="n">MEAN_SUFFIX</span> <span class="k">if</span> <span class="n">rank_by</span> <span class="o">==</span> <span class="s1">'mean'</span> <span class="k">else</span> <span class="n">PERCENT_SUFFIX</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">gene</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="prepare_plot_dataframe">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.prepare_plot_dataframe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">prepare_plot_dataframe</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">genes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">cell_types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">contains</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">min_cells</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">min_percent_cells</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">top</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">rank_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">sort_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">show_cell_stats</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Filter, rank, sort, and label summary rows for plotting."""</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'cell_type'</span><span class="p">,</span>
+        <span class="s1">'cell_count'</span><span class="p">,</span>
+        <span class="s1">'percent_cells'</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">required</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Missing required summary columns: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">plot_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">plot_df</span><span class="p">[</span><span class="s1">'_input_order'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">plot_df</span><span class="p">))</span>
+
+    <span class="n">plot_df</span><span class="p">[</span><span class="s1">'cell_count'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span>
+        <span class="n">plot_df</span><span class="p">[</span><span class="s1">'cell_count'</span><span class="p">],</span>
+        <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">plot_df</span><span class="p">[</span><span class="s1">'percent_cells'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span>
+        <span class="n">plot_df</span><span class="p">[</span><span class="s1">'percent_cells'</span><span class="p">],</span>
+        <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="s1">'cell_count'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_cells</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="s1">'percent_cells'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_percent_cells</span><span class="p">)</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">cell_types</span><span class="p">:</span>
+        <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="p">[</span>
+            <span class="n">plot_df</span><span class="p">[</span><span class="s1">'cell_type'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cell_types</span><span class="p">)</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">contains</span><span class="p">:</span>
+        <span class="n">contains_mask</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">plot_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">contains</span><span class="p">:</span>
+            <span class="n">contains_mask</span> <span class="o">|=</span> <span class="n">plot_df</span><span class="p">[</span><span class="s1">'cell_type'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span>
+                <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">text</span><span class="p">),</span>
+                <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="p">[</span><span class="n">contains_mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">plot_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'No rows remain after applying the plot filters.'</span><span class="p">)</span>
+
+    <span class="n">plot_df</span><span class="p">[</span><span class="s1">'_rank'</span><span class="p">]</span> <span class="o">=</span> <span class="n">row_rank</span><span class="p">(</span><span class="n">plot_df</span><span class="p">,</span> <span class="n">genes</span><span class="p">,</span> <span class="n">rank_by</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">top</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'--top must be 0 or greater.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">top</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">plot_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">top</span><span class="p">:</span>
+        <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="s1">'_rank'</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s1">'first'</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s1">'rank'</span><span class="p">:</span>
+        <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'_rank'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'stable'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s1">'cells'</span><span class="p">:</span>
+        <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'cell_count'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'stable'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s1">'percent-cells'</span><span class="p">:</span>
+        <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+            <span class="s1">'percent_cells'</span><span class="p">,</span>
+            <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">kind</span><span class="o">=</span><span class="s1">'stable'</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s1">'name'</span><span class="p">:</span>
+        <span class="n">plot_df</span><span class="p">[</span><span class="s1">'_name_sort'</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_df</span><span class="p">[</span><span class="s1">'cell_type'</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">natural_sort_text</span><span class="p">)</span>
+        <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'_name_sort'</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'stable'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s1">'input'</span><span class="p">:</span>
+        <span class="n">plot_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'_input_order'</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'stable'</span><span class="p">)</span>
+
+    <span class="n">plot_df</span><span class="p">[</span><span class="s1">'_plot_label'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">plot_df</span><span class="p">[</span><span class="s1">'cell_type'</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">'NA'</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_cell_stats</span><span class="p">:</span>
+        <span class="n">plot_df</span><span class="p">[</span><span class="s1">'_plot_label'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">percent_cells</span><span class="si">:</span><span class="s1">.3g</span><span class="si">}</span><span class="s1">%)'</span>
+            <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">percent_cells</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">plot_df</span><span class="p">[</span><span class="s1">'_plot_label'</span><span class="p">],</span>
+                <span class="n">plot_df</span><span class="p">[</span><span class="s1">'percent_cells'</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+    <span class="k">return</span> <span class="n">plot_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="summary_context">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.summary_context">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">summary_context</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Return species, level, and threshold labels from a summary CSV."""</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="s1">''</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="s1">''</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="s1">''</span>
+
+    <span class="k">if</span> <span class="s1">'species'</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="p">[</span><span class="s1">'species'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">species</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'species'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s1">'level'</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="p">[</span><span class="s1">'level'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'level'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s1">'threshold'</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="p">[</span><span class="s1">'threshold'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">threshold_value</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">'threshold'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">threshold_value</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">'</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">threshold_value</span><span class="p">)</span>
+            <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'threshold'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">species</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">threshold</span></div>
+
+
+
+<div class="viewcode-block" id="default_title">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.default_title">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">default_title</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">custom_title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Create a base title from summary metadata."""</span>
+    <span class="k">if</span> <span class="n">custom_title</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">custom_title</span>
+
+    <span class="n">level</span> <span class="o">=</span> <span class="s1">''</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="s1">''</span>
+
+    <span class="k">if</span> <span class="s1">'input'</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="p">[</span><span class="s1">'input'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'input'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">stem</span>
+
+        <span class="k">if</span> <span class="s1">'__'</span> <span class="ow">in</span> <span class="n">region</span><span class="p">:</span>
+            <span class="n">region</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'__'</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">'_filtered_'</span> <span class="ow">in</span> <span class="n">region</span><span class="p">:</span>
+            <span class="n">region</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">'_filtered_'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'_neurons'</span><span class="p">):</span>
+            <span class="n">region</span> <span class="o">=</span> <span class="n">region</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s1">'_neurons'</span><span class="p">)]</span>
+
+        <span class="n">region</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">'level'</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="p">[</span><span class="s1">'level'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">'level'</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s1"> — </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s1"> expression'</span></div>
+
+
+
+<div class="viewcode-block" id="automatic_figure_size">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.automatic_figure_size">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">automatic_figure_size</span><span class="p">(</span>
+    <span class="n">n_rows</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">n_genes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Choose a readable figure size while allowing explicit overrides."""</span>
+    <span class="n">auto_width</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.70</span> <span class="o">*</span> <span class="n">n_genes</span> <span class="o">+</span> <span class="mf">8.0</span><span class="p">))</span>
+    <span class="n">auto_height</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.30</span> <span class="o">*</span> <span class="n">n_rows</span> <span class="o">+</span> <span class="mf">2.2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">width</span> <span class="ow">or</span> <span class="n">auto_width</span><span class="p">,</span> <span class="n">height</span> <span class="ow">or</span> <span class="n">auto_height</span></div>
+
+
+
+<div class="viewcode-block" id="matrix_for_metric">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.matrix_for_metric">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">matrix_for_metric</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">genes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return a numeric cell-type by gene matrix."""</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">gene</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="finite_max">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.finite_max">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">finite_max</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">fallback</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return a positive finite maximum suitable for a color scale."""</span>
+    <span class="n">finite</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">finite</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fallback</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">finite</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">value</span> <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">fallback</span></div>
+
+
+
+<div class="viewcode-block" id="save_figure">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.save_figure">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_figure</span><span class="p">(</span>
+    <span class="n">fig</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Save and close a Matplotlib figure."""</span>
+    <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plot_dotplot">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.plot_dotplot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_dotplot</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">genes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mean_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">percent_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">size_min</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">size_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mean_cmap</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Plot mean expression as color and percent expression as dot size."""</span>
+    <span class="k">if</span> <span class="n">percent_max</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'--percent-max must be greater than 0.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">size_min</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">size_max</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">size_max</span> <span class="o">&lt;</span> <span class="n">size_min</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Dot sizes must satisfy 0 &lt;= size-min &lt;= size-max.'</span><span class="p">)</span>
+
+    <span class="n">mean_matrix</span> <span class="o">=</span> <span class="n">matrix_for_metric</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">genes</span><span class="p">,</span> <span class="n">MEAN_SUFFIX</span><span class="p">)</span>
+    <span class="n">percent_matrix</span> <span class="o">=</span> <span class="n">matrix_for_metric</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">genes</span><span class="p">,</span> <span class="n">PERCENT_SUFFIX</span><span class="p">)</span>
+
+    <span class="n">n_rows</span><span class="p">,</span> <span class="n">n_genes</span> <span class="o">=</span> <span class="n">mean_matrix</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">figure_size</span> <span class="o">=</span> <span class="n">automatic_figure_size</span><span class="p">(</span>
+        <span class="n">n_rows</span><span class="p">,</span>
+        <span class="n">n_genes</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figure_size</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span>
+        <span class="mi">3</span><span class="p">,</span>
+        <span class="n">width_ratios</span><span class="o">=</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">n_genes</span><span class="p">),</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">),</span>
+        <span class="n">wspace</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">colorbar_ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">legend_ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="n">legend_ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span>
+
+    <span class="n">x_grid</span><span class="p">,</span> <span class="n">y_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_genes</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_rows</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">mean_matrix</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">percent_matrix</span><span class="p">)</span>
+
+    <span class="n">clipped_percent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">percent_matrix</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">percent_max</span><span class="p">)</span>
+    <span class="n">dot_sizes</span> <span class="o">=</span> <span class="n">size_min</span> <span class="o">+</span> <span class="p">(</span>
+        <span class="n">clipped_percent</span> <span class="o">/</span> <span class="n">percent_max</span>
+    <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">size_max</span> <span class="o">-</span> <span class="n">size_min</span><span class="p">)</span>
+
+    <span class="n">vmax</span> <span class="o">=</span> <span class="n">mean_max</span> <span class="k">if</span> <span class="n">mean_max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">finite_max</span><span class="p">(</span><span class="n">mean_matrix</span><span class="p">)</span>
+    <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+        <span class="n">x_grid</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span>
+        <span class="n">y_grid</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span>
+        <span class="n">c</span><span class="o">=</span><span class="n">mean_matrix</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span>
+        <span class="n">s</span><span class="o">=</span><span class="n">dot_sizes</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">mean_cmap</span><span class="p">,</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+        <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+        <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_genes</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">'right'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_rows</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'_plot_label'</span><span class="p">])</span>
+    <span class="n">color_cell_type_tick_labels</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_genes</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">n_rows</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Gene'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Cell type'</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">: dot plot'</span><span class="p">,</span>
+        <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">'both'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">)</span>
+
+    <span class="n">colorbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">scatter</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">colorbar_ax</span><span class="p">)</span>
+    <span class="n">colorbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">'Mean log2(CPM+1) expression'</span><span class="p">)</span>
+
+    <span class="n">legend_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">percent_max</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">legend_handles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">legend_values</span><span class="p">:</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">size_min</span> <span class="o">+</span> <span class="p">(</span><span class="n">value</span> <span class="o">/</span> <span class="n">percent_max</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">size_max</span> <span class="o">-</span> <span class="n">size_min</span><span class="p">)</span>
+        <span class="n">legend_handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">Line2D</span><span class="p">(</span>
+                <span class="p">[],</span>
+                <span class="p">[],</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span>
+                <span class="n">linestyle</span><span class="o">=</span><span class="s1">'None'</span><span class="p">,</span>
+                <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span>
+                <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span>
+                <span class="n">markersize</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">),</span>
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">%'</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">legend_title</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s1">'Percent &gt; </span><span class="si">{</span><span class="n">threshold</span><span class="si">}</span><span class="s1">'</span>
+        <span class="k">if</span> <span class="n">threshold</span> <span class="k">else</span> <span class="s1">'Percent expression'</span>
+    <span class="p">)</span>
+    <span class="n">legend_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+        <span class="n">handles</span><span class="o">=</span><span class="n">legend_handles</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">legend_title</span><span class="p">,</span>
+        <span class="n">loc</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span>
+        <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">dpi</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plot_heatmap">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.plot_heatmap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_heatmap</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">genes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mean_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">percent_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mean_cmap</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">percent_cmap</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">annotate</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Plot a mean- or percent-expression heatmap."""</span>
+    <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s1">'mean'</span><span class="p">:</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">MEAN_SUFFIX</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix_for_metric</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">genes</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">mean_cmap</span>
+        <span class="n">vmax</span> <span class="o">=</span> <span class="n">mean_max</span> <span class="k">if</span> <span class="n">mean_max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">finite_max</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="n">colorbar_label</span> <span class="o">=</span> <span class="s1">'Mean log2(CPM+1) expression'</span>
+        <span class="n">plot_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">: mean expression heatmap'</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">PERCENT_SUFFIX</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix_for_metric</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">genes</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">percent_cmap</span>
+        <span class="n">vmax</span> <span class="o">=</span> <span class="n">percent_max</span>
+        <span class="n">colorbar_label</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'Percent expression &gt; </span><span class="si">{</span><span class="n">threshold</span><span class="si">}</span><span class="s1">'</span>
+            <span class="k">if</span> <span class="n">threshold</span> <span class="k">else</span> <span class="s1">'Percent expression'</span>
+        <span class="p">)</span>
+        <span class="n">plot_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">: percent expression heatmap'</span>
+
+    <span class="k">if</span> <span class="n">vmax</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Heatmap color maximum must be greater than 0.'</span><span class="p">)</span>
+
+    <span class="n">n_rows</span><span class="p">,</span> <span class="n">n_genes</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">figure_size</span> <span class="o">=</span> <span class="n">automatic_figure_size</span><span class="p">(</span>
+        <span class="n">n_rows</span><span class="p">,</span>
+        <span class="n">n_genes</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figure_size</span><span class="p">)</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+        <span class="n">matrix</span><span class="p">,</span>
+        <span class="n">aspect</span><span class="o">=</span><span class="s1">'auto'</span><span class="p">,</span>
+        <span class="n">interpolation</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_genes</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">'right'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_rows</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'_plot_label'</span><span class="p">])</span>
+    <span class="n">color_cell_type_tick_labels</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Gene'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Cell type'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="n">plot_title</span><span class="p">,</span>
+        <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">colorbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="n">colorbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">colorbar_label</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">annotate</span><span class="p">:</span>
+        <span class="n">text_color_cutoff</span> <span class="o">=</span> <span class="n">vmax</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">row_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rows</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">gene_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_genes</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">row_index</span><span class="p">,</span> <span class="n">gene_index</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                    <span class="n">gene_index</span><span class="p">,</span>
+                    <span class="n">row_index</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span>
+                    <span class="n">va</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s1">'white'</span> <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">text_color_cutoff</span> <span class="k">else</span> <span class="s1">'black'</span><span class="p">,</span>
+                <span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">dpi</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../../../unravel/allen_institute/abca/scRNA_seq/expression_plot.html#unravel.allen_institute.abca.scRNA_seq.expression_plot.main">[docs]</a>
+<span class="nd">@log_command</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">install</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+    <span class="n">verbose_start_msg</span><span class="p">()</span>
+
+    <span class="n">input_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">input_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Input CSV not found: </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">min_cells</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'--min-cells must be 0 or greater.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">args</span><span class="o">.</span><span class="n">min_percent_cells</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'--min-percent-cells must be between 0 and 100.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dpi</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'--dpi must be greater than 0.'</span><span class="p">)</span>
+
+    <span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">genes</span> <span class="o">=</span> <span class="n">validate_and_select_genes</span><span class="p">(</span><span class="n">summary_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">genes</span><span class="p">)</span>
+
+    <span class="n">plot_df</span> <span class="o">=</span> <span class="n">prepare_plot_dataframe</span><span class="p">(</span>
+        <span class="n">df</span><span class="o">=</span><span class="n">summary_df</span><span class="p">,</span>
+        <span class="n">genes</span><span class="o">=</span><span class="n">genes</span><span class="p">,</span>
+        <span class="n">cell_types</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">cell_types</span><span class="p">,</span>
+        <span class="n">contains</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">contains</span><span class="p">,</span>
+        <span class="n">min_cells</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">min_cells</span><span class="p">,</span>
+        <span class="n">min_percent_cells</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">min_percent_cells</span><span class="p">,</span>
+        <span class="n">top</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">top</span><span class="p">,</span>
+        <span class="n">rank_by</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">rank_by</span><span class="p">,</span>
+        <span class="n">sort_by</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">sort_by</span><span class="p">,</span>
+        <span class="n">show_cell_stats</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">show_cell_stats</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">else</span> <span class="n">input_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">'expression_plots'</span>
+    <span class="p">)</span>
+    <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">output_prefix</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">output_prefix</span> <span class="ow">or</span> <span class="n">input_path</span><span class="o">.</span><span class="n">stem</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">genes</span><span class="p">:</span>
+        <span class="n">gene_label</span> <span class="o">=</span> <span class="s1">'-'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">safe_name</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes</span>
+        <span class="p">)</span>
+        <span class="n">output_prefix</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s1">__gene-</span><span class="si">{</span><span class="n">gene_label</span><span class="si">}</span><span class="s1">'</span>
+        <span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">default_title</span><span class="p">(</span><span class="n">summary_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+    
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">threshold</span> <span class="o">=</span> <span class="n">summary_context</span><span class="p">(</span><span class="n">summary_df</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Input: </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Genes: </span><span class="si">{</span><span class="n">genes</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Rows plotted: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">plot_df</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Output directory: </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">saved_paths</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">plot</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'dotplot'</span><span class="p">,</span> <span class="s1">'both'</span><span class="p">):</span>
+        <span class="n">dotplot_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">'dotplot'</span>
+        <span class="n">dotplot_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dotplot_path</span> <span class="o">=</span> <span class="n">dotplot_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s1">__dotplot.</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">format</span><span class="si">}</span><span class="s1">'</span>
+        <span class="n">plot_dotplot</span><span class="p">(</span>
+            <span class="n">df</span><span class="o">=</span><span class="n">plot_df</span><span class="p">,</span>
+            <span class="n">genes</span><span class="o">=</span><span class="n">genes</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+            <span class="n">output_path</span><span class="o">=</span><span class="n">dotplot_path</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+            <span class="n">mean_max</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mean_max</span><span class="p">,</span>
+            <span class="n">percent_max</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">percent_max</span><span class="p">,</span>
+            <span class="n">size_min</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">size_min</span><span class="p">,</span>
+            <span class="n">size_max</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">size_max</span><span class="p">,</span>
+            <span class="n">mean_cmap</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mean_cmap</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">saved_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dotplot_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">plot</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'heatmap'</span><span class="p">,</span> <span class="s1">'both'</span><span class="p">):</span>
+        <span class="n">heatmap_metrics</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s1">'mean'</span><span class="p">,</span> <span class="s1">'percent'</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">heatmap_metric</span> <span class="o">==</span> <span class="s1">'both'</span>
+            <span class="k">else</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">heatmap_metric</span><span class="p">,)</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">heatmap_metrics</span><span class="p">:</span>
+            <span class="n">heatmap_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'heatmap_</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s1">'</span>
+            <span class="n">heatmap_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">heatmap_path</span> <span class="o">=</span> <span class="n">heatmap_dir</span> <span class="o">/</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s1">__heatmap-</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">format</span><span class="si">}</span><span class="s1">'</span>
+            <span class="p">)</span>
+            <span class="n">plot_heatmap</span><span class="p">(</span>
+                <span class="n">df</span><span class="o">=</span><span class="n">plot_df</span><span class="p">,</span>
+                <span class="n">genes</span><span class="o">=</span><span class="n">genes</span><span class="p">,</span>
+                <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span>
+                <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+                <span class="n">output_path</span><span class="o">=</span><span class="n">heatmap_path</span><span class="p">,</span>
+                <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                <span class="n">mean_max</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mean_max</span><span class="p">,</span>
+                <span class="n">percent_max</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">percent_max</span><span class="p">,</span>
+                <span class="n">mean_cmap</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mean_cmap</span><span class="p">,</span>
+                <span class="n">percent_cmap</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">percent_cmap</span><span class="p">,</span>
+                <span class="n">annotate</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">annotate</span><span class="p">,</span>
+                <span class="n">dpi</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">saved_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heatmap_path</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Saved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">saved_paths</span><span class="p">)</span><span class="si">}</span><span class="s1"> plot(s):'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">saved_paths</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'    </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">verbose_end_msg</span><span class="p">()</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, the UNRAVEL team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

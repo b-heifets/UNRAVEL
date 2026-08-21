@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scRNA_seq/expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -618,8 +619,426 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-abca-merfish-merfish-expression-to-nii-module">
-<span id="unravel-allen-institute-abca-merfish-merfish-expression-to-nii"></span><h1>unravel.allen_institute.abca.merfish.merfish_expression_to_nii module<a class="headerlink" href="#unravel-allen-institute-abca-merfish-merfish-expression-to-nii-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.abca.merfish.merfish_expression_to_nii">
+<span id="unravel-allen-institute-abca-merfish-merfish-expression-to-nii-module"></span><span id="unravel-allen-institute-abca-merfish-merfish-expression-to-nii"></span><h1>unravel.allen_institute.abca.merfish.merfish_expression_to_nii module<a class="headerlink" href="#module-unravel.allen_institute.abca.merfish.merfish_expression_to_nii" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">abca_merfish_expression_to_nii</span></code> or <code class="docutils literal notranslate"><span class="pre">me</span></code> from UNRAVEL to make 3D .nii.gz
+images of ABCA MERFISH expression data.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>MERFISH expression .h5ad (or use -b to find it in the ABCA download cache)</p></li>
+<li><p>MERFISH cell metadata CSV (or use -b to find it in the ABCA download cache)</p></li>
+<li><p>Reference .nii.gz for affine/header/shape info (e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)</p></li>
+<li><p>Optional: -g &lt;gene&gt; … to select specific genes. If omitted, all genes in the selected MERFISH dataset are processed.</p></li>
+<li><p>Optional: -i path/cell_metadata_filtered.csv to use a pre-filtered cell metadata CSV instead of the default ABCA MERFISH metadata.</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>&lt;gene&gt;.nii.gz for each requested gene, with the same affine and header as the reference .nii.gz</p></li>
+<li><p>Dir: [<a href="#id1"><span class="problematic" id="id2">imputed_</span></a>]MERFISH[_neuronal|_nonneuronal]_expression_maps/</p></li>
+<li><p>Dir with -c and -val: [<a href="#id3"><span class="problematic" id="id4">imputed_</span></a>]MERFISH[_neuronal|_nonneuronal]_expression_maps_&lt;filter_column&gt;-&lt;filter_value&gt;/</p></li>
+<li><p>Dir with -i: [<a href="#id5"><span class="problematic" id="id6">imputed_</span></a>]MERFISH[_neuronal|_nonneuronal]_expression_maps_&lt;input_stem&gt;/</p></li>
+</ul>
+</dd>
+</dl>
+<section id="notes">
+<h2>Notes:<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-w</span></code> uses threads, not processes, to avoid duplicating the loaded expression matrix.</p></li>
+<li><p>Each worker still creates one full 3D output image in memory, so keep <code class="docutils literal notranslate"><span class="pre">-w</span></code> modest.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_merfish_expression_to_nii -b &lt;abc_download_root&gt; -r &lt;ref_nii&gt; [-g &lt;gene&gt; …] [-i path/cell_metadata_filtered.csv] [–imputed] [–neurons | –nonneurons] [-o &lt;output&gt;] [-w N] [–dense] [–no-csc] [-dt float32|float64] [-f] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-one-gene">
+<h2>Usage for one gene:<a class="headerlink" href="#usage-for-one-gene" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_merfish_expression_to_nii -b &lt;abc_download_root&gt; -g &lt;gene&gt; –no-csc</p>
+</div></blockquote>
+</section>
+<section id="usage-for-selected-genes">
+<h2>Usage for selected genes:<a class="headerlink" href="#usage-for-selected-genes" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_merfish_expression_to_nii -b &lt;abc_download_root&gt; -g &lt;gene&gt; &lt;gene&gt; …</p>
+</div></blockquote>
+</section>
+<section id="usage-for-all-genes">
+<h2>Usage for all genes:<a class="headerlink" href="#usage-for-all-genes" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>abca_merfish_expression_to_nii -b &lt;abc_download_root&gt;</p>
+</div></blockquote>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">GeneJobResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gene</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'Path'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonzero_cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression_sum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#GeneJobResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gene</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – </p></li>
+<li><p><strong>nonzero_cells</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – </p></li>
+<li><p><strong>expression_sum</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.gene">
+<span class="sig-name descname"><span class="pre">gene</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.gene" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.output_path">
+<span class="sig-name descname"><span class="pre">output_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.output_path" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.nonzero_cells">
+<span class="sig-name descname"><span class="pre">nonzero_cells</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.nonzero_cells" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.expression_sum">
+<span class="sig-name descname"><span class="pre">expression_sum</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></em><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.expression_sum" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.unique_preserve_order">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">unique_preserve_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#unique_preserve_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.unique_preserve_order" title="Link to this definition">#</a></dt>
+<dd><p>Return unique strings while preserving first occurrence order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_requested_genes_from_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">get_requested_genes_from_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#get_requested_genes_from_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_requested_genes_from_args" title="Link to this definition">#</a></dt>
+<dd><p>Return requested genes and whether the user omitted -g/–gene.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">-g</span></code> is omitted, use the curated ABCA MERFISH gene-list helpers from
+<code class="docutils literal notranslate"><span class="pre">merfish.py</span></code>. These lists let us build output paths and skip existing files
+before loading the large expression matrix. The final list is still validated
+against <code class="docutils literal notranslate"><span class="pre">adata.var</span></code> after AnnData is loaded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>], <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.format_gene_preview">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">format_gene_preview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_genes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#format_gene_preview"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.format_gene_preview" title="Link to this definition">#</a></dt>
+<dd><p>Return a compact gene-list preview for console output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>max_genes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.find_expression_h5ad">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">find_expression_h5ad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imputed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#find_expression_h5ad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.find_expression_h5ad" title="Link to this definition">#</a></dt>
+<dd><p>Try to find the ABCA MERFISH expression h5ad without using backed subsetting.</p>
+<p>This lets the script bypass <code class="docutils literal notranslate"><span class="pre">mf.load_expression_data()</span></code>, which may subset a
+CSRDataset-backed h5ad before loading it into memory. The selected AnnData is
+opened backed/read-only, then <code class="docutils literal notranslate"><span class="pre">adata.X</span></code> is loaded fully into memory later.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – </p></li>
+<li><p><strong>imputed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – </p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.default_output_path">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">default_output_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_requested_genes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#default_output_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.default_output_path" title="Link to this definition">#</a></dt>
+<dd><p>Return the default output path for one gene.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gene</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>n_requested_genes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_var_symbols">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">get_var_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#get_var_symbols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_var_symbols" title="Link to this definition">#</a></dt>
+<dd><p>Return gene symbols aligned to <code class="docutils literal notranslate"><span class="pre">adata.var</span></code> columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_to_cols">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">get_gene_to_cols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requested_genes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#get_gene_to_cols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_to_cols" title="Link to this definition">#</a></dt>
+<dd><p>Map requested gene symbols to integer column positions in <code class="docutils literal notranslate"><span class="pre">adata.X</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>requested_genes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_and_prepare_cell_metadata">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">load_and_prepare_cell_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">download_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neurons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonneurons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#load_and_prepare_cell_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_and_prepare_cell_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Load and optionally filter MERFISH cell metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>download_base</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – </p></li>
+<li><p><strong>input_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>neurons</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – </p></li>
+<li><p><strong>nonneurons</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – </p></li>
+<li><p><strong>filter_column</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>filter_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.infer_cell_id_column">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">infer_cell_id_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obs_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#infer_cell_id_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.infer_cell_id_column" title="Link to this definition">#</a></dt>
+<dd><p>Infer which cell metadata field matches AnnData obs_names best.</p>
+<p>The original ABCA metadata generally uses cell labels as the index, but this keeps
+the script robust if future exports expose them as a column instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>obs_names</strong> (<em>Index</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<em>Series</em>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.align_cells_to_adata">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">align_cells_to_adata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#align_cells_to_adata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.align_cells_to_adata" title="Link to this definition">#</a></dt>
+<dd><p>Align cell metadata to AnnData row order without subsetting backed AnnData.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>aligned_cell_df</strong> (<em>DataFrame</em>) – Metadata rows in the same order as <code class="docutils literal notranslate"><span class="pre">adata.X[row_indices,</span> <span class="pre">:]</span></code>.</p></li>
+<li><p><strong>row_indices</strong> (<em>ndarray[int]</em>) – Integer AnnData row indices to keep.</p></li>
+<li><p><strong>id_source</strong> (<em>str</em>) – Metadata field used for matching.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<em>DataFrame</em>, <em>ndarray</em>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.precompute_linear_indices">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">precompute_linear_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_size_um</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#precompute_linear_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.precompute_linear_indices" title="Link to this definition">#</a></dt>
+<dd><p>Convert reconstructed MERFISH coordinates to flattened image indices once.</p>
+<dl class="simple">
+<dt>This mirrors <code class="docutils literal notranslate"><span class="pre">mf.points_to_img_sum</span></code> style accumulation, but does it in 3D:</dt><dd><p>img[int(x / pixel_size), int(y / pixel_size), z_index] += expression</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_df</strong> (<em>DataFrame</em>) – </p></li>
+<li><p><strong>shape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em>) – </p></li>
+<li><p><strong>pixel_size_um</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<em>ndarray</em>, <em>ndarray</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_X_fully_into_memory">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">load_X_fully_into_memory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#load_X_fully_into_memory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_X_fully_into_memory" title="Link to this definition">#</a></dt>
+<dd><p>Load <code class="docutils literal notranslate"><span class="pre">adata.X</span></code> into memory once, avoiding backed slicing/subsetting.</p>
+<p>For AnnData CSRDataset/CSCDataset, <code class="docutils literal notranslate"><span class="pre">to_memory()</span></code> should return a scipy sparse
+matrix. Fallbacks cover older anndata/scipy combinations.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.subset_matrix_after_memory_load">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">subset_matrix_after_memory_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_cell_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_to_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genes_to_process</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dense</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_csc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#subset_matrix_after_memory_load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.subset_matrix_after_memory_load" title="Link to this definition">#</a></dt>
+<dd><p>Subset rows/columns after full in-memory load and return local gene-column mapping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row_indices</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>valid_cell_mask</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>gene_to_cols</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>genes_to_process</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>dense</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – </p></li>
+<li><p><strong>convert_to_csc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_values">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">get_gene_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#get_gene_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_values" title="Link to this definition">#</a></dt>
+<dd><p>Return a dense 1D expression vector for one gene from the working matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cols</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em>) – </p></li>
+<li><p><strong>dtype</strong> (<em>dtype</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.expression_values_to_img">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">expression_values_to_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#expression_values_to_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.expression_values_to_img" title="Link to this definition">#</a></dt>
+<dd><p>Accumulate per-cell expression values into a 3D image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>linear_idx</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>shape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em>) – </p></li>
+<li><p><strong>dtype</strong> (<em>dtype</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.save_nii">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">save_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#save_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.save_nii" title="Link to this definition">#</a></dt>
+<dd><p>Save image with reference affine/header and a floating output dtype.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>affine</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – </p></li>
+<li><p><strong>dtype</strong> (<em>dtype</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.process_gene_job">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">process_gene_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_to_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#process_gene_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.process_gene_job" title="Link to this definition">#</a></dt>
+<dd><p>Build and save one gene image from the shared in-memory expression matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gene</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – </p></li>
+<li><p><strong>gene_to_cols</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>linear_idx</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>shape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em>) – </p></li>
+<li><p><strong>dtype</strong> (<em>dtype</em>) – </p></li>
+<li><p><strong>affine</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult" title="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult"><em>GeneJobResult</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.run_gene_jobs">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">run_gene_jobs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genes_to_process</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_to_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#run_gene_jobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.run_gene_jobs" title="Link to this definition">#</a></dt>
+<dd><p>Run gene image construction/saving sequentially or in a thread pool.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genes_to_process</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>gene_to_cols</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>linear_idx</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>shape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em>) – </p></li>
+<li><p><strong>dtype</strong> (<em>dtype</em>) – </p></li>
+<li><p><strong>affine</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>output_paths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a><em>]</em>) – </p></li>
+<li><p><strong>workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – </p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference internal" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult" title="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult"><em>GeneJobResult</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.abca.merfish.merfish_expression_to_nii.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.abca.merfish.merfish_expression_to_nii.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/unravel/allen_institute/abca/merfish/merfish_expression_to_nii.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -660,6 +1079,49 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-one-gene">Usage for one gene:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-selected-genes">Usage for selected genes:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-all-genes">Usage for all genes:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult"><code class="docutils literal notranslate"><span class="pre">GeneJobResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.gene"><code class="docutils literal notranslate"><span class="pre">GeneJobResult.gene</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.output_path"><code class="docutils literal notranslate"><span class="pre">GeneJobResult.output_path</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.nonzero_cells"><code class="docutils literal notranslate"><span class="pre">GeneJobResult.nonzero_cells</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.GeneJobResult.expression_sum"><code class="docutils literal notranslate"><span class="pre">GeneJobResult.expression_sum</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.unique_preserve_order"><code class="docutils literal notranslate"><span class="pre">unique_preserve_order()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_requested_genes_from_args"><code class="docutils literal notranslate"><span class="pre">get_requested_genes_from_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.format_gene_preview"><code class="docutils literal notranslate"><span class="pre">format_gene_preview()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.find_expression_h5ad"><code class="docutils literal notranslate"><span class="pre">find_expression_h5ad()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.default_output_path"><code class="docutils literal notranslate"><span class="pre">default_output_path()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_var_symbols"><code class="docutils literal notranslate"><span class="pre">get_var_symbols()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_to_cols"><code class="docutils literal notranslate"><span class="pre">get_gene_to_cols()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_and_prepare_cell_metadata"><code class="docutils literal notranslate"><span class="pre">load_and_prepare_cell_metadata()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.infer_cell_id_column"><code class="docutils literal notranslate"><span class="pre">infer_cell_id_column()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.align_cells_to_adata"><code class="docutils literal notranslate"><span class="pre">align_cells_to_adata()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.precompute_linear_indices"><code class="docutils literal notranslate"><span class="pre">precompute_linear_indices()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.load_X_fully_into_memory"><code class="docutils literal notranslate"><span class="pre">load_X_fully_into_memory()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.subset_matrix_after_memory_load"><code class="docutils literal notranslate"><span class="pre">subset_matrix_after_memory_load()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.get_gene_values"><code class="docutils literal notranslate"><span class="pre">get_gene_values()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.expression_values_to_img"><code class="docutils literal notranslate"><span class="pre">expression_values_to_img()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.save_nii"><code class="docutils literal notranslate"><span class="pre">save_nii()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.process_gene_job"><code class="docutils literal notranslate"><span class="pre">process_gene_job()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.run_gene_jobs"><code class="docutils literal notranslate"><span class="pre">run_gene_jobs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.abca.merfish.merfish_expression_to_nii.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

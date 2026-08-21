@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -877,7 +716,7 @@ window.runMermaid = runMermaid;</script>
   <h1>Source code for unravel.core.utils</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Utility functions and decorators for handling configurations, processing files and directories,</span>
 <span class="sd">and enhancing command-line scripts with progress bars and detailed function execution info.</span>
 
@@ -907,15 +746,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    &gt;&gt;&gt; from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_func_name_args_times, load_text_from_file, copy_files</span>
 
 <span class="sd">    &gt;&gt;&gt; # Load the configuration from a file</span>
-<span class="sd">    &gt;&gt;&gt; config = load_config(&quot;path/to/config.ini&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; config = load_config("path/to/config.ini")</span>
 
 <span class="sd">    &gt;&gt;&gt; # Get a list of sample directories</span>
-<span class="sd">    &gt;&gt;&gt; samples = get_samples([&quot;path/to/dir1&quot;, &quot;path/to/dir2&quot;], dir_pattern=&quot;sample??&quot;, verbose=True)</span>
+<span class="sd">    &gt;&gt;&gt; samples = get_samples(["path/to/dir1", "path/to/dir2"], dir_pattern="sample??", verbose=True)</span>
 <span class="sd">    </span>
 <span class="sd">    &gt;&gt;&gt; # Initialize a progress bar</span>
-<span class="sd">    &gt;&gt;&gt; progress, task_id = initialize_progress_bar(len(samples), task_message=&quot;[red]Processing samples...&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; progress, task_id = initialize_progress_bar(len(samples), task_message="[red]Processing samples...")</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
@@ -942,11 +781,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="load_config">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.load_config">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="n">config_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load settings from the config file and return a Config object.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Load settings from the config file and return a Config object."""</span>
     <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">cfg</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    [red]</span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s1"> does not exist</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">    [red]</span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s1"> does not exist</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">cfg</span></div>
 
@@ -954,8 +793,8 @@ window.runMermaid = runMermaid;</script>
 <span class="c1"># Sample list </span>
 <div class="viewcode-block" id="get_samples">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.get_samples">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_samples</span><span class="p">(</span><span class="n">dir_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dir_pattern</span><span class="o">=</span><span class="s2">&quot;sample??&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_samples</span><span class="p">(</span><span class="n">dir_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dir_pattern</span><span class="o">=</span><span class="s2">"sample??"</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Finds and returns paths to directories matching a specified pattern within given directories </span>
 <span class="sd">    or, if none are provided, the current working directory.</span>
 
@@ -966,12 +805,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        or directories that may contain subdirectories matching the `dir_pattern`. </span>
 
 <span class="sd">    dir_pattern : str, optional</span>
-<span class="sd">        A pattern to match directory names, default is &quot;sample??&quot;, where &quot;?&quot; is a wildcard matching a </span>
+<span class="sd">        A pattern to match directory names, default is "sample??", where "?" is a wildcard matching a </span>
 <span class="sd">        single character. This pattern is used to identify directories of interest.</span>
 
 <span class="sd">    dir_pattern : str, optional</span>
 <span class="sd">        A Unix shell-style wildcard pattern used by `fnmatch` to match directory names. </span>
-<span class="sd">        Default is &quot;sample??&quot;, where each &quot;?&quot; matches a single character. </span>
+<span class="sd">        Default is "sample??", where each "?" matches a single character. </span>
 
 <span class="sd">    verbose : bool, optional</span>
 <span class="sd">        If True, prints the found directories, grouped by their parent directories.</span>
@@ -991,8 +830,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; sample_paths = get_samples()  # Search the current working directory for sample?? directories</span>
-<span class="sd">    &gt;&gt;&gt; sample_paths = get_samples([path1, path2], dir_pattern=&quot;sample???&quot;)  # Search path1 and path2 for sample??? directories</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; sample_paths = get_samples([path1, path2], dir_pattern="sample???")  # Search path1 and path2 for sample??? directories</span>
+<span class="sd">    """</span>
     <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dir_list</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
@@ -1011,7 +850,7 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">sample_dirs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">d</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dir_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">dir_pattern</span><span class="p">)])</span>
                     <span class="n">samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sample_dirs</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]Directory </span><span class="si">{</span><span class="n">dir_path</span><span class="si">}</span><span class="s2"> does not exist or is not a directory</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    [red1]Directory </span><span class="si">{</span><span class="n">dir_path</span><span class="si">}</span><span class="s2"> does not exist or is not a directory</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># If the cwd matches the pattern, add it to the list of samples</span>
         <span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
@@ -1043,10 +882,10 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># Print the found directories grouped by their parent directories in order</span>
         <span class="n">uniq_parent_dirs</span> <span class="o">=</span> <span class="p">{</span><span class="n">sample_dir</span><span class="o">.</span><span class="n">parent</span> <span class="k">for</span> <span class="n">sample_dir</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">}</span>  <span class="c1"># Avoids printing ~ duplicate message when no sample?? dirs are found</span>
         <span class="k">for</span> <span class="n">parent_dir</span> <span class="ow">in</span> <span class="n">uniq_parent_dirs</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  [bold gold3]get_samples[/]() found these directories in [bright_black bold]</span><span class="si">{</span><span class="n">parent_dir</span><span class="si">}</span><span class="s2">[/]:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">  [bold gold3]get_samples[/]() found these directories in [bright_black bold]</span><span class="si">{</span><span class="n">parent_dir</span><span class="si">}</span><span class="s2">[/]:</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">sample_dir</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">sample_dir</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">parent_dir</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [bold dark_orange]</span><span class="si">{</span><span class="n">sample_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    [bold dark_orange]</span><span class="si">{</span><span class="n">sample_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">samples</span></div>
@@ -1061,7 +900,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="n">completed</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">completed</span><span class="p">)</span>
         <span class="n">total</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">total</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">completed</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bright_cyan&quot;</span><span class="p">)</span> </div>
+        <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">completed</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"bright_cyan"</span><span class="p">)</span> </div>
 </div>
 
 
@@ -1072,7 +911,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.CustomTimeElapsedColumn.render">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="n">time_elapsed</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-        <span class="n">time_elapsed</span><span class="o">.</span><span class="n">stylize</span><span class="p">(</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+        <span class="n">time_elapsed</span><span class="o">.</span><span class="n">stylize</span><span class="p">(</span><span class="s2">"green"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">time_elapsed</span></div>
 </div>
 
@@ -1084,7 +923,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.CustomTimeRemainingColumn.render">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
         <span class="n">time_elapsed</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-        <span class="n">time_elapsed</span><span class="o">.</span><span class="n">stylize</span><span class="p">(</span><span class="s2">&quot;dark_orange&quot;</span><span class="p">)</span>
+        <span class="n">time_elapsed</span><span class="o">.</span><span class="n">stylize</span><span class="p">(</span><span class="s2">"dark_orange"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">time_elapsed</span></div>
 </div>
 
@@ -1095,7 +934,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="AverageTimePerIterationColumn.render">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.AverageTimePerIterationColumn.render">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Render the average time per iteration.</span>
 
 <span class="sd">        Args:</span>
@@ -1103,27 +942,27 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A Text object displaying the average time per iteration.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">speed</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">speed</span> <span class="ow">or</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">speed</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">avg_time</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">speed</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s/iter&quot;</span>
+            <span class="n">avg_time</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">speed</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s/iter"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">avg_time</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
-        <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">avg_time</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;red1&quot;</span><span class="p">)</span></div>
+            <span class="n">avg_time</span> <span class="o">=</span> <span class="s2">"."</span>
+        <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="n">avg_time</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"red1"</span><span class="p">)</span></div>
 </div>
 
 
 <div class="viewcode-block" id="initialize_progress_bar">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.initialize_progress_bar">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">initialize_progress_bar</span><span class="p">(</span><span class="n">num_of_items_to_iterate</span><span class="p">,</span> <span class="n">task_message</span><span class="o">=</span><span class="s2">&quot;[red]Processing...&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">initialize_progress_bar</span><span class="p">(</span><span class="n">num_of_items_to_iterate</span><span class="p">,</span> <span class="n">task_message</span><span class="o">=</span><span class="s2">"[red]Processing..."</span><span class="p">):</span>
     <span class="n">progress</span> <span class="o">=</span> <span class="n">Progress</span><span class="p">(</span>
-        <span class="n">TextColumn</span><span class="p">(</span><span class="s2">&quot;[progress.description]</span><span class="si">{task.description}</span><span class="s2">&quot;</span><span class="p">),</span>
-        <span class="n">SpinnerColumn</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;bright_magenta&quot;</span><span class="p">),</span>
-        <span class="n">BarColumn</span><span class="p">(</span><span class="n">complete_style</span><span class="o">=</span><span class="s2">&quot;purple3&quot;</span><span class="p">,</span> <span class="n">finished_style</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span><span class="p">),</span>
-        <span class="n">TextColumn</span><span class="p">(</span><span class="s2">&quot;[bright_blue]</span><span class="si">{task.percentage:&gt;3.0f}</span><span class="s2">%[progress.percentage]&quot;</span><span class="p">),</span>
+        <span class="n">TextColumn</span><span class="p">(</span><span class="s2">"[progress.description]</span><span class="si">{task.description}</span><span class="s2">"</span><span class="p">),</span>
+        <span class="n">SpinnerColumn</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">"bright_magenta"</span><span class="p">),</span>
+        <span class="n">BarColumn</span><span class="p">(</span><span class="n">complete_style</span><span class="o">=</span><span class="s2">"purple3"</span><span class="p">,</span> <span class="n">finished_style</span><span class="o">=</span><span class="s2">"purple"</span><span class="p">),</span>
+        <span class="n">TextColumn</span><span class="p">(</span><span class="s2">"[bright_blue]</span><span class="si">{task.percentage:&gt;3.0f}</span><span class="s2">%[progress.percentage]"</span><span class="p">),</span>
         <span class="n">CustomMofNCompleteColumn</span><span class="p">(),</span>
         <span class="n">CustomTimeElapsedColumn</span><span class="p">(),</span>
-        <span class="n">TextColumn</span><span class="p">(</span><span class="s2">&quot;[gold1]eta:&quot;</span><span class="p">),</span>
+        <span class="n">TextColumn</span><span class="p">(</span><span class="s2">"[gold1]eta:"</span><span class="p">),</span>
         <span class="n">CustomTimeRemainingColumn</span><span class="p">(),</span>
         <span class="n">AverageTimePerIterationColumn</span><span class="p">()</span>
     <span class="p">)</span>
@@ -1138,11 +977,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="verbose_start_msg">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.verbose_start_msg">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">verbose_start_msg</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the start command and time if verbose mode is enabled.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Print the start command and time if verbose mode is enabled."""</span>
     <span class="k">if</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">[bold magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [bold purple3]</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">[/]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  [bright_blue]Start:[/] </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">[bold magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [bold purple3]</span><span class="si">{</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">[/]</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">  [bright_blue]Start:[/] </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S'</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cmd</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -1150,39 +989,39 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="verbose_end_msg">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.verbose_end_msg">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">verbose_end_msg</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the end time if verbose mode is enabled.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Print the end time if verbose mode is enabled."""</span>
     <span class="k">if</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">:mushroom: [bold magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [purple3]finished[/] [bright_blue]at:[/] </span><span class="si">{</span><span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">[gold1]![/][dark_orange]![/][red1]![/] </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">:mushroom: [bold magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [purple3]finished[/] [bright_blue]at:[/] </span><span class="si">{</span><span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S'</span><span class="p">)</span><span class="si">}</span><span class="s2">[gold1]![/][dark_orange]![/][red1]![/] </span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S'</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="log_command">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.log_command">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">log_command</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A decorator for main() to log the command and execution times to a hidden file (.command_log.txt).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A decorator for main() to log the command and execution times to a hidden file (.command_log.txt)."""</span>
     <span class="c1"># TODO: avoid logging when -h or --help is used</span>
-    <span class="c1"># TODO: Don&#39;t strip quotes from patterns for glob</span>
+    <span class="c1"># TODO: Don't strip quotes from patterns for glob</span>
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">log_file</span> <span class="o">=</span> <span class="s2">&quot;.command_log.txt&quot;</span>  <span class="c1"># Name of the hidden log file</span>
+        <span class="n">log_file</span> <span class="o">=</span> <span class="s2">".command_log.txt"</span>  <span class="c1"># Name of the hidden log file</span>
 
         <span class="c1"># Command string</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="c1"># Log command to file</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>  <span class="c1"># Open in append mode</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>  <span class="c1"># Open in append mode</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Start: </span><span class="si">{</span><span class="n">start_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    Start: </span><span class="si">{</span><span class="n">start_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># Call the original function</span>
 
         <span class="c1"># Always log end time to file</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    End: </span><span class="si">{</span><span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">    End: </span><span class="si">{</span><span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S'</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="n">result</span>
     <span class="k">return</span> <span class="n">wrapper</span></div>
@@ -1198,11 +1037,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="print_func_name_args_times">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.print_func_name_args_times">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">print_func_name_args_times</span><span class="p">(</span><span class="n">print_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A decorator that prints the function name, arguments, duration, and memory usage of the function it decorates.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A decorator that prints the function name, arguments, duration, and memory usage of the function it decorates."""</span>
     
     <span class="n">ARG_REPRESENTATIONS</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;ndarray: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="nb">list</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;list: </span><span class="si">{</span><span class="n">x</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span><span class="si">}{</span><span class="s1">&#39;...&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"ndarray: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="nb">list</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"list: </span><span class="si">{</span><span class="n">x</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span><span class="si">}{</span><span class="s1">'...'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">''</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
         <span class="nb">str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="nb">int</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="nb">float</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1210,7 +1049,7 @@ window.runMermaid = runMermaid;</script>
     <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">arg_str_representation</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a string representation of the argument passed to the decorated function.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return a string representation of the argument passed to the decorated function."""</span>
         <span class="k">return</span> <span class="n">ARG_REPRESENTATIONS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">),</span> <span class="nb">repr</span><span class="p">)(</span><span class="n">arg</span><span class="p">)</span> <span class="c1"># repr is used for unsupported types</span>
     
     <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
@@ -1219,31 +1058,31 @@ window.runMermaid = runMermaid;</script>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># If not verbose, skip all additional logic</span>
             
-            <span class="n">func_args_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span> 
-            <span class="n">func_kwargs_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">!r}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
-            <span class="n">combined_args</span> <span class="o">=</span> <span class="n">func_args_str</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;, &#39;</span> <span class="k">if</span> <span class="n">func_args_str</span> <span class="ow">and</span> <span class="n">func_kwargs_str</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">func_kwargs_str</span>
+            <span class="n">func_args_str</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span> 
+            <span class="n">func_kwargs_str</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">!r}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="n">combined_args</span> <span class="o">=</span> <span class="n">func_args_str</span> <span class="o">+</span> <span class="p">(</span><span class="s1">', '</span> <span class="k">if</span> <span class="n">func_args_str</span> <span class="ow">and</span> <span class="n">func_kwargs_str</span> <span class="k">else</span> <span class="s1">''</span><span class="p">)</span> <span class="o">+</span> <span class="n">func_kwargs_str</span>
             
             <span class="c1"># Increment the indentation level</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">thread_local_data</span><span class="p">,</span> <span class="s1">&#39;indentation_level&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">thread_local_data</span><span class="p">,</span> <span class="s1">'indentation_level'</span><span class="p">):</span>
                 <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="c1"># Compute indentation based on the current level</span>
-            <span class="n">indent_str</span> <span class="o">=</span> <span class="s1">&#39;  &#39;</span> <span class="o">*</span> <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span>  <span class="c1"># Using 2 spaces for each indentation level</span>
+            <span class="n">indent_str</span> <span class="o">=</span> <span class="s1">'  '</span> <span class="o">*</span> <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span>  <span class="c1"># Using 2 spaces for each indentation level</span>
             
             <span class="c1"># Convert args and kwargs to string for printing</span>
-            <span class="n">args_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg_str_representation</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
-            <span class="n">kwargs_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">arg_str_representation</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
-            <span class="n">combined_args</span> <span class="o">=</span> <span class="n">args_str</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;, &#39;</span> <span class="k">if</span> <span class="n">args_str</span> <span class="ow">and</span> <span class="n">kwargs_str</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">kwargs_str</span>
+            <span class="n">args_str</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg_str_representation</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+            <span class="n">kwargs_str</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">arg_str_representation</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="n">combined_args</span> <span class="o">=</span> <span class="n">args_str</span> <span class="o">+</span> <span class="p">(</span><span class="s1">', '</span> <span class="k">if</span> <span class="n">args_str</span> <span class="ow">and</span> <span class="n">kwargs_str</span> <span class="k">else</span> <span class="s1">''</span><span class="p">)</span> <span class="o">+</span> <span class="n">kwargs_str</span>
 
             <span class="c1"># Print out the arguments with the added indent</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
             <span class="k">if</span> <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># considering that main function is at level 1</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[dark_orange]</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">([/][bright_black]</span><span class="si">{</span><span class="n">args_str</span><span class="si">}{</span><span class="s1">&#39;, &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">[/][dark_orange])[/]&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[dark_orange]</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">([/][bright_black]</span><span class="si">{</span><span class="n">args_str</span><span class="si">}{</span><span class="s1">', '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">''</span><span class="si">}</span><span class="s2">[/][dark_orange])[/]"</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[dark_orange]</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">([/][bright_black]</span><span class="si">{</span><span class="n">args_str</span><span class="si">}{</span><span class="s1">&#39;, &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">[/][dark_orange])[/]&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[dark_orange]</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">([/][bright_black]</span><span class="si">{</span><span class="n">args_str</span><span class="si">}{</span><span class="s1">', '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">''</span><span class="si">}</span><span class="s2">[/][dark_orange])[/]"</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[bold gold3]</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">([/][bright_black]</span><span class="si">{</span><span class="n">combined_args</span><span class="si">}</span><span class="s2">[/][bold gold3])[/]&quot;</span><span class="p">)</span> <span class="c1"># bold orange_red1</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[bold gold3]</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">([/][bright_black]</span><span class="si">{</span><span class="n">combined_args</span><span class="si">}</span><span class="s2">[/][bold gold3])[/]"</span><span class="p">)</span> <span class="c1"># bold orange_red1</span>
 
             <span class="c1"># Function execution</span>
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
@@ -1253,13 +1092,13 @@ window.runMermaid = runMermaid;</script>
             <span class="c1"># Print duration</span>
             <span class="n">run_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
             <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">run_time</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-            <span class="n">duration_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> min </span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> sec&quot;</span> <span class="k">if</span> <span class="n">minutes</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> sec&quot;</span>
+            <span class="n">duration_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> min </span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> sec"</span> <span class="k">if</span> <span class="n">minutes</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> sec"</span>
 
             <span class="c1"># Print out the arguments with the added indent</span>
             <span class="k">if</span> <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># considering that main function is at level 1</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[dark_orange]</span><span class="si">{</span><span class="n">duration_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[dark_orange]</span><span class="si">{</span><span class="n">duration_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[gold3]</span><span class="si">{</span><span class="n">duration_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[gold3]</span><span class="si">{</span><span class="n">duration_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">-=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">result</span>
@@ -1275,10 +1114,10 @@ window.runMermaid = runMermaid;</script>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_text_from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Error reading file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">[/]&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Error reading file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
@@ -1286,34 +1125,34 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.copy_files">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">copy_files</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy the specified slices to the target directory.</span>
+<span class="w">    </span><span class="sd">"""Copy the specified slices to the target directory.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        - source_dir (Path): Path to the source directory containing the .tif files.</span>
 <span class="sd">        - target_dir (Path): Path to the target directory where the selected slices will be copied.</span>
 <span class="sd">        - filename (str): Name of the file to copy.</span>
 <span class="sd">        - sample_path (Path): Path to the sample directory (provide to prepend to the filename).</span>
-<span class="sd">        - verbose (bool): Increase verbosity.&quot;&quot;&quot;</span>
+<span class="sd">        - verbose (bool): Increase verbosity."""</span>
     
     <span class="n">src_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="n">src_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">sample_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">dest_file</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sample_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">dest_file</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">sample_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">'</span>
         <span class="k">else</span><span class="p">:</span> 
             <span class="n">dest_file</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="n">filename</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied </span><span class="si">{</span><span class="n">src_file</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">dest_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Copied </span><span class="si">{</span><span class="n">src_file</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">dest_file</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">src_file</span><span class="si">}</span><span class="s2"> does not exist and was not copied.&quot;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File </span><span class="si">{</span><span class="n">src_file</span><span class="si">}</span><span class="s2"> does not exist and was not copied."</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="match_files">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.match_files">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">match_files</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="n">base_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand one or more glob patterns to match file paths.</span>
+<span class="w">    </span><span class="sd">"""Expand one or more glob patterns to match file paths.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1338,17 +1177,17 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        If patterns is not a string, Path, or list of such types.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If no files match the given patterns.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Normalize patterns to a list of strings</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
         <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">patterns</span><span class="p">)]</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">):</span>
         <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;patterns must be a string, Path, or list of those types.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"patterns must be a string, Path, or list of those types."</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">base_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;base_path must be a string or Path object.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"base_path must be a string or Path object."</span><span class="p">)</span>
 
     <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="k">if</span> <span class="n">base_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
     <span class="n">paths</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1356,8 +1195,8 @@ window.runMermaid = runMermaid;</script>
     <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
         <span class="n">pattern_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
 
-        <span class="c1"># Determine if it&#39;s a glob (contains wildcard characters)</span>
-        <span class="n">is_glob</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">ch</span> <span class="ow">in</span> <span class="n">pattern</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="s2">&quot;*?[]&quot;</span><span class="p">)</span>
+        <span class="c1"># Determine if it's a glob (contains wildcard characters)</span>
+        <span class="n">is_glob</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">ch</span> <span class="ow">in</span> <span class="n">pattern</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="s2">"*?[]"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">is_glob</span><span class="p">:</span>
             <span class="c1"># Absolute glob</span>
@@ -1372,7 +1211,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">paths</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No files found in </span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2"> matching the pattern(s): </span><span class="si">{</span><span class="n">patterns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No files found in </span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2"> matching the pattern(s): </span><span class="si">{</span><span class="n">patterns</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">paths</span></div>
 
@@ -1380,9 +1219,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_stem">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.get_stem">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_stem</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the stem of a file path by removing known compound extensions</span>
-<span class="sd">    (e.g., &#39;.nii.gz&#39;, &#39;.ome.tif&#39;, &#39;.tar.gz&#39;) and falling back to single-extension logic.</span>
+<span class="sd">    (e.g., '.nii.gz', '.ome.tif', '.tar.gz') and falling back to single-extension logic.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1393,19 +1232,19 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
 <span class="sd">        Stem of the file with all recognized extensions removed. E.g., path/to/file.nii.gz -&gt; file</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">name</span>
     <span class="n">lower_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
     <span class="n">compound_extensions</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.ome.tif&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.ome.tiff&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.zarr.gz&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.tar.gz&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.tar.bz2&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.tar.xz&#39;</span><span class="p">,</span>
+        <span class="s1">'.nii.gz'</span><span class="p">,</span>
+        <span class="s1">'.ome.tif'</span><span class="p">,</span>
+        <span class="s1">'.ome.tiff'</span><span class="p">,</span>
+        <span class="s1">'.zarr.gz'</span><span class="p">,</span>
+        <span class="s1">'.tar.gz'</span><span class="p">,</span>
+        <span class="s1">'.tar.bz2'</span><span class="p">,</span>
+        <span class="s1">'.tar.xz'</span><span class="p">,</span>
     <span class="p">]</span>
 
     <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">compound_extensions</span><span class="p">:</span>
@@ -1418,7 +1257,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_extension">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.get_extension">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_extension</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the extension of a file path, including compound extensions.</span>
 
 <span class="sd">    Parameters</span>
@@ -1430,18 +1269,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
 <span class="sd">        The extension of the file, including compound extensions. E.g., path/to/file.nii.gz -&gt; .nii.gz</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">name</span>
 
     <span class="n">compound_extensions</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.ome.tif&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.ome.tiff&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.zarr.gz&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.tar.gz&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.tar.bz2&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;.tar.xz&#39;</span><span class="p">,</span>
+        <span class="s1">'.nii.gz'</span><span class="p">,</span>
+        <span class="s1">'.ome.tif'</span><span class="p">,</span>
+        <span class="s1">'.ome.tiff'</span><span class="p">,</span>
+        <span class="s1">'.zarr.gz'</span><span class="p">,</span>
+        <span class="s1">'.tar.gz'</span><span class="p">,</span>
+        <span class="s1">'.tar.bz2'</span><span class="p">,</span>
+        <span class="s1">'.tar.xz'</span><span class="p">,</span>
     <span class="p">]</span>
 
     <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">compound_extensions</span><span class="p">:</span>
@@ -1463,18 +1302,18 @@ window.runMermaid = runMermaid;</script>
     <span class="n">skip_existing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">return_inputs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Resolve and prepare output file path(s) based on input file(s) and an optional output argument.</span>
 
 <span class="sd">    The `output_paths` argument can include an optional suffix using colon notation:</span>
-<span class="sd">        - &quot;results/:_filtered&quot; → output dir = &quot;results/&quot;, suffix = &quot;_filtered&quot;</span>
-<span class="sd">        - &quot;:_processed&quot;        → no dir, just apply suffix &quot;_processed&quot; next to inputs</span>
-<span class="sd">        - &quot;results/&quot;           → output dir only (adds &#39;_out&#39; if input/output names would match)</span>
-<span class="sd">        - &quot;results/file.csv&quot;   → explicit file output</span>
+<span class="sd">        - "results/:_filtered" → output dir = "results/", suffix = "_filtered"</span>
+<span class="sd">        - ":_processed"        → no dir, just apply suffix "_processed" next to inputs</span>
+<span class="sd">        - "results/"           → output dir only (adds '_out' if input/output names would match)</span>
+<span class="sd">        - "results/file.csv"   → explicit file output</span>
 
 <span class="sd">    Suffix logic</span>
 <span class="sd">    -------------</span>
-<span class="sd">    - If input and output filenames (including extension) would match, &#39;_out&#39; is added automatically</span>
+<span class="sd">    - If input and output filenames (including extension) would match, '_out' is added automatically</span>
 <span class="sd">      to prevent overwriting.</span>
 <span class="sd">    - If filenames differ (e.g., due to directory, stem, or extension), no default suffix is used.</span>
 <span class="sd">    - User-specified suffixes (via colon notation or `stem_suffix`) always take precedence.</span>
@@ -1498,15 +1337,15 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Example usage</span>
 <span class="sd">    -------------</span>
-<span class="sd">    &gt;&gt;&gt; inputs = [&quot;data/a.nrrd&quot;, &quot;data/b.nrrd&quot;]</span>
-<span class="sd">    &gt;&gt;&gt; outputs = resolve_output_paths(inputs, &quot;results/:_aligned&quot;, ext=&quot;.nii.gz&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; inputs = ["data/a.nrrd", "data/b.nrrd"]</span>
+<span class="sd">    &gt;&gt;&gt; outputs = resolve_output_paths(inputs, "results/:_aligned", ext=".nii.gz")</span>
 <span class="sd">    &gt;&gt;&gt; for i, o in zip(inputs, outputs):</span>
-<span class="sd">    ...     print(f&quot;{i} → {o}&quot;)</span>
+<span class="sd">    ...     print(f"{i} → {o}")</span>
 <span class="sd">    data/a.nrrd → results/a.nii.gz</span>
 <span class="sd">    data/b.nrrd → results/b.nii.gz</span>
 
-<span class="sd">    &gt;&gt;&gt; # Same format and name → &#39;_out&#39; added</span>
-<span class="sd">    &gt;&gt;&gt; outputs = resolve_output_paths(inputs, &quot;results/&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; # Same format and name → '_out' added</span>
+<span class="sd">    &gt;&gt;&gt; outputs = resolve_output_paths(inputs, "results/")</span>
 <span class="sd">    data/a.nrrd → results/a_out.nrrd</span>
 
 <span class="sd">    Parameters</span>
@@ -1514,11 +1353,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    file_paths : list[str | Path]</span>
 <span class="sd">        One or more input file paths.</span>
 <span class="sd">    output_paths : str | Path | None, optional</span>
-<span class="sd">        Output path with optional suffix using colon notation (e.g., &#39;outdir/:_filtered&#39;).</span>
+<span class="sd">        Output path with optional suffix using colon notation (e.g., 'outdir/:_filtered').</span>
 <span class="sd">        If None, outputs are saved next to input files.</span>
 <span class="sd">    ext : str | None, optional</span>
-<span class="sd">        Optional override for file extension (e.g., &#39;.csv&#39;, &#39;.nii.gz&#39;).</span>
-<span class="sd">        If None, keeps the input file&#39;s extension.</span>
+<span class="sd">        Optional override for file extension (e.g., '.csv', '.nii.gz').</span>
+<span class="sd">        If None, keeps the input file's extension.</span>
 <span class="sd">    stem_suffix : str | None, optional</span>
 <span class="sd">        Manual suffix to append before the extension. Overrides any suffix in `output_paths`.</span>
 <span class="sd">    base_dir : str | Path | None, optional</span>
@@ -1534,16 +1373,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    list[Path]  or  (list[Path], list[Path])</span>
 <span class="sd">        List of resolved output paths (always Path objects).</span>
 <span class="sd">        If `return_inputs=True`, returns (filtered_inputs, outputs).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">file_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">]</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_paths</span><span class="p">)</span>
     <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="c1"># --- Parse colon notation in output_paths ---</span>
-    <span class="n">output_paths</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_paths</span><span class="p">)</span> <span class="k">if</span> <span class="n">output_paths</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">output_paths</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_paths</span><span class="p">)</span> <span class="k">if</span> <span class="n">output_paths</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">""</span>
     <span class="n">parsed_suffix</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">output_paths</span><span class="p">:</span>
-        <span class="n">base_part</span><span class="p">,</span> <span class="n">parsed_suffix</span> <span class="o">=</span> <span class="n">output_paths</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">":"</span> <span class="ow">in</span> <span class="n">output_paths</span><span class="p">:</span>
+        <span class="n">base_part</span><span class="p">,</span> <span class="n">parsed_suffix</span> <span class="o">=</span> <span class="n">output_paths</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">output_paths</span> <span class="o">=</span> <span class="n">base_part</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span>
         <span class="n">parsed_suffix</span> <span class="o">=</span> <span class="n">parsed_suffix</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span>
 
@@ -1562,7 +1401,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">final_suffix</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">stem_suffix</span> <span class="k">if</span> <span class="n">stem_suffix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">else</span> <span class="n">parsed_suffix</span> <span class="k">if</span> <span class="n">parsed_suffix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">else</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># decided below dynamically if needed</span>
+        <span class="k">else</span> <span class="s2">""</span>  <span class="c1"># decided below dynamically if needed</span>
     <span class="p">)</span>
 
     <span class="c1"># --- Main logic ---</span>
@@ -1590,12 +1429,12 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">target_dir</span> <span class="o">=</span> <span class="n">output_paths</span> <span class="o">/</span> <span class="n">rel_dir</span>
                 <span class="n">target_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-                <span class="c1"># Determine if name/extension match → add &#39;_out&#39;</span>
-                <span class="n">candidate</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stem</span><span class="si">}{</span><span class="n">final_suffix</span><span class="si">}{</span><span class="n">out_ext</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="k">if</span> <span class="n">final_suffix</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">candidate</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                    <span class="n">final_suffix</span> <span class="o">=</span> <span class="s2">&quot;_out&quot;</span>
+                <span class="c1"># Determine if name/extension match → add '_out'</span>
+                <span class="n">candidate</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">stem</span><span class="si">}{</span><span class="n">final_suffix</span><span class="si">}{</span><span class="n">out_ext</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">if</span> <span class="n">final_suffix</span> <span class="o">==</span> <span class="s2">""</span> <span class="ow">and</span> <span class="n">candidate</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">final_suffix</span> <span class="o">=</span> <span class="s2">"_out"</span>
 
-                <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stem</span><span class="si">}{</span><span class="n">final_suffix</span><span class="si">}{</span><span class="n">out_ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">stem</span><span class="si">}{</span><span class="n">final_suffix</span><span class="si">}{</span><span class="n">out_ext</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Case 3: No output path → save next to input</span>
@@ -1604,9 +1443,9 @@ window.runMermaid = runMermaid;</script>
             <span class="n">in_ext</span> <span class="o">=</span> <span class="n">get_extension</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
             <span class="n">out_ext</span> <span class="o">=</span> <span class="n">ext</span> <span class="ow">or</span> <span class="n">in_ext</span>
             <span class="n">final_suffix_for_this</span> <span class="o">=</span> <span class="n">final_suffix</span>
-            <span class="k">if</span> <span class="n">final_suffix_for_this</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">out_ext</span> <span class="o">==</span> <span class="n">in_ext</span><span class="p">:</span>
-                <span class="n">final_suffix_for_this</span> <span class="o">=</span> <span class="s2">&quot;_out&quot;</span>
-            <span class="n">out_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stem</span><span class="si">}{</span><span class="n">final_suffix_for_this</span><span class="si">}{</span><span class="n">out_ext</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">final_suffix_for_this</span> <span class="o">==</span> <span class="s2">""</span> <span class="ow">and</span> <span class="n">out_ext</span> <span class="o">==</span> <span class="n">in_ext</span><span class="p">:</span>
+                <span class="n">final_suffix_for_this</span> <span class="o">=</span> <span class="s2">"_out"</span>
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">stem</span><span class="si">}{</span><span class="n">final_suffix_for_this</span><span class="si">}{</span><span class="n">out_ext</span><span class="si">}</span><span class="s2">"</span>
             <span class="n">out_file</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out_file</span><span class="p">)</span>
 
@@ -1629,15 +1468,15 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="n">pad_percent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pad_percent</span>
 
-    <span class="n">pad_txt</span> <span class="o">=</span> <span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="s2">&quot;pad_percent.txt&quot;</span>
+    <span class="n">pad_txt</span> <span class="o">=</span> <span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="s2">"pad_percent.txt"</span>
     <span class="k">if</span> <span class="n">pad_txt</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pad_txt</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pad_txt</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Warning: Invalid value in pad_percent.txt. Using default pad_percent = 0.25&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"    Warning: Invalid value in pad_percent.txt. Using default pad_percent = 0.25"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Warning: pad_percent.txt not found. Using default pad_percent = 0.25&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"    Warning: pad_percent.txt not found. Using default pad_percent = 0.25"</span><span class="p">)</span>
     <span class="k">return</span> <span class="mf">0.25</span></div>
 
 </pre></div>

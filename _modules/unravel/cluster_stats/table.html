@@ -50,182 +50,17 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
 
 
 
 const initStyles = () => {
     const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
     document.head.appendChild(defaultStyle);
 
     const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
     document.head.appendChild(fullscreenStyle);
 }
 
@@ -272,6 +107,13 @@ let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
 let _lazyObserver = null;
 let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
 
 // Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
 // so this is safe to call both for the initial batch and for diagrams that
@@ -368,8 +210,10 @@ const runMermaid = async (rerun) => {
                                     el.removeAttribute('data-mermaid-deferred');
                                     // Apply zoom to the now-rendered diagram, matching
                                     // the decoration visible diagrams receive.
-                                    if ("False" === "True") {
-                                        addZoomToSvgs(d3.selectAll(""));
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
                                     }
                                 } catch (e) {
                                     console.error("Mermaid deferred rendering failed:", e);
@@ -390,10 +234,12 @@ const runMermaid = async (rerun) => {
     const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
     const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
         if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
             // Wait until every active (visible) diagram has rendered. Deferred
             // diagrams are excluded, so a fixed d3_node_count that counts a
             // hidden diagram no longer loops forever waiting for its SVG.
@@ -410,7 +256,7 @@ const runMermaid = async (rerun) => {
     }
 
     // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
+    if (!true) return;
 
     if (modal !== null ) {
         // Destroy existing modal
@@ -433,7 +279,7 @@ const runMermaid = async (rerun) => {
     modalContent = modal.querySelector('.mermaid-container-fullscreen');
     const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
 
-    const closeModal = () => {
+    closeModal = () => {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
         document.body.style.overflow = ''
@@ -444,12 +290,6 @@ const runMermaid = async (rerun) => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
         if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
             mermaidDiv.closest('.mermaid-fullscreen-modal')) {
@@ -469,8 +309,8 @@ const runMermaid = async (rerun) => {
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
         fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
 
         // Calculate dynamic position based on diagram's margin and padding
         const diagramStyle = window.getComputedStyle(mermaidDiv);
@@ -482,7 +322,7 @@ const runMermaid = async (rerun) => {
         fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
 
         fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
+            previousScrollOffset = [window.scrollX, window.scrollY];
             const clone = mermaidDiv.cloneNode(true);
             modalContent.innerHTML = '';
             modalContent.appendChild(clone);
@@ -494,9 +334,9 @@ const runMermaid = async (rerun) => {
                 svg.style.width = '100%';
                 svg.style.height = 'auto';
                 svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
+                svg.style.display = 'block';
 
-                if ("False" === "True") {
+                if (false) {
                     setTimeout(() => {
                         const g = svg.querySelector('g');
                         if (g) {
@@ -519,8 +359,11 @@ const runMermaid = async (rerun) => {
     });
 };
 
+
+
 const load = async () => {
     initStyles();
+
 
     await runMermaid(true);
 
@@ -530,10 +373,8 @@ const load = async () => {
             darkTheme = newDarkTheme;
             console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
             await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
                 }
             );
             await runMermaid(true);
@@ -558,10 +399,8 @@ const load = async () => {
 
 console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
 mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
     }
 );
 
@@ -877,7 +716,7 @@ window.runMermaid = runMermaid;</script>
   <h1>Source code for unravel.cluster_stats.table</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Use ``cstats_table`` (``ct``) from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</span>
 
 <span class="sd">Prereqs:</span>
@@ -901,7 +740,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">   - Sort the rows by their individual volume in descending order.</span>
 
 <span class="sd">Maintain Grouping Order:</span>
-<span class="sd">   - As we move to deeper depth levels, maintain the grouping and ordering established in previous steps (only adjusting the order within groups based on the new depth&#39;s aggregate volumes).</span>
+<span class="sd">   - As we move to deeper depth levels, maintain the grouping and ordering established in previous steps (only adjusting the order within groups based on the new depth's aggregate volumes).</span>
 
 <span class="sd">Note: </span>
 <span class="sd">    - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/</span>
@@ -911,7 +750,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
 <span class="sd">    cstats_table [-vcd &lt;val_clusters_dir&gt;] [-t &lt;number of top regions&gt;] [-pv &lt;perecent volume criterion&gt;] [-csv CCFv3-2020_info.csv] [-rgb sunburst_RGBs.csv] [-v]</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">openpyxl</span>
@@ -937,21 +776,21 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
-    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args&#39;</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-vcd&#39;</span><span class="p">,</span> <span class="s1">&#39;--val_clusters_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--top_regions&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of top regions to output. Default: 4&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pv&#39;</span><span class="p">,</span> <span class="s1">&#39;--percent_vol&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-csv&#39;</span><span class="p">,</span> <span class="s1">&#39;--info_csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-rgb&#39;</span><span class="p">,</span> <span class="s1">&#39;--sunburst_rgbs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: sunburst_RGBs.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sunburst_RGBs.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'Optional args'</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-vcd'</span><span class="p">,</span> <span class="s1">'--val_clusters_dir'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-t'</span><span class="p">,</span> <span class="s1">'--top_regions'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Number of top regions to output. Default: 4'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-pv'</span><span class="p">,</span> <span class="s1">'--percent_vol'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-csv'</span><span class="p">,</span> <span class="s1">'--info_csv_path'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'CSV name or path/name.csv. Default: CCFv3-2020_info.csv'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'CCFv3-2020_info.csv'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-rgb'</span><span class="p">,</span> <span class="s1">'--sunburst_rgbs'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'CSV name or path/name.csv. Default: sunburst_RGBs.csv'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'sunburst_RGBs.csv'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
-    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">'General arguments'</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'-v'</span><span class="p">,</span> <span class="s1">'--verbose'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Increase verbosity. Default: False'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-<span class="c1"># TODO: Correct font color for the volumes column. &#39;fiber tracts&#39; is filled with white rather than the color of the fiber tracts</span>
-<span class="c1"># TODO: &#39;CUL4, 5&#39; is not filled with the color of the region. </span>
+<span class="c1"># TODO: Correct font color for the volumes column. 'fiber tracts' is filled with white rather than the color of the fiber tracts</span>
+<span class="c1"># TODO: 'CUL4, 5' is not filled with the color of the region. </span>
 <span class="c1"># TODO: The first 3 columns need to be converted to a number in the excel file. Can this be done in the code?</span>
 <span class="c1"># TODO: Sometimes when copying tables to PPT, the close to black color in the Volumes column is not visible.</span>
 <span class="c1"># TODO: Fix the font in the volumes column to be white if the fill color is dark and black if the fill color is light</span>
@@ -961,18 +800,18 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="can_collapse">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.can_collapse">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">can_collapse</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">depth_col</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if regions in the specified depth column can be collapsed.</span>
 <span class="sd">    Returns a DataFrame with regions that can be collapsed based on volume and count criteria.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">volume_column</span> <span class="o">=</span> <span class="s1">&#39;Volume_(mm^3)&#39;</span>
+<span class="sd">    """</span>
+    <span class="n">volume_column</span> <span class="o">=</span> <span class="s1">'Volume_(mm^3)'</span>
 
     <span class="c1"># Group by the parent region and aggregate both volume and count (.e.g, if a parent has 3 children, the count is 3)</span>
-    <span class="n">subregion_aggregates</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">depth_col</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="n">volume_column</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">]})</span>
-    <span class="n">subregion_aggregates</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Volume_Sum&#39;</span><span class="p">,</span> <span class="s1">&#39;Count&#39;</span><span class="p">]</span>
+    <span class="n">subregion_aggregates</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">depth_col</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="n">volume_column</span><span class="p">:</span> <span class="p">[</span><span class="s1">'sum'</span><span class="p">,</span> <span class="s1">'count'</span><span class="p">]})</span>
+    <span class="n">subregion_aggregates</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Volume_Sum'</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span>
 
     <span class="c1"># Adjust the condition to check for both a volume threshold and a minimum count of subregions</span>
-    <span class="n">pooling_potential</span> <span class="o">=</span> <span class="n">subregion_aggregates</span><span class="p">[(</span><span class="n">subregion_aggregates</span><span class="p">[</span><span class="s1">&#39;Volume_Sum&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">subregion_aggregates</span><span class="p">[</span><span class="s1">&#39;Count&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">pooling_potential</span> <span class="o">=</span> <span class="n">subregion_aggregates</span><span class="p">[(</span><span class="n">subregion_aggregates</span><span class="p">[</span><span class="s1">'Volume_Sum'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">subregion_aggregates</span><span class="p">[</span><span class="s1">'Count'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)]</span>
 
     <span class="k">return</span> <span class="n">pooling_potential</span> <span class="c1"># DataFrame with regions that can be collapsed based on volume and count criteria (Depth_*, Volume_Sum, Count)</span></div>
 
@@ -980,12 +819,12 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="collapse_hierarchy">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.collapse_hierarchy">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">collapse_hierarchy</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="n">volume_column</span> <span class="o">=</span> <span class="s1">&#39;Volume_(mm^3)&#39;</span>
-    <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
+    <span class="n">volume_column</span> <span class="o">=</span> <span class="s1">'Volume_(mm^3)'</span>
+    <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">'Depth'</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">depth_level</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depth_columns</span><span class="p">))):</span>
         <span class="n">depth_col</span> <span class="o">=</span> <span class="n">depth_columns</span><span class="p">[</span><span class="n">depth_level</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">depth_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">break</span>  <span class="c1"># Stop if we&#39;re at the top level</span>
+        <span class="k">if</span> <span class="n">depth_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">break</span>  <span class="c1"># Stop if we're at the top level</span>
 
         <span class="c1"># Identify regions that can be collapsed into their parent</span>
         <span class="n">collapsible_regions</span> <span class="o">=</span> <span class="n">can_collapse</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">depth_col</span><span class="p">)</span>
@@ -996,7 +835,7 @@ window.runMermaid = runMermaid;</script>
             <span class="c1"># For each collapsible region name, get the name and the aggregate volume</span>
             <span class="k">for</span> <span class="n">region</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">collapsible_regions</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
 
-                <span class="n">aggregated_volume</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Volume_Sum&#39;</span><span class="p">]</span>
+                <span class="n">aggregated_volume</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'Volume_Sum'</span><span class="p">]</span>
 
                 <span class="c1"># Collapse rows containing the region name and set the volume to the aggregate volume</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">depth_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">region</span><span class="p">,</span> <span class="n">volume_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">aggregated_volume</span>
@@ -1020,7 +859,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="calculate_top_regions">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.calculate_top_regions">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_top_regions</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">top_n</span><span class="p">,</span> <span class="n">percent_vol_threshold</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Identify the top regions based on the dynamically collapsed hierarchy,</span>
 <span class="sd">    ensuring they meet the specified percentage volume criterion.</span>
 <span class="sd">    </span>
@@ -1028,16 +867,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param top_n: The number of top regions to identify.</span>
 <span class="sd">    :param percent_vol_threshold: The minimum percentage of total volume these regions should represent.</span>
 <span class="sd">    :return: DataFrame with the top regions and their volumes if the criterion is met; otherwise, None.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Get the total volume</span>
-    <span class="n">total_volume</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">total_volume</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'Volume_(mm^3)'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 
     <span class="c1"># Get top regions</span>
-    <span class="n">df_sorted</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df_sorted</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">'Volume_(mm^3)'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">top_regions_df</span> <span class="o">=</span> <span class="n">df_sorted</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span>
 
     <span class="c1"># Sum the volumes of the top regions</span>
-    <span class="n">top_regions_volume</span> <span class="o">=</span> <span class="n">top_regions_df</span><span class="p">[</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">top_regions_volume</span> <span class="o">=</span> <span class="n">top_regions_df</span><span class="p">[</span><span class="s1">'Volume_(mm^3)'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 
     <span class="c1"># Calculate the percentage of the total volume the top regions represent</span>
     <span class="n">percent_vol</span> <span class="o">=</span> <span class="n">top_regions_volume</span> <span class="o">/</span> <span class="n">total_volume</span>
@@ -1056,19 +895,19 @@ window.runMermaid = runMermaid;</script>
 
     <span class="c1"># Check if the DataFrame is empty print a message and return</span>
     <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">sunburst_csv_path</span><span class="si">}</span><span class="s1"> is empty. Exiting...&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="si">{</span><span class="n">sunburst_csv_path</span><span class="si">}</span><span class="s1"> is empty. Exiting...'</span><span class="p">)</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
     <span class="c1"># Sort the DataFrame by hierarchy and volume</span>
     <span class="n">df_sorted</span> <span class="o">=</span> <span class="n">sunburst_sort</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
     <span class="c1"># Save the sorted DataFrame to a new CSV file</span>
-    <span class="n">sorted_parent_path</span> <span class="o">=</span> <span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;_sorted_sunburst_CSVs&#39;</span>
+    <span class="n">sorted_parent_path</span> <span class="o">=</span> <span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">'_sorted_sunburst_CSVs'</span>
     <span class="n">sorted_parent_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;sunburst.csv&#39;</span><span class="p">):</span>
-        <span class="n">sorted_csv_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;sunburst.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;sunburst_sorted.csv&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'sunburst.csv'</span><span class="p">):</span>
+        <span class="n">sorted_csv_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'sunburst.csv'</span><span class="p">,</span> <span class="s1">'sunburst_sorted.csv'</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">sorted_csv_name</span> <span class="o">=</span> <span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s1">&#39;_sorted.csv&#39;</span>
+        <span class="n">sorted_csv_name</span> <span class="o">=</span> <span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s1">'_sorted.csv'</span>
     <span class="n">df_sorted</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sorted_parent_path</span> <span class="o">/</span> <span class="n">sorted_csv_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># Attempt to calculate top regions, collapsing as necessary</span>
@@ -1080,8 +919,8 @@ window.runMermaid = runMermaid;</script>
             <span class="n">criteria_met</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="c1"># If a top region contributes to less than 1% of the total volume, remove it</span>
-            <span class="n">total_volume</span> <span class="o">=</span> <span class="n">df_sorted</span><span class="p">[</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-            <span class="n">top_regions_df</span> <span class="o">=</span> <span class="n">top_regions_df</span><span class="p">[</span><span class="n">top_regions_df</span><span class="p">[</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_volume</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">]</span>
+            <span class="n">total_volume</span> <span class="o">=</span> <span class="n">df_sorted</span><span class="p">[</span><span class="s1">'Volume_(mm^3)'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">top_regions_df</span> <span class="o">=</span> <span class="n">top_regions_df</span><span class="p">[</span><span class="n">top_regions_df</span><span class="p">[</span><span class="s1">'Volume_(mm^3)'</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_volume</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">]</span>
 
             <span class="c1"># Initialize lists to hold the top region names and their aggregate volumes</span>
             <span class="n">top_region_names_and_percent_vols</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1094,16 +933,16 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">region_name</span> <span class="o">=</span> <span class="n">row_wo_volume</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
                 <span class="c1"># Calculate the percentage of the total volume the top regions represent</span>
-                <span class="n">aggregate_volume</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">]</span>
+                <span class="n">aggregate_volume</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'Volume_(mm^3)'</span><span class="p">]</span>
                 <span class="n">percent_vol</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">aggregate_volume</span> <span class="o">/</span> <span class="n">total_volume</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
 
                 <span class="c1"># Append the region name and the percentage volume to the list</span>
-                <span class="n">top_region_names_and_percent_vols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">percent_vol</span><span class="si">}</span><span class="s1">%)&#39;</span><span class="p">)</span>
+                <span class="n">top_region_names_and_percent_vols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">percent_vol</span><span class="si">}</span><span class="s1">%)'</span><span class="p">)</span>
 
             <span class="c1"># Save the top regions DataFrame to a new CSV file</span>
-            <span class="n">top_regions_parent_path</span> <span class="o">=</span> <span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;_top_regions_for_each_cluster&#39;</span>
+            <span class="n">top_regions_parent_path</span> <span class="o">=</span> <span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">'_top_regions_for_each_cluster'</span>
             <span class="n">top_regions_parent_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">top_regions_csv_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;sunburst.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;sunburst_top_regions.csv&#39;</span><span class="p">)</span>
+            <span class="n">top_regions_csv_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'sunburst.csv'</span><span class="p">,</span> <span class="s1">'sunburst_top_regions.csv'</span><span class="p">)</span>
             <span class="n">top_regions_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">top_regions_parent_path</span> <span class="o">/</span> <span class="n">top_regions_csv_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Attempt to collapse the hierarchy further</span>
@@ -1127,10 +966,10 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># Convert to a scale of 0-255 (for RGB values)</span>
     <span class="n">rgb_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">normalized_value</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
     <span class="c1"># Create fill color as a hex string</span>
-    <span class="n">fill_color</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rgb_value</span><span class="si">:</span><span class="s2">02x</span><span class="si">}{</span><span class="n">rgb_value</span><span class="si">:</span><span class="s2">02x</span><span class="si">}{</span><span class="n">rgb_value</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">fill_color</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">rgb_value</span><span class="si">:</span><span class="s2">02x</span><span class="si">}{</span><span class="n">rgb_value</span><span class="si">:</span><span class="s2">02x</span><span class="si">}{</span><span class="n">rgb_value</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">"</span>
     
     <span class="c1"># Set the font color to black if the fill color is light (more than 127 in RGB scale), otherwise white</span>
-    <span class="n">font_color</span> <span class="o">=</span> <span class="s2">&quot;000000&quot;</span> <span class="k">if</span> <span class="n">rgb_value</span> <span class="o">&gt;</span> <span class="mi">127</span> <span class="k">else</span> <span class="s2">&quot;FFFFFF&quot;</span>
+    <span class="n">font_color</span> <span class="o">=</span> <span class="s2">"000000"</span> <span class="k">if</span> <span class="n">rgb_value</span> <span class="o">&gt;</span> <span class="mi">127</span> <span class="k">else</span> <span class="s2">"FFFFFF"</span>
     
     <span class="k">return</span> <span class="n">fill_color</span><span class="p">,</span> <span class="n">font_color</span></div>
 
@@ -1146,31 +985,31 @@ window.runMermaid = runMermaid;</script>
 
     <span class="c1"># Find cluster_* dirs in the current dir</span>
     <span class="n">valid_clusters_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">val_clusters_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">val_clusters_dir</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
-    <span class="n">cluster_sunburst_csvs</span> <span class="o">=</span> <span class="n">valid_clusters_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;cluster_*_sunburst.csv&#39;</span><span class="p">)</span>
+    <span class="n">cluster_sunburst_csvs</span> <span class="o">=</span> <span class="n">valid_clusters_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'cluster_*_sunburst.csv'</span><span class="p">)</span>
 
     <span class="c1"># Remove directories from the list</span>
     <span class="n">cluster_sunburst_csvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">cluster_sunburst_csvs</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">is_file</span><span class="p">()]</span>
 
     <span class="c1"># Generate dynamic column names based on args.top_regions</span>
-    <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Volume&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;CoG&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;~Region&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;ID_Path&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Top_Region_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">)]</span>
+    <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Cluster'</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'Volume'</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'CoG'</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'~Region'</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'ID_Path'</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s1">'Top_Region_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">)]</span>
 
     <span class="c1"># Load the *cluster_info.txt file from the parent dir to get the cluster Centroid of Gravity (CoG)</span>
     <span class="n">cluster_info_txt_parent</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">val_clusters_dir</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">val_clusters_dir</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
-    <span class="n">cluster_info_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cluster_info_txt_parent</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*cluster_info.txt&#39;</span><span class="p">))</span>
+    <span class="n">cluster_info_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cluster_info_txt_parent</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*cluster_info.txt'</span><span class="p">))</span>
     
     <span class="c1"># If no cluster_info.txt file is found, search in the grandparent dir, and exit if not found</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">cluster_info_files</span><span class="p">:</span>
         <span class="c1"># Check for it in the grandparent dir</span>
         <span class="n">cluster_info_txt_grandparent</span> <span class="o">=</span> <span class="n">cluster_info_txt_parent</span><span class="o">.</span><span class="n">parent</span>
-        <span class="n">cluster_info_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cluster_info_txt_grandparent</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*cluster_info.txt&#39;</span><span class="p">))</span>
+        <span class="n">cluster_info_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cluster_info_txt_grandparent</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*cluster_info.txt'</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">cluster_info_files</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    [red]No *cluster_info.txt file found in </span><span class="si">{</span><span class="n">cluster_info_txt_parent</span><span class="si">}</span><span class="s1">. Exiting...&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">    [red]No *cluster_info.txt file found in </span><span class="si">{</span><span class="n">cluster_info_txt_parent</span><span class="si">}</span><span class="s1">. Exiting...'</span><span class="p">)</span>
             <span class="k">return</span>
     
     <span class="n">cluster_info_file</span> <span class="o">=</span> <span class="n">cluster_info_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># first match</span>
  
     <span class="c1"># Load the cluster info file</span>
-    <span class="n">cluster_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cluster_info_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># Assuming tab-separated values; adjust if different</span>
+    <span class="n">cluster_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cluster_info_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\t</span><span class="s1">'</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># Assuming tab-separated values; adjust if different</span>
 
     <span class="c1"># Reverse the row order of only the first column (excluding the header)</span>
     <span class="n">first_column_name</span> <span class="o">=</span> <span class="n">cluster_info_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1181,8 +1020,8 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># Get the CoG for each cluster (values in last three columns of each row)</span>
     <span class="n">CoGs</span> <span class="o">=</span> <span class="n">cluster_info_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">values</span>
 
-    <span class="c1"># Convert to this format: &#39;x,y,z&#39;</span>
-    <span class="n">CoGs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">CoG</span><span class="p">))</span> <span class="k">for</span> <span class="n">CoG</span> <span class="ow">in</span> <span class="n">CoGs</span><span class="p">]</span>
+    <span class="c1"># Convert to this format: 'x,y,z'</span>
+    <span class="n">CoGs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">CoG</span><span class="p">))</span> <span class="k">for</span> <span class="n">CoG</span> <span class="ow">in</span> <span class="n">CoGs</span><span class="p">]</span>
 
     <span class="c1"># Create a dict w/ the first column as keys and the CoG as values</span>
     <span class="n">cluster_CoGs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cluster_info_df</span><span class="p">[</span><span class="n">first_column_name</span><span class="p">],</span> <span class="n">CoGs</span><span class="p">))</span>
@@ -1191,82 +1030,82 @@ window.runMermaid = runMermaid;</script>
     <span class="n">top_regions_and_percent_vols_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">column_names</span><span class="p">)</span>
 
     <span class="c1"># Specify the column names you want to load</span>
-    <span class="n">columns_to_load</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">,</span> <span class="s1">&#39;general_region&#39;</span><span class="p">,</span>  <span class="s1">&#39;structure_id_path&#39;</span><span class="p">]</span>
+    <span class="n">columns_to_load</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'abbreviation'</span><span class="p">,</span> <span class="s1">'general_region'</span><span class="p">,</span>  <span class="s1">'structure_id_path'</span><span class="p">]</span>
 
     <span class="c1"># Load the specified columns from the CSV with CCFv3 info</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2017_info.csv&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">:</span> 
-        <span class="n">ccfv3_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns_to_load</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">'CCFv3-2017_info.csv'</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">'CCFv3-2020_info.csv'</span><span class="p">:</span> 
+        <span class="n">ccfv3_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">'core'</span> <span class="o">/</span> <span class="s1">'csvs'</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns_to_load</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ccfv3_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns_to_load</span><span class="p">)</span>
 
     <span class="c1"># For each cluster directory</span>
     <span class="k">for</span> <span class="n">cluster_sunburst_csv</span> <span class="ow">in</span> <span class="n">cluster_sunburst_csvs</span><span class="p">:</span>
 
-        <span class="c1"># Get the cluster number from the file name &#39;cluster_*_sunburst.csv&#39;</span>
-        <span class="n">cluster_num</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster_sunburst_csv</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Get the cluster number from the file name 'cluster_*_sunburst.csv'</span>
+        <span class="n">cluster_num</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster_sunburst_csv</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'_'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="c1"># Get the CoG string for the current cluster from the dictionary</span>
-        <span class="n">cog_string</span> <span class="o">=</span> <span class="n">cluster_CoGs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cluster_num</span><span class="p">)</span> <span class="k">if</span> <span class="n">cluster_CoGs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cluster_num</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;Not found&quot;</span>
+        <span class="n">cog_string</span> <span class="o">=</span> <span class="n">cluster_CoGs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cluster_num</span><span class="p">)</span> <span class="k">if</span> <span class="n">cluster_CoGs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cluster_num</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"Not found"</span>
 
         <span class="c1"># Get the top regions and their percentage volumes for the current cluster</span>
         <span class="n">top_regions_and_percent_vols</span><span class="p">,</span> <span class="n">cluster_volume</span> <span class="o">=</span> <span class="n">get_top_regions_and_percent_vols</span><span class="p">(</span><span class="n">cluster_sunburst_csv</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">percent_vol</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
         <span class="c1"># Get the top region</span>
-        <span class="n">top_region</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">top_region</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Lookup the general_regio and structure_id_path in the DataFrame using the abbreviation for the top region</span>
-        <span class="n">general_region</span> <span class="o">=</span> <span class="n">ccfv3_info_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ccfv3_info_df</span><span class="p">[</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">top_region</span><span class="p">,</span> <span class="s1">&#39;general_region&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">id_path</span> <span class="o">=</span> <span class="n">ccfv3_info_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ccfv3_info_df</span><span class="p">[</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">top_region</span><span class="p">,</span> <span class="s1">&#39;structure_id_path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">general_region</span> <span class="o">=</span> <span class="n">ccfv3_info_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ccfv3_info_df</span><span class="p">[</span><span class="s1">'abbreviation'</span><span class="p">]</span> <span class="o">==</span> <span class="n">top_region</span><span class="p">,</span> <span class="s1">'general_region'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">id_path</span> <span class="o">=</span> <span class="n">ccfv3_info_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ccfv3_info_df</span><span class="p">[</span><span class="s1">'abbreviation'</span><span class="p">]</span> <span class="o">==</span> <span class="n">top_region</span><span class="p">,</span> <span class="s1">'structure_id_path'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
         <span class="c1"># Since there could be multiple matches, we take the first one or a default value if not found</span>
-        <span class="n">general_region</span> <span class="o">=</span> <span class="n">general_region</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">general_region</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;General region not found&quot;</span>
-        <span class="n">id_path</span> <span class="o">=</span> <span class="n">id_path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;ID path not found&quot;</span>
+        <span class="n">general_region</span> <span class="o">=</span> <span class="n">general_region</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">general_region</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">"General region not found"</span>
+        <span class="n">id_path</span> <span class="o">=</span> <span class="n">id_path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">"ID path not found"</span>
 
         <span class="c1"># Ensure the list has the exact number of top regions (pad with None if necessary)</span>
         <span class="n">padded_top_regions</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">top_regions_and_percent_vols</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">)[:</span><span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">]</span>
 
-        <span class="c1"># Prepare the row data, including placeholders for &#39;Volume&#39;, &#39;CoG&#39;, &#39;~Region&#39;, and top regions</span>
+        <span class="c1"># Prepare the row data, including placeholders for 'Volume', 'CoG', '~Region', and top regions</span>
         <span class="n">row_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">cluster_num</span><span class="p">,</span> <span class="n">cluster_volume</span><span class="p">,</span> <span class="n">cog_string</span><span class="p">,</span> <span class="n">general_region</span><span class="p">,</span> <span class="n">id_path</span><span class="p">]</span> <span class="o">+</span> <span class="n">padded_top_regions</span>   
 
         <span class="c1"># Ensure column_names matches the structure of row_data</span>
-        <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">,</span> <span class="s1">&#39;Volume&#39;</span><span class="p">,</span> <span class="s1">&#39;CoG&#39;</span><span class="p">,</span> <span class="s1">&#39;~Region&#39;</span><span class="p">,</span> <span class="s1">&#39;ID_Path&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Top_Region_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">)]</span>
+        <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Cluster'</span><span class="p">,</span> <span class="s1">'Volume'</span><span class="p">,</span> <span class="s1">'CoG'</span><span class="p">,</span> <span class="s1">'~Region'</span><span class="p">,</span> <span class="s1">'ID_Path'</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s1">'Top_Region_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">)]</span>
 
-        <span class="c1"># Create a temporary DataFrame for the current cluster&#39;s data</span>
+        <span class="c1"># Create a temporary DataFrame for the current cluster's data</span>
         <span class="n">temp_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">row_data</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">column_names</span><span class="p">)</span>
 
         <span class="c1"># Concatenate the temporary DataFrame with the main DataFrame</span>
         <span class="n">top_regions_and_percent_vols_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">top_regions_and_percent_vols_df</span><span class="p">,</span> <span class="n">temp_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># Sort the DataFrame by the &#39;ID_Path&#39; column in descending order</span>
-    <span class="n">top_regions_and_percent_vols_df</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;ID_Path&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># Sort the DataFrame by the 'ID_Path' column in descending order</span>
+    <span class="n">top_regions_and_percent_vols_df</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">'ID_Path'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="c1"># Drop the &#39;ID_Path&#39; column</span>
-    <span class="n">top_regions_and_percent_vols_df</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ID_Path&#39;</span><span class="p">])</span>
+    <span class="c1"># Drop the 'ID_Path' column</span>
+    <span class="n">top_regions_and_percent_vols_df</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'ID_Path'</span><span class="p">])</span>
 
-    <span class="c1"># Convert the &#39;Volume&#39; column to 4 decimal places</span>
-    <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">&#39;Volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">&#39;Volume&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">The top regions and their percentage volumes for each cluster:&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># Convert the 'Volume' column to 4 decimal places</span>
+    <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">'Volume'</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">'Volume'</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">The top regions and their percentage volumes for each cluster:'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="si">{</span><span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 
     <span class="c1"># Load csv with RGB values </span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">sunburst_rgbs</span> <span class="o">==</span> <span class="s1">&#39;sunburst_RGBs.csv&#39;</span><span class="p">:</span> 
-        <span class="n">sunburst_RGBs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="s1">&#39;sunburst_RGBs.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">sunburst_rgbs</span> <span class="o">==</span> <span class="s1">'sunburst_RGBs.csv'</span><span class="p">:</span> 
+        <span class="n">sunburst_RGBs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">'core'</span> <span class="o">/</span> <span class="s1">'csvs'</span> <span class="o">/</span> <span class="s1">'sunburst_RGBs.csv'</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sunburst_RGBs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">sunburst_rgbs</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
     <span class="c1"># Parse the dataframe to get a dictionary of region names and their corresponding RGB values</span>
     <span class="n">rgb_values</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sunburst_RGBs_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="c1"># Format is &#39;region_name: rgb(r,g,b)&#39;</span>
-        <span class="n">region</span><span class="p">,</span> <span class="n">rgb</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;: rgb(&#39;</span><span class="p">)</span>
-        <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">rgb</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+        <span class="c1"># Format is 'region_name: rgb(r,g,b)'</span>
+        <span class="n">region</span><span class="p">,</span> <span class="n">rgb</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">': rgb('</span><span class="p">)</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">rgb</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">')'</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">))</span>
         <span class="n">rgb_values</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
     <span class="c1"># Create an Excel workbook and select the active worksheet</span>
     <span class="n">wb</span> <span class="o">=</span> <span class="n">openpyxl</span><span class="o">.</span><span class="n">Workbook</span><span class="p">()</span>
     <span class="n">ws</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">active</span>
 
-    <span class="n">thin_border</span> <span class="o">=</span> <span class="n">Border</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;thin&#39;</span><span class="p">),</span> <span class="n">right</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;thin&#39;</span><span class="p">),</span> <span class="n">top</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;thin&#39;</span><span class="p">),</span> <span class="n">bottom</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;thin&#39;</span><span class="p">))</span>
+    <span class="n">thin_border</span> <span class="o">=</span> <span class="n">Border</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">'thin'</span><span class="p">),</span> <span class="n">right</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">'thin'</span><span class="p">),</span> <span class="n">top</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">'thin'</span><span class="p">),</span> <span class="n">bottom</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">'thin'</span><span class="p">))</span>
 
     <span class="c1"># Write each row of the DataFrame to the worksheet and color cells for the top regions</span>
     <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">dataframe_to_rows</span><span class="p">(</span><span class="n">top_regions_and_percent_vols_df</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -1279,20 +1118,20 @@ window.runMermaid = runMermaid;</script>
 
             <span class="n">region_key</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="n">top_region_column_num</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">region_key</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="n">top_region_column_num</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">region_key</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="n">top_region_column_num</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="c1"># Apply the color to the cell if it matches one of the RGB values</span>
             <span class="k">if</span> <span class="n">region_key</span> <span class="ow">in</span> <span class="n">rgb_values</span><span class="p">:</span>
                 <span class="c1"># Convert the RGB to a hex string</span>
                 <span class="n">rgb</span> <span class="o">=</span> <span class="n">rgb_values</span><span class="p">[</span><span class="n">region_key</span><span class="p">]</span>
-                <span class="n">hex_color</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:02x}{:02x}{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-                <span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+                <span class="n">hex_color</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{:02x}{:02x}{:02x}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">'solid'</span><span class="p">)</span>
                 <span class="n">top_region_column_num</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">i</span>
                 <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">top_region_column_num</span><span class="p">)</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">fill</span>
                 <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">top_region_column_num</span><span class="p">)</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="n">thin_border</span>
             <span class="k">elif</span> <span class="n">region_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">hex_color</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:02x}{:02x}{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="c1"># Grey</span>
-                <span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+                <span class="n">hex_color</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{:02x}{:02x}{:02x}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="c1"># Grey</span>
+                <span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">'solid'</span><span class="p">)</span>
                 <span class="n">top_region_column_num</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">i</span>
                 <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">top_region_column_num</span><span class="p">)</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">fill</span>
                 <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">top_region_column_num</span><span class="p">)</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="n">thin_border</span>
@@ -1315,31 +1154,31 @@ window.runMermaid = runMermaid;</script>
             <span class="n">ws</span><span class="o">.</span><span class="n">column_dimensions</span><span class="p">[</span><span class="n">column_letter</span><span class="p">]</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">adjusted_width</span>
 
     <span class="c1"># Fill cells in first column with white</span>
-    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]:</span>
-        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">'A'</span><span class="p">]:</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">'FFFFFF'</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">'FFFFFF'</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">'solid'</span><span class="p">)</span>
 
     <span class="c1"># Fill cells in ninth column with white</span>
     <span class="n">column</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">top_regions</span>
     <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="n">get_column_letter</span><span class="p">(</span><span class="n">column</span><span class="p">)]:</span>
-        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">'FFFFFF'</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">'FFFFFF'</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">'solid'</span><span class="p">)</span>
 
     <span class="c1"># Fill cells in first row with white</span>
     <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">'FFFFFF'</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">'FFFFFF'</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">'solid'</span><span class="p">)</span>
 
     <span class="c1"># Fill cells in last row with white</span>
     <span class="n">num_rows</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span>
     <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="n">num_rows</span><span class="p">]:</span>
-        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">'FFFFFF'</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">'FFFFFF'</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">'solid'</span><span class="p">)</span>
 
     <span class="c1"># Center align the content</span>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">min_row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_col</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
-            <span class="n">cell</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="n">Alignment</span><span class="p">(</span><span class="n">horizontal</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">vertical</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="n">Alignment</span><span class="p">(</span><span class="n">horizontal</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span> <span class="n">vertical</span><span class="o">=</span><span class="s1">'center'</span><span class="p">)</span>
 
     <span class="c1"># Format column C such that the brightness of the fill is proportional to the volume / total volume and the text brightness is inversely proportional to the fill brightness</span>
-    <span class="c1"># total_volume = top_regions_and_percent_vols_df[&#39;Volume&#39;].sum()</span>
-    <span class="n">volumes</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">&#39;Volume&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="c1"># total_volume = top_regions_and_percent_vols_df['Volume'].sum()</span>
+    <span class="n">volumes</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">'Volume'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="n">max_volume</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">volumes</span><span class="p">)</span>  <span class="c1"># The largest volume</span>
 
     <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">volume</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">volumes</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>  <span class="c1"># Starting from row 3 (C3)</span>
@@ -1350,9 +1189,9 @@ window.runMermaid = runMermaid;</script>
         <span class="n">cell</span> <span class="o">=</span> <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Column 3 corresponds to column C</span>
         
         <span class="c1"># Set the fill color based on the calculated brightness</span>
-        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="n">fill_color</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="n">fill_color</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s2">&quot;solid&quot;</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="n">fill_color</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="n">fill_color</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s2">"solid"</span><span class="p">)</span>
         
-        <span class="c1"># Set the font color based on the inverse of the fill color&#39;s brightness</span>
+        <span class="c1"># Set the font color based on the inverse of the fill color's brightness</span>
         <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">font_color</span><span class="p">)</span>
 
     <span class="c1"># Apply a thin border style to cells with content</span>
@@ -1360,24 +1199,24 @@ window.runMermaid = runMermaid;</script>
         <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>  <span class="c1"># If the cell has content</span>
                 <span class="n">cell</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="n">thin_border</span>
-                <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Arial'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
 
     <span class="c1"># Apply the font to the header row</span>
-    <span class="n">header_font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">&#39;2:2&#39;</span><span class="p">]:</span>
+    <span class="n">header_font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Arial'</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">'2:2'</span><span class="p">]:</span>
         <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">header_font</span>
 
     <span class="c1"># Make column B bold</span>
-    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">]:</span>
-        <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">'B'</span><span class="p">]:</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Arial'</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     
     <span class="c1"># Additional step to ensure cells from column F onwards are black</span>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">min_col</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span> 
         <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="p">:</span>  <span class="c1"># If the cell already has font settings applied</span>
-                <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">bold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;FF000000&#39;</span><span class="p">)</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Arial'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">bold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'FF000000'</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;FF000000&#39;</span><span class="p">)</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Arial'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'FF000000'</span><span class="p">)</span>
 
     <span class="c1"># Iterate through the cells and merge cells with the same value in column 5</span>
     <span class="n">current_region</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1386,12 +1225,12 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># Adjusted min_row to 2 and min_col/max_col to merge_column because of the added padding row and column</span>
     <span class="n">merge_column</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">min_row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_col</span><span class="o">=</span><span class="n">merge_column</span><span class="p">,</span> <span class="n">max_col</span><span class="o">=</span><span class="n">merge_column</span><span class="p">):</span>
-        <span class="n">cell</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># row[0] since we&#39;re only looking at one column, and iter_rows yields tuples</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># row[0] since we're only looking at one column, and iter_rows yields tuples</span>
         <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">current_region</span><span class="p">:</span>
             <span class="c1"># If the cell value changes, merge the previous cells if there are more than one with the same value</span>
             <span class="k">if</span> <span class="n">first_row</span> <span class="ow">and</span> <span class="n">first_row</span> <span class="o">&lt;</span> <span class="n">cell</span><span class="o">.</span><span class="n">row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">ws</span><span class="o">.</span><span class="n">merge_cells</span><span class="p">(</span><span class="n">start_row</span><span class="o">=</span><span class="n">first_row</span><span class="p">,</span> <span class="n">start_column</span><span class="o">=</span><span class="n">merge_column</span><span class="p">,</span> <span class="n">end_row</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">end_column</span><span class="o">=</span><span class="n">merge_column</span><span class="p">)</span>
-            <span class="c1"># Update the current region and reset the first_row to the current cell&#39;s row</span>
+            <span class="c1"># Update the current region and reset the first_row to the current cell's row</span>
             <span class="n">current_region</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span>
             <span class="n">first_row</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">row</span>
 
@@ -1399,26 +1238,26 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="n">first_row</span> <span class="ow">and</span> <span class="n">first_row</span> <span class="o">&lt;</span> <span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">:</span>
         <span class="n">ws</span><span class="o">.</span><span class="n">merge_cells</span><span class="p">(</span><span class="n">start_row</span><span class="o">=</span><span class="n">first_row</span><span class="p">,</span> <span class="n">start_column</span><span class="o">=</span><span class="n">merge_column</span><span class="p">,</span> <span class="n">end_row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">end_column</span><span class="o">=</span><span class="n">merge_column</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]:</span>
-        <span class="n">cell</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="n">Alignment</span><span class="p">(</span><span class="n">horizontal</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">vertical</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">'E'</span><span class="p">]:</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="n">Alignment</span><span class="p">(</span><span class="n">horizontal</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span> <span class="n">vertical</span><span class="o">=</span><span class="s1">'center'</span><span class="p">)</span>
     
     <span class="c1"># Save the workbook to a file</span>
-    <span class="n">excel_file_path</span> <span class="o">=</span> <span class="n">valid_clusters_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">valid_clusters_dir</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_valid_clusters_table.xlsx&#39;</span>
+    <span class="n">excel_file_path</span> <span class="o">=</span> <span class="n">valid_clusters_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">valid_clusters_dir</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_valid_clusters_table.xlsx'</span>
     <span class="n">wb</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">excel_file_path</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Excel file saved at </span><span class="si">{</span><span class="n">excel_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Brighter cell fills in the &#39;Volume&#39; column represent larger volumes (log(10) scaled and normalized to the max volume).&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Excel file saved at </span><span class="si">{</span><span class="n">excel_file_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Brighter cell fills in the 'Volume' column represent larger volumes (log(10) scaled and normalized to the max volume)."</span><span class="p">)</span>
 
     <span class="c1"># Get the anatomically sorted list of cluster IDs and save it to a .txt file</span>
-    <span class="n">valid_cluster_ids</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="n">valid_cluster_ids_str</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">valid_cluster_ids</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_clusters_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_sorted_by_anatomy.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">valid_cluster_ids</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">'Cluster'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">valid_cluster_ids_str</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">valid_cluster_ids</span><span class="p">))</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_clusters_dir</span> <span class="o">/</span> <span class="s1">'valid_cluster_IDs_sorted_by_anatomy.txt'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">valid_cluster_ids_str</span><span class="p">)</span>
 
     <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 
     
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

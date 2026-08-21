@@ -508,9 +508,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../abca/scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="../abca/scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../abca/scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../abca/scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../abca/scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../abca/scRNA_seq/expression_summary.html">unravel.allen_institute.abca.scRNA_seq.expression_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../abca/scRNA_seq/expression_plot.html">unravel.allen_institute.abca.scRNA_seq.expression_plot module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -615,8 +616,58 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-allen-institute-mapmysections-soma-ratio-module">
-<span id="unravel-allen-institute-mapmysections-soma-ratio"></span><h1>unravel.allen_institute.mapmysections.soma_ratio module<a class="headerlink" href="#unravel-allen-institute-mapmysections-soma-ratio-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.allen_institute.mapmysections.soma_ratio">
+<span id="unravel-allen-institute-mapmysections-soma-ratio-module"></span><span id="unravel-allen-institute-mapmysections-soma-ratio"></span><h1>unravel.allen_institute.mapmysections.soma_ratio module<a class="headerlink" href="#module-unravel.allen_institute.mapmysections.soma_ratio" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">mms_soma_ratio</span></code> or <code class="docutils literal notranslate"><span class="pre">mms_sr</span></code> from UNRAVEL to compute the proportion of somata voxels in specified atlas regions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>We used this to compute the proportion of voxels in the anterior commissure containing somata.</p></li>
+<li><p>This was used to label samples as preferentially having oligodendrocytes.</p></li>
+<li><p>For each seg file, the count of of non-zero voxels in a specified atlas label is divided by the total voxels of that atlas label.</p></li>
+<li><p>If the ratio is &gt; 0.004, the sample is predicted to be oligodendrocyte-enriched.</p></li>
+</ul>
+</div>
+<dl class="simple">
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">warp_to_atlas</span></code> to warp segmentation volumes to atlas space (e.g., CCFv3 2020 30um).</p></li>
+</ul>
+</dd>
+<dt>Output:</dt><dd><ul class="simple">
+<li><p>soma_ratio/&lt;input stem&gt;_soma_ratio.csv</p></li>
+<li><p>Columns: label, count, total_label, proportion.</p></li>
+<li><p>label = atlas label (e.g., 890 for anterior commissure)</p></li>
+<li><p>count = count of nonzero voxels in that label</p></li>
+<li><p>total_label = total voxels of that label in the atlas</p></li>
+<li><p>proportion = count / total voxels of that label in the atlas</p></li>
+</ul>
+</dd>
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">mms_concat_with_source</span></code> to concatenate multiple CSVs into one file.</p></li>
+</ul>
+</dd>
+</dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>mms_soma_ratio -a path/atlas_CCFv3_2020_30um.nii.gz [-i ‘&lt;asterisk&gt;_seg_1.nii.gz’] [-l 890] [-o output_dir] [-f] [-v]</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.mapmysections.soma_ratio.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.mapmysections.soma_ratio.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/unravel/allen_institute/mapmysections/soma_ratio.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.mapmysections.soma_ratio.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.mapmysections.soma_ratio.soma_ratio">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.mapmysections.soma_ratio.</span></span><span class="sig-name descname"><span class="pre">soma_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seg_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/unravel/allen_institute/mapmysections/soma_ratio.html#soma_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.mapmysections.soma_ratio.soma_ratio" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.allen_institute.mapmysections.soma_ratio.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.allen_institute.mapmysections.soma_ratio.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/unravel/allen_institute/mapmysections/soma_ratio.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.allen_institute.mapmysections.soma_ratio.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -657,6 +708,21 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.mapmysections.soma_ratio.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.mapmysections.soma_ratio.soma_ratio"><code class="docutils literal notranslate"><span class="pre">soma_ratio()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.allen_institute.mapmysections.soma_ratio.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

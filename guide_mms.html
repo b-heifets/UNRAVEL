@@ -469,13 +469,13 @@ abca_cache<span class="w"> </span>-d<span class="w"> </span>MERFISH-C57BL6J-6388
 gta_download<span class="w"> </span>-e<span class="w"> </span><span class="m">1109210299</span><span class="w"> </span>-l<span class="w"> </span><span class="m">3</span>
 
 <span class="c1"># From metadata file</span>
-gta_download<span class="w"> </span>-c<span class="w"> </span>SpecimenFileManifest.csv<span class="w"> </span>-l<span class="w"> </span><span class="m">3</span><span class="w"> </span>-col<span class="w"> </span><span class="s1">&#39;Image Series ID&#39;</span>
+gta_download<span class="w"> </span>-c<span class="w"> </span>SpecimenFileManifest.csv<span class="w"> </span>-l<span class="w"> </span><span class="m">3</span><span class="w"> </span>-col<span class="w"> </span><span class="s1">'Image Series ID'</span>
 
 <span class="c1"># From simplified metadata</span>
-gta_download<span class="w"> </span>-c<span class="w"> </span>SpecimenMetadata_subset.csv<span class="w"> </span>-l<span class="w"> </span><span class="m">3</span><span class="w"> </span>-col<span class="w"> </span><span class="s1">&#39;Image Series ID&#39;</span>
+gta_download<span class="w"> </span>-c<span class="w"> </span>SpecimenMetadata_subset.csv<span class="w"> </span>-l<span class="w"> </span><span class="m">3</span><span class="w"> </span>-col<span class="w"> </span><span class="s1">'Image Series ID'</span>
 
 <span class="c1"># From MapMySections entrant dataset (first copy sheet to a csv)</span>
-gta_download<span class="w"> </span>-c<span class="w"> </span>MapMySections_EntrantData_Test_Set.csv<span class="w"> </span>-l<span class="w"> </span><span class="m">3</span><span class="w"> </span>-col<span class="w"> </span><span class="s1">&#39;STPT Data File Path&#39;</span>
+gta_download<span class="w"> </span>-c<span class="w"> </span>MapMySections_EntrantData_Test_Set.csv<span class="w"> </span>-l<span class="w"> </span><span class="m">3</span><span class="w"> </span>-col<span class="w"> </span><span class="s1">'STPT Data File Path'</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -505,8 +505,8 @@ gta_download<span class="w"> </span>-c<span class="w"> </span>MapMySections_Entr
 <section id="convert-zarr-to-tiff">
 <h3>Convert Zarr to TIFF<a class="headerlink" href="#convert-zarr-to-tiff" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>GTA_level_3
-conv<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.zarr&#39;</span><span class="w"> </span>-s<span class="w"> </span>.tif<span class="w"> </span>-c<span class="w"> </span><span class="m">0</span><span class="w"> </span>-o<span class="w"> </span>red
-conv<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.zarr&#39;</span><span class="w"> </span>-s<span class="w"> </span>.tif<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span>green
+conv<span class="w"> </span>-i<span class="w"> </span><span class="s1">'*.zarr'</span><span class="w"> </span>-s<span class="w"> </span>.tif<span class="w"> </span>-c<span class="w"> </span><span class="m">0</span><span class="w"> </span>-o<span class="w"> </span>red
+conv<span class="w"> </span>-i<span class="w"> </span><span class="s1">'*.zarr'</span><span class="w"> </span>-s<span class="w"> </span>.tif<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span>green
 rm<span class="w"> </span>-rf<span class="w"> </span>*.zarr<span class="w">  </span><span class="c1"># optional</span>
 </pre></div>
 </div>
@@ -528,11 +528,11 @@ gta_auto_crop<span class="w"> </span>-d<span class="w"> </span>dual<span class="
 <ul class="simple">
 <li><p>Inspect brain outlines with Fiji, napari, or viu (this determines cropping)</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>agg<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;bbox/*_aip_outline.tif&#39;</span><span class="w"> </span>-td<span class="w"> </span>auto_crop_check<span class="w"> </span>-a<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>agg<span class="w"> </span>-i<span class="w"> </span><span class="s1">'bbox/*_aip_outline.tif'</span><span class="w"> </span>-td<span class="w"> </span>auto_crop_check<span class="w"> </span>-a<span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
 <span class="nb">cd</span><span class="w"> </span>auto_crop_check
 
 <span class="c1"># If viu and imagemagick are installed, quickly view images with:</span>
-<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.tif<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n</span><span class="nv">$i</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span>magick<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$i</span><span class="s2">&quot;</span><span class="w"> </span>-auto-level<span class="w"> </span>tmp.jpg<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>viu<span class="w"> </span>tmp.jpg<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>tmp.jpg<span class="p">;</span><span class="w"> </span>echo<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.tif<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"\n</span><span class="nv">$i</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span>magick<span class="w"> </span><span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span><span class="w"> </span>-auto-level<span class="w"> </span>tmp.jpg<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>viu<span class="w"> </span>tmp.jpg<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>tmp.jpg<span class="p">;</span><span class="w"> </span>echo<span class="p">;</span><span class="w"> </span><span class="k">done</span>
 
 <span class="nb">cd</span><span class="w"> </span>..
 </pre></div>
@@ -573,7 +573,7 @@ gta_bbox_crop<span class="w"> </span>-a<span class="w"> </span>green<span class=
 <section id="segment-with-ilastik">
 <h3>Segment with Ilastik<a class="headerlink" href="#segment-with-ilastik" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example (red channel)</span>
-seg_ilastik<span class="w"> </span>-ilp<span class="w"> </span>&lt;path&gt;/somata1_bkg2_endo3_astro4.ilp<span class="w"> </span>-i<span class="w"> </span>red<span class="w"> </span>-o<span class="w"> </span>MMS_seg<span class="w"> </span>-l<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="w"> </span>-rmo<span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-ie<span class="w"> </span>&lt;path_to_ilastik_executable&gt;<span class="w"> </span>-d<span class="w"> </span>red
+seg_ilastik<span class="w"> </span>-ilp<span class="w"> </span>&lt;path&gt;/somata1_bkg2_endo3_astro4.ilp<span class="w"> </span>-i<span class="w"> </span>red<span class="w"> </span>-o<span class="w"> </span>MMS_seg<span class="w"> </span>-l<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="w"> </span>-rmo<span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-ie<span class="w"> </span>&lt;path_to_ilastik_executable&gt;<span class="w"> </span>-d<span class="w"> </span>red
 </pre></div>
 </div>
 <ul class="simple">
@@ -597,40 +597,40 @@ seg_ilastik<span class="w"> </span>-ilp<span class="w"> </span>&lt;path&gt;/soma
 <li><p>Download the template and atlas</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># For STPT data use this template:</span>
-curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>average_template_CCFv3_30um.nii.gz<span class="w"> </span><span class="s2">&quot;https://drive.google.com/uc?export=download&amp;id=13cdFNa8uG4zhR7mh6QZxPzJxhzYA8-vJ&quot;</span>
+curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>average_template_CCFv3_30um.nii.gz<span class="w"> </span><span class="s2">"https://drive.google.com/uc?export=download&amp;id=13cdFNa8uG4zhR7mh6QZxPzJxhzYA8-vJ"</span>
 
 <span class="c1"># For iDISCO/LSFM use this template:</span>
-curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>iDISCO_template_CCFv3_30um.nii.gz<span class="w"> </span><span class="s2">&quot;https://drive.google.com/uc?export=download&amp;id=1BBg7ydj3WTfvbIqtBlrkkLiDl0ZmCeaP&quot;</span>
+curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>iDISCO_template_CCFv3_30um.nii.gz<span class="w"> </span><span class="s2">"https://drive.google.com/uc?export=download&amp;id=1BBg7ydj3WTfvbIqtBlrkkLiDl0ZmCeaP"</span>
 
 <span class="c1"># Allen brain atlas (CCFv3; 30 µm resolution):</span>
-curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>atlas_CCFv3_2020_30um.nii.gz<span class="w"> </span><span class="s2">&quot;https://drive.google.com/uc?export=download&amp;id=1IL0Qgi1ctJEM0Ask89l4CQqEj2RZWy7H&quot;</span>
+curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>atlas_CCFv3_2020_30um.nii.gz<span class="w"> </span><span class="s2">"https://drive.google.com/uc?export=download&amp;id=1IL0Qgi1ctJEM0Ask89l4CQqEj2RZWy7H"</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>Prep the fixed input for registration:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>io_metadata<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>.8<span class="w"> </span>-z<span class="w"> </span><span class="m">100</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
-reg_prep<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red
-reg_prep<span class="w"> </span>-i<span class="w"> </span>red<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>green<span class="w"> </span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>io_metadata<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>.8<span class="w"> </span>-z<span class="w"> </span><span class="m">100</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+reg_prep<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-d<span class="w"> </span>red
+reg_prep<span class="w"> </span>-i<span class="w"> </span>red<span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-d<span class="w"> </span>green<span class="w"> </span>
 
 <span class="c1"># for dual, use the channel with less fluorescence for -i. For example:</span>
-reg_prep<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>dual<span class="w"> </span>
+reg_prep<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-d<span class="w"> </span>dual<span class="w"> </span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>Run registration:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg<span class="w"> </span>-m<span class="w"> </span>average_template_CCFv3_30um.nii.gz<span class="w"> </span>-f<span class="w"> </span>reg_inputs/autofl_50um.nii.gz<span class="w"> </span>-m2<span class="w"> </span>atlas_CCFv3_2020_30um.nii.gz<span class="w"> </span>-mas<span class="w"> </span>None<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span>RIA<span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg<span class="w"> </span>-m<span class="w"> </span>average_template_CCFv3_30um.nii.gz<span class="w"> </span>-f<span class="w"> </span>reg_inputs/autofl_50um.nii.gz<span class="w"> </span>-m2<span class="w"> </span>atlas_CCFv3_2020_30um.nii.gz<span class="w"> </span>-mas<span class="w"> </span>None<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span>RIA<span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>Check alignment:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg_check<span class="w"> </span>-fri<span class="w"> </span>reg_outputs/autofl_50um_fixed_reg_input.nii.gz<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg_check<span class="w"> </span>-fri<span class="w"> </span>reg_outputs/autofl_50um_fixed_reg_input.nii.gz<span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
 
 <span class="c1"># Setting up fsleyes: https://b-heifets.github.io/UNRAVEL/guide.html#reg-check</span>
 <span class="nb">cd</span><span class="w"> </span>reg_check
-reg_check_fsleyes<span class="w"> </span>-fri<span class="w"> </span><span class="s1">&#39;*autofl_50um_fixed_reg_input.nii.gz&#39;</span><span class="w"> </span>-max<span class="w"> </span><span class="m">2000</span><span class="w"> </span><span class="p">&amp;</span>
+reg_check_fsleyes<span class="w"> </span>-fri<span class="w"> </span><span class="s1">'*autofl_50um_fixed_reg_input.nii.gz'</span><span class="w"> </span>-max<span class="w"> </span><span class="m">2000</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="nb">cd</span><span class="w"> </span>..
 
 <span class="c1"># If fsleyes is not working (e.g., on Windows), use ITK-SNAP or another neuroimaging viewer. Contact us about wireframe atlas coloring for ITK-SNAP.</span>
@@ -654,9 +654,9 @@ reg_prep<span class="w"> </span>-i<span class="w"> </span>red
 <h2>Pre-Processing (CCFv3 Space)<a class="headerlink" href="#pre-processing-ccfv3-space" title="Link to this heading">#</a></h2>
 <section id="warp-segmentations-to-ccfv3-atlas-space">
 <h3>Warp segmentations to CCFv3 atlas space<a class="headerlink" href="#warp-segmentations-to-ccfv3-atlas-space" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>warp_to_atlas<span class="w"> </span>-a<span class="w"> </span>atlas_CCFv3_2020_30um.nii.gz<span class="w"> </span>-i<span class="w"> </span>MMS_seg/MMS_seg_<span class="si">${</span><span class="nv">i</span><span class="si">}</span>.nii.gz<span class="w"> </span>-o<span class="w"> </span>MMS_seg_<span class="si">${</span><span class="nv">i</span><span class="si">}</span>.nii.gz<span class="w"> </span>-dt<span class="w"> </span>uint8<span class="w"> </span>-fri<span class="w"> </span>reg_outputs/autofl_50um_fixed_reg_input.nii.gz<span class="w"> </span>-inp<span class="w"> </span>nearestNeighbor<span class="w"> </span>-zo<span class="w"> </span><span class="m">0</span><span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>warp_to_atlas<span class="w"> </span>-a<span class="w"> </span>atlas_CCFv3_2020_30um.nii.gz<span class="w"> </span>-i<span class="w"> </span>MMS_seg/MMS_seg_<span class="si">${</span><span class="nv">i</span><span class="si">}</span>.nii.gz<span class="w"> </span>-o<span class="w"> </span>MMS_seg_<span class="si">${</span><span class="nv">i</span><span class="si">}</span>.nii.gz<span class="w"> </span>-dt<span class="w"> </span>uint8<span class="w"> </span>-fri<span class="w"> </span>reg_outputs/autofl_50um_fixed_reg_input.nii.gz<span class="w"> </span>-inp<span class="w"> </span>nearestNeighbor<span class="w"> </span>-zo<span class="w"> </span><span class="m">0</span><span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
 
-agg<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;atlas_space/MMS_seg_*.nii.gz&#39;</span><span class="w"> </span>-a<span class="w"> </span>-td<span class="w"> </span>CCF30_space<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+agg<span class="w"> </span>-i<span class="w"> </span><span class="s1">'atlas_space/MMS_seg_*.nii.gz'</span><span class="w"> </span>-a<span class="w"> </span>-td<span class="w"> </span>CCF30_space<span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
 
 <span class="nb">cd</span><span class="w"> </span>CCF30_space
 </pre></div>
@@ -681,7 +681,7 @@ mms_concat_with_source<span class="w"> </span>
 <ul class="simple">
 <li><p>Mirror segmentation masks:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mirror<span class="w"> </span>-o<span class="w"> </span>mirrored<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*1.nii.gz&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mirror<span class="w"> </span>-o<span class="w"> </span>mirrored<span class="w"> </span>-i<span class="w"> </span><span class="s1">'*1.nii.gz'</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -703,7 +703,7 @@ mms_concat_with_source<span class="w"> </span>
 <li><p>Extract it (double click or use tar -xvzf CCF30_to_MERFISH.tar.gz). This is the warp root.</p></li>
 <li><p>Warp combined segmentation images from CCFv3 space (30 µm res) to MERFISH space:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>warp_ccf30_to_merfish<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.nii.gz&#39;</span><span class="w"> </span>-w<span class="w"> </span>&lt;/path/to/warp_root&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>warp_ccf30_to_merfish<span class="w"> </span>-i<span class="w"> </span><span class="s1">'*.nii.gz'</span><span class="w"> </span>-w<span class="w"> </span>&lt;/path/to/warp_root&gt;
 
 <span class="nb">cd</span><span class="w"> </span>MERFISH
 </pre></div>
@@ -713,7 +713,7 @@ mms_concat_with_source<span class="w"> </span>
 </section>
 <section id="spatially-filter-merfish-cells">
 <h2>Spatially Filter MERFISH Cells<a class="headerlink" href="#spatially-filter-merfish-cells" title="Link to this heading">#</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>abca_merfish_filter_by_mask<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.nii.gz&#39;</span><span class="w"> </span>-b<span class="w"> </span>&lt;ABCA_download_root&gt;<span class="w"> </span>-o<span class="w"> </span>cells
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>abca_merfish_filter_by_mask<span class="w"> </span>-i<span class="w"> </span><span class="s1">'*.nii.gz'</span><span class="w"> </span>-b<span class="w"> </span>&lt;ABCA_download_root&gt;<span class="w"> </span>-o<span class="w"> </span>cells
 
 <span class="nb">cd</span><span class="w"> </span>cells
 
@@ -757,13 +757,13 @@ abca_sunburst<span class="w"> </span>-i<span class="w"> </span>ID_1104197092_MMS
 <ul class="simple">
 <li><p>For a region (e.g., VISp):</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mms_cell_type_proportions<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.csv&#39;</span><span class="w"> </span>-col<span class="w"> </span>subclass<span class="w"> </span>-rc<span class="w"> </span>parcellation_structure<span class="w"> </span>-r<span class="w"> </span>VISp<span class="w"> </span>-t
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mms_cell_type_proportions<span class="w"> </span>-i<span class="w"> </span><span class="s1">'*.csv'</span><span class="w"> </span>-col<span class="w"> </span>subclass<span class="w"> </span>-rc<span class="w"> </span>parcellation_structure<span class="w"> </span>-r<span class="w"> </span>VISp<span class="w"> </span>-t
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>For the whole brain:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mms_cell_type_proportions<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.csv&#39;</span><span class="w"> </span>-col<span class="w"> </span>subclass<span class="w"> </span>-t
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mms_cell_type_proportions<span class="w"> </span>-i<span class="w"> </span><span class="s1">'*.csv'</span><span class="w"> </span>-col<span class="w"> </span>subclass<span class="w"> </span>-t
 </pre></div>
 </div>
 <ul class="simple">
@@ -785,7 +785,7 @@ abca_sunburst<span class="w"> </span>-i<span class="w"> </span>ID_1104197092_MMS
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>../../../..<span class="w"> </span><span class="c1"># cd to the TIFFs dir</span>
 mms_seg_summary<span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
-agg<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;MMS_seg/MMS_test_*_segmentation_summary.csv&#39;</span><span class="w"> </span>-td<span class="w"> </span>seg_summary<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+agg<span class="w"> </span>-i<span class="w"> </span><span class="s1">'MMS_seg/MMS_test_*_segmentation_summary.csv'</span><span class="w"> </span>-td<span class="w"> </span>seg_summary<span class="w"> </span>-p<span class="w"> </span><span class="s1">'ID_*'</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
 <span class="nb">cd</span><span class="w"> </span>seg_summary
 mms_concat_with_source<span class="w">  </span><span class="c1"># Combine outputs into one file (one row per brain)</span>
 <span class="nb">cd</span><span class="w"> </span>..
