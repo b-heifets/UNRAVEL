@@ -13,9 +13,9 @@ Inputs:
 
 Outputs:
     - <gene>.nii.gz for each requested gene, with the same affine and header as the reference .nii.gz
-    - Dir: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps/
-    - Dir with -c and -val: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps_<filter_column>-<filter_value>/
-    - Dir with -i: [imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps_<input_stem>/
+    - Dir: \[imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps/
+    - Dir with -c and -val: \[imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps_<filter_column>-<filter_value>/
+    - Dir with -i: \[imputed_]MERFISH[_neuronal|_nonneuronal]_expression_maps_<input_stem>/
     
 Notes:
 ------

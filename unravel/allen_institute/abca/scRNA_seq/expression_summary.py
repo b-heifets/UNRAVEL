@@ -38,7 +38,7 @@ Notes:
 
 Genes:
     - Use -g/--genes to summarize selected genes.
-    - If -g is omitted, all columns after the last *_color column are
+    - If -g is omitted, all columns after the last `*`_color column are
       assumed to contain gene-expression values.
 
 Species:
