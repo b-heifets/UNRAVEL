@@ -56,7 +56,6 @@ def parse_args():
     opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: human', default='human', choices=('mouse', 'human'), action=SM)
     opts.add_argument('-c', '--cell_type', help='Cell type to extract data from for humans (Neurons or Nonneurons)', default=None, action=SM)
     opts.add_argument('-o', '--output', help='Path to output folder for the expression data. Default: current directory', default='.', action=SM)
-    opts.add_argument('-l', '--less-metadata', help='Include less metadata in the output (omit cluster annotations and colors).', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -312,13 +311,12 @@ def main():
         download_base, cell_df, gene_df, args.genes, species=args.species, cell_type=args.cell_type
     )
 
-    if not args.less_metadata:
-        expression_data = join_cell_metadata(
-            expression_data,
-            download_base,
-            args.species,
-            cell_df=cell_df,
-        )
+    expression_data = join_cell_metadata(
+        expression_data,
+        download_base,
+        args.species,
+        cell_df=cell_df,
+    )
 
     # Check the data before saving to confirm structure
     print(f"\n    Final output data for {args.genes}:\n{expression_data.head()}\n")
