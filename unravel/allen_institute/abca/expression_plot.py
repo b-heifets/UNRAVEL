@@ -13,24 +13,28 @@ Plots:
 
 The script auto-detects genes from columns ending in ``_mean_expression``.
 
-# Top 50 by expression, ordered by expression
+# Top 20 by expression, ordered by expression
 --rank-by mean
-
-# Top 50 by expression, then reorder those 50 by prevalence
+    
+# Top 20 by expression, then reorder those 20 by prevalence
 --rank-by mean --sort-by cells
 
+# Rank by a specific gene while still displaying all genes
+--rank-gene <gene_name>
+
+# Rank by cell prevalence
+--rank-by cells
+
+# Rank by the average of mean expression across all genes
+--gene-aggregate mean
 
 Usage (sorting by mean expression by default):
 ----------------------------------------------
-    exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv [-ct cell_type1 cell_type2 ...] [-g gene1 gene2 ...] [-n 50] [--rank-by ...] [--sort-by ...] [--no-cell-stats] [-p dotplot|heatmap|both] [--heatmap-metric <value>] [--mean-max <value>] [--percent-max <value>] [--size-min <value>] [--size-max <value>] [--mean-cmap <cmap>] [--percent-cmap <cmap>] [--annotate] [-o output_dir] [-op output_prefix] [-f png|pdf|svg] [--dpi <value>] [-v]
+    exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv
 
 Usage for selected cell types and genes (ranked by mean expression and sorted by cell count):
 ---------------------------------------------------------------------------------------------
     exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv -ct "Medium spiny neuron" "Eccentric medium spiny neuron" -g DRD1 DRD2 --sort-by cells
-
-Usage for the 50 most abundant cell types sorted by abundance:
---------------------------------------------------------------
-    exp_plot -i file.csv --rank-by cells
 
 Usage for parallel processing:
 ------------------------------
@@ -112,22 +116,22 @@ def parse_args():
     )
     opts.add_argument(
         '-n', '--top',
-        help='Maximum cell types to plot after filtering. Use 0 for all. Default: 50',
-        default=50,
+        help='Maximum cell types to plot after filtering. Use 0 for all. Default: 20',
+        default=20,
         type=int,
         action=SM,
     )
     opts.add_argument(
         '--min-cells',
-        help='Minimum cell_count required. Default: 0',
-        default=0,
+        help='Minimum cell_count required. Default: 20',
+        default=20,
         type=int,
         action=SM,
     )
     opts.add_argument(
         '--min-percent-cells',
-        help='Minimum percent_cells required. Default: 0',
-        default=0,
+        help='Minimum percent_cells required. Default: 0.1',
+        default=0.1,
         type=float,
         action=SM,
     )
