@@ -193,13 +193,17 @@ def get_gene_data_wo_cache_and_chunking(
     output_gene_data : pandas.DataFrame
         Subset of gene data indexed by cell.
     """
-    # Filter genes
-    gene_mask = all_genes.gene_symbol.isin(selected_genes)
-    gene_filtered = all_genes[gene_mask]
+    # Filter genes, preserving the order
+    gene_order = {gene: i for i, gene in enumerate(selected_genes)}
+    gene_filtered = (
+        all_genes[all_genes.gene_symbol.isin(selected_genes)]
+        .assign(_gene_order=lambda df: df['gene_symbol'].map(gene_order))
+        .sort_values('_gene_order')
+        .drop(columns='_gene_order')
+    )
     if gene_filtered.empty:
         print(f"    [red1]Error: None of the selected genes ({selected_genes}) found in gene metadata.\n")
         import sys; sys.exit()
-    
     print(f"\n    Selected genes in gene metadata: {gene_filtered['gene_symbol'].tolist()}\n")
     
     # Path to expression data
