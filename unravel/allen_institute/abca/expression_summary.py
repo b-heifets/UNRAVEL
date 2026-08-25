@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_expression_summary`` or ``exp_summary`` from UNRAVEL to summarize log2(CPM+1) expression across every level of the ABCA cell-type ontology.
+Use ``abca_expression_summary`` (``exp_summary``) from UNRAVEL to summarize expression across the ABCA cell-type ontology.
 
-The input should be a CSV produced by ``abca_scRNAseq_expression`` / ``rna_exp``
-with ABCA cell-type annotations and one or more gene-expression columns.
+Inputs:
+    - CSV with log2(CPM+1) expression data from ``abca_scRNAseq_expression`` (``rna_exp``) or ``abca_merfish_filter`` (``mf_filter``)
+    - The CSV must include ABCA cell-type annotations and one or more gene-expression columns.
 
 Mouse hierarchy:
     neurotransmitter -> class -> subclass -> supertype -> cluster
