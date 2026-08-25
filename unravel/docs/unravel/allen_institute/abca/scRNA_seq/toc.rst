@@ -6,8 +6,6 @@ unravel.allen_institute.abca.scRNA_seq package
 
    expression
    filter
-   expression_summary
-   expression_plot
 
 .. automodule:: unravel.allen_institute.abca.scRNA_seq
    :members:

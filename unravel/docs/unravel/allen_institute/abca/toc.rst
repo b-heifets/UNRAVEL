@@ -5,6 +5,8 @@ unravel.allen_institute.abca package
    :maxdepth: 3
 
    cache
+   expression_summary
+   expression_plot
    merfish/toc
    sunburst/toc
    scRNA_seq/toc

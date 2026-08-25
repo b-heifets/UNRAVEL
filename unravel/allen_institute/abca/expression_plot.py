@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNAseq_expression_plot`` (``rna_exp_plot``) from UNRAVEL to plot expression summary CSVs.
+Use ``abca_expression_plot`` (``exp_plot``) from UNRAVEL to plot expression summary CSVs.
 
 Inputs: 
-    - Wide CSVs produced by ``abca_scRNAseq_expression_summary`` (``rna_exp_summary``).
+    - Wide CSVs produced by ``abca_expression_summary`` (``exp_summary``).
 
 Plots:
     - Dot plot (default): dot color = mean log2(CPM+1) expression; dot size = percent
@@ -22,19 +22,19 @@ The script auto-detects genes from columns ending in ``_mean_expression``.
 
 Usage (sorting by mean expression by default):
 ----------------------------------------------
-    rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv [-ct cell_type1 cell_type2 ...] [-g gene1 gene2 ...] [-n 50] [--rank-by ...] [--sort-by ...] [--no-cell-stats] [-p dotplot|heatmap|both] [--heatmap-metric <value>] [--mean-max <value>] [--percent-max <value>] [--size-min <value>] [--size-max <value>] [--mean-cmap <cmap>] [--percent-cmap <cmap>] [--annotate] [-o output_dir] [-op output_prefix] [-f png|pdf|svg] [--dpi <value>] [-v]
+    exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv [-ct cell_type1 cell_type2 ...] [-g gene1 gene2 ...] [-n 50] [--rank-by ...] [--sort-by ...] [--no-cell-stats] [-p dotplot|heatmap|both] [--heatmap-metric <value>] [--mean-max <value>] [--percent-max <value>] [--size-min <value>] [--size-max <value>] [--mean-cmap <cmap>] [--percent-cmap <cmap>] [--annotate] [-o output_dir] [-op output_prefix] [-f png|pdf|svg] [--dpi <value>] [-v]
 
 Usage for selected cell types and genes (ranked by mean expression and sorted by cell count):
 ---------------------------------------------------------------------------------------------
-    rna_exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv -ct "Medium spiny neuron" "Eccentric medium spiny neuron" -g DRD1 DRD2 --sort-by cells
+    exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv -ct "Medium spiny neuron" "Eccentric medium spiny neuron" -g DRD1 DRD2 --sort-by cells
 
 Usage for the 50 most abundant cell types sorted by abundance:
 --------------------------------------------------------------
-    rna_exp_plot -i file.csv --rank-by cells
+    exp_plot -i file.csv --rank-by cells
 
 Usage for parallel processing:
 ------------------------------
-    fd -e csv -d 1 -j 4 -x rna_exp_plot -i {}
+    fd -e csv -d 1 -j 4 -x exp_plot -i {}
 """
 
 
@@ -68,7 +68,7 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument(
         '-i', '--input',
-        help='Wide CSV produced by ``abca_scRNAseq_expression_summary`` (``rna_exp_summary``).',
+        help='Wide CSV produced by ``abca_expression_summary`` (``exp_summary``).',
         required=True,
         action=SM,
     )
@@ -311,7 +311,7 @@ def validate_and_select_genes(
     if not detected:
         raise ValueError(
             'No gene columns ending in "_mean_expression" were found. '
-            'Use a CSV produced by rna_exp_summary.'
+            'Use a CSV produced by `exp_summary`.'
         )
 
     genes = requested_genes if requested_genes is not None else detected

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNAseq_expression_summary`` or ``rna_exp_summary`` from UNRAVEL to summarize log2(CPM+1) expression across every level of the ABCA cell-type ontology.
+Use ``abca_expression_summary`` or ``exp_summary`` from UNRAVEL to summarize log2(CPM+1) expression across every level of the ABCA cell-type ontology.
 
 The input should be a CSV produced by ``abca_scRNAseq_expression`` / ``rna_exp``
 with ABCA cell-type annotations and one or more gene-expression columns.
@@ -46,15 +46,15 @@ Species:
 
 Usage for mouse:
 ----------------
-    rna_exp_summary -i path/expression_data_log2.csv [-g Htr2a Htr2b Drd1 Drd2] [-t 3]
+    exp_summary -i path/expression_data_log2.csv [-g Htr2a Htr2b Drd1 Drd2] [-t 3]
 
 Usage for human:
 ----------------
-    rna_exp_summary -i path/expression_data_Neurons_log2.csv [-g HTR2A HTR2B DRD1 DRD2] [-t 3]
+    exp_summary -i path/expression_data_Neurons_log2.csv [-g HTR2A HTR2B DRD1 DRD2] [-t 3]
 
 Usage for parallel processing:
 ------------------------------
-    fd -e csv -d 1 -j 4 -x rna_exp_summary -i {}
+    fd -e csv -d 1 -j 4 -x exp_summary -i {}
 """
 
 import re

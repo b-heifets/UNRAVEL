@@ -13,7 +13,7 @@ Notes:
     - For multiple columns and values, the number of columns must match the number of values.
 
 Next steps:
-    - ``abca_sunburst_expression`` or ``abca_scRNAseq_expression_summary``
+    - ``abca_sunburst_expression`` or ``abca_expression_summary``
 
 Usage:
 ------
