@@ -249,6 +249,19 @@ def parse_args():
         type=int,
         action=SM,
     )
+    opts.add_argument(
+        '--gene-aggregate',
+        help='How to aggregate the ranking metric across plotted genes. Default: max',
+        default='max',
+        choices=('max', 'mean'),
+        action=SM,
+    )
+    opts.add_argument(
+        '--rank-gene',
+        help='Rank using one plotted gene instead of aggregating across genes.',
+        default=None,
+        action=SM,
+    )
 
     general = parser.add_argument_group('General arguments')
     general.add_argument(
@@ -337,14 +350,29 @@ def validate_and_select_genes(
     return genes
 
 
-def row_rank(df: pd.DataFrame, genes: list[str], rank_by: str) -> pd.Series:
+def row_rank(
+    df: pd.DataFrame,
+    genes: list[str],
+    rank_by: str,
+    gene_aggregate: str,
+    rank_gene: str | None,
+) -> pd.Series:
     """Calculate the metric used to select and sort cell types."""
     if rank_by == 'cells':
-        return pd.to_numeric(df['cell_count'], errors='coerce').fillna(0)
+        return pd.to_numeric(
+            df['cell_count'],
+            errors='coerce',
+        ).fillna(0)
 
+    ranking_genes = [rank_gene] if rank_gene else genes
     suffix = MEAN_SUFFIX if rank_by == 'mean' else PERCENT_SUFFIX
-    columns = [f'{gene}{suffix}' for gene in genes]
-    return df[columns].apply(pd.to_numeric, errors='coerce').max(axis=1)
+    columns = [f'{gene}{suffix}' for gene in ranking_genes]
+    values = df[columns].apply(pd.to_numeric, errors='coerce')
+
+    if gene_aggregate == 'mean':
+        return values.mean(axis=1)
+
+    return values.max(axis=1)
 
 
 def plot_footer(
@@ -845,6 +873,8 @@ def main():
         raise ValueError('--dpi must be greater than 0.')
     if args.mean_max is not None and args.mean_max <= 0:
         raise ValueError('--mean-max must be greater than 0.')
+    if args.rank_gene is not None and args.rank_gene not in genes:
+        raise ValueError(f'--rank-gene must be one of the plotted genes: {genes}')
 
     summary_df = pd.read_csv(input_path, low_memory=False)
     genes = validate_and_select_genes(summary_df, args.genes)
