@@ -433,6 +433,8 @@ def prepare_plot_dataframe(
     min_percent_cells: float,
     top: int,
     rank_by: str,
+    gene_aggregate: str,
+    rank_gene: str | None,
     sort_by: str,
     show_cell_stats: bool,
 ) -> pd.DataFrame:
@@ -483,26 +485,24 @@ def prepare_plot_dataframe(
         raise ValueError('No rows remain after applying the plot filters.')
 
     # Rank the rows based on the specified ranking criteria.
-    plot_df['_rank'] = row_rank(plot_df, genes, rank_by)
+    plot_df['_rank'] = row_rank(
+        df=plot_df,
+        genes=genes,
+        rank_by=rank_by,
+        gene_aggregate=gene_aggregate,
+        rank_gene=rank_gene,
+    )
 
     if top < 0:
         raise ValueError('--top must be 0 or greater.')
     if top > 0 and len(plot_df) > top:
         plot_df = plot_df.nlargest(top, '_rank', keep='first').copy()
 
-    displayed_percent = plot_df['percent_cells'].sum()
-
     # Sort the plot DataFrame based on the specified sort order.
     if sort_by == 'rank':
         plot_df = plot_df.sort_values('_rank', ascending=False, kind='stable')
     elif sort_by == 'cells':
         plot_df = plot_df.sort_values('cell_count', ascending=False, kind='stable')
-    elif sort_by == 'percent-cells':
-        plot_df = plot_df.sort_values(
-            'percent_cells',
-            ascending=False,
-            kind='stable',
-        )
     elif sort_by == 'name':
         plot_df['_name_sort'] = plot_df['cell_type'].map(natural_sort_text)
         plot_df = plot_df.sort_values('_name_sort', kind='stable')
@@ -877,11 +877,12 @@ def main():
         raise ValueError('--dpi must be greater than 0.')
     if args.mean_max is not None and args.mean_max <= 0:
         raise ValueError('--mean-max must be greater than 0.')
-    if args.rank_gene is not None and args.rank_gene not in genes:
-        raise ValueError(f'--rank-gene must be one of the plotted genes: {genes}')
 
     summary_df = pd.read_csv(input_path, low_memory=False)
     genes = validate_and_select_genes(summary_df, args.genes)
+
+    if args.rank_gene is not None and args.rank_gene not in genes:
+        raise ValueError(f'--rank-gene must be one of the plotted genes: {genes}')
 
     plot_df = prepare_plot_dataframe(
         df=summary_df,
@@ -892,6 +893,8 @@ def main():
         min_percent_cells=args.min_percent_cells,
         top=args.top,
         rank_by=args.rank_by,
+        gene_aggregate=args.gene_aggregate,
+        rank_gene=args.rank_gene,
         sort_by=args.sort_by,
         show_cell_stats=args.show_cell_stats,
     )
