@@ -32,7 +32,7 @@ Notes:
     - ``cell_count`` counts all rows assigned to a cell type.
     - Mean expression is calculated from non-missing expression values.
     - Percent expression uses non-missing expression values as the denominator.
-    - By default, outputs are saved to ``expression_summary_thr<value>`` in the input directory.
+    - By default, outputs are saved to ``exp_summary_thr<value>`` in the input directory.
     - ``source_path_count`` is the number of unique ontology paths contributing
       to a collapsed cell-type row.
     - ``source_ontology_paths`` lists those contributing ontology paths.
@@ -107,13 +107,13 @@ def parse_args():
     )
     opts.add_argument(
         '-o', '--output',
-        help='Output directory. Default: input_dir/expression_summary_thr<value>',
+        help='Output directory. Default: exp_summary_thr<value>/',
         default=None,
         action=SM,
     )
     opts.add_argument(
         '-op', '--output_prefix',
-        help='Output file prefix. Default: input stem',
+        help='Output file prefix. Default: input file name without extension.',
         default=None,
         action=SM,
     )
@@ -442,7 +442,7 @@ def main():
 
     if args.output is None:
         output_dir = input_path.parent / (
-            f'expression_summary_thr{threshold_label}'
+            f'exp_summary_thr{threshold_label}'
         )
     else:
         output_dir = Path(args.output)
