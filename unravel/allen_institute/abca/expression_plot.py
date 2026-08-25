@@ -55,6 +55,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 MEAN_SUFFIX = '_mean_expression'
 PERCENT_SUFFIX = '_percent_expression'
+DEFAULT_MEAN_MAX = 3.0
 
 
 def parse_args():
@@ -155,7 +156,7 @@ def parse_args():
     appearance = parser.add_argument_group('Appearance')
     appearance.add_argument(
         '--mean-max',
-        help='Maximum mean-expression color value. Default: data maximum',
+        help='Maximum mean-expression color value. Default: data maximum, with a minimum of 3',
         default=None,
         type=float,
         action=SM,
@@ -533,6 +534,17 @@ def finite_max(values: np.ndarray, fallback: float = 1.0) -> float:
     return value if value > 0 else fallback
 
 
+def mean_color_max(
+    matrix: np.ndarray,
+    requested_max: float | None,
+) -> float:
+    """Return the requested maximum or an automatic maximum of at least 3."""
+    if requested_max is not None:
+        return requested_max
+
+    return max(DEFAULT_MEAN_MAX, finite_max(matrix))
+
+
 def save_figure(
     fig: plt.Figure,
     output_path: Path,
@@ -598,7 +610,7 @@ def plot_dotplot(
         clipped_percent / percent_max
     ) * (size_max - size_min)
 
-    vmax = mean_max if mean_max is not None else finite_max(mean_matrix)
+    vmax = mean_color_max(mean_matrix, mean_max)
     scatter = ax.scatter(
         x_grid[valid],
         y_grid[valid],
@@ -682,7 +694,7 @@ def plot_heatmap(
         suffix = MEAN_SUFFIX
         matrix = matrix_for_metric(df, genes, suffix)
         cmap = mean_cmap
-        vmax = mean_max if mean_max is not None else finite_max(matrix)
+        vmax = mean_color_max(matrix, mean_max)
         colorbar_label = 'Mean log2(CPM+1) expression'
         plot_title = f'{title}: mean expression heatmap'
     else:
@@ -769,6 +781,8 @@ def main():
         raise ValueError('--min-percent-cells must be between 0 and 100.')
     if args.dpi <= 0:
         raise ValueError('--dpi must be greater than 0.')
+    if args.mean_max is not None and args.mean_max <= 0:
+        raise ValueError('--mean-max must be greater than 0.')
 
     summary_df = pd.read_csv(input_path, low_memory=False)
     genes = validate_and_select_genes(summary_df, args.genes)
