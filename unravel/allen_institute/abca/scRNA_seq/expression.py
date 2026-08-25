@@ -1,34 +1,29 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNAseq_expression`` (``rna_exp``) from UNRAVEL to extract expression data for specific genes from the ABCA.
+Use ``abca_scRNAseq_expression`` (``rna_exp``) from UNRAVEL to create a CSV with
+gene expression data and cell metadata from the Allen Brain Cell Atlas (ABCA).
 
 Inputs:
-    - Cell metadata from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
-    - Gene metadata from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
-    - Expression data from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
+    - Cell metadata, gene metadata, and expression data from the ABCA (use ``abca_cache`` to download).
 
 Outputs:
-    - A CSV file with the expression data for the selected genes, indexed by cell_label.
+    - For humans: WHB-10Xv3_<cell_type>_expression.csv
+    - For mice: WMB-10X_expression.csv
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.html
-    - Only the first gene in the list will be used to name the output file.
-    - For humans, the cell type must be specified (Neurons or Nonneurons).
-    - For mice, optionally filter neurons or nonneurons with ``abca_scRNAseq_filter`` after joining cell metadata and expression data using ``abca_scRNAseq_join_cell_metadata``.
-    - The output will be a CSV file with the expression data for the selected genes, indexed by cell_label.
 
-Usage:
-------
-    abca_scRNAseq_expression -b path/base_dir -g genes [-s mouse | human] [-c Neurons | Nonneurons] [-o output] [-v]
+Next steps:
+    - ``abca_scRNAseq_filter`` (``rna_filter``) to filter the expression data for specific cell types, regions, etc.
 
 Usage for humans:
 -----------------
-    abca_scRNAseq_expression -b path/base_dir -g genes -c Neurons [-o output_dir] [-v]
+    abca_scRNAseq_expression -b path/dir from ``abca_cache`` -g genes -c Neurons [-o output CSV] [-v]
 
 Usage for mice:
 ---------------
-    abca_scRNAseq_expression -b path/base_dir -g genes [-o output_dir] [-v]
+    abca_scRNAseq_expression -b path/base_dir -g genes [-o output CSV] [-v]
 """
 
 from typing import List
@@ -49,13 +44,13 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
+    reqs.add_argument('-b', '--base', help='Path to the root directory of the ABCA data', required=True, action=SM)
     reqs.add_argument('-g', '--genes', help='Genes to extract expression data for.', nargs='*', required=True, action=SM)
     
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-s', '--species', help='Species to use (human or mouse). Default: human', default='human', choices=('mouse', 'human'), action=SM)
-    opts.add_argument('-c', '--cell_type', help='Cell type to extract data from for humans (Neurons or Nonneurons)', default=None, action=SM)
-    opts.add_argument('-o', '--output', help='Path to output folder for the expression data. Default: current directory', default='.', action=SM)
+    opts.add_argument('-c', '--cell_type', help='Provide the cell type for humans (Neurons or Nonneurons)', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='Output CSV file path. Default: species-appropriate filename in the current directory.', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -326,15 +321,25 @@ def main():
     print(f"\n    Final output data for {args.genes}:\n{expression_data.head()}\n")
 
     # Define output file path and save the DataFrame
-    output_folder = Path(args.output) if args.output != '.' else Path.cwd()
-    output_folder.mkdir(parents=True, exist_ok=True)
-    if args.species == 'mouse':
-        output_file = output_folder / f"WMB-10Xv3_{args.genes[0]}_expression_data_log2.csv"
+    if args.output:
+        output_file = Path(args.output)
+    elif args.species == 'mouse':
+        output_file = Path.cwd() / 'WMB-10X_expression.csv'
     else:
-        output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_log2.csv"
+        output_file = Path.cwd() / (
+            f'WHB-10Xv3_{args.cell_type}_expression.csv'
+        )
+
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+
+    if output_file.exists():
+        raise FileExistsError(
+            f'Output file already exists: {output_file}. '
+            'Choose a new path with -o.'
+        )
 
     expression_data.to_csv(output_file, index=False)
-    print(f"\n    Saved expression data for gene {args.genes[0]} to {output_file}\n")
+    print(f"\n    Saved expression data to {output_file}\n")
 
     verbose_end_msg()
 
