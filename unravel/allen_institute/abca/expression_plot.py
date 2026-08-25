@@ -347,6 +347,51 @@ def row_rank(df: pd.DataFrame, genes: list[str], rank_by: str) -> pd.Series:
     return df[columns].apply(pd.to_numeric, errors='coerce').max(axis=1)
 
 
+def plot_footer(
+    df: pd.DataFrame,
+    rank_by: str,
+    gene_aggregate: str,
+    rank_gene: str | None,
+    min_percent_cells: float,
+    min_cells: int,
+) -> str:
+    """Describe plot coverage, ranking, and filtering."""
+    coverage = df['percent_cells'].sum()
+
+    if rank_by == 'cells':
+        ranking = 'cell abundance'
+    else:
+        metric = (
+            'mean expression'
+            if rank_by == 'mean'
+            else 'percent expression'
+        )
+        if rank_gene:
+            ranking = f'{rank_gene} {metric}'
+        else:
+            aggregate = (
+                'maximum'
+                if gene_aggregate == 'max'
+                else 'arithmetic mean'
+            )
+            ranking = f'{aggregate} {metric} across genes'
+
+    filters = []
+    if min_percent_cells > 0:
+        filters.append(f'≥{min_percent_cells:g}% of cells')
+    if min_cells > 0:
+        filters.append(f'≥{min_cells:,} cells')
+
+    footer = (
+        f'{coverage:.3g}% of cells shown'
+        f' • Top {len(df)} cell types by {ranking}'
+    )
+    if filters:
+        footer += f' • {"; ".join(filters)}'
+
+    return footer
+
+
 def prepare_plot_dataframe(
     df: pd.DataFrame,
     genes: list[str],
@@ -405,6 +450,7 @@ def prepare_plot_dataframe(
     if plot_df.empty:
         raise ValueError('No rows remain after applying the plot filters.')
 
+    # Rank the rows based on the specified ranking criteria.
     plot_df['_rank'] = row_rank(plot_df, genes, rank_by)
 
     if top < 0:
@@ -412,6 +458,9 @@ def prepare_plot_dataframe(
     if top > 0 and len(plot_df) > top:
         plot_df = plot_df.nlargest(top, '_rank', keep='first').copy()
 
+    displayed_percent = plot_df['percent_cells'].sum()
+
+    # Sort the plot DataFrame based on the specified sort order.
     if sort_by == 'rank':
         plot_df = plot_df.sort_values('_rank', ascending=False, kind='stable')
     elif sort_by == 'cells':
@@ -570,6 +619,7 @@ def plot_dotplot(
     size_max: float,
     mean_cmap: str,
     dpi: int,
+    footer: str,
 ) -> None:
     """Plot mean expression as color and percent expression as dot size."""
     if percent_max <= 0:
@@ -669,6 +719,11 @@ def plot_dotplot(
         loc='center',
         frameon=False,
     )
+    fig.supxlabel(
+        footer,
+        fontsize=8,
+        color='0.35',
+    )
 
     save_figure(fig, output_path, dpi)
 
@@ -688,6 +743,7 @@ def plot_heatmap(
     percent_cmap: str,
     annotate: bool,
     dpi: int,
+    footer: str,
 ) -> None:
     """Plot a mean- or percent-expression heatmap."""
     if metric == 'mean':
@@ -761,6 +817,12 @@ def plot_heatmap(
                     color='white' if value > text_color_cutoff else 'black',
                 )
 
+    fig.supxlabel(
+        footer,
+        fontsize=8,
+        color='0.35',
+    )   
+
     fig.tight_layout()
     save_figure(fig, output_path, dpi)
 
@@ -826,6 +888,15 @@ def main():
     print(f'Rows plotted: {len(plot_df):,}')
     print(f'Output directory: {output_dir}\n')
 
+    footer = plot_footer(
+        df=plot_df,
+        rank_by=args.rank_by,
+        gene_aggregate=args.gene_aggregate,
+        rank_gene=args.rank_gene,
+        min_percent_cells=args.min_percent_cells,
+        min_cells=args.min_cells,
+    )
+
     saved_paths = []
 
     if args.plot in ('dotplot', 'both'):
@@ -846,6 +917,7 @@ def main():
             size_max=args.size_max,
             mean_cmap=args.mean_cmap,
             dpi=args.dpi,
+            footer=footer,
         )
         saved_paths.append(dotplot_path)
 
@@ -876,6 +948,7 @@ def main():
                 percent_cmap=args.percent_cmap,
                 annotate=args.annotate,
                 dpi=args.dpi,
+                footer=footer,
             )
             saved_paths.append(heatmap_path)
 
