@@ -235,7 +235,7 @@ def parse_args():
     )
     output.add_argument(
         '-op', '--output-prefix',
-        help='Output file prefix. Default: input stem',
+        help='Exact output file prefix. Default: input stem, with selected genes appended.',
         default=None,
         action=SM,
     )
