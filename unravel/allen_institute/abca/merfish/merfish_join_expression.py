@@ -65,11 +65,23 @@ def main():
     # Filter expression data for the specified genes
     asubset, gf = mf.filter_expression_data(adata, args.genes)
 
-    # Create a dataframe with the expression data for the specified gene
-    gdata = asubset[:, gf.index].to_df()  # Extract expression data for the gene
-    
-    gdata.columns = gf.gene_symbol  # Set the column names to the gene symbols
-    
+    # Create a dataframe with expression data
+    gdata = asubset[:, gf.index].to_df()
+    gdata.columns = gf['gene_symbol'].to_numpy()
+
+    # Preserve the gene order supplied with --genes
+    available_genes = set(gdata.columns)
+    missing_genes = [gene for gene in args.genes if gene not in available_genes]
+    ordered_genes = [gene for gene in args.genes if gene in available_genes]
+
+    if missing_genes:
+        print(
+            f"[yellow]Warning: Genes not found and omitted: "
+            f"{', '.join(missing_genes)}[/yellow]"
+        )
+
+    gdata = gdata.loc[:, ordered_genes]
+        
     # exp_df = cell_df.join(gdata)  # Join the cell metadata with the expression data
     exp_df = cell_df.set_index('cell_label').join(gdata, how='left').reset_index()
 
