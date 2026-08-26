@@ -7,8 +7,6 @@ ontology levels.
 
 Inputs:
     - Wide CSVs produced by ``abca_expression_summary`` (``exp_summary``).
-    - Each -i/--input may be a summary CSV or a directory. Directories are
-      searched recursively by default.
     - Cell-level expression CSVs are not analyzed directly. During a directory
       scan, they are skipped with a warning so a directory may contain both
       cell-level inputs and expression summaries.
@@ -73,7 +71,7 @@ from rich.traceback import install
 
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import log_command, verbose_end_msg, verbose_start_msg
+from unravel.core.utils import log_command, match_files, verbose_end_msg, verbose_start_msg
 
 
 MEAN_SUFFIX = '_mean_expression'
@@ -122,9 +120,9 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument(
         '-i', '--input',
-        help='Summary CSV file(s) or directories containing summary CSVs.',
+        help="Pattern or patterns for CSV file(s) from `exp_summary`. (e.g., '**/*.csv' for a recursive search)",
         required=True,
-        nargs='+',
+        nargs='*',
         action=SM,
     )
 
@@ -169,23 +167,10 @@ def parse_args():
     )
     opts.add_argument(
         '--expression-aggregate',
-        help='Multi-gene panel expression score. Default: max',
+        help='Multi-gene panel expression score (max or mean expression across genes for a given cell type). Default: max',
         default='max',
         choices=('max', 'mean'),
         action=SM,
-    )
-    opts.add_argument(
-        '--no-recursive',
-        help='Do not recursively search input directories. Default: recursive.',
-        dest='recursive',
-        action='store_false',
-        default=True,
-    )
-    opts.add_argument(
-        '--strict',
-        help='Raise an error instead of skipping non-summary or invalid CSVs.',
-        action='store_true',
-        default=False,
     )
     opts.add_argument(
         '-o', '--output',
@@ -220,30 +205,6 @@ def natural_sort_text(value) -> str:
     """Return a zero-padded natural-sort key."""
     text = '' if pd.isna(value) else str(value).lower()
     return re.sub(r'\d+', lambda match: f'{int(match.group()):012d}', text)
-
-
-def discover_csv_paths(inputs: list[str], recursive: bool) -> list[Path]:
-    """Resolve input files and directories to unique CSV paths."""
-    paths = []
-    for value in inputs:
-        input_path = Path(value)
-        if not input_path.exists():
-            raise FileNotFoundError(f'Input does not exist: {input_path}')
-
-        if input_path.is_file():
-            if input_path.suffix.lower() != '.csv':
-                raise ValueError(f'Input file is not a CSV: {input_path}')
-            paths.append(input_path)
-            continue
-
-        pattern = '**/*.csv' if recursive else '*.csv'
-        paths.extend(path for path in input_path.glob(pattern) if path.is_file())
-
-    unique_paths = {}
-    for path in paths:
-        unique_paths[str(path.resolve())] = path.resolve()
-
-    return sorted(unique_paths.values(), key=lambda path: natural_sort_text(path))
 
 
 def summary_genes(columns: list[str]) -> list[str]:
@@ -901,28 +862,15 @@ def main():
         if args.levels
         else None
     )
-    csv_paths = discover_csv_paths(args.input, args.recursive)
-    if not csv_paths:
-        raise ValueError('No CSV files were found in the supplied inputs.')
+    csv_paths = match_files(args.input)
 
     summary_paths = []
     skipped = []
-    invalid = []
     for csv_path in csv_paths:
-        try:
-            columns = pd.read_csv(csv_path, nrows=0).columns.tolist()
-        except Exception as exc:
-            if args.strict:
-                raise ValueError(f'Could not read CSV header: {csv_path}') from exc
-            invalid.append((csv_path, str(exc)))
-            continue
+        columns = pd.read_csv(csv_path, nrows=0).columns.tolist()
 
         if is_expression_summary(columns):
             summary_paths.append(csv_path)
-        elif args.strict:
-            raise ValueError(
-                f'Not an abca_expression_summary CSV: {csv_path}'
-            )
         else:
             skipped.append(csv_path)
 
@@ -1007,11 +955,6 @@ def main():
         if args.verbose:
             for path in skipped:
                 print(f'  {path}')
-    if invalid:
-        print(f'[yellow]Skipped {len(invalid)} unreadable CSV(s).[/yellow]')
-        if args.verbose:
-            for path, error in invalid:
-                print(f'  {path}: {error}')
 
     print('\nSaved:')
     for path in saved_paths:
