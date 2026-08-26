@@ -383,7 +383,7 @@ def copy_files(source_dir, target_dir, filename, sample_path=None, verbose=False
             print(f"File {src_file} does not exist and was not copied.")
 
 def match_files(patterns, base_path=None):
-    """Expand one or more glob patterns to match file paths.
+    """Expand one or more glob patterns to match file paths. For recursive searches, use '**' in the pattern.
 
     Parameters
     ----------
