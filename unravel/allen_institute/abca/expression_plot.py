@@ -25,8 +25,8 @@ The script auto-detects genes from columns ending in ``_mean_expression``.
 # Rank by cell prevalence
 --rank-by cells
 
-# Rank by the average of mean expression across all genes
---gene-aggregate mean
+# Rank by the arithmetic mean of expression across all genes
+--rank-aggregate mean
 
 Usage (sorting by mean expression by default):
 ----------------------------------------------
@@ -254,8 +254,13 @@ def parse_args():
         action=SM,
     )
     opts.add_argument(
-        '--gene-aggregate',
-        help='How to aggregate the ranking metric across plotted genes. Default: max',
+        '-erm',
+        '--expression-rank-mode',
+        dest='expression_rank_mode',
+        help=(
+            'Rank cells by the max or mean expression across plotted genes, '
+            'Ignored with --rank-by cells or --rank-gene. Default: max',
+        ),
         default='max',
         choices=('max', 'mean'),
         action=SM,
@@ -358,7 +363,7 @@ def row_rank(
     df: pd.DataFrame,
     genes: list[str],
     rank_by: str,
-    gene_aggregate: str,
+    expression_rank_mode: str,
     rank_gene: str | None,
 ) -> pd.Series:
     """Calculate the metric used to select and sort cell types."""
@@ -373,7 +378,7 @@ def row_rank(
     columns = [f'{gene}{suffix}' for gene in ranking_genes]
     values = df[columns].apply(pd.to_numeric, errors='coerce')
 
-    if gene_aggregate == 'mean':
+    if expression_rank_mode == 'mean':
         return values.mean(axis=1)
 
     return values.max(axis=1)
@@ -382,7 +387,7 @@ def row_rank(
 def plot_footer(
     df: pd.DataFrame,
     rank_by: str,
-    gene_aggregate: str,
+    expression_rank_mode: str,
     rank_gene: str | None,
     min_percent_cells: float,
     min_cells: int,
@@ -401,12 +406,10 @@ def plot_footer(
         if rank_gene:
             ranking = f'{rank_gene} {metric}'
         else:
-            aggregate = (
-                'maximum'
-                if gene_aggregate == 'max'
-                else 'arithmetic mean'
-            )
-            ranking = f'{aggregate} {metric} across genes'
+            if expression_rank_mode == 'max':
+                ranking = f'maximum {metric} across genes'
+            else:
+                ranking = f'arithmetic mean of {metric} across genes'
 
     filters = []
     if min_percent_cells > 0:
@@ -433,7 +436,7 @@ def prepare_plot_dataframe(
     min_percent_cells: float,
     top: int,
     rank_by: str,
-    gene_aggregate: str,
+    expression_rank_mode: str,
     rank_gene: str | None,
     sort_by: str,
     show_cell_stats: bool,
@@ -489,7 +492,7 @@ def prepare_plot_dataframe(
         df=plot_df,
         genes=genes,
         rank_by=rank_by,
-        gene_aggregate=gene_aggregate,
+        expression_rank_mode=expression_rank_mode,
         rank_gene=rank_gene,
     )
 
@@ -673,8 +676,8 @@ def plot_dotplot(
     grid = fig.add_gridspec(
         1,
         3,
-        width_ratios=(max(2.5, 0.7 * n_genes), 0.18, 1.5),
-        wspace=0.45,
+        width_ratios=(max(2.5, 0.7 * n_genes), 0.16, 0.4),
+        wspace=0.08,
     )
     ax = fig.add_subplot(grid[0, 0])
     colorbar_ax = fig.add_subplot(grid[0, 1])
@@ -712,12 +715,9 @@ def plot_dotplot(
     color_cell_type_tick_labels(ax, df)
     ax.set_xlim(-0.5, n_genes - 0.5)
     ax.set_ylim(n_rows - 0.5, -0.5)
-    ax.set_xlabel('Gene')
+    ax.set_xlabel('Gene', fontweight='bold')
     ax.set_ylabel('Cell type', fontweight='bold')
-    ax.set_title(
-        f'{title}: dot plot',
-        fontweight='bold',
-    )
+    ax.set_title(f'{title}', fontweight='bold')
     ax.set_axisbelow(True)
     ax.grid(True, axis='both', linewidth=0.35, alpha=0.35)
 
@@ -893,7 +893,7 @@ def main():
         min_percent_cells=args.min_percent_cells,
         top=args.top,
         rank_by=args.rank_by,
-        gene_aggregate=args.gene_aggregate,
+        expression_rank_mode=args.expression_rank_mode,
         rank_gene=args.rank_gene,
         sort_by=args.sort_by,
         show_cell_stats=args.show_cell_stats,
@@ -928,7 +928,7 @@ def main():
     footer = plot_footer(
         df=plot_df,
         rank_by=args.rank_by,
-        gene_aggregate=args.gene_aggregate,
+        expression_rank_mode=args.expression_rank_mode,
         rank_gene=args.rank_gene,
         min_percent_cells=args.min_percent_cells,
         min_cells=args.min_cells,
