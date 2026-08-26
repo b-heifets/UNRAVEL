@@ -18,32 +18,21 @@ Within each summary, cell types are ranked separately for every gene by:
     - mean expression
     - cell-type abundance
     - percent expression
-    - expressing-cell share
-
-``expressing_cell_share`` is the percentage of all cells in the summarized
-input that belong to the cell type and express the gene above the threshold.
-It is calculated directly from cell counts when available. With complete
-expression values, it is equivalent to:
-
-    percent_cells * percent_expression / 100
 
 For multi-gene panels, expression is aggregated across the selected genes using
 the maximum mean expression by default. Use ``--expression-rank-mode mean`` to
 favor cell types with broader expression across the gene panel.
 
 Outputs:
-    - <prefix>_all.csv
-        All eligible cell type x gene rows and their within-input ranks.
-    - <prefix>_candidates.csv
-        Rows in the top N by expression, abundance, or expressing-cell share.
+    - <prefix>_genes.csv
+        All eligible cell type x gene rows, their within-input ranks, and
+        top-N selection flags.
     - <prefix>_panels.csv
-        One row per eligible cell type with multi-gene panel rankings.
+        One row per eligible cell type with multi-gene panel scores, rankings,
+        and top-N selection flags.
     - <prefix>_inputs.csv
-        One row per screened summary, including the proportion of cells
-        represented by the top expression, abundance, and union selections.
-    - <prefix>_recurrence.csv
-        Recurrence and expression summaries for each cell type x gene across
-        the screened inputs.
+        One row per screened summary with input size, eligibility coverage,
+        and screened genes.
 
 Notes:
     - ``percent_cells`` represents cell-type representation within the cells in
@@ -54,6 +43,8 @@ Notes:
       gene abundance plots are therefore usually redundant.
     - File names are not interpreted. Each invocation should contain the
       expression summaries that should be compared together.
+    - Cell-type colors and ontology-path details remain available in the
+      source expression-summary CSVs and are not repeated in these outputs.
 
 Usage:
 ------
@@ -75,7 +66,6 @@ from unravel.core.utils import log_command, match_files, verbose_end_msg, verbos
 
 MEAN_SUFFIX = '_mean_expression'
 PERCENT_SUFFIX = '_percent_expression'
-EXPRESSING_COUNT_SUFFIX = '_expressing_cell_count'
 
 SUMMARY_BASE_COLUMNS = {
     'input',
@@ -89,23 +79,14 @@ SUMMARY_BASE_COLUMNS = {
 
 RANK_SPECS = (
     ('mean_expression', 'expression_rank', 'top_expression'),
-    ('percent_cells', 'abundance_rank', 'top_abundance'),
     ('percent_expression', 'percent_expression_rank', 'top_percent_expression'),
-    (
-        'expressing_cell_share',
-        'expressing_cell_share_rank',
-        'top_expressing_cell_share',
-    ),
+    ('percent_cells', 'abundance_rank', 'top_abundance'),
 )
 
 PANEL_RANK_SPECS = (
     ('panel_expression_score', 'panel_expression_rank', 'top_panel_expression'),
+    ('max_percent_expression', 'percent_expression_rank', 'top_percent_expression'),
     ('percent_cells', 'abundance_rank', 'top_abundance'),
-    (
-        'max_expressing_cell_share',
-        'expressing_cell_share_rank',
-        'top_expressing_cell_share',
-    ),
 )
 
 
@@ -119,7 +100,8 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument(
         '-i', '--input',
-        help="Pattern or patterns for CSV file(s) from `exp_summary`. (e.g., '**/*.csv' for a recursive search)",
+        help="Pattern or patterns for CSV file(s) from `exp_summary`. "
+             "(e.g., '**/*.csv' for a recursive search)",
         required=True,
         nargs='*',
         action=SM,
@@ -176,7 +158,6 @@ def parse_args():
         choices=('max', 'mean'),
         action=SM,
     )
-
     opts.add_argument(
         '-o', '--output',
         help='Output directory. Default: expression_screen_* beside the input.',
@@ -216,12 +197,15 @@ def summary_genes(columns: list[str]) -> list[str]:
     """Return genes with complete mean- and percent-expression columns."""
     column_set = set(columns)
     genes = []
+
     for column in columns:
         if not column.endswith(MEAN_SUFFIX):
             continue
+
         gene = column[:-len(MEAN_SUFFIX)]
         if f'{gene}{PERCENT_SUFFIX}' in column_set:
             genes.append(gene)
+
     return genes
 
 
@@ -230,18 +214,16 @@ def is_expression_summary(columns: list[str]) -> bool:
     return SUMMARY_BASE_COLUMNS.issubset(columns) and bool(summary_genes(columns))
 
 
-def select_genes(available: list[str], requested: list[str] | None) -> list[str]:
+def select_genes(
+    available: list[str],
+    requested: list[str] | None,
+) -> list[str]:
     """Select genes case-insensitively while preserving source column order."""
     if not requested:
         return available
+
     requested_keys = {gene.casefold() for gene in requested}
     return [gene for gene in available if gene.casefold() in requested_keys]
-
-
-def first_nonmissing(series: pd.Series, default=''):
-    """Return the first nonmissing series value or a default."""
-    nonmissing = series.dropna()
-    return nonmissing.iloc[0] if not nonmissing.empty else default
 
 
 def rank_group(
@@ -260,31 +242,17 @@ def rank_group(
             kind='stable',
             na_position='last',
         ).index
+
         positions = pd.Series(
             np.arange(1, len(order) + 1),
             index=order,
             dtype='int64',
         )
+
         ranked[rank_column] = positions.reindex(ranked.index).astype('int64')
         ranked[top_column] = True if top == 0 else ranked[rank_column].le(top)
 
     return ranked.drop(columns='_cell_type_sort')
-
-
-def add_selection_reason(
-    df: pd.DataFrame,
-    flag_to_reason: tuple[tuple[str, str], ...],
-) -> pd.Series:
-    """Describe which transparent top-N criteria selected each row."""
-    reasons = []
-    for row in df.itertuples(index=False):
-        selected = [
-            reason
-            for flag, reason in flag_to_reason
-            if bool(getattr(row, flag))
-        ]
-        reasons.append(';'.join(selected))
-    return pd.Series(reasons, index=df.index, dtype='string')
 
 
 def process_summary_file(
@@ -293,7 +261,7 @@ def process_summary_file(
     requested_levels: set[str] | None,
     min_cells: int,
     min_percent_cells: float,
-) -> tuple[list[pd.DataFrame], list[dict], list[dict], set[str]]:
+) -> tuple[list[pd.DataFrame], list[dict], set[str]]:
     """Convert one wide expression summary to eligible long-form rows."""
     df = pd.read_csv(summary_path, low_memory=False)
     available_genes = summary_genes(df.columns.tolist())
@@ -301,7 +269,7 @@ def process_summary_file(
     found_genes = {gene.casefold() for gene in genes}
 
     if not genes:
-        return [], [], [], found_genes
+        return [], [], found_genes
 
     for column in ('cell_count', 'percent_cells', 'threshold'):
         df[column] = pd.to_numeric(df[column], errors='coerce')
@@ -309,12 +277,12 @@ def process_summary_file(
     group_columns = ['input', 'species', 'threshold', 'level']
     long_parts = []
     input_records = []
-    evaluation_records = []
 
     grouped = df.groupby(group_columns, sort=False, dropna=False)
     for group_values, group_df in grouped:
         source_input, species, threshold, level = group_values
         level = str(level)
+
         if requested_levels and level.casefold() not in requested_levels:
             continue
 
@@ -332,10 +300,12 @@ def process_summary_file(
 
         group_df = group_df.copy()
         group_df['cell_count'] = pd.to_numeric(
-            group_df['cell_count'], errors='coerce'
+            group_df['cell_count'],
+            errors='coerce',
         ).fillna(0)
         group_df['percent_cells'] = pd.to_numeric(
-            group_df['percent_cells'], errors='coerce'
+            group_df['percent_cells'],
+            errors='coerce',
         ).fillna(0)
 
         total_cells = float(group_df['cell_count'].sum())
@@ -346,7 +316,6 @@ def process_summary_file(
 
         common = {
             '_screen_id': screen_id,
-            'summary_file': summary_path.name,
             'source_input': source_input,
             'species': species,
             'threshold': threshold,
@@ -359,14 +328,13 @@ def process_summary_file(
                 'total_cells': total_cells,
                 'total_cell_types': len(group_df),
                 'eligible_cell_types': len(eligible),
-                'eligible_percent_cells_total': eligible['percent_cells'].sum(),
+                'eligible_cell_coverage_percent': eligible[
+                    'percent_cells'
+                ].sum(),
                 'genes_screened': len(genes),
                 'genes': ';'.join(genes),
             }
         )
-
-        for gene in genes:
-            evaluation_records.append({**common, 'gene': gene})
 
         if eligible.empty:
             continue
@@ -374,86 +342,55 @@ def process_summary_file(
         for gene in genes:
             gene_df = eligible.copy()
             gene_df['mean_expression'] = pd.to_numeric(
-                gene_df[f'{gene}{MEAN_SUFFIX}'], errors='coerce'
+                gene_df[f'{gene}{MEAN_SUFFIX}'],
+                errors='coerce',
             )
             gene_df['percent_expression'] = pd.to_numeric(
-                gene_df[f'{gene}{PERCENT_SUFFIX}'], errors='coerce'
+                gene_df[f'{gene}{PERCENT_SUFFIX}'],
+                errors='coerce',
             )
-
-            count_column = f'{gene}{EXPRESSING_COUNT_SUFFIX}'
-            if count_column in gene_df.columns:
-                gene_df['expressing_cell_count'] = pd.to_numeric(
-                    gene_df[count_column], errors='coerce'
-                )
-            else:
-                gene_df['expressing_cell_count'] = (
-                    gene_df['cell_count']
-                    * gene_df['percent_expression']
-                    / 100
-                )
-
-            if count_column in gene_df.columns and total_cells > 0:
-                gene_df['expressing_cell_share'] = (
-                    gene_df['expressing_cell_count']
-                    / total_cells
-                    * 100
-                )
-            else:
-                gene_df['expressing_cell_share'] = (
-                    gene_df['percent_cells']
-                    * gene_df['percent_expression']
-                    / 100
-                )
-
             gene_df['gene'] = gene
+
             for column, value in common.items():
                 gene_df[column] = value
 
-            optional_columns = [
-                column
-                for column in (
-                    'cell_type_color',
-                    'source_path_count',
-                    'source_ontology_paths',
-                )
-                if column in gene_df.columns
-            ]
             keep_columns = list(common) + [
                 'gene',
                 'cell_type',
-                *optional_columns,
                 'cell_count',
                 'percent_cells',
-                'expressing_cell_count',
                 'mean_expression',
                 'percent_expression',
-                'expressing_cell_share',
             ]
             long_parts.append(gene_df[keep_columns])
 
-    return long_parts, input_records, evaluation_records, found_genes
+    return long_parts, input_records, found_genes
 
 
-def rank_long_table(long_df: pd.DataFrame, top: int) -> pd.DataFrame:
+def rank_long_table(
+    long_df: pd.DataFrame,
+    top: int,
+) -> pd.DataFrame:
     """Rank cell types separately for every summary and gene."""
     ranked_parts = []
+
     for _, group in long_df.groupby(['_screen_id', 'gene'], sort=False):
         ranked_parts.append(rank_group(group, RANK_SPECS, top))
 
     ranked = pd.concat(ranked_parts, ignore_index=True)
     ranked['selected'] = ranked[
-        ['top_expression', 'top_abundance', 'top_expressing_cell_share']
+        ['top_expression', 'top_percent_expression', 'top_abundance']
     ].any(axis=1)
-    ranked['selection_reason'] = add_selection_reason(
-        ranked,
-        (
-            ('top_expression', 'expression'),
-            ('top_abundance', 'abundance'),
-            ('top_expressing_cell_share', 'expressing_cell_share'),
-        ),
-    )
+
     return ranked.sort_values(
-        ['species', 'threshold', 'level', 'source_input', 'gene', 'expression_rank'],
+        [
+            'species',
+            'threshold',
+            'level',
+            'source_input',
+            'gene',
+            'expression_rank',
+        ],
         kind='stable',
     ).reset_index(drop=True)
 
@@ -466,32 +403,22 @@ def build_panel_table(
     """Create one multi-gene ranking row per eligible cell type."""
     rows = []
     group_columns = ['_screen_id', 'cell_type']
-    metadata_columns = [
-        'summary_file',
-        'source_input',
-        'species',
-        'threshold',
-        'level',
-        'cell_type_color',
-        'source_path_count',
-        'source_ontology_paths',
-        'cell_count',
-        'percent_cells',
-    ]
 
     for (screen_id, cell_type), group in long_df.groupby(
-        group_columns, sort=False, dropna=False
+        group_columns,
+        sort=False,
+        dropna=False,
     ):
         numeric_expression = pd.to_numeric(
-            group['mean_expression'], errors='coerce'
+            group['mean_expression'],
+            errors='coerce',
         )
+
         if numeric_expression.notna().any():
             maximum_index = numeric_expression.idxmax()
             highest_gene = group.loc[maximum_index, 'gene']
-            highest_mean = numeric_expression.loc[maximum_index]
         else:
             highest_gene = ''
-            highest_mean = np.nan
 
         if expression_rank_mode == 'max':
             panel_score = numeric_expression.max()
@@ -500,227 +427,54 @@ def build_panel_table(
 
         row = {
             '_screen_id': screen_id,
+            'source_input': group['source_input'].iloc[0],
+            'species': group['species'].iloc[0],
+            'threshold': group['threshold'].iloc[0],
+            'level': group['level'].iloc[0],
             'cell_type': cell_type,
+            'cell_count': group['cell_count'].iloc[0],
+            'percent_cells': group['percent_cells'].iloc[0],
+            'genes_expressed': int(group['percent_expression'].gt(0).sum()),
+            'expression_rank_mode': expression_rank_mode,
+            'panel_expression_score': panel_score,
+            'highest_expression_gene': highest_gene,
+            'max_percent_expression': group['percent_expression'].max(),
         }
-        for column in metadata_columns:
-            if column in group.columns and column not in row:
-                row[column] = first_nonmissing(group[column])
-
-        row.update(
-            {
-                'genes_screened': group['gene'].nunique(),
-                'genes': ';'.join(dict.fromkeys(group['gene'].astype(str))),
-                'genes_expressed': int(group['percent_expression'].gt(0).sum()),
-                'expression_rank_mode': expression_rank_mode,
-                'panel_expression_score': panel_score,
-                'highest_expression_gene': highest_gene,
-                'highest_mean_expression': highest_mean,
-                'max_percent_expression': group['percent_expression'].max(),
-                'max_expressing_cell_share': group[
-                    'expressing_cell_share'
-                ].max(),
-            }
-        )
         rows.append(row)
 
     panels = pd.DataFrame(rows)
     ranked_parts = []
+
     for _, group in panels.groupby('_screen_id', sort=False):
         ranked_parts.append(rank_group(group, PANEL_RANK_SPECS, top))
 
     panels = pd.concat(ranked_parts, ignore_index=True)
-    panels['plot_selected'] = panels[
-        ['top_panel_expression', 'top_abundance']
-    ].any(axis=1)
-    panels['screen_selected'] = panels[
+    panels['selected'] = panels[
         [
             'top_panel_expression',
+            'top_percent_expression',
             'top_abundance',
-            'top_expressing_cell_share',
         ]
     ].any(axis=1)
-    panels['selection_reason'] = add_selection_reason(
-        panels,
-        (
-            ('top_panel_expression', 'panel_expression'),
-            ('top_abundance', 'abundance'),
-            ('top_expressing_cell_share', 'expressing_cell_share'),
-        ),
-    )
+
     return panels.sort_values(
-        ['species', 'threshold', 'level', 'source_input', 'panel_expression_rank'],
-        kind='stable',
-    ).reset_index(drop=True)
-
-
-def selected_cell_type_text(group: pd.DataFrame, flag: str) -> str:
-    """Return semicolon-separated selected cell types in rank order."""
-    rank_column = {
-        'top_panel_expression': 'panel_expression_rank',
-        'top_abundance': 'abundance_rank',
-        'top_expressing_cell_share': 'expressing_cell_share_rank',
-        'plot_selected': 'panel_expression_rank',
-        'screen_selected': 'panel_expression_rank',
-    }[flag]
-    selected = group[group[flag]].sort_values(rank_column, kind='stable')
-    return ';'.join(selected['cell_type'].astype(str))
-
-
-def selected_percent_total(group: pd.DataFrame, flag: str) -> float:
-    """Sum cell-type percentages for a nonoverlapping panel selection."""
-    return float(group.loc[group[flag], 'percent_cells'].sum())
-
-
-def build_input_table(
-    input_records: list[dict],
-    panels: pd.DataFrame,
-) -> pd.DataFrame:
-    """Summarize coverage and selections once per screened summary input."""
-    inputs = pd.DataFrame(input_records)
-    selection_rows = []
-    for screen_id, group in panels.groupby('_screen_id', sort=False):
-        selection_rows.append(
-            {
-                '_screen_id': screen_id,
-                'top_expression_percent_cells_total': selected_percent_total(
-                    group, 'top_panel_expression'
-                ),
-                'top_abundance_percent_cells_total': selected_percent_total(
-                    group, 'top_abundance'
-                ),
-                'top_expressing_share_percent_cells_total': selected_percent_total(
-                    group, 'top_expressing_cell_share'
-                ),
-                'plot_union_percent_cells_total': selected_percent_total(
-                    group, 'plot_selected'
-                ),
-                'screen_union_percent_cells_total': selected_percent_total(
-                    group, 'screen_selected'
-                ),
-                'top_expression_cell_types': selected_cell_type_text(
-                    group, 'top_panel_expression'
-                ),
-                'top_abundance_cell_types': selected_cell_type_text(
-                    group, 'top_abundance'
-                ),
-                'top_expressing_share_cell_types': selected_cell_type_text(
-                    group, 'top_expressing_cell_share'
-                ),
-            }
-        )
-
-    if selection_rows:
-        inputs = inputs.merge(
-            pd.DataFrame(selection_rows),
-            on='_screen_id',
-            how='left',
-            validate='one_to_one',
-        )
-
-    return inputs.sort_values(
-        ['species', 'threshold', 'level', 'source_input'],
-        kind='stable',
-    ).reset_index(drop=True)
-
-
-def joined_unique(values: pd.Series) -> str:
-    """Join unique, nonempty values in natural order."""
-    unique = {
-        str(value)
-        for value in values.dropna()
-        if str(value).strip()
-    }
-    return ';'.join(sorted(unique, key=natural_sort_text))
-
-
-def build_recurrence_table(
-    long_df: pd.DataFrame,
-    evaluation_records: list[dict],
-) -> pd.DataFrame:
-    """Aggregate candidate strength and recurrence across screened inputs."""
-    group_columns = [
-        'species',
-        'threshold',
-        'level',
-        'gene',
-        'cell_type',
-    ]
-
-    rows = []
-    for group_values, group in long_df.groupby(
-        group_columns, sort=False, dropna=False
-    ):
-        row = dict(zip(group_columns, group_values))
-        top_expression = group[group['top_expression']]
-        top_abundance = group[group['top_abundance']]
-        top_share = group[group['top_expressing_cell_share']]
-        selected = group[group['selected']]
-        row.update(
-            {
-                'inputs_passing_filters': group['_screen_id'].nunique(),
-                'inputs_top_expression': top_expression['_screen_id'].nunique(),
-                'inputs_top_abundance': top_abundance['_screen_id'].nunique(),
-                'inputs_top_expressing_cell_share': top_share[
-                    '_screen_id'
-                ].nunique(),
-                'inputs_selected': selected['_screen_id'].nunique(),
-                'selected_inputs': joined_unique(selected['source_input']),
-                'median_mean_expression': group['mean_expression'].median(),
-                'max_mean_expression': group['mean_expression'].max(),
-                'median_percent_expression': group['percent_expression'].median(),
-                'max_percent_expression': group['percent_expression'].max(),
-                'median_percent_cells': group['percent_cells'].median(),
-                'max_percent_cells': group['percent_cells'].max(),
-                'median_expressing_cell_share': group[
-                    'expressing_cell_share'
-                ].median(),
-                'max_expressing_cell_share': group[
-                    'expressing_cell_share'
-                ].max(),
-            }
-        )
-        rows.append(row)
-
-    recurrence = pd.DataFrame(rows)
-
-    evaluations = pd.DataFrame(evaluation_records)
-    evaluation_columns = [
-        'species',
-        'threshold',
-        'level',
-        'gene',
-    ]
-    evaluated = evaluations.groupby(
-        evaluation_columns, sort=False, dropna=False
-    ).agg(
-        inputs_evaluated=('_screen_id', 'nunique'),
-    ).reset_index()
-
-    recurrence = recurrence.merge(
-        evaluated,
-        on=evaluation_columns,
-        how='left',
-        validate='many_to_one',
-    )
-    recurrence['fraction_inputs_selected'] = (
-        recurrence['inputs_selected']
-        / recurrence['inputs_evaluated'].replace(0, np.nan)
-    )
-    recurrence['fraction_inputs_top_expression'] = (
-        recurrence['inputs_top_expression']
-        / recurrence['inputs_evaluated'].replace(0, np.nan)
-    )
-
-    return recurrence.sort_values(
         [
             'species',
             'threshold',
             'level',
-            'gene',
-            'inputs_selected',
-            'max_mean_expression',
+            'source_input',
+            'panel_expression_rank',
         ],
-        ascending=[True, True, True, True, False, False],
+        kind='stable',
+    ).reset_index(drop=True)
+
+
+def build_input_table(input_records: list[dict]) -> pd.DataFrame:
+    """Summarize input size, eligibility, and screened genes."""
+    inputs = pd.DataFrame(input_records)
+
+    return inputs.sort_values(
+        ['species', 'threshold', 'level', 'source_input'],
         kind='stable',
     ).reset_index(drop=True)
 
@@ -752,25 +506,24 @@ def write_outputs(
     long_df: pd.DataFrame,
     panels: pd.DataFrame,
     inputs: pd.DataFrame,
-    recurrence: pd.DataFrame,
 ) -> list[Path]:
     """Write all screening tables and return their paths."""
     output_dir.mkdir(parents=True, exist_ok=True)
     tables = {
-        'all': long_df,
-        'candidates': long_df[long_df['selected']].copy(),
+        'genes': long_df,
         'panels': panels,
         'inputs': inputs,
-        'recurrence': recurrence,
     }
 
     saved_paths = []
     for suffix, table in tables.items():
         output_path = output_dir / f'{output_prefix}_{suffix}.csv'
-        table.drop(columns=['_screen_id'], errors='ignore').to_csv(
-            output_path, index=False
-        )
+        table.drop(
+            columns=['_screen_id'],
+            errors='ignore',
+        ).to_csv(output_path, index=False)
         saved_paths.append(output_path)
+
     return saved_paths
 
 
@@ -797,6 +550,7 @@ def main():
 
     summary_paths = []
     skipped = []
+
     for csv_path in csv_paths:
         columns = pd.read_csv(csv_path, nrows=0).columns.tolist()
 
@@ -813,10 +567,10 @@ def main():
 
     long_parts = []
     input_records = []
-    evaluation_records = []
     found_gene_keys = set()
+
     for summary_path in summary_paths:
-        parts, records, evaluations, found = process_summary_file(
+        parts, records, found = process_summary_file(
             summary_path=summary_path,
             requested_genes=args.genes,
             requested_levels=requested_levels,
@@ -825,17 +579,19 @@ def main():
         )
         long_parts.extend(parts)
         input_records.extend(records)
-        evaluation_records.extend(evaluations)
         found_gene_keys.update(found)
 
     if args.genes:
         missing_genes = [
-            gene for gene in args.genes
+            gene
+            for gene in args.genes
             if gene.casefold() not in found_gene_keys
         ]
+
         if missing_genes:
             print(
-                '[yellow]Requested genes not found in any screened summary:[/yellow] '
+                '[yellow]Requested genes not found in any screened summary:'
+                '[/yellow] '
                 + ', '.join(missing_genes)
             )
 
@@ -855,8 +611,7 @@ def main():
         top=args.top,
         expression_rank_mode=args.expression_rank_mode,
     )
-    inputs = build_input_table(input_records, panels)
-    recurrence = build_recurrence_table(long_df, evaluation_records)
+    inputs = build_input_table(input_records)
 
     output_dir = (
         Path(args.output)
@@ -868,21 +623,23 @@ def main():
             args.top,
         )
     )
+
     saved_paths = write_outputs(
         output_dir=output_dir,
         output_prefix=args.output_prefix,
         long_df=long_df,
         panels=panels,
         inputs=inputs,
-        recurrence=recurrence,
     )
 
     print(f'\nScreened {len(summary_paths)} expression-summary CSV(s).')
+
     if skipped:
         print(
             f'[yellow]Skipped {len(skipped)} non-summary CSV(s).[/yellow] '
             'Run exp_summary first if they should be included.'
         )
+
         if args.verbose:
             for path in skipped:
                 print(f'  {path}')
