@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_expression_screen`` (``exp_screen``) from UNRAVEL to screen one or
-more expression-summary CSVs and create a long-form table for comparing gene
-expression across regions and cell types.
+Use ``abca_expression_screen`` (``exp_screen``) to combine expression-summary CSVs
+and screen eligible gene-cell-type combinations across regions.
 
 Inputs:
     - Wide CSVs produced by ``abca_expression_summary`` (``exp_summary``).
