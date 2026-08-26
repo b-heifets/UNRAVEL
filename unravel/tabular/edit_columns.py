@@ -3,9 +3,21 @@
 """
 Use ``tabular_edit_columns`` (``edit_cols``) from UNRAVEL to drop, keep, rename, or reorder columns in a CSV or XLSX file.
 
-Usage:
-------
-    `tabular_edit_columns -i 'path/to/data/*.csv' [-d col1 col2 ... or -c col2 col1 ...] [--rename OLD=NEW ...] [-o output_dir/] [-v]`
+Usage to DROP columns:
+----------------------
+    `tabular_edit_columns -i 'path/to/data/*.csv' [-d col1 col2 ...] [-o output_dir] [-v]`
+
+Usage to REORDER columns:
+-------------------------
+    `tabular_edit_columns -i 'path/to/data/*.csv' -c col2 col1 col3 ... [-o output_dir] [-v]`
+
+Usage to RENAME columns:
+------------------------
+    `tabular_edit_columns -i 'path/to/data/*.csv' --rename OLD=NEW ... [-o output_dir] [-v]`
+
+Usage to REPLACE text in column names:
+--------------------------------------
+    `tabular_edit_columns -i 'path/to/data/*.csv' --replace OLD=NEW ... [-o output_dir] [-v]`
 """
 
 import pandas as pd
