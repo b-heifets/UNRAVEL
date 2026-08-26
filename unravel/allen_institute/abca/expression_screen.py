@@ -18,7 +18,7 @@ Default eligibility criteria:
 Outputs:
     - <prefix>_genes.csv
         One row per eligible region x ontology level x gene x cell type, with
-        cell abundance, mean expression, and percent expression.
+        cell abundance, expression metrics, and abundance-weighted metrics.
     - <prefix>_inputs.csv
         One row per screened summary with source metadata, input size, and
         eligibility coverage.
@@ -38,6 +38,13 @@ Notes:
     - No ranks or top-N flags are generated. Filter by region, ontology level,
       and gene, then sort by ``mean_expression``, ``percent_expression``, or
       ``percent_cells`` as needed.
+    - ``mean_expression_contribution`` = ``mean_expression * percent_cells / 100``
+      Contribution to the abundance-weighted mean log expression among sampled cells
+      (not an estimate of total transcript abundance)
+    - ``percent_all_cells_expressing`` is calculated as
+      ``percent_expression * percent_cells / 100``. It is the percentage of all
+      cells in the input that belong to the cell type and meet the expression
+      threshold for the gene.
     - Each invocation should contain summaries from one logical dataset
       collection. File prefixes are otherwise unrestricted.
     - Cell-type colors and ontology-path details remain available in the
@@ -56,12 +63,7 @@ from rich.traceback import install
 
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import (
-    log_command,
-    match_files,
-    verbose_end_msg,
-    verbose_start_msg,
-)
+from unravel.core.utils import log_command, match_files, verbose_end_msg, verbose_start_msg
 
 
 MEAN_SUFFIX = '_mean_expression'
@@ -108,10 +110,7 @@ def parse_args():
     )
     opts.add_argument(
         '-l', '--levels',
-        help=(
-            'Cell-type ontology levels to include. '
-            'Default: all detected levels.'
-        ),
+        help='Cell-type ontology levels to include. Default: all detected levels.',
         nargs='*',
         default=None,
         action=SM,
@@ -177,10 +176,7 @@ def summary_genes(columns: list[str]) -> list[str]:
 
 def is_expression_summary(columns: list[str]) -> bool:
     """Return True when a CSV header matches expression-summary output."""
-    return (
-        SUMMARY_BASE_COLUMNS.issubset(columns)
-        and bool(summary_genes(columns))
-    )
+    return SUMMARY_BASE_COLUMNS.issubset(columns) and bool(summary_genes(columns))
 
 
 def select_genes(
@@ -192,11 +188,7 @@ def select_genes(
         return available
 
     requested_keys = {gene.casefold() for gene in requested}
-    return [
-        gene
-        for gene in available
-        if gene.casefold() in requested_keys
-    ]
+    return [gene for gene in available if gene.casefold() in requested_keys]
 
 
 def infer_region(source_input: str) -> str:
@@ -239,12 +231,7 @@ def process_summary_file(
     gene_parts = []
     input_records = []
 
-    grouped = df.groupby(
-        group_columns,
-        sort=False,
-        dropna=False,
-    )
-
+    grouped = df.groupby(group_columns, sort=False, dropna=False)
     for group_values, group_df in grouped:
         source_input, species, threshold, level = group_values
         level = str(level)
@@ -301,6 +288,16 @@ def process_summary_file(
                 gene_df[f'{gene}{PERCENT_SUFFIX}'],
                 errors='coerce',
             )
+            gene_df['mean_expression_contribution'] = (
+                gene_df['mean_expression']
+                * gene_df['percent_cells']
+                / 100
+            )
+            gene_df['percent_all_cells_expressing'] = (
+                gene_df['percent_expression']
+                * gene_df['percent_cells']
+                / 100
+            )
             gene_df['region'] = region
             gene_df['level'] = level
             gene_df['gene'] = gene
@@ -311,18 +308,18 @@ def process_summary_file(
                 'gene',
                 'cell_type',
                 'cell_count',
-                'percent_cells',
                 'mean_expression',
                 'percent_expression',
+                'percent_cells',
+                'mean_expression_contribution',
+                'percent_all_cells_expressing',
             ]
             gene_parts.append(gene_df[keep_columns])
 
     return gene_parts, input_records, found_genes
 
 
-def build_gene_table(
-    gene_parts: list[pd.DataFrame],
-) -> pd.DataFrame:
+def build_gene_table(gene_parts: list[pd.DataFrame]) -> pd.DataFrame:
     """Combine and sort eligible gene-expression rows."""
     genes = pd.concat(gene_parts, ignore_index=True)
 
@@ -336,34 +333,18 @@ def build_gene_table(
             'region',
             'cell_type',
         ],
-        ascending=[
-            True,
-            True,
-            False,
-            False,
-            False,
-            True,
-            True,
-        ],
+        ascending=[True, True, False, False, False, True, True],
         kind='stable',
         na_position='last',
     ).reset_index(drop=True)
 
 
-def build_input_table(
-    input_records: list[dict],
-) -> pd.DataFrame:
+def build_input_table(input_records: list[dict]) -> pd.DataFrame:
     """Summarize source metadata, input size, and eligibility."""
     inputs = pd.DataFrame(input_records)
 
     return inputs.sort_values(
-        [
-            'species',
-            'threshold',
-            'level',
-            'region',
-            'source_input',
-        ],
+        ['species', 'threshold', 'level', 'region', 'source_input'],
         kind='stable',
     ).reset_index(drop=True)
 
@@ -395,14 +376,12 @@ def write_outputs(
 ) -> list[Path]:
     """Write screening tables and return their paths."""
     output_dir.mkdir(parents=True, exist_ok=True)
-
     tables = {
         'genes': genes,
         'inputs': inputs,
     }
 
     saved_paths = []
-
     for suffix, table in tables.items():
         output_path = output_dir / f'{output_prefix}_{suffix}.csv'
         table.to_csv(output_path, index=False)
@@ -420,28 +399,20 @@ def main():
 
     if args.min_cells < 0:
         raise ValueError('--min-cells must be 0 or greater.')
-
     if not 0 <= args.min_percent_cells <= 100:
-        raise ValueError(
-            '--min-percent-cells must be between 0 and 100.'
-        )
+        raise ValueError('--min-percent-cells must be between 0 and 100.')
 
     requested_levels = (
         {level.casefold() for level in args.levels}
         if args.levels
         else None
     )
-
     csv_paths = match_files(args.input)
 
     summary_paths = []
     skipped = []
-
     for csv_path in csv_paths:
-        columns = pd.read_csv(
-            csv_path,
-            nrows=0,
-        ).columns.tolist()
+        columns = pd.read_csv(csv_path, nrows=0).columns.tolist()
 
         if is_expression_summary(columns):
             summary_paths.append(csv_path)
@@ -450,9 +421,8 @@ def main():
 
     if not summary_paths:
         raise ValueError(
-            'No abca_expression_summary CSVs were found. '
-            'Run exp_summary on cell-level expression inputs '
-            'before screening them.'
+            'No abca_expression_summary CSVs were found. Run exp_summary on '
+            'cell-level expression inputs before screening them.'
         )
 
     gene_parts = []
@@ -480,22 +450,18 @@ def main():
 
         if missing_genes:
             print(
-                '[yellow]'
-                'Requested genes not found in any screened summary:'
+                '[yellow]Requested genes not found in any screened summary:'
                 '[/yellow] '
                 + ', '.join(missing_genes)
             )
 
     if not input_records:
         raise ValueError(
-            'No summaries matched the requested genes '
-            'and ontology levels.'
+            'No summaries matched the requested genes and ontology levels.'
         )
-
     if not gene_parts:
         raise ValueError(
-            'No cell types passed the minimum cell-count '
-            'and percentage cutoffs.'
+            'No cell types passed the minimum cell-count and percentage cutoffs.'
         )
 
     genes = build_gene_table(gene_parts)
@@ -510,7 +476,6 @@ def main():
             args.min_percent_cells,
         )
     )
-
     saved_paths = write_outputs(
         output_dir=output_dir,
         output_prefix=args.output_prefix,
@@ -518,18 +483,11 @@ def main():
         inputs=inputs,
     )
 
-    print(
-        f'\nScreened '
-        f'{len(summary_paths)} '
-        f'expression-summary CSV(s).'
-    )
-
+    print(f'\nScreened {len(summary_paths)} expression-summary CSV(s).')
     if skipped:
         print(
-            f'[yellow]'
-            f'Skipped {len(skipped)} non-summary CSV(s).'
-            f'[/yellow] '
-            f'Run exp_summary first if they should be included.'
+            f'[yellow]Skipped {len(skipped)} non-summary CSV(s).[/yellow] '
+            'Run exp_summary first if they should be included.'
         )
 
         if args.verbose:
@@ -537,7 +495,6 @@ def main():
                 print(f'  {path}')
 
     print('\nSaved:')
-
     for path in saved_paths:
         print(f'  {path}')
 
