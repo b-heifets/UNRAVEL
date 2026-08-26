@@ -26,7 +26,7 @@ The script auto-detects genes from columns ending in ``_mean_expression``.
 --rank-by cells
 
 # Rank by the arithmetic mean of expression across all genes
---rank-aggregate mean
+--expression-rank-mode mean
 
 Usage (sorting by mean expression by default):
 ----------------------------------------------
@@ -258,8 +258,8 @@ def parse_args():
         '--expression-rank-mode',
         dest='expression_rank_mode',
         help=(
-            'Rank cells by the max or mean expression across plotted genes, '
-            'Ignored with --rank-by cells or --rank-gene. Default: max',
+            'Rank cell types by the maximum or mean expression across plotted genes. '
+            'Ignored with --rank-by cells or --rank-gene. Default: max'
         ),
         default='max',
         choices=('max', 'mean'),
@@ -906,15 +906,16 @@ def main():
     )
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    output_prefix = args.output_prefix or input_path.stem
+    if args.output_prefix:
+        output_prefix = args.output_prefix
+    else:
+        output_prefix = input_path.stem
 
-    if args.genes:
-        gene_label = '-'.join(
-            safe_name(gene) for gene in genes
-        )
-        output_prefix = (
-            f'{output_prefix}__gene-{gene_label}'
-        )
+        if args.genes:
+            gene_label = '-'.join(
+                safe_name(gene) for gene in genes
+            )
+            output_prefix = f'{output_prefix}__gene-{gene_label}'
 
     title = default_title(summary_df, args.title)
     
