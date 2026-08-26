@@ -2,8 +2,7 @@
 
 """
 Use ``abca_expression_screen`` (``exp_screen``) from UNRAVEL to screen one or
-more expression-summary CSVs across ABCA datasets, brain regions, and cell-type
-ontology levels.
+more expression-summary CSVs across input files and cell-type ontology levels.
 
 Inputs:
     - Wide CSVs produced by ``abca_expression_summary`` (``exp_summary``).
@@ -29,7 +28,7 @@ expression values, it is equivalent to:
     percent_cells * percent_expression / 100
 
 For multi-gene panels, expression is aggregated across the selected genes using
-the maximum mean expression by default. Use ``--expression-aggregate mean`` to
+the maximum mean expression by default. Use ``--expression-rank-mode mean`` to
 favor cell types with broader expression across the gene panel.
 
 Outputs:
@@ -42,9 +41,9 @@ Outputs:
     - <prefix>_inputs.csv
         One row per screened summary, including the proportion of cells
         represented by the top expression, abundance, and union selections.
-    - <prefix>_cross_region.csv
+    - <prefix>_recurrence.csv
         Recurrence and expression summaries for each cell type x gene across
-        regions within a dataset and anatomical granularity.
+        the screened inputs.
 
 Notes:
     - ``percent_cells`` represents cell-type representation within the cells in
@@ -53,8 +52,8 @@ Notes:
     - Rank selection occurs after applying both eligibility cutoffs.
     - The abundance ranking is gene-independent within a summary. Individual-
       gene abundance plots are therefore usually redundant.
-    - Dataset, region, and anatomical granularity are inferred from the source
-      input name and path when possible and are retained as explicit columns.
+    - File names are not interpreted. Each invocation should contain the
+      expression summaries that should be compared together.
 
 Usage:
 ------
@@ -166,12 +165,18 @@ def parse_args():
         action=SM,
     )
     opts.add_argument(
-        '--expression-aggregate',
-        help='Multi-gene panel expression score (max or mean expression across genes for a given cell type). Default: max',
+        '-erm',
+        '--expression-rank-mode',
+        dest='expression_rank_mode',
+        help=(
+            'Rank multi-gene panels using the maximum or arithmetic mean '
+            'expression across selected genes. Default: max'
+        ),
         default='max',
         choices=('max', 'mean'),
         action=SM,
     )
+
     opts.add_argument(
         '-o', '--output',
         help='Output directory. Default: expression_screen_* beside the input.',
@@ -231,57 +236,6 @@ def select_genes(available: list[str], requested: list[str] | None) -> list[str]
         return available
     requested_keys = {gene.casefold() for gene in requested}
     return [gene for gene in available if gene.casefold() in requested_keys]
-
-
-def infer_dataset(source_input: str, summary_path: Path, species: str) -> str:
-    """Infer a useful dataset label from existing naming conventions."""
-    text = f'{source_input} {summary_path}'.lower()
-    if 'imputed' in text or re.search(r'(^|[/_])im([/_]|$)', text):
-        return 'MERFISH imputed'
-    if 'regular_exp' in text or 'merfish' in text:
-        return 'MERFISH regular'
-    if 'whb' in text:
-        return 'human snRNA-seq'
-    if 'wmb' in text:
-        return 'mouse scRNA-seq'
-    if species:
-        return f'{species} ABCA'
-    return 'ABCA'
-
-
-def infer_region(source_input: str) -> str:
-    """Infer region from region-filtered ABCA input filenames."""
-    stem = Path(str(source_input)).stem
-
-    match = re.search(r'__Human_(.+)$', stem, flags=re.IGNORECASE)
-    if match:
-        return f"Human {match.group(1).replace('_', ' ')}"
-
-    if '__' in stem:
-        suffix = stem.rsplit('__', maxsplit=1)[1]
-        if suffix:
-            return suffix.replace('_', ' ')
-
-    match = re.search(r'_filtered_(.+)$', stem, flags=re.IGNORECASE)
-    if match:
-        return match.group(1).replace('_', ' ')
-
-    return 'brain-wide'
-
-
-def infer_anatomical_level(summary_path: Path, region: str) -> str:
-    """Infer MERFISH parcellation granularity or scRNA-seq region scope."""
-    text = str(summary_path).lower()
-    for level in (
-        'parcellation_substructure',
-        'parcellation_structure',
-        'parcellation_division',
-    ):
-        if level in text:
-            return level
-    if region == 'brain-wide':
-        return 'brain-wide'
-    return 'region_of_interest'
 
 
 def first_nonmissing(series: pd.Series, default=''):
@@ -366,9 +320,6 @@ def process_summary_file(
 
         source_input = str(source_input)
         species = str(species)
-        region = infer_region(source_input)
-        dataset = infer_dataset(source_input, summary_path, species)
-        anatomical_level = infer_anatomical_level(summary_path, region)
         screen_id = '::'.join(
             (
                 str(summary_path.resolve()),
@@ -395,14 +346,10 @@ def process_summary_file(
 
         common = {
             '_screen_id': screen_id,
-            'summary_path': str(summary_path.resolve()),
             'summary_file': summary_path.name,
             'source_input': source_input,
-            'dataset': dataset,
             'species': species,
             'threshold': threshold,
-            'anatomical_level': anatomical_level,
-            'region': region,
             'level': level,
         }
 
@@ -506,7 +453,7 @@ def rank_long_table(long_df: pd.DataFrame, top: int) -> pd.DataFrame:
         ),
     )
     return ranked.sort_values(
-        ['dataset', 'anatomical_level', 'region', 'level', 'gene', 'expression_rank'],
+        ['species', 'threshold', 'level', 'source_input', 'gene', 'expression_rank'],
         kind='stable',
     ).reset_index(drop=True)
 
@@ -514,20 +461,16 @@ def rank_long_table(long_df: pd.DataFrame, top: int) -> pd.DataFrame:
 def build_panel_table(
     long_df: pd.DataFrame,
     top: int,
-    expression_aggregate: str,
+    expression_rank_mode: str,
 ) -> pd.DataFrame:
     """Create one multi-gene ranking row per eligible cell type."""
     rows = []
     group_columns = ['_screen_id', 'cell_type']
     metadata_columns = [
-        'summary_path',
         'summary_file',
         'source_input',
-        'dataset',
         'species',
         'threshold',
-        'anatomical_level',
-        'region',
         'level',
         'cell_type_color',
         'source_path_count',
@@ -550,7 +493,7 @@ def build_panel_table(
             highest_gene = ''
             highest_mean = np.nan
 
-        if expression_aggregate == 'max':
+        if expression_rank_mode == 'max':
             panel_score = numeric_expression.max()
         else:
             panel_score = numeric_expression.mean()
@@ -568,7 +511,7 @@ def build_panel_table(
                 'genes_screened': group['gene'].nunique(),
                 'genes': ';'.join(dict.fromkeys(group['gene'].astype(str))),
                 'genes_expressed': int(group['percent_expression'].gt(0).sum()),
-                'expression_aggregate': expression_aggregate,
+                'expression_rank_mode': expression_rank_mode,
                 'panel_expression_score': panel_score,
                 'highest_expression_gene': highest_gene,
                 'highest_mean_expression': highest_mean,
@@ -605,7 +548,7 @@ def build_panel_table(
         ),
     )
     return panels.sort_values(
-        ['dataset', 'anatomical_level', 'region', 'level', 'panel_expression_rank'],
+        ['species', 'threshold', 'level', 'source_input', 'panel_expression_rank'],
         kind='stable',
     ).reset_index(drop=True)
 
@@ -675,7 +618,7 @@ def build_input_table(
         )
 
     return inputs.sort_values(
-        ['dataset', 'anatomical_level', 'region', 'level'],
+        ['species', 'threshold', 'level', 'source_input'],
         kind='stable',
     ).reset_index(drop=True)
 
@@ -690,16 +633,14 @@ def joined_unique(values: pd.Series) -> str:
     return ';'.join(sorted(unique, key=natural_sort_text))
 
 
-def build_cross_region_table(
+def build_recurrence_table(
     long_df: pd.DataFrame,
     evaluation_records: list[dict],
 ) -> pd.DataFrame:
-    """Aggregate candidate strength and recurrence across regions."""
+    """Aggregate candidate strength and recurrence across screened inputs."""
     group_columns = [
-        'dataset',
         'species',
         'threshold',
-        'anatomical_level',
         'level',
         'gene',
         'cell_type',
@@ -717,20 +658,13 @@ def build_cross_region_table(
         row.update(
             {
                 'inputs_passing_filters': group['_screen_id'].nunique(),
-                'regions_passing_filters': group['region'].nunique(),
                 'inputs_top_expression': top_expression['_screen_id'].nunique(),
-                'regions_top_expression': top_expression['region'].nunique(),
                 'inputs_top_abundance': top_abundance['_screen_id'].nunique(),
-                'regions_top_abundance': top_abundance['region'].nunique(),
                 'inputs_top_expressing_cell_share': top_share[
                     '_screen_id'
                 ].nunique(),
-                'regions_top_expressing_cell_share': top_share[
-                    'region'
-                ].nunique(),
                 'inputs_selected': selected['_screen_id'].nunique(),
-                'regions_selected': selected['region'].nunique(),
-                'selected_regions': joined_unique(selected['region']),
+                'selected_inputs': joined_unique(selected['source_input']),
                 'median_mean_expression': group['mean_expression'].median(),
                 'max_mean_expression': group['mean_expression'].max(),
                 'median_percent_expression': group['percent_expression'].median(),
@@ -747,14 +681,12 @@ def build_cross_region_table(
         )
         rows.append(row)
 
-    cross_region = pd.DataFrame(rows)
+    recurrence = pd.DataFrame(rows)
 
     evaluations = pd.DataFrame(evaluation_records)
     evaluation_columns = [
-        'dataset',
         'species',
         'threshold',
-        'anatomical_level',
         'level',
         'gene',
     ]
@@ -762,31 +694,30 @@ def build_cross_region_table(
         evaluation_columns, sort=False, dropna=False
     ).agg(
         inputs_evaluated=('_screen_id', 'nunique'),
-        regions_evaluated=('region', 'nunique'),
     ).reset_index()
 
-    cross_region = cross_region.merge(
+    recurrence = recurrence.merge(
         evaluated,
         on=evaluation_columns,
         how='left',
         validate='many_to_one',
     )
-    cross_region['fraction_regions_selected'] = (
-        cross_region['regions_selected']
-        / cross_region['regions_evaluated'].replace(0, np.nan)
+    recurrence['fraction_inputs_selected'] = (
+        recurrence['inputs_selected']
+        / recurrence['inputs_evaluated'].replace(0, np.nan)
     )
-    cross_region['fraction_regions_top_expression'] = (
-        cross_region['regions_top_expression']
-        / cross_region['regions_evaluated'].replace(0, np.nan)
+    recurrence['fraction_inputs_top_expression'] = (
+        recurrence['inputs_top_expression']
+        / recurrence['inputs_evaluated'].replace(0, np.nan)
     )
 
-    return cross_region.sort_values(
+    return recurrence.sort_values(
         [
-            'dataset',
-            'anatomical_level',
+            'species',
+            'threshold',
             'level',
             'gene',
-            'regions_selected',
+            'inputs_selected',
             'max_mean_expression',
         ],
         ascending=[True, True, True, True, False, False],
@@ -821,7 +752,7 @@ def write_outputs(
     long_df: pd.DataFrame,
     panels: pd.DataFrame,
     inputs: pd.DataFrame,
-    cross_region: pd.DataFrame,
+    recurrence: pd.DataFrame,
 ) -> list[Path]:
     """Write all screening tables and return their paths."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -830,7 +761,7 @@ def write_outputs(
         'candidates': long_df[long_df['selected']].copy(),
         'panels': panels,
         'inputs': inputs,
-        'cross_region': cross_region,
+        'recurrence': recurrence,
     }
 
     saved_paths = []
@@ -922,10 +853,10 @@ def main():
     panels = build_panel_table(
         long_df,
         top=args.top,
-        expression_aggregate=args.expression_aggregate,
+        expression_rank_mode=args.expression_rank_mode,
     )
     inputs = build_input_table(input_records, panels)
-    cross_region = build_cross_region_table(long_df, evaluation_records)
+    recurrence = build_recurrence_table(long_df, evaluation_records)
 
     output_dir = (
         Path(args.output)
@@ -943,7 +874,7 @@ def main():
         long_df=long_df,
         panels=panels,
         inputs=inputs,
-        cross_region=cross_region,
+        recurrence=recurrence,
     )
 
     print(f'\nScreened {len(summary_paths)} expression-summary CSV(s).')
