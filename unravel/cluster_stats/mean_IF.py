@@ -69,7 +69,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional args')
     opts.add_argument(
         '-ip', '--input_pattern',
-        help="Glob pattern(s) for NIfTI images to process. Default: '*.nii.gz'",
+        help="Glob pattern(s) for NIfTI images to quantify. Default: '*.nii.gz'",
         default='*.nii.gz',
         nargs='*',
         action=SM,
