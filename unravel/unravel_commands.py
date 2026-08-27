@@ -281,14 +281,14 @@ def main():
                 "module": "unravel.cluster_stats.fdr_range",
                 "description": "Get FDR q value range yielding clusters.",
                 "common": True,
-                "alias": "fr"
+                "alias": "cstats_fr"
 
             },
             "cstats_fdr": {
                 "module": "unravel.cluster_stats.fdr",
                 "description": "FDR-correct 1-p value map --> cluster map.",
                 "common": True,
-                "alias": "f"
+                "alias": "cstats_f"
             },
             "cstats_fstat_sig_vx_mask": {
                 "module": "unravel.cluster_stats.fstat_sig_vx_mask",
