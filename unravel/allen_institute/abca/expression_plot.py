@@ -13,28 +13,21 @@ Plots:
 
 The script auto-detects genes from columns ending in ``_mean_expression``.
 
-# Top 20 by expression, ordered by expression
---rank-by mean
-    
-# Top 20 by expression, then reorder those 20 by prevalence
---rank-by mean --sort-by cells
-
-# Rank by a specific gene while still displaying all genes
---rank-gene <gene_name>
-
-# Rank by cell prevalence
---rank-by cells
-
-# Rank by the arithmetic mean of expression across all genes
---expression-rank-mode mean
-
 Usage (sorting by mean expression by default):
 ----------------------------------------------
-    exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv
+    exp_plot -i expression_summary_thr3/<file>.csv
 
-Usage for selected cell types and genes (ranked by mean expression and sorted by cell count):
+Usage for selected genes (ranked by mean expression and sorted by cell count):
 ---------------------------------------------------------------------------------------------
-    exp_plot -i path/expression_summary_thr3/5HTR__Human_NAC__supercluster.csv -ct "Medium spiny neuron" "Eccentric medium spiny neuron" -g DRD1 DRD2 --sort-by cells
+    exp_plot -i expression_summary_thr3/<file>.csv -g DRD1 DRD2 --sort-by cells
+
+Usage to rank by cell prevalence:
+---------------------------------
+    exp_plot -i expression_summary_thr3/<file>.csv --rank-by cells
+
+Usage to rank by a specific gene and sort by cell count:
+--------------------------------------------------------
+    exp_plot -i expression_summary_thr3/<file>.csv --rank-gene HTR2A --sort-by cells
 
 Usage for parallel processing:
 ------------------------------
