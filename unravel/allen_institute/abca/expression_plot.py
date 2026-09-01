@@ -228,7 +228,10 @@ def parse_args():
     )
     output.add_argument(
         '-op', '--output-prefix',
-        help='Exact output file prefix. Default: input stem, with selected genes appended.',
+        help=(
+            'Exact output filename prefix before the extension. When provided, gene names are not appended. '
+            'Default: input stem with selected genes appended.'
+        ),
         default=None,
         action=SM,
     )
