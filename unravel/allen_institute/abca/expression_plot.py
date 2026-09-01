@@ -575,12 +575,22 @@ def default_title(
 
         region = region.replace('_', ' ')
 
-    if 'level' in df.columns and not df['level'].dropna().empty:
-        level = str(
-            df['level'].dropna().iloc[0]
-        ).replace('_', ' ')
+    LEVEL_TITLE_LABELS = {
+        'neurotransmitter': 'neurotransmitter classes',
+        'class': 'cell classes',
+        'subclass': 'cell subclasses',
+        'supercluster': 'cell superclusters',
+        'cluster': 'cell clusters',
+        'subcluster': 'cell subclusters',
+        'supertype': 'cell supertypes',
+    }
 
-    return f'{region} — {level} expression'
+    level_label = LEVEL_TITLE_LABELS.get(
+        level,
+        f'{level.replace("_", " ")} groups',
+    )
+
+    return f'{region} — Gene expression across {level_label}'
 
 
 def automatic_figure_size(
