@@ -58,14 +58,22 @@ def concat_csvs(input_patterns, axis=1, output=None, verbose=False):
     if verbose:
         print(f"\nInput CSV file paths: {paths}\n")
 
-    # Load all CSV files into DataFrames
+    # Load and concatenate the CSV files.
     if axis == 1:
         dfs = [pd.read_csv(path, index_col=0) for path in paths]
+        df_concat = pd.concat(dfs, axis=1)
     else:
         dfs = [pd.read_csv(path) for path in paths]
+        df_concat = pd.concat(dfs, axis=0, ignore_index=True)
 
-    # Concatenate DataFrames along the specified axis
-    df_concat = pd.concat(dfs, axis=axis)
+    # Save the concatenated DataFrame.
+    output_path = Path(output) if output else Path("concatenated_output.csv")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    df_concat.to_csv(
+        output_path,
+        index=(axis == 1),
+    )
 
     if verbose:
         print(f"\nConcatenated DataFrame: {df_concat}\n")
