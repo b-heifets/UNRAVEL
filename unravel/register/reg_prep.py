@@ -132,6 +132,8 @@ def main():
             # Prepare the autofluo image for registration
             img_resampled = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
 
+            del img  # Free memory
+
             # Save the prepped autofluo image as tif series (for ``seg_brain_mask``)
             tif_dir = Path(str(output).replace('.nii.gz', '_tifs'))
             tif_dir.mkdir(parents=True, exist_ok=True)
