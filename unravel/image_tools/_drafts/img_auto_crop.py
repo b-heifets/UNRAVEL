@@ -21,6 +21,12 @@ Notes:
     - No resampling, full-volume threshold mask, or full-volume dtype conversion.
       The complete selected channel must still fit in RAM: load_3D_img() does
       not read only the CZI subset. This does not fix CZI loading errors.
+    - MIPs are computed one XY plane at a time. Each plane is copied into a
+      reusable contiguous buffer before reduction. Additional projection memory
+      is the three MIPs plus one XY plane, not another copy of the whole volume.
+      This avoids whole-volume reductions but cannot repair an invalid CZI buffer.
+    - --trace_mips prints the Z index and operation before every data access or
+      reduction. Fault-handler tracebacks are enabled for native-code crashes.
     - Arrays and bbox files use ZYX order: zmin:zmax, ymin:ymax, xmin:xmax.
       mip_z: rows Y / columns X; mip_y: Z / X; mip_x: Z / Y.
     - With no threshold or box, only MIPs and metadata are saved. Choose a
@@ -48,8 +54,11 @@ Usage:
 The example threshold is illustrative, not a recommended value for your data.
 """
 
+import faulthandler
 import json
+import sys
 import time
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -97,6 +106,8 @@ def parse_args():
                       help='Save MIPs, masks, boxes, and previews without exporting the TIFF series.')
     opts.add_argument('-w', '--workers', default=4, type=int, action=SM,
                       help='TIFF-writing workers. Default: 4. Use 1 for sequential writes.')
+    opts.add_argument('--trace_mips', action='store_true',
+                      help='Debug native crashes: print each Z index and MIP operation to stderr.')
     opts.add_argument('-f', '--force', action='store_true',
                       help='Replace output, keeping the previous directory as a timestamped backup.')
 
@@ -121,12 +132,44 @@ def parse_args():
 
 
 @print_func_name_args_times()
-def make_mips(img):
-    """Exact NumPy reductions of a ZYX volume; only 2D outputs are allocated."""
+def make_mips(img, verbose=False, trace=False):
+    """Exact MIPs using one contiguous XY buffer and in-place Z accumulation.
+
+    A plane copy separates reads of the CZI-owned buffer from NumPy reductions.
+    A crash during that copy still needs investigation of the reader/native
+    environment; splitting the reduction cannot validate or repair its memory.
+    """
     if img.ndim != 3 or 0 in img.shape or img.dtype.kind not in 'buif':
         raise ValueError('Input must be a nonempty, real-valued 3D ndarray.')
-    mips = {name: np.max(img, axis=axis) for axis, name in enumerate('zyx')}
-    if any(not np.isfinite(mip).all() for mip in mips.values()):
+    nz, ny, nx = img.shape
+    mips = {
+        'z': np.empty((ny, nx), dtype=img.dtype),
+        'y': np.empty((nz, nx), dtype=img.dtype),
+        'x': np.empty((nz, ny), dtype=img.dtype),
+    }
+    plane = np.empty((ny, nx), dtype=img.dtype, order='C')
+
+    def report(operation):
+        if trace:
+            # Explicit flush keeps the last operation available even after SIGSEGV.
+            sys.stderr.write(f'MIP z={z}/{nz - 1}: {operation}\n')
+            sys.stderr.flush()
+
+    for z in range(nz):
+        report('copy input XY plane into contiguous buffer')
+        np.copyto(plane, img[z], casting='no')
+        report('update MIP Z')
+        if z == 0:
+            np.copyto(mips['z'], plane, casting='no')
+        else:
+            np.maximum(mips['z'], plane, out=mips['z'])
+        report('reduce Y for MIP Y')
+        np.max(plane, axis=0, out=mips['y'][z])
+        report('reduce X for MIP X')
+        np.max(plane, axis=1, out=mips['x'][z])
+        if verbose and not trace and (z == 0 or (z + 1) % max(1, nz // 10) == 0 or z + 1 == nz):
+            print(f'    MIPs: {z + 1}/{nz} XY planes processed', flush=True)
+    if img.dtype.kind == 'f' and any(not np.isfinite(mip).all() for mip in mips.values()):
         raise ValueError('MIPs contain NaN or infinity; check the input image.')
     return mips
 
@@ -262,14 +305,20 @@ def process_sample(sample_path, args):
             return_res=True, verbose=args.verbose)
     except SystemExit as exc:
         raise RuntimeError('load_3D_img() exited before returning an image; see its error above.') from exc
-    mips = make_mips(img)
-    print(f'    Loaded ZYX {img.shape}, {img.dtype}; image array {img.nbytes / 2**30:.2f} GiB')
+    # Print only array metadata here, before any full-image pixel access.
+    print(f'    Loaded ZYX {img.shape}, {img.dtype}; image array {img.nbytes / 2**30:.2f} GiB', flush=True)
+    if args.verbose:
+        print(f'    Strides (bytes): {img.strides}; C-contiguous: {img.flags.c_contiguous}; '
+              f'aligned: {img.flags.aligned}; owns data: {img.flags.owndata}; '
+              f'base type: {type(img.base).__name__}', flush=True)
+    mips = make_mips(img, verbose=args.verbose, trace=args.trace_mips)
 
     metadata = {
         'source': str(img_path), 'channel': args.channel, 'axis_order': 'zyx',
         'shape_zyx': list(img.shape), 'dtype': str(img.dtype),
         'voxel_size_um_zyx': [float(v) if v is not None else None for v in (z_res, xy_res, xy_res)],
         'bounds_convention': 'zero-based, stop-exclusive',
+        'mip_method': 'contiguous XY plane copies and in-place Z maximum',
         'mip_axes_rows_columns': {'z': ['y', 'x'], 'y': ['z', 'x'], 'x': ['z', 'y']},
         'thresholds_zyx': args.threshold, 'keep_all': args.keep_all,
         'status': 'mips_only', 'tiff_series_saved': False,
@@ -328,10 +377,18 @@ def process_sample(sample_path, args):
 
 @log_command
 def main():
+    faulthandler.enable(all_threads=True)
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
+    if args.verbose:
+        print(f'    Python {sys.version.split()[0]}: {sys.executable}', flush=True)
+        for package in ('numpy', 'scipy', 'aicspylibczi'):
+            try:
+                print(f'    {package}: {version(package)}', flush=True)
+            except PackageNotFoundError:
+                print(f'    {package}: package version unavailable', flush=True)
     sample_paths = list(dict.fromkeys(get_samples(args.dirs, args.pattern, args.verbose)))
     if not sample_paths:
         raise ValueError('No sample directories found.')
