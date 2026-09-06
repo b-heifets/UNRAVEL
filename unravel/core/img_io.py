@@ -169,49 +169,204 @@ def extract_resolution(img_path):
             z_res = res[0]
     return xy_res, z_res
 
+# @print_func_name_args_times()
+# def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
+#     """
+#     Load a .czi image and return the ndarray.
+
+#     Parameters
+#     ----------
+#     czi_path : str
+#         The path to the .czi file.
+#     channel : int, optional
+#         The channel to load. Default is 0.
+#     desired_axis_order : str, optional
+#         The desired order of the image axes. Default is 'xyz'.
+#     return_res : bool, optional
+#         Whether to return resolutions. Default is False.
+#     return_metadata : bool, optional
+#         Whether to return metadata. Default is False.
+#     save_metadata : str, optional
+#         Path to save metadata file. Default is None.
+#     xy_res : float, optional
+#         The resolution in the xy-plane.
+#     z_res : float, optional
+#         The resolution in the z-plane.
+
+#     Returns
+#     -------
+#     ndarray
+#         The loaded 3D image array.
+#     tuple, optional
+#         If return_res is True, returns (ndarray, xy_res, z_res).
+#     tuple, optional
+#         If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+#     """
+#     czi = CziFile(czi_path)
+#     ndarray = np.squeeze(czi.read_image(C=channel)[0])
+
+#     if ndarray.ndim == 4:
+#         print(f"\n[red1].czi channel {channel} has 4 axes. Please stitch tiles from {Path(czi_path).name}\n")
+#         import sys ; sys.exit()
+
+#     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
+#     xy_res, z_res, x_dim, y_dim, z_dim = metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
+#     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
+
+def _czi_layout(reader, channel):
+    """Get full-resolution geometry from subblock headers, without pixel reads."""
+    if not isinstance(channel, (int, np.integer)) or channel < 0:
+        raise ValueError('CZI channel must be a nonnegative integer.')
+    if not hasattr(reader, 'enumerate_subblocks_subset'):
+        raise RuntimeError('This CZI loader requires pylibCZIrw 6.1.0 or newer.')
+
+    records = []
+
+    def collect(index, info):
+        records.append((info.coordinate.to_dict(), str(info.pixelType).split('.')[-1]))
+        return True
+
+    reader.enumerate_subblocks_subset(collect, only_layer0=True)
+    if not records:
+        raise ValueError('CZI contains no full-resolution image subblocks.')
+    axes = set().union(*(coords for coords, _ in records))
+    values = {axis: {coords.get(axis, 0) for coords, _ in records} for axis in axes}
+    # The existing API selects a channel, but has no scene/time/view selectors.
+    ambiguous = {axis: sorted(vals) for axis, vals in values.items()
+                 if axis not in ('C', 'Z') and len(vals) > 1}
+    if ambiguous:
+        raise ValueError(f'CZI is not a single 3D volume per channel: {ambiguous}. '
+                         'Export the desired scene/time/view separately.')
+    channels = sorted(values.get('C', {0}))
+    if channel not in channels:
+        raise ValueError(f'CZI channel {channel} is absent; available channels: {channels}.')
+    selected = [(coords, kind) for coords, kind in records if coords.get('C', 0) == channel]
+    z_indices = sorted({coords.get('Z', 0) for coords, _ in selected})
+    z_start, z_stop = z_indices[0], z_indices[-1] + 1
+    if len(z_indices) != z_stop - z_start:
+        raise ValueError('Selected CZI channel has missing Z planes; refusing to collapse the Z axis.')
+    pixel_types = {kind for _, kind in selected}
+    supported = {'Gray8': 'uint8', 'Gray16': 'uint16', 'Gray32Float': 'float32'}
+    if len(pixel_types) != 1 or not pixel_types.issubset(supported):
+        raise ValueError(f'Expected one grayscale pixel type per channel; got {sorted(pixel_types)}.')
+    pixel_type = next(iter(pixel_types))
+
+    # Use one layer-0 rectangle across all Z planes and channels. This preserves
+    # tile placement and channel alignment, including nonzero/negative XY origins.
+    rect = reader.total_bounding_rectangle_no_pyramid
+    if rect.w <= 0 or rect.h <= 0:
+        raise ValueError(f'Invalid full-resolution CZI rectangle: {rect}.')
+    coords = selected[0][0]
+    return {
+        'shape_zyx': (len(z_indices), rect.h, rect.w),
+        'roi_xywh': (rect.x, rect.y, rect.w, rect.h),
+        'z_bounds': (z_start, z_stop),
+        'scene': coords.get('S'),
+        'plane': {axis: int(value) for axis, value in coords.items() if axis != 'S'},
+        'pixel_type': pixel_type,
+        'dtype': supported[pixel_type],
+        'channel': int(channel),
+        'full_resolution_subblocks': len(selected),
+    }
+
+
+def inspect_czi(czi_path, channel=0):
+    """Return CZI geometry without decoding pixels or allocating the 3D image.
+
+    ``shape_zyx`` is the rendered layer-0 shape. ``xml_size_xyz`` contains the
+    descriptive XML sizes for comparison; it is not used to reshape pixels.
+    Requires pylibCZIrw 6.1.0 or newer.
+    """
+    from pylibCZIrw import czi as czi_rw
+
+    with czi_rw.open_czi(str(czi_path)) as reader:
+        layout = _czi_layout(reader, channel)
+        root = ET.fromstring(reader.raw_metadata)
+        layout['xml_size_xyz'] = tuple(
+            root.findtext(f'.//Information/Image/Size{axis}') for axis in 'XYZ')
+    return layout
+
+
 @print_func_name_args_times()
-def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
+def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None, verbose=False):
+    """Load a grayscale CZI channel through fixed-rectangle, full-resolution planes.
+
+    Requires ``python -m pip install pylibCZIrw==6.1.0``. This replaces the
+    aicspylibczi bulk ``read_image`` path. Each plane is rendered by the ZEISS
+    reader at zoom=1.0, checked, and copied into a NumPy-owned ZYX volume.
+    The complete channel still has to fit in RAM, plus one rendered XY plane.
+
+    The rectangle is shared across all channels and Z planes, using layer-0
+    bounds to exclude pyramid padding. Missing XY tile coverage is black.
+    Multiple scenes/timepoints/views and missing Z planes raise ValueError.
+    Singleton spatial axes are retained; no unrestricted squeeze or reshape.
+
+    Return conventions match the original function: image alone, image plus
+    (xy_res, z_res), or image plus (xy_res, z_res, x_dim, y_dim, z_dim).
+    Resolutions are micrometers. Dimension metadata always uses actual XYZ
+    sizes, regardless of the requested ndarray axis order.
     """
-    Load a .czi image and return the ndarray.
+    if desired_axis_order not in ('xyz', 'zyx'):
+        raise ValueError('desired_axis_order must be "xyz" or "zyx".')
+    try:
+        from pylibCZIrw import czi as czi_rw
+    except ImportError as exc:
+        raise ImportError('CZI loading now requires pylibCZIrw. Install in this Python '
+                          'environment: python -m pip install pylibCZIrw==6.1.0') from exc
 
-    Parameters
-    ----------
-    czi_path : str
-        The path to the .czi file.
-    channel : int, optional
-        The channel to load. Default is 0.
-    desired_axis_order : str, optional
-        The desired order of the image axes. Default is 'xyz'.
-    return_res : bool, optional
-        Whether to return resolutions. Default is False.
-    return_metadata : bool, optional
-        Whether to return metadata. Default is False.
-    save_metadata : str, optional
-        Path to save metadata file. Default is None.
-    xy_res : float, optional
-        The resolution in the xy-plane.
-    z_res : float, optional
-        The resolution in the z-plane.
+    with czi_rw.open_czi(str(czi_path)) as reader:
+        layout = _czi_layout(reader, channel)
+        z_dim, y_dim, x_dim = layout['shape_zyx']
+        dtype = np.dtype(layout['dtype'])
+        if verbose:
+            gib = z_dim * y_dim * x_dim * dtype.itemsize / 2**30
+            print(f'    CZI layer-0 ZYX: {(z_dim, y_dim, x_dim)}; {dtype}; {gib:.2f} GiB', flush=True)
+            print(f'    Fixed ROI (x, y, width, height): {layout["roi_xywh"]}; '
+                  f'Z bounds: {layout["z_bounds"]}; channel: {channel}', flush=True)
 
-    Returns
-    -------
-    ndarray
-        The loaded 3D image array.
-    tuple, optional
-        If return_res is True, returns (ndarray, xy_res, z_res).
-    tuple, optional
-        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
-    """
-    czi = CziFile(czi_path)
-    ndarray = np.squeeze(czi.read_image(C=channel)[0])
+        if return_res or return_metadata or save_metadata:
+            root = ET.fromstring(reader.raw_metadata)
 
-    if ndarray.ndim == 4:
-        print(f"\n[red1].czi channel {channel} has 4 axes. Please stitch tiles from {Path(czi_path).name}\n")
-        import sys ; sys.exit()
+            def resolution_um(axis):
+                value = root.findtext(f".//Scaling/Items/Distance[@Id='{axis}']/Value")
+                if value is None:
+                    return None
+                value = float(value) * 1e6
+                if not np.isfinite(value) or value <= 0:
+                    return None
+                return value
 
-    ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-    xy_res, z_res, x_dim, y_dim, z_dim = metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
+            if xy_res is None:
+                xy_res = resolution_um('X')
+                y_res = resolution_um('Y')
+                if xy_res is not None and y_res is not None and not np.isclose(xy_res, y_res):
+                    raise ValueError(f'CZI has unequal X/Y voxel sizes ({xy_res}, {y_res}) um; '
+                                     'the existing xy_res API cannot represent both.')
+            if z_res is None:
+                z_res = resolution_um('Z')
+
+        volume = np.empty((z_dim, y_dim, x_dim), dtype=dtype)
+        plane_coords = dict(layout['plane'])
+        plane_coords['C'] = int(channel)
+        for out_z, source_z in enumerate(range(*layout['z_bounds'])):
+            plane_coords['Z'] = source_z
+            plane = reader.read(
+                roi=layout['roi_xywh'], plane=plane_coords, scene=layout['scene'],
+                zoom=1.0, pixel_type=layout['pixel_type'], background_pixel=(0.0, 0.0, 0.0))
+            if plane.shape != (y_dim, x_dim, 1) or plane.dtype != dtype:
+                raise ValueError(f'CZI Z={source_z}: expected {(y_dim, x_dim, 1)} {dtype}; '
+                                 f'got {plane.shape} {plane.dtype}.')
+            np.copyto(volume[out_z], plane[..., 0], casting='no')
+            del plane
+            if verbose and (out_z == 0 or (out_z + 1) % max(1, z_dim // 10) == 0 or out_z + 1 == z_dim):
+                print(f'    CZI planes: {out_z + 1}/{z_dim}', flush=True)
+
+    ndarray = volume.transpose(2, 1, 0) if desired_axis_order == 'xyz' else volume
+    if save_metadata:
+        save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata=save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
+
+
 
 def load_single_tif(tif_file):
     """Load a single .tif file using OpenCV and return the ndarray."""
@@ -742,7 +897,7 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
     # Load image based on file type and optionally return resolutions and dimensions
     try:
         if str(img_path).endswith('.czi'):
-            return load_czi(img_path, channel=channel, desired_axis_order=desired_axis_order, return_res=return_res, return_metadata=return_metadata, save_metadata=save_metadata, xy_res=xy_res, z_res=z_res)
+            return load_czi(img_path, channel=channel, desired_axis_order=desired_axis_order, return_res=return_res, return_metadata=return_metadata, save_metadata=save_metadata, xy_res=xy_res, z_res=z_res, verbose=verbose)
         elif str(img_path).endswith('.ome.tif') or str(img_path).endswith('.tif'):
             return load_3D_tif(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
         elif str(img_path).endswith('.nii.gz'):
