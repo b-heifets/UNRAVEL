@@ -169,49 +169,6 @@ def extract_resolution(img_path):
             z_res = res[0]
     return xy_res, z_res
 
-# @print_func_name_args_times()
-# def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
-#     """
-#     Load a .czi image and return the ndarray.
-
-#     Parameters
-#     ----------
-#     czi_path : str
-#         The path to the .czi file.
-#     channel : int, optional
-#         The channel to load. Default is 0.
-#     desired_axis_order : str, optional
-#         The desired order of the image axes. Default is 'xyz'.
-#     return_res : bool, optional
-#         Whether to return resolutions. Default is False.
-#     return_metadata : bool, optional
-#         Whether to return metadata. Default is False.
-#     save_metadata : str, optional
-#         Path to save metadata file. Default is None.
-#     xy_res : float, optional
-#         The resolution in the xy-plane.
-#     z_res : float, optional
-#         The resolution in the z-plane.
-
-#     Returns
-#     -------
-#     ndarray
-#         The loaded 3D image array.
-#     tuple, optional
-#         If return_res is True, returns (ndarray, xy_res, z_res).
-#     tuple, optional
-#         If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
-#     """
-#     czi = CziFile(czi_path)
-#     ndarray = np.squeeze(czi.read_image(C=channel)[0])
-
-#     if ndarray.ndim == 4:
-#         print(f"\n[red1].czi channel {channel} has 4 axes. Please stitch tiles from {Path(czi_path).name}\n")
-#         import sys ; sys.exit()
-
-#     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-#     xy_res, z_res, x_dim, y_dim, z_dim = metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
-#     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
 def _czi_layout(reader, channel):
     """Get full-resolution geometry from subblock headers, without pixel reads."""
