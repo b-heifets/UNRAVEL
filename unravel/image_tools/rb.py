@@ -3,6 +3,14 @@
 """
 Use ``img_rb`` (``rb``) from UNRAVEL to perform rolling ball background subtraction on a 3D image or a test 2D TIFF image.
 
+Input:
+    - 3D mode: .czi, .ome.tif, .tif, .nii.gz, .h5, or .zarr
+    - 2D mode: single 2D .tif
+
+Output:
+    - 3D mode: background-subtracted image saved as a TIFF series in the specified output directory
+    - 2D mode: background-subtracted image saved as a single TIFF file (default: input filename with '_rb' appended)
+
 Note:
     - Radius for rolling ball subtraction should be ~ 1.0 to 2.0 times the size of the features of interest
     - Larger radii will remove more background, but may also remove some of the features of interest
@@ -34,7 +42,7 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help="Path to full res image (relative to ./sample??/ [or cwd w/ -t]) or glob pattern (e.g., '*.czi'). First match used.", required=True, action=SM)
     reqs.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels.', required=True, type=int, action=SM)
-    reqs.add_argument('-o', '--output', help='Output filename (relative to ./sample??/) or, if -t, path to save the output TIFF file.', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='Output dir (relative to ./sample??/) or, if -t, path to save the output TIFF file.', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-t', '--test', help='Run a test with a 2D TIFF image. Default: False', action='store_true', default=False)
