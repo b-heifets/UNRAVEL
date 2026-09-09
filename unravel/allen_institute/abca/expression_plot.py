@@ -121,7 +121,7 @@ def parse_args():
         action=SM,
     )
     opts.add_argument(
-        '--contains',
+        '-c', '--contains',
         help='Keep rows whose cell_type contains any supplied text.',
         nargs='*',
         default=None,
@@ -135,28 +135,28 @@ def parse_args():
         action=SM,
     )
     opts.add_argument(
-        '--min-cells',
+        '-nc', '--min-cells',
         help='Minimum cell_count required. Default: 20',
         default=20,
         type=int,
         action=SM,
     )
     opts.add_argument(
-        '--min-percent-cells',
+        '-mpc', '--min-percent-cells',
         help='Minimum percent_cells required. Default: 0.1',
         default=0.1,
         type=float,
         action=SM,
     )
     opts.add_argument(
-        '--rank-by',
+        '-rb', '--rank-by',
         help='Metric used to choose top cell types. Default: mean',
         default='mean',
         choices=('mean', 'percent', 'cells'),
         action=SM,
     )
     opts.add_argument(
-        '--sort-by',
+        '-sb', '--sort-by',
         help='Final row order. Default: rank',
         default='rank',
         choices=('rank', 'name', 'cells', 'input'),
@@ -172,7 +172,7 @@ def parse_args():
 
     appearance = parser.add_argument_group('Appearance')
     appearance.add_argument(
-        '--dot-style',
+        '-ds', '--dot-style',
         help=(
             'Dot-plot symbols: size (variable area), pie (colored slice), or ring '
             '(colored center with percentage arc). Default: size. '
@@ -183,14 +183,14 @@ def parse_args():
         action=SM,
     )
     appearance.add_argument(
-        '--mean-max',
+        '-mm', '--mean-max',
         help='Maximum mean-expression color value. Default: data maximum, with a minimum of 3',
         default=None,
         type=float,
         action=SM,
     )
     appearance.add_argument(
-        '--percent-max',
+        '-pm', '--percent-max',
         help=(
             'Maximum percent-expression heatmap/color or variable-dot-size value. '
             'Pie and ring percentages always use 0-100. Default: 100'
@@ -200,14 +200,14 @@ def parse_args():
         action=SM,
     )
     appearance.add_argument(
-        '--size-min',
+        '-sm', '--size-min',
         help='Minimum dot area for --dot-style size; ignored for pie/ring. Default: 12',
         default=12,
         type=float,
         action=SM,
     )
     appearance.add_argument(
-        '--size-max',
+        '-sx', '--size-max',
         help=(
             'Maximum dot size in points squared; fixed size for pie/ring. '
             'Outer diameter = sqrt(size-max) points. Default: 240'
@@ -217,40 +217,40 @@ def parse_args():
         action=SM,
     )
     appearance.add_argument(
-        '--mean-cmap',
+        '-mc', '--mean-cmap',
         help='Matplotlib colormap for mean expression. Default: magma_r',
         default='magma_r',
         action=SM,
     )
 
     appearance.add_argument(
-        '--percent-cmap',
+        '-pc', '--percent-cmap',
         help='Matplotlib colormap for percent expression. Default: viridis_r',
         default='viridis_r',
         action=SM,
     )
     appearance.add_argument(
-        '--annotate',
+        '-an', '--annotate',
         help='Write values inside heatmap cells. Default: False',
         action='store_true',
         default=False,
     )
     appearance.add_argument(
-        '--width',
+        '-w', '--width',
         help='Figure width in inches. Default: automatic',
         default=None,
         type=float,
         action=SM,
     )
     appearance.add_argument(
-        '--height',
+        '-he', '--height',
         help='Figure height in inches. Default: automatic',
         default=None,
         type=float,
         action=SM,
     )
     appearance.add_argument(
-        '--title',
+        '-t', '--title',
         help='Base plot title. Default: derived from the input.',
         default=None,
         action=SM,
@@ -299,7 +299,7 @@ def parse_args():
         action=SM,
     )
     opts.add_argument(
-        '--rank-gene',
+        '-rg', '--rank-gene',
         help='Rank using one plotted gene instead of aggregating across genes.',
         default=None,
         action=SM,
