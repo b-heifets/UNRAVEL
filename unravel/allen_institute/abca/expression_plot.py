@@ -9,9 +9,18 @@ Inputs:
 Plots:
     - Dot plot (default): dot color = mean log2(CPM+1) expression; dot size = percent
       expression above the threshold used by expression_summary.py.
+    - Pie symbols: equal diameters; colored slice = percent above threshold;
+      slice color = mean expression across all cells; gray = remaining cells.
+    - Ring symbols: equal diameters; center color = mean across all cells;
+      dark outer arc = percent above threshold; gray arc = remaining cells.
     - Heatmap: mean expression, percent expression, or both.
 
 The script auto-detects genes from columns ending in ``_mean_expression``.
+Pie and ring styles use the same summary columns as the default dot plot.
+Their percentages always use a 0-100 scale, regardless of ``--percent-max``.
+``--size-max`` controls their fixed outer diameter (sqrt(size-max) points).
+At 0% above threshold, a pie is entirely gray; a ring retains the mean color.
+Missing mean/percentage pairs are omitted rather than plotted as zero.
 
 Usage (sorting by mean expression by default):
 ----------------------------------------------
@@ -20,6 +29,11 @@ Usage (sorting by mean expression by default):
 Usage for selected genes (ranked by mean expression and sorted by cell count):
 ---------------------------------------------------------------------------------------------
     exp_plot -i expression_summary_thr3/<file>.csv -g DRD1 DRD2 --sort-by cells
+
+Usage for fixed-diameter pie or ring symbols:
+---------------------------------------------
+    exp_plot -i expression_summary_thr3/<file>.csv --dot-style pie
+    exp_plot -i expression_summary_thr3/<file>.csv --dot-style ring
 
 Usage to rank by cell prevalence:
 ---------------------------------
@@ -40,7 +54,13 @@ import numpy as np
 import pandas as pd
 import re
 from argparse import SUPPRESS
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
 from matplotlib.lines import Line2D
+from matplotlib.offsetbox import (
+    AnchoredOffsetbox, AnnotationBbox, DrawingArea, HPacker, TextArea, VPacker,
+)
+from matplotlib.patches import Circle, Wedge
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -152,6 +172,17 @@ def parse_args():
 
     appearance = parser.add_argument_group('Appearance')
     appearance.add_argument(
+        '--dot-style',
+        help=(
+            'Dot-plot symbols: size (variable area), pie (colored slice), or ring '
+            '(colored center with percentage arc). Default: size. '
+            'All styles use mean expression across all cells for color.'
+        ),
+        default='size',
+        choices=('size', 'pie', 'ring'),
+        action=SM,
+    )
+    appearance.add_argument(
         '--mean-max',
         help='Maximum mean-expression color value. Default: data maximum, with a minimum of 3',
         default=None,
@@ -160,21 +191,27 @@ def parse_args():
     )
     appearance.add_argument(
         '--percent-max',
-        help='Maximum percent-expression color/size value. Default: 100',
+        help=(
+            'Maximum percent-expression heatmap/color or variable-dot-size value. '
+            'Pie and ring percentages always use 0-100. Default: 100'
+        ),
         default=100,
         type=float,
         action=SM,
     )
     appearance.add_argument(
         '--size-min',
-        help='Minimum dot area. Default: 12',
+        help='Minimum dot area for --dot-style size; ignored for pie/ring. Default: 12',
         default=12,
         type=float,
         action=SM,
     )
     appearance.add_argument(
         '--size-max',
-        help='Maximum dot area. Default: 240',
+        help=(
+            'Maximum dot size in points squared; fixed size for pie/ring. '
+            'Outer diameter = sqrt(size-max) points. Default: 240'
+        ),
         default=240,
         type=float,
         action=SM,
@@ -646,6 +683,89 @@ def save_figure(
     plt.close(fig)
 
 
+def expression_symbol(
+    percent: float,
+    color,
+    size: float,
+    style: str,
+    background='white',
+) -> DrawingArea:
+    """Build a pie/ring in points, independent of the plot's axis proportions.
+
+    The outer diameter matches a scatter circle with ``s=size``. Percentages
+    are clipped to 0-100 and drawn clockwise from 12 o'clock. The caller skips
+    missing data and supplies the all-cell mean color (or a neutral legend color).
+    """
+    if style not in ('pie', 'ring'):
+        raise ValueError('Expression symbols must use pie or ring style.')
+
+    diameter = np.sqrt(size)
+    radius = diameter / 2
+    center = (radius, radius)
+    drawing = DrawingArea(diameter, diameter)
+    percent = float(np.clip(percent, 0, 100))
+    ring_width = 0.20 * radius if style == 'ring' else None
+
+    drawing.add_artist(Circle(center, radius, facecolor=background, edgecolor='none'))
+    drawing.add_artist(Wedge(
+        center, radius, 0, 360,
+        width=ring_width, facecolor='0.85', edgecolor='none',
+    ))
+    if percent > 0:
+        drawing.add_artist(Wedge(
+            center, radius, 90 - 3.6 * percent, 90,
+            width=ring_width,
+            facecolor='0.20' if style == 'ring' else color,
+            edgecolor='none',
+        ))
+    if style == 'ring':
+        drawing.add_artist(Circle(
+            center, 0.70 * radius,
+            facecolor=color, edgecolor='black', linewidth=0.25,
+        ))
+    drawing.add_artist(Circle(
+        center, radius, facecolor='none', edgecolor='black', linewidth=0.25,
+    ))
+    return drawing
+
+
+def expression_symbol_legend(
+    ax: plt.Axes,
+    threshold: str,
+    size: float,
+    style: str,
+) -> None:
+    """Show true percentages using the same symbols and size as the plot."""
+    title = (
+        f'Cells > {threshold} (%)'
+        if threshold else 'Cells above threshold (%)'
+    )
+    rows = [TextArea(
+        f'{title}\nwithin each cell type',
+        textprops={'fontsize': 9, 'fontweight': 'bold'},
+    )]
+    for value in (0, 25, 50, 75, 100):
+        rows.append(HPacker(
+            children=[
+                expression_symbol(
+                    value, '0.20' if style == 'pie' else '0.65',
+                    size, style, background=ax.get_facecolor(),
+                ),
+                TextArea(f'{value}%', textprops={'fontsize': 10}),
+            ],
+            align='center', pad=0, sep=7,
+        ))
+    rows.append(TextArea(
+        'Gray: remaining cells' if style == 'pie' else 'Dark arc: above threshold',
+        textprops={'fontsize': 8, 'color': '0.35'},
+    ))
+    ax.add_artist(AnchoredOffsetbox(
+        loc='center',
+        child=VPacker(children=rows, align='left', pad=0, sep=7),
+        frameon=False, pad=0, borderpad=0,
+    ))
+
+
 def plot_dotplot(
     df: pd.DataFrame,
     genes: list[str],
@@ -661,11 +781,16 @@ def plot_dotplot(
     mean_cmap: str,
     dpi: int,
     footer: str,
+    dot_style: str = 'size',
 ) -> None:
-    """Plot mean expression as color and percent expression as dot size."""
-    if percent_max <= 0:
+    """Plot all-cell mean color with size-, pie-, or ring-encoded percentages."""
+    if dot_style not in ('size', 'pie', 'ring'):
+        raise ValueError('Dot style must be size, pie, or ring.')
+    if dot_style == 'size' and percent_max <= 0:
         raise ValueError('--percent-max must be greater than 0.')
-    if size_min < 0 or size_max <= 0 or size_max < size_min:
+    if not np.isfinite(size_max) or size_max <= 0:
+        raise ValueError('--size-max must be finite and greater than 0.')
+    if dot_style == 'size' and (size_min < 0 or size_max < size_min):
         raise ValueError('Dot sizes must satisfy 0 <= size-min <= size-max.')
 
     mean_matrix = matrix_for_metric(df, genes, MEAN_SUFFIX)
@@ -696,23 +821,37 @@ def plot_dotplot(
     )
     valid = np.isfinite(mean_matrix) & np.isfinite(percent_matrix)
 
-    clipped_percent = np.clip(percent_matrix, 0, percent_max)
-    dot_sizes = size_min + (
-        clipped_percent / percent_max
-    ) * (size_max - size_min)
-
     vmax = mean_color_max(mean_matrix, mean_max)
-    scatter = ax.scatter(
-        x_grid[valid],
-        y_grid[valid],
-        c=mean_matrix[valid],
-        s=dot_sizes[valid],
-        cmap=mean_cmap,
-        vmin=0,
-        vmax=vmax,
-        linewidths=0.25,
-        edgecolors='black',
-    )
+    if dot_style == 'size':
+        clipped_percent = np.clip(percent_matrix, 0, percent_max)
+        dot_sizes = size_min + (
+            clipped_percent / percent_max
+        ) * (size_max - size_min)
+        mappable = ax.scatter(
+            x_grid[valid],
+            y_grid[valid],
+            c=mean_matrix[valid],
+            s=dot_sizes[valid],
+            cmap=mean_cmap,
+            vmin=0,
+            vmax=vmax,
+            linewidths=0.25,
+            edgecolors='black',
+        )
+    else:
+        mappable = ScalarMappable(norm=Normalize(0, vmax), cmap=mean_cmap)
+        for x, y, percent, mean in zip(
+            x_grid[valid], y_grid[valid],
+            percent_matrix[valid], mean_matrix[valid],
+        ):
+            symbol = expression_symbol(
+                percent, mappable.to_rgba(mean), size_max, dot_style,
+                background=ax.get_facecolor(),
+            )
+            ax.add_artist(AnnotationBbox(
+                symbol, (x, y), frameon=False, pad=0,
+                box_alignment=(0.5, 0.5), annotation_clip=True,
+            ))
 
     ax.set_xticks(np.arange(n_genes))
     ax.set_xticklabels(genes, rotation=45, ha='right')
@@ -727,36 +866,42 @@ def plot_dotplot(
     ax.set_axisbelow(True)
     ax.grid(True, axis='both', linewidth=0.35, alpha=0.35)
 
-    colorbar = fig.colorbar(scatter, cax=colorbar_ax)
-    colorbar.set_label('Mean log2(CPM+1) expression')
+    colorbar = fig.colorbar(mappable, cax=colorbar_ax)
+    colorbar_label = 'Mean log2(CPM+1) expression'
+    if dot_style != 'size':
+        colorbar_label += '\nacross all cells'
+    colorbar.set_label(colorbar_label)
 
-    legend_values = np.linspace(0, percent_max, 5)
-    legend_handles = []
-    for value in legend_values:
-        size = size_min + (value / percent_max) * (size_max - size_min)
-        legend_handles.append(
-            Line2D(
-                [],
-                [],
-                marker='o',
-                linestyle='None',
-                markerfacecolor='none',
-                markeredgecolor='black',
-                markersize=np.sqrt(size),
-                label=f'{value:g}%',
+    if dot_style == 'size':
+        legend_values = np.linspace(0, percent_max, 5)
+        legend_handles = []
+        for value in legend_values:
+            size = size_min + (value / percent_max) * (size_max - size_min)
+            legend_handles.append(
+                Line2D(
+                    [],
+                    [],
+                    marker='o',
+                    linestyle='None',
+                    markerfacecolor='none',
+                    markeredgecolor='black',
+                    markersize=np.sqrt(size),
+                    label=f'{value:g}%',
+                )
             )
-        )
 
-    legend_title = (
-        f'Percent > {threshold}'
-        if threshold else 'Percent expression'
-    )
-    legend_ax.legend(
-        handles=legend_handles,
-        title=legend_title,
-        loc='center',
-        frameon=False,
-    )
+        legend_title = (
+            f'Percent > {threshold}'
+            if threshold else 'Percent expression'
+        )
+        legend_ax.legend(
+            handles=legend_handles,
+            title=legend_title,
+            loc='center',
+            frameon=False,
+        )
+    else:
+        expression_symbol_legend(legend_ax, threshold, size_max, dot_style)
     fig.supxlabel(
         footer,
         fontsize=8,
@@ -944,9 +1089,10 @@ def main():
     saved_paths = []
 
     if args.plot in ('dotplot', 'both'):
-        dotplot_dir = output_dir / 'dotplot'
+        plot_name = {'size': 'dotplot', 'pie': 'pieplot', 'ring': 'ringplot'}[args.dot_style]
+        dotplot_dir = output_dir / plot_name
         dotplot_dir.mkdir(parents=True, exist_ok=True)
-        dotplot_path = dotplot_dir / f'{output_prefix}__dotplot.{args.format}'
+        dotplot_path = dotplot_dir / f'{output_prefix}__{plot_name}.{args.format}'
         plot_dotplot(
             df=plot_df,
             genes=genes,
@@ -962,6 +1108,7 @@ def main():
             mean_cmap=args.mean_cmap,
             dpi=args.dpi,
             footer=footer,
+            dot_style=args.dot_style,
         )
         saved_paths.append(dotplot_path)
 
