@@ -25,7 +25,17 @@ Outputs:
       One wide CSV per ontology level. Identical cell-type labels that occur
       under different parent ontology paths are combined into one row.
     - <input>__all_cells.csv
-      A CSV containing all cells with their expression values.
+      A one-row expression summary across all retained cells.
+
+Filtering:
+    - Use -c/--filter-column and -vals/--filter-values together to filter
+      cell-level input before summarizing. Matches are exact and case-sensitive.
+    - Multiple values are combined with OR. Quote labels containing spaces.
+    - All outputs use retained cells only; percent_cells is relative to the
+      total number of retained cells, including in each ontology-level summary.
+    - Use a distinct -o directory to keep filtered and unfiltered runs separate.
+
+    exp_summary -i WHB_HTR.csv -c neurotransmitter -vals "VGLUT1 VGLUT2" -o exp_summary_VGLUT1_VGLUT2
 
 Notes:
     - Example of collapsing: if Cell type A occurs under two different
@@ -95,6 +105,19 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument(
+        '-c', '--filter-column',
+        help='Input column to filter before summarizing. Requires -vals.',
+        default=None,
+        action=SM,
+    )
+    opts.add_argument(
+        '-vals', '--filter-values',
+        help='Keep cells matching any of these exact, case-sensitive values. Requires -c. Quote labels containing spaces.',
+        nargs='+',
+        default=None,
+        action=SM,
+    )
+    opts.add_argument(
         '-g', '--genes',
         help='Gene-expression columns to summarize. Default: all columns after the last *_color column.',
         nargs='*',
@@ -128,7 +151,10 @@ def parse_args():
         default=False,
     )
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if (args.filter_column is None) != (args.filter_values is None):
+        parser.error('--filter-column and --filter-values must be used together.')
+    return args
 
 
 def infer_species(columns: list[str]) -> str:
@@ -191,12 +217,15 @@ def load_expression_data(
     input_path: Path,
     species: str,
     genes: list[str],
+    filter_column: str | None = None,
 ) -> tuple[pd.DataFrame, list[str]]:
     """Load required ontology, color, and gene-expression columns."""
     header = pd.read_csv(input_path, nrows=0).columns.tolist()
     hierarchy_levels = HIERARCHY_LEVELS[species]
 
     expected = set(hierarchy_levels + genes)
+    if filter_column is not None:
+        expected.add(filter_column)
     missing = sorted(expected - set(header))
     if missing:
         raise ValueError(
@@ -210,9 +239,12 @@ def load_expression_data(
     ]
 
     usecols = hierarchy_levels + color_columns + genes
+    if filter_column is not None and filter_column not in usecols:
+        usecols.append(filter_column)
     cell_df = pd.read_csv(
         input_path,
         usecols=usecols,
+        dtype={filter_column: 'string'} if filter_column is not None else None,
         low_memory=False,
     )
 
@@ -234,6 +266,29 @@ def load_expression_data(
         cell_df[gene] = numeric
 
     return cell_df, hierarchy_levels
+
+
+def filter_cells(
+    cell_df: pd.DataFrame,
+    column: str | None = None,
+    values: list[str] | None = None,
+) -> pd.DataFrame:
+    """Keep cells matching any exact string value before ontology grouping."""
+    if column is None and values is None:
+        return cell_df
+    if column is None or not values:
+        raise ValueError('A filter column and at least one filter value are required.')
+    if column not in cell_df.columns:
+        raise ValueError(f'Filter column not found: {column!r}')
+
+    mask = cell_df[column].astype('string').isin(values)
+    filtered_df = cell_df.loc[mask].copy()
+    if filtered_df.empty:
+        raise ValueError(
+            f'No cells matched {column!r} with values {values!r}. '
+            'Matching is exact and case-sensitive.'
+        )
+    return filtered_df
 
 
 def source_paths_dataframe(
@@ -554,11 +609,21 @@ def main():
         input_path=input_path,
         species=species,
         genes=genes,
+        filter_column=args.filter_column,
     )
 
     print(
         f'Loaded {len(cell_df):,} cells.\n'
     )
+
+    cell_df = filter_cells(
+        cell_df,
+        column=args.filter_column,
+        values=args.filter_values,
+    )
+    if args.filter_column is not None:
+        print(f'Filter: {args.filter_column} = {args.filter_values!r}')
+        print(f'Retained {len(cell_df):,} cells; all summaries use these cells.\n')
 
     saved_paths = save_outputs(
         cell_df=cell_df,
