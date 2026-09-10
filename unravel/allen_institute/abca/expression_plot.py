@@ -722,11 +722,13 @@ def expression_symbol(
     if style == 'ring':
         drawing.add_artist(Circle(
             center, 0.70 * radius,
-            facecolor=color, edgecolor='black', linewidth=0.25,
+            facecolor=color, edgecolor='none',
         ))
-    drawing.add_artist(Circle(
-        center, radius, facecolor='none', edgecolor='black', linewidth=0.25,
-    ))
+    if style == 'pie':
+        drawing.add_artist(Circle(
+            center, radius,
+            facecolor='none', edgecolor='black', linewidth=0.25,
+        ))
     return drawing
 
 
