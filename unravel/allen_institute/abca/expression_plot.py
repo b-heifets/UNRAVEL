@@ -15,6 +15,11 @@ Plots:
       dark outer arc = percent above threshold; gray arc = remaining cells.
     - Heatmap: mean expression, percent expression, or both.
 
+Titles show species, modality, and region. Use --region "Whole brain" for
+whole-brain inputs when scope is not explicit in metadata or the input name.
+Use --modality to override inferred modality, or --title for a complete title.
+The y-axis identifies the ontology level; pooled summaries use "All cells".
+
 The script auto-detects genes from columns ending in ``_mean_expression``.
 Pie and ring styles use the same summary columns as the default dot plot.
 Their percentages always use a 0-100 scale, regardless of ``--percent-max``.
@@ -252,6 +257,19 @@ def parse_args():
     appearance.add_argument(
         '-t', '--title',
         help='Base plot title. Default: derived from the input.',
+        default=None,
+        action=SM,
+    )
+
+    appearance.add_argument(
+        '--modality',
+        help='Title modality override, e.g. snRNA-seq or MERFISH (imputed).',
+        default=None,
+        action=SM,
+    )
+    appearance.add_argument(
+        '--region',
+        help='Title region override. Use "Whole brain" for a whole-brain input.',
         default=None,
         action=SM,
     )
@@ -586,49 +604,91 @@ def summary_context(df: pd.DataFrame) -> tuple[str, str, str]:
     return species, level, threshold
 
 
+LEVEL_TITLE_LABELS = {
+    'all_cells': 'all cells',
+    'neurotransmitter': 'neurotransmitter',
+    'class': 'class',
+    'subclass': 'subclass',
+    'supercluster': 'supercluster',
+    'cluster': 'cluster',
+    'subcluster': 'subcluster',
+    'supertype': 'supertype',
+}
+
+
+def cell_type_axis_label(df: pd.DataFrame) -> str:
+    """Put the ontology level on the axis rather than in the plot title."""
+    _, level, _ = summary_context(df)
+    if level == 'all_cells':
+        return 'All cells'
+    label = LEVEL_TITLE_LABELS.get(level, level.replace('_', ' '))
+    return f'Cell type ({label})' if label else 'Cell type'
+
+
 def default_title(
     df: pd.DataFrame,
     custom_title: str | None,
+    modality: str | None = None,
+    region: str | None = None,
 ) -> str:
-    """Create a base title from summary metadata."""
+    """Use species, modality, and anatomical scope; never infer scope from level."""
     if custom_title:
         return custom_title
 
-    level = ''
-    region = ''
+    def metadata_value(*columns):
+        for column in columns:
+            if column in df.columns:
+                values = df[column].dropna().astype(str).str.strip()
+                values = values[values.ne('')].unique()
+                if len(values) == 1:
+                    return values[0]
+        return ''
 
-    if 'input' in df.columns and not df['input'].dropna().empty:
-        region = Path(
-            str(df['input'].dropna().iloc[0])
-        ).stem
-
-        if '__' in region:
-            region = region.split('__')[-1]
-        elif '_filtered_' in region:
-            region = region.rsplit('_filtered_', 1)[-1]
-
-        if region.endswith('_neurons'):
-            region = region[:-len('_neurons')]
-
-        region = region.replace('_', ' ')
-
-    LEVEL_TITLE_LABELS = {
-        'all_cells': 'all cells',
-        'neurotransmitter': 'neurotransmitter classes',
-        'class': 'cell classes',
-        'subclass': 'cell subclasses',
-        'supercluster': 'cell superclusters',
-        'cluster': 'cell clusters',
-        'subcluster': 'cell subclusters',
-        'supertype': 'cell supertypes',
-    }
-
-    level_label = LEVEL_TITLE_LABELS.get(
-        level,
-        f'{level.replace("_", " ")} groups',
+    species, _, _ = summary_context(df)
+    source = Path(metadata_value('input')).stem
+    source_lower = source.lower()
+    if not species:
+        if 'whb' in source_lower or 'human' in source_lower:
+            species = 'human'
+        elif 'wmb' in source_lower or 'mouse' in source_lower:
+            species = 'mouse'
+    species_label = {'mouse': 'Mouse', 'human': 'Human'}.get(
+        species.lower(), species.capitalize(),
     )
 
-    return f'{region} — Gene expression across {level_label}'
+    modality = modality or metadata_value('modality')
+    if not modality:
+        if 'merfish' in source_lower or 'mf_' in source_lower:
+            modality = 'MERFISH'
+        elif 'snrna' in source_lower or 'whb' in source_lower:
+            modality = 'snRNA-seq'
+        elif 'scrna' in source_lower or 'wmb' in source_lower:
+            modality = 'scRNA-seq'
+    if modality == 'MERFISH' and 'imputed' in source_lower:
+        modality = 'MERFISH (imputed)'
+
+    region = region or metadata_value('region', 'region_of_interest_acronym')
+    if not region:
+        if '__' in source:
+            region = source.rsplit('__', 1)[-1]
+        elif '_filtered_' in source:
+            region = source.rsplit('_filtered_', 1)[-1]
+        elif re.search(r'whole[-_ ]?brain', source_lower):
+            region = 'Whole brain'
+    region = re.sub(r'_neurons$', '', region or '', flags=re.IGNORECASE)
+    region = region.replace('_', ' ').strip()
+    region = re.sub(r'^(human|mouse)\s+', '', region, flags=re.IGNORECASE)
+    if region.lower().replace('-', ' ') in ('whole brain', 'wholebrain'):
+        region = 'Whole brain'
+    # An all_cells summary can still contain just one region.
+    if region.lower() in ('all cells', 'all'):
+        region = ''
+
+    return (
+        f'{species_label or "Species unspecified"} '
+        f'{modality or "Modality unspecified"}: '
+        f'{region or "Region unspecified"}'
+    )
 
 
 def automatic_figure_size(
@@ -739,9 +799,8 @@ def expression_symbol_legend(
     style: str,
 ) -> None:
     """Show true percentages using the same symbols and size as the plot."""
-    title = f'Percent > {threshold}'
     rows = [TextArea(
-        f'{title}\nwithin each cell type',
+        f'Percent > {threshold}',
         textprops={'fontsize': 9, 'fontweight': 'bold'},
     )]
     for value in (0, 25, 50, 75, 100):
@@ -755,10 +814,11 @@ def expression_symbol_legend(
             ],
             align='center', pad=0, sep=7,
         ))
-    rows.append(TextArea(
-        'Gray: remaining cells' if style == 'pie' else 'Dark arc: above threshold',
-        textprops={'fontsize': 8, 'color': '0.35'},
-    ))
+    if style == 'pie':
+        rows.append(TextArea(
+            'Gray: remaining cells',
+            textprops={'fontsize': 8, 'color': '0.35'},
+        ))
     ax.add_artist(AnchoredOffsetbox(
         loc='center',
         child=VPacker(children=rows, align='left', pad=0, sep=7),
@@ -861,15 +921,13 @@ def plot_dotplot(
     ax.set_xlim(-0.5, n_genes - 0.5)
     ax.set_ylim(n_rows - 0.5, -0.5)
     ax.set_xlabel('Gene', fontweight='bold')
-    ax.set_ylabel('Cell type', fontweight='bold')
+    ax.set_ylabel(cell_type_axis_label(df), fontweight='bold')
     ax.set_title(f'{title}', fontweight='bold')
     ax.set_axisbelow(True)
     ax.grid(True, axis='both', linewidth=0.35, alpha=0.35)
 
     colorbar = fig.colorbar(mappable, cax=colorbar_ax)
     colorbar_label = 'Mean log2(CPM+1) expression'
-    if dot_style != 'size':
-        colorbar_label += '\nacross all cells'
     colorbar.set_label(colorbar_label)
 
     if dot_style == 'size':
@@ -935,7 +993,7 @@ def plot_heatmap(
         cmap = mean_cmap
         vmax = mean_color_max(matrix, mean_max)
         colorbar_label = 'Mean log2(CPM+1) expression'
-        plot_title = f'{title}: mean expression heatmap'
+        plot_title = title
     else:
         suffix = PERCENT_SUFFIX
         matrix = matrix_for_metric(df, genes, suffix)
@@ -945,7 +1003,7 @@ def plot_heatmap(
             f'Percent expression > {threshold}'
             if threshold else 'Percent expression'
         )
-        plot_title = f'{title}: percent expression heatmap'
+        plot_title = title
 
     if vmax <= 0:
         raise ValueError('Heatmap color maximum must be greater than 0.')
@@ -974,7 +1032,7 @@ def plot_heatmap(
     ax.set_yticklabels(df['_plot_label'])
     color_cell_type_tick_labels(ax, df)
     ax.set_xlabel('Gene')
-    ax.set_ylabel('Cell type')
+    ax.set_ylabel(cell_type_axis_label(df))
     ax.set_title(
         plot_title,
         fontweight='bold',
@@ -1068,7 +1126,9 @@ def main():
             )
             output_prefix = f'{output_prefix}__gene-{gene_label}'
 
-    title = default_title(summary_df, args.title)
+    title = default_title(
+        summary_df, args.title, modality=args.modality, region=args.region,
+    )
     
     _, _, threshold = summary_context(summary_df)
 
