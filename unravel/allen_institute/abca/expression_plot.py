@@ -739,10 +739,7 @@ def expression_symbol_legend(
     style: str,
 ) -> None:
     """Show true percentages using the same symbols and size as the plot."""
-    title = (
-        f'Cells > {threshold} (%)'
-        if threshold else 'Cells above threshold (%)'
-    )
+    title = f'Percent > {threshold}'
     rows = [TextArea(
         f'{title}\nwithin each cell type',
         textprops={'fontsize': 9, 'fontweight': 'bold'},
