@@ -24,6 +24,8 @@ Outputs:
     - <input>__LEVEL.csv
       One wide CSV per ontology level. Identical cell-type labels that occur
       under different parent ontology paths are combined into one row.
+    - <input>__all_cells.csv
+      A CSV containing all cells with their expression values.
 
 Notes:
     - Example of collapsing: if Cell type A occurs under two different
