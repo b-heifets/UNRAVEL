@@ -378,6 +378,72 @@ def summarize_level(
     ).reset_index(drop=True)
 
 
+def summarize_all_cells(
+    cell_df: pd.DataFrame,
+    input_name: str,
+    species: str,
+    genes: list[str],
+    threshold: float,
+) -> pd.DataFrame:
+    """Create a one-row expression summary across every cell in the input."""
+    total_cells = len(cell_df)
+
+    row = {
+        'input': input_name,
+        'species': species,
+        'threshold': threshold,
+        'level': 'all_cells',
+        'cell_type': 'All cells',
+        'cell_type_color': '',
+        'source_path_count': 1,
+        'source_ontology_paths': 'All cells in input',
+        'cell_count': total_cells,
+        'percent_cells': 100.0,
+    }
+
+    for gene in genes:
+        values = cell_df[gene]
+        valid_values = values.dropna()
+        expressing_count = int(valid_values.gt(threshold).sum())
+        denominator = len(valid_values)
+
+        row[f'{gene}_expressing_cell_count'] = expressing_count
+        row[f'{gene}_mean_expression'] = valid_values.mean()
+        row[f'{gene}_percent_expression'] = (
+            expressing_count / denominator * 100
+            if denominator > 0
+            else float('nan')
+        )
+
+    base_columns = [
+        'input',
+        'species',
+        'threshold',
+        'level',
+        'cell_type',
+        'cell_type_color',
+        'source_path_count',
+        'source_ontology_paths',
+        'cell_count',
+        'percent_cells',
+    ]
+
+    metric_columns = [
+        column
+        for gene in genes
+        for column in (
+            f'{gene}_expressing_cell_count',
+            f'{gene}_mean_expression',
+            f'{gene}_percent_expression',
+        )
+    ]
+
+    return pd.DataFrame(
+        [row],
+        columns=base_columns + metric_columns,
+    )
+
+
 def save_outputs(
     cell_df: pd.DataFrame,
     input_name: str,
@@ -388,8 +454,27 @@ def save_outputs(
     threshold: float,
     hierarchy_levels: list[str],
 ) -> list[Path]:
-    """Save one collapsed wide CSV per ontology level."""
+    """Save an all-cells summary and one CSV per ontology level."""
     saved_paths = []
+
+    all_cells_df = summarize_all_cells(
+        cell_df=cell_df,
+        input_name=input_name,
+        species=species,
+        genes=genes,
+        threshold=threshold,
+    )
+
+    all_cells_path = output_dir / (
+        f'{output_prefix}__all_cells.csv'
+    )
+
+    all_cells_df.to_csv(
+        all_cells_path,
+        index=False,
+    )
+
+    saved_paths.append(all_cells_path)
 
     for level_index, level in enumerate(hierarchy_levels):
         summary_df = summarize_level(

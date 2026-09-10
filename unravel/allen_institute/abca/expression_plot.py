@@ -613,6 +613,7 @@ def default_title(
         region = region.replace('_', ' ')
 
     LEVEL_TITLE_LABELS = {
+        'all_cells': 'all cells',
         'neurotransmitter': 'neurotransmitter classes',
         'class': 'cell classes',
         'subclass': 'cell subclasses',
