@@ -105,7 +105,7 @@ def parse_args():
         action=SM,
     )
     opts.add_argument(
-        '-m', '--heatmap-metric',
+        '-hm', '--heatmap-metric',
         help='Heatmap metric. Default: both',
         default='both',
         choices=('mean', 'percent', 'both'),
@@ -262,13 +262,13 @@ def parse_args():
     )
 
     appearance.add_argument(
-        '--modality',
+        '-m,', '--modality',
         help='Title modality override, e.g. snRNA-seq or MERFISH (imputed).',
         default=None,
         action=SM,
     )
     appearance.add_argument(
-        '--region',
+        '-r', '--region',
         help='Title region override. Use "Whole brain" for a whole-brain input.',
         default=None,
         action=SM,
@@ -813,11 +813,6 @@ def expression_symbol_legend(
                 TextArea(f'{value}%', textprops={'fontsize': 10}),
             ],
             align='center', pad=0, sep=7,
-        ))
-    if style == 'pie':
-        rows.append(TextArea(
-            'Gray: remaining cells',
-            textprops={'fontsize': 8, 'color': '0.35'},
         ))
     ax.add_artist(AnchoredOffsetbox(
         loc='center',
