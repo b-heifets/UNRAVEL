@@ -8,7 +8,7 @@ Prereqs:
 
 Inputs:
     - CSVs with sunburst data for each cluster (e.g., cluster_`*`_sunburst.csv).
-    - `*`cluster_info.txt in the parent dir (made by ``cstats_fdr`` and copied by ``cstats_org_data``).
+    - Optional `*`cluster_info.txt in the parent dir (made by ``cstats_fdr`` and copied by ``cstats_org_data``).
 
 Outputs:
     - A color-coded xlsx table summarizing the top regions and their volumes for each cluster.
@@ -261,34 +261,35 @@ def main():
     cluster_info_txt_parent = Path(args.val_clusters_dir).parent if args.val_clusters_dir else Path.cwd()
     cluster_info_files = list(cluster_info_txt_parent.glob('*cluster_info.txt'))
     
-    # If no cluster_info.txt file is found, search in the grandparent dir, and exit if not found
+    # If no cluster_info.txt file is found, search in the grandparent dir
     if not cluster_info_files:
         # Check for it in the grandparent dir
         cluster_info_txt_grandparent = cluster_info_txt_parent.parent
         cluster_info_files = list(cluster_info_txt_grandparent.glob('*cluster_info.txt'))
-        if not cluster_info_files:
-            print(f'\n    [red]No *cluster_info.txt file found in {cluster_info_txt_parent}. Exiting...')
-            return
-    
-    cluster_info_file = cluster_info_files[0] # first match
- 
-    # Load the cluster info file
-    cluster_info_df = pd.read_csv(cluster_info_file, sep='\t', header=None)  # Assuming tab-separated values; adjust if different
 
-    # Reverse the row order of only the first column (excluding the header)
-    first_column_name = cluster_info_df.columns[0]
-    reversed_data = cluster_info_df[first_column_name].iloc[1:].iloc[::-1].reset_index(drop=True) # Reverse the data 
-    new_first_column = pd.concat([cluster_info_df[first_column_name].iloc[:1], reversed_data]) # Concat header w/ reversed data
-    cluster_info_df[first_column_name] = new_first_column.values # Assign the new column back to the DataFrame
+    cluster_CoGs = {}
+    if not cluster_info_files:
+        print(f'\n    [yellow]Warning: No *cluster_info.txt file found in {cluster_info_txt_parent} or {cluster_info_txt_grandparent}. CoG values will be blank.[/yellow]')
+    else:
+        cluster_info_file = cluster_info_files[0] # first match
 
-    # Get the CoG for each cluster (values in last three columns of each row)
-    CoGs = cluster_info_df.iloc[:, -3:].values
+        # Load the cluster info file
+        cluster_info_df = pd.read_csv(cluster_info_file, sep='\t', header=None)  # Assuming tab-separated values; adjust if different
 
-    # Convert to this format: 'x,y,z'
-    CoGs = [','.join(map(str, CoG)) for CoG in CoGs]
+        # Reverse the row order of only the first column (excluding the header)
+        first_column_name = cluster_info_df.columns[0]
+        reversed_data = cluster_info_df[first_column_name].iloc[1:].iloc[::-1].reset_index(drop=True) # Reverse the data 
+        new_first_column = pd.concat([cluster_info_df[first_column_name].iloc[:1], reversed_data]) # Concat header w/ reversed data
+        cluster_info_df[first_column_name] = new_first_column.values # Assign the new column back to the DataFrame
 
-    # Create a dict w/ the first column as keys and the CoG as values
-    cluster_CoGs = dict(zip(cluster_info_df[first_column_name], CoGs))
+        # Get the CoG for each cluster (values in last three columns of each row)
+        CoGs = cluster_info_df.iloc[:, -3:].values
+
+        # Convert to this format: 'x,y,z'
+        CoGs = [','.join(map(str, CoG)) for CoG in CoGs]
+
+        # Create a dict w/ the first column as keys and the CoG as values
+        cluster_CoGs = dict(zip(cluster_info_df[first_column_name], CoGs))
 
     # Create an empty DataFrame with the column names
     top_regions_and_percent_vols_df = pd.DataFrame(columns=column_names)
@@ -309,7 +310,7 @@ def main():
         cluster_num = str(cluster_sunburst_csv.name).split('_')[1]
 
         # Get the CoG string for the current cluster from the dictionary
-        cog_string = cluster_CoGs.get(cluster_num) if cluster_CoGs.get(cluster_num) else "Not found"
+        cog_string = cluster_CoGs.get(cluster_num, "")
 
         # Get the top regions and their percentage volumes for the current cluster
         top_regions_and_percent_vols, cluster_volume = get_top_regions_and_percent_vols(cluster_sunburst_csv, args.top_regions, args.percent_vol, args.verbose)
