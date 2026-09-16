@@ -13,6 +13,7 @@ Inputs:
 
 Outputs:
     - rstats_mean_IF_summary/region_<region_id>_<region_abbr>.pdf for each region
+    - regional_mean_IF_summary/regional_mean_IF_summary_<test>.csv
     - If significant differences are found, a prefix '_' is added to the filename to sort the files
 
 Note:
@@ -65,17 +66,16 @@ def parse_args():
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
     opts.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
     opts.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default="CCFv3-2020__regionID_side_IDpath_region_abbr.csv", action=SM)
+    opts.add_argument('-s', '--skip_plots', help='Only write the summary CSV; do not generate PDF plots.', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
-# TODO: Dunnett's test is not available in scipy.stats. Find an alternative or implement it.
-# TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cstats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
+# TODO: Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 # TODO: CSVs are loaded for each region. It would be more efficient to load them once for processing all regions. 
 # TODO: Update coloring of plots to match ABA colors (i.e., use code from rstats_summary.py)
-# TODO: Save a CSV with the results of the statistical tests for each region.
 
 
 # Set Arial as the font
@@ -157,11 +157,68 @@ def perform_t_tests(df, order):
             comparisons.append({
                 'group1': group1,
                 'group2': group2,
-                'p-adj': p_value
+                'statistic': t_stat,
+                'p-value': p_value,
+                'reject': p_value < 0.05,
             })
     return pd.DataFrame(comparisons)
 
-def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tukey', alt='two-sided'):
+
+def add_group_summary_columns(test_df, df):
+    """Add n, means, and mean differences to the stats table."""
+    group_stats = (
+        df.groupby('group', observed=True)['mean_intensity']
+        .agg(['count', 'mean'])
+    )
+
+    rows = []
+    for _, row in test_df.iterrows():
+        row = row.to_dict()
+        group1 = row['group1']
+        group2 = row['group2']
+
+        row['n_group1'] = int(group_stats.loc[group1, 'count'])
+        row['n_group2'] = int(group_stats.loc[group2, 'count'])
+        row['mean_group1'] = float(group_stats.loc[group1, 'mean'])
+        row['mean_group2'] = float(group_stats.loc[group2, 'mean'])
+        row['diff_group2_minus_group1'] = row['mean_group2'] - row['mean_group1']
+
+        rows.append(row)
+
+    return pd.DataFrame(rows)
+
+
+def run_stats(df, order, test_type, alt):
+    """Run the selected statistical test."""
+    if test_type == 'tukey':
+        test_results = pairwise_tukeyhsd(df['mean_intensity'], df['group']).summary()
+        test_df = pd.DataFrame(test_results.data[1:], columns=test_results.data[0])
+        test_df['statistic'] = np.nan
+    elif test_type == 'dunnett':
+        control_data = df[df['group'] == order[0]]['mean_intensity'].values
+        experimental_data = [df[df['group'] == group]['mean_intensity'].values for group in order[1:]]
+        test_stats = dunnett(*experimental_data, control=control_data, alternative=alt)
+        test_df = pd.DataFrame({
+            'group1': [order[0]] * len(np.atleast_1d(test_stats.pvalue)),
+            'group2': order[1:],
+            'statistic': np.atleast_1d(test_stats.statistic),
+            'p-adj': np.atleast_1d(test_stats.pvalue),
+            'reject': np.atleast_1d(test_stats.pvalue) < 0.05,
+        })
+    elif test_type == 'ttest':
+        test_df = perform_t_tests(df, order)
+
+    test_df = add_group_summary_columns(test_df, df)
+
+    p_col = 'p-value' if test_type == 'ttest' else 'p-adj'
+    test_df['significance'] = test_df[p_col].apply(
+        lambda p: '****' if p < 0.0001 else '***' if p < 0.001 else '**' if p < 0.01 else '*' if p < 0.05 else 'n.s.'
+    )
+
+    return test_df
+
+
+def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tukey', alt='two-sided', skip_plots=False):
     df = load_data(region_id)
 
     if 'group' not in df.columns:
@@ -197,6 +254,16 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
         df['group_label'] = df['group'].map(labels_mapping)
     else:
         df['group_label'] = df['group']
+
+    test_df = run_stats(df, order, test_type, alt)
+    test_df['region_ID'] = region_id
+    test_df['region'] = region_name
+    test_df['abbr'] = region_abbr
+
+    p_col = 'p-value' if test_type == 'ttest' else 'p-adj'
+
+    if skip_plots:
+        return test_df
     
     # Bar plot
     plt.figure(figsize=(4, 4))
@@ -219,26 +286,6 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
     if ax.legend_:
         ax.legend_.remove()
 
-    # Perform the chosen post-hoc test
-    if test_type == 'tukey':
-        test_results = pairwise_tukeyhsd(df['mean_intensity'], df['group']).summary()
-        test_df = pd.DataFrame(test_results.data[1:], columns=test_results.data[0])
-    elif test_type == 'dunnett':
-        # Assuming control is the first group in the order (change as needed)
-        control_data = df[df['group'] == order[0]]['mean_intensity'].values
-        experimental_data = [df[df['group'] == group]['mean_intensity'].values for group in order[1:]]
-        test_stats = dunnett(*experimental_data, control=control_data, alternative=alt)
-        # Convert the result to a DataFrame similar to the Tukey output for easier handling
-        test_df = pd.DataFrame({
-            'group1': [order[0]] * len(test_stats.pvalue),
-            'group2': order[1:],
-            'p-adj': test_stats.pvalue
-        })
-        test_df['reject'] = test_df['p-adj'] < 0.05
-    elif test_type == 'ttest':
-        test_df = perform_t_tests(df, order)
-        test_df['reject'] = test_df['p-adj'] < 0.05
-
     significant_comparisons = test_df[test_df['reject'] == True]
 
     # Calculate y-axis limits
@@ -256,11 +303,11 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
 
         plt.plot([x1, x1, x2, x2], [y_pos, y_pos + height_diff, y_pos + height_diff, y_pos], lw=1.5, c='black')
         
-        if row['p-adj'] < 0.0001:
+        if row[p_col] < 0.0001:
             sig = '****'
-        elif row['p-adj'] < 0.001:
+        elif row[p_col] < 0.001:
             sig = '***'
-        elif row['p-adj'] < 0.01:
+        elif row[p_col] < 0.01:
             sig = '**'
         else:
             sig = '*'
@@ -290,6 +337,8 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
 
     plt.close()
 
+    return test_df
+
 
 @log_command
 def main():
@@ -307,12 +356,12 @@ def main():
     if len(args.order) < 2:
         raise ValueError("At least two groups are required for comparison)")
     
-    if len(args.order) == 2:
-        test_type = 'ttest'
-    elif len(args.order) > 2 and args.test is None:
-        test_type = 'tukey'
-    else:
+    if args.test is not None:
         test_type = args.test
+    elif len(args.order) == 2:
+        test_type = 'ttest'
+    elif len(args.order) > 2:
+        test_type = 'tukey'
     
     # Print CSVs in the working dir
     print(f'\n[bold]CSVs in the working dir to process (the first word defines the groups): \n')
@@ -332,9 +381,41 @@ def main():
     # Remove regions with Mean_IF_Intensity of 0 across all input CSVs
     region_ids_to_process = remove_zero_intensity_regions(region_ids_to_process)
 
+    test_results = []
+
     # Process each region ID
     for region_id in region_ids_to_process:
-        plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=test_type, alt=args.alternate)
+        test_df = plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=test_type, alt=args.alternate, skip_plots=args.skip_plots)
+        test_results.append(test_df)
+
+    test_df_all = pd.concat(test_results, ignore_index=True)
+
+    id_cols = ['region_ID', 'region', 'abbr']
+    stats_cols = [
+        'group1',
+        'group2',
+        # 'statistic',
+        'p-value', # Used for t-tests
+        'p-adj', # Used for Dunnett's and Tukey's tests
+        # 'reject',
+        'significance',
+        'n_group1',
+        'n_group2',
+        'mean_group1',
+        'mean_group2',
+        'diff_group2_minus_group1',
+    ]
+    keep_cols = id_cols + [col for col in stats_cols if col in test_df_all.columns]
+    test_df_all = test_df_all[keep_cols]
+
+    output_folder = Path('regional_mean_IF_summary')
+    output_folder.mkdir(parents=True, exist_ok=True)
+
+    output_csv = output_folder / f'regional_mean_IF_summary_{test_type}.csv'
+    test_df_all.to_csv(output_csv, index=False)
+
+    print(f'\n{test_df_all}\n')
+    print(f'Summary CSV saved to ./{output_csv}')
 
     verbose_end_msg()
     
