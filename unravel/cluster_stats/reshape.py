@@ -66,15 +66,17 @@ def detect_simple_metric_schema(first_df):
     if not required_cols.issubset(first_df.columns):
         raise ValueError("Not a simple metric CSV.")
 
+    excluded_cols = required_cols | {"condition", "n_voxels"}
+
     metric_cols = [
         c for c in first_df.columns
-        if c not in required_cols
+        if c not in excluded_cols
     ]
 
     if len(metric_cols) != 1:
         raise ValueError(
             f"Could not infer metric column. Expected exactly one column besides "
-            f"{sorted(required_cols)}, found: {metric_cols}"
+            f"{sorted(excluded_cols)}, found: {metric_cols}"
         )
 
     return metric_cols[0]
