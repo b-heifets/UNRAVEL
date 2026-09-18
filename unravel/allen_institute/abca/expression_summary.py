@@ -31,6 +31,7 @@ Filtering:
     - Use -c/--filter-column and -vals/--filter-values together to filter
       cell-level input before summarizing. Matches are exact and case-sensitive.
     - Multiple values are combined with OR. Quote labels containing spaces.
+    - Add --exclude to remove matching cells instead. Missing filter labels are excluded.
     - All outputs use retained cells only; percent_cells is relative to the
       total number of retained cells, including in each ontology-level summary.
     - Use a distinct -o directory to keep filtered and unfiltered runs separate.
@@ -118,6 +119,12 @@ def parse_args():
         action=SM,
     )
     opts.add_argument(
+        '--exclude',
+        help='Exclude matching values instead of keeping them. Requires -c and -vals; missing filter labels are excluded.',
+        action='store_true',
+        default=False,
+    )
+    opts.add_argument(
         '-g', '--genes',
         help='Gene-expression columns to summarize. Default: all columns after the last *_color column.',
         nargs='*',
@@ -154,6 +161,8 @@ def parse_args():
     args = parser.parse_args()
     if (args.filter_column is None) != (args.filter_values is None):
         parser.error('--filter-column and --filter-values must be used together.')
+    if args.exclude and args.filter_column is None:
+        parser.error('--exclude requires --filter-column and --filter-values.')
     return args
 
 
@@ -272,9 +281,10 @@ def filter_cells(
     cell_df: pd.DataFrame,
     column: str | None = None,
     values: list[str] | None = None,
+    exclude: bool = False,
 ) -> pd.DataFrame:
-    """Keep cells matching any exact string value before ontology grouping."""
-    if column is None and values is None:
+    """Keep or exclude cells matching exact values before ontology grouping."""
+    if column is None and values is None and not exclude:
         return cell_df
     if column is None or not values:
         raise ValueError('A filter column and at least one filter value are required.')
@@ -282,10 +292,12 @@ def filter_cells(
         raise ValueError(f'Filter column not found: {column!r}')
 
     mask = cell_df[column].astype('string').isin(values)
+    if exclude:
+        mask = ~mask & cell_df[column].notna()
     filtered_df = cell_df.loc[mask].copy()
     if filtered_df.empty:
         raise ValueError(
-            f'No cells matched {column!r} with values {values!r}. '
+            f'No cells remain after filtering {column!r} with values {values!r} (exclude={exclude}). '
             'Matching is exact and case-sensitive.'
         )
     return filtered_df
@@ -620,9 +632,11 @@ def main():
         cell_df,
         column=args.filter_column,
         values=args.filter_values,
+        exclude=args.exclude,
     )
     if args.filter_column is not None:
-        print(f'Filter: {args.filter_column} = {args.filter_values!r}')
+        operator = 'not in' if args.exclude else 'in'
+        print(f'Filter: {args.filter_column} {operator} {args.filter_values!r}')
         print(f'Retained {len(cell_df):,} cells; all summaries use these cells.\n')
 
     saved_paths = save_outputs(
