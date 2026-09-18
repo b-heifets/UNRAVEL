@@ -123,7 +123,6 @@ def group_summary(stats, genes, prefix):
     denominator[denominator == 0] = np.nan
     return pd.DataFrame({
         f'{prefix}_cell_count': stats['cell_count'],
-        f'{prefix}_expression_count': stats['expression_count'],
         f'{prefix}_expressing_cell_count': stats['expressing_cell_count'],
         f'{prefix}_mean_expression': stats['sum_expression'] / denominator,
         f'{prefix}_mean_cpm': stats['sum_cpm'] / denominator,
