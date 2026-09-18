@@ -66,6 +66,10 @@ Usage for human:
 ----------------
     exp_summary -i path/expression_data_Neurons_log2.csv [-g HTR2A HTR2B DRD1 DRD2] [-t 3]
 
+Usage for excluding cells (e.g., for comparing a non-enriched population):
+--------------------------------------------------------------------------
+    exp_summary -i WHB_GPCR_neurons.csv -c region_of_interest_acronym -vals "Human CaB" "Human Pu" "Human NAC" --exclude -o nonSTR -op nonSTR
+
 Usage for parallel processing:
 ------------------------------
     fd -e csv -d 1 -j 4 -x exp_summary -i {}
