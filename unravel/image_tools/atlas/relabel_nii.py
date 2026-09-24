@@ -96,7 +96,7 @@ def main():
     nib.save(new_nii, args.output)
 
     # Summarize the volume for each label before and after the replacement
-    if args.output:
+    if args.volumes:
         old_labels, counts_old_labels = np.unique(img, return_counts=True)
         new_labels, counts_new_labels = np.unique(new_img_array, return_counts=True)
         volume_summary_old_labels = pd.DataFrame({columns[0]: old_labels, 'voxel_count': counts_old_labels})
