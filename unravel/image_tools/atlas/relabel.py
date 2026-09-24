@@ -70,7 +70,8 @@ def main():
     else:
         raise FileNotFoundError(f'CSV file not found: {args.csv_input}')
     
-    # Get column names
+    # Keep the first two columns and remove empty rows
+    df = df.iloc[:, :2].dropna(how='all')
     columns = df.columns
 
     # Convert values in columns to integers
@@ -93,6 +94,7 @@ def main():
 
     # Convert the ndarray to an NIfTI image and save
     new_nii = nib.Nifti1Image(new_img_array, nii.affine, nii.header)
+    new_nii.set_data_dtype(new_img_array.dtype)
     nib.save(new_nii, args.output)
 
     # Summarize the volume for each label before and after the replacement
