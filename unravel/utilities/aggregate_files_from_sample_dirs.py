@@ -69,7 +69,7 @@ def aggregate_files_from_sample_dirs(sample_path, pattern, target_dir, add_prefi
                 print(f"Copying {src_path} to {target_output}")
 
         if src_path.exists():
-            shutil.copy(src_path, target_output)
+            shutil.copyfile(src_path, target_output)
 
 
 @log_command
