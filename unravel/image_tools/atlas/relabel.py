@@ -88,7 +88,9 @@ def main():
         new_img_array = np.zeros(img.shape, dtype=np.uint16)
 
     # Replace voxel values in the new image array with the new labels
-    for old_label, new_label in zip(df[columns[0]], df[columns[1]]):
+    for i, (old_label, new_label) in enumerate(zip(df[columns[0]], df[columns[1]]), start=1):
+        if args.verbose:
+            print(f'Relabeling {i}/{len(df)}: {old_label} -> {new_label}')
         mask = img == old_label
         new_img_array[mask] = new_label
 
