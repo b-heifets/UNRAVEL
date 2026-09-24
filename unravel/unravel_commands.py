@@ -658,7 +658,7 @@ def main():
         },
         "Atlas tools": {
             "atlas_relabel": {
-                "module": "unravel.image_tools.atlas.relabel_nii",
+                "module": "unravel.image_tools.atlas.relabel",
                 "description": "Relabel atlas IDs.",
                 "common": False,
                 "alias": "relabel"

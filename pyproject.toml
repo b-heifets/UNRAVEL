@@ -94,8 +94,8 @@ line-length = 120
 [project.scripts]
 unravel_commands = "unravel.unravel_commands:main"
 uc = "unravel.unravel_commands:main"
-atlas_relabel = "unravel.image_tools.atlas.relabel_nii:main"
-relabel = "unravel.image_tools.atlas.relabel_nii:main"
+atlas_relabel = "unravel.image_tools.atlas.relabel:main"
+relabel = "unravel.image_tools.atlas.relabel:main"
 atlas_wireframe = "unravel.image_tools.atlas.wireframe:main"
 wf = "unravel.image_tools.atlas.wireframe:main"
 cstats_fdr_range = "unravel.cluster_stats.fdr_range:main"
