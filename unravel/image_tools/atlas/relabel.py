@@ -71,7 +71,7 @@ def main():
         raise FileNotFoundError(f'CSV file not found: {args.csv_input}')
     
     # Keep the first two columns and remove empty rows
-    df = df.iloc[:, :2].dropna(how='all')
+    df = df.iloc[:, :2].dropna()
     columns = df.columns
 
     # Convert values in columns to integers
