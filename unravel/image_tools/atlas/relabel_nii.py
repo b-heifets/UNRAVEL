@@ -5,7 +5,16 @@ Use ``atlas_relabel`` (``relabel``) from UNRAVEL to convert intensities (e.g., a
 
 Inputs:
     - old_image.nii.gz: Lable image with original intensities.
-    - input.csv: CSV with old IDs in column 1 and new IDs in column 2.
+    - input.csv: CSV with a required header row, old IDs in column 1,
+      and new IDs in column 2. Header names are arbitrary.
+      Labels absent from column 1 are set to 0 in the output.
+
+CSV example:
+------------
+    old_id,new_id
+    1,10
+    2,10
+    3,20
 
 Outputs:
     - new_image.nii.gz: Image with relabeled intensities.
@@ -14,7 +23,7 @@ Outputs:
 
 Usage: 
 ------
-    atlas_relabel -i path/old_image.nii.gz -o path/new_image.nii.gz -ci path/input.csv [-vols] [-odt uint16] [-v]
+    atlas_relabel -i path/old_image.nii.gz -o path/new_image.nii.gz -c path/input.csv [-vols] [-odt uint16] [-v]
 """
 
 import numpy as np
@@ -35,7 +44,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/old_image.nii.gz', required=True, action=SM)
-    reqs.add_argument('-ci', '--csv_input', help='path/input.csv w/ old IDs in column 1 and new IDs in column 2', required=True, action=SM)
+    reqs.add_argument('-c', '--csv_input', help='CSV with a required header row, old IDs in column 1 and new IDs in column 2', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='path/new_image.nii.gz', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
