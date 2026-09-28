@@ -83,8 +83,11 @@ def main():
 
     # Convert old labels to integers and new values to numeric
     df[columns[0]] = df[columns[0]].astype(int)
-    df[columns[1]] = pd.to_numeric(df[columns[1]])
+    df[columns[1]] = pd.to_numeric(df[columns[1]], errors='coerce')
 
+    # Remove rows with non-numeric replacement values
+    df = df.dropna(subset=[columns[1]])
+    
     # Ensure floating-point values are not written to an integer image
     if np.issubdtype(np.dtype(args.data_type), np.integer):
         if not np.all(df[columns[1]] == np.floor(df[columns[1]])):
