@@ -371,7 +371,12 @@ def main():
     print()
 
     # If region IDs are provided using -r, use them; otherwise, get all region IDs from the CSV
-    lut = Path(__file__).parent.parent / 'core' / 'csvs' / args.lut
+    if args.lut == "CCFv3-2020__regionID_side_IDpath_region_abbr.csv":
+        lut = Path(__file__).parent.parent / 'core' / 'csvs' / args.lut
+    else:
+        lut = Path(args.lut)
+        if not lut.exists():
+            raise FileNotFoundError(f"LUT CSV '{lut}' not found. Please provide a valid path.")
     region_ids_to_process = args.region_ids if args.region_ids else get_all_region_ids(lut)
 
     # Filter region IDs based on max Region_Intensity in input CSVs
