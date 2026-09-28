@@ -4,22 +4,29 @@
 Use ``atlas_relabel`` (``relabel``) from UNRAVEL to convert intensities (e.g., atlas label IDs) based on a CSV.
 
 Inputs:
-    - old_image.nii.gz: Lable image with original intensities.
+    - old_image.nii.gz: Label image with original intensities.
     - input.csv: CSV with a required header row, old IDs in column 1,
-      and new IDs in column 2. Header names are arbitrary.
+      and new values in column 2. Header names are arbitrary.
       Labels absent from column 1 are set to 0 in the output.
+      Use ``-odt float32`` when the new values are floats.
 
-CSV example:
-------------
+CSV examples:
+-------------
+
     old_id,new_id
     1,10
     2,10
     3,20
 
+    old_id,p_value
+    1,0.012
+    2,0.034
+    3,0.001
+
 Outputs:
     - new_image.nii.gz: Image with relabeled intensities.
     - relabel_nii_volume_summary_old_labels.csv: Summary of the volume for each label before the replacement.
-    - relabel_nii_volume_summary_new_labels.csv: Summary of the volume for each label after the replacement.
+    - relabel_nii_volume_summary_new_labels.csv: Summary of the volume for each value after the replacement.
 
 Usage: 
 ------
@@ -44,7 +51,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/old_image.nii.gz', required=True, action=SM)
-    reqs.add_argument('-c', '--csv_input', help='CSV with a required header row, old IDs in column 1 and new IDs in column 2', required=True, action=SM)
+    reqs.add_argument('-c', '--csv_input', help='CSV with a required header row, old IDs in column 1 and new values in column 2', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='path/new_image.nii.gz', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -64,7 +71,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    # Load the specified columns from the CSV with CCFv3 info
+    # Load the specified columns from the CSV
     if Path(args.csv_input).exists() and args.csv_input.endswith('.csv'):
         df = pd.read_csv(args.csv_input)
     else:
@@ -74,25 +81,34 @@ def main():
     df = df.iloc[:, :2].dropna()
     columns = df.columns
 
-    # Convert values in columns to integers
-    df[columns] = df[columns].astype(int)
+    # Convert old labels to integers and new values to numeric
+    df[columns[0]] = df[columns[0]].astype(int)
+    df[columns[1]] = pd.to_numeric(df[columns[1]])
+
+    # Ensure floating-point values are not written to an integer image
+    if np.issubdtype(np.dtype(args.data_type), np.integer):
+        if not np.all(df[columns[1]] == np.floor(df[columns[1]])):
+            raise ValueError(
+                f'Column "{columns[1]}" contains non-integer values. '
+                'Use a floating-point output data type such as -odt float32.'
+            )
 
     # Load the NIfTI image
     nii = nib.load(args.input)
     img = nii.get_fdata(dtype=np.float32)
 
-    # Initialize an empty ndarray with the same shape as img and data type uint16
+    # Initialize an empty ndarray with the same shape as img and specified data type
     if args.data_type: 
         new_img_array = np.zeros(img.shape, dtype=args.data_type)
     else:
         new_img_array = np.zeros(img.shape, dtype=np.uint16)
 
-    # Replace voxel values in the new image array with the new labels
-    for i, (old_label, new_label) in enumerate(zip(df[columns[0]], df[columns[1]]), start=1):
+    # Replace voxel values in the new image array with the new values
+    for i, (old_label, new_value) in enumerate(zip(df[columns[0]], df[columns[1]]), start=1):
         if args.verbose:
-            print(f'Relabeling {i}/{len(df)}: {old_label} -> {new_label}')
+            print(f'Relabeling {i}/{len(df)}: {old_label} -> {new_value}')
         mask = img == old_label
-        new_img_array[mask] = new_label
+        new_img_array[mask] = new_value
 
     # Convert the ndarray to an NIfTI image and save
     new_nii = nib.Nifti1Image(new_img_array, nii.affine, nii.header)
@@ -105,8 +121,8 @@ def main():
         new_labels, counts_new_labels = np.unique(new_img_array, return_counts=True)
         volume_summary_old_labels = pd.DataFrame({columns[0]: old_labels, 'voxel_count': counts_old_labels})
         volume_summary_new_labels = pd.DataFrame({columns[1]: new_labels, 'voxel_count': counts_new_labels})
-        volume_summary_old_labels.to_csv(f'relabel_nii_volume_summary_old_labels.csv', index=False) 
-        volume_summary_new_labels.to_csv(f'relabel_nii_volume_summary_new_labels.csv', index=False)
+        volume_summary_old_labels.to_csv('relabel_nii_volume_summary_old_labels.csv', index=False) 
+        volume_summary_new_labels.to_csv('relabel_nii_volume_summary_new_labels.csv', index=False)
 
     verbose_end_msg()
 
