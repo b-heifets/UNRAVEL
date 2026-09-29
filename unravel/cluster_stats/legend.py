@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_legend`` (``legend``) from UNRAVEL to summarize regional abbreviations from _valid_clusters_table.xlsx files.
+Use ``cstats_legend`` (``legend``) from UNRAVEL to summarize regional abbreviations from _clusters_table.xlsx files.
 
 Inputs:
-    - One or more `*`_valid_clusters_table.xlsx files or glob patterns output from ``cstats_table``
+    - One or more `*`_clusters_table.xlsx files or glob patterns output from ``cstats_table``
 
 Outputs:
     - legend.xlsx
@@ -39,7 +39,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-i', '--input', help="One or more xlsx paths or glob patterns (space-separated). Default: '*_valid_clusters_table.xlsx'", default='*_valid_clusters_table.xlsx', nargs='*', action=SM)
+    opts.add_argument('-i', '--input', help="One or more xlsx paths or glob patterns (space-separated). Default: '*_clusters_table.xlsx'", default='*_clusters_table.xlsx', nargs='*', action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
 
     general = parser.add_argument_group('General arguments')
