@@ -104,6 +104,14 @@ def main():
     with Live(progress):
         for sample_path in sample_paths:
 
+            # If the input is a tif series (ends with '.tif' or is a directory), warn if -x and -z are not provided and metadata.txt is missing
+            if str(args.input).endswith('.tif') or Path(sample_path / args.input).is_dir():
+                if args.xy_res is None and args.z_res is None:
+                    metadata_path = sample_path / args.metadata
+                    if not metadata_path.exists():
+                        print(f"\n    [red]Warning:[/] -x and -z must be provided for tif series input if metadata.txt is missing for {sample_path.name}.\n")
+                        continue
+
             # Define output
             output = resolve_path(sample_path, args.output, make_parents=True)
             if output.exists():
