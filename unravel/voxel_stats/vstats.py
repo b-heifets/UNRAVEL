@@ -215,10 +215,18 @@ def main():
         create_design_ttest2(design_path_and_prefix, groups_info[group_keys[0]], groups_info[group_keys[1]])
         print(f"\n    Running t-test for groups {group_keys[0]} and {group_keys[1]}\n")
     elif len(group_keys) > 2:
-        print("\n    Running ANOVA\n")
-        if not design_fts_path.exists():
-            print(f'\n    [red1]{design_fts_path} does not exist. See extended help for setting up files for the ANOVA\n')
-            import sys ; sys.exit() 
+        print("\n    Running multi-group GLM with user-defined contrasts\n")
+
+        for filename in ("design.mat", "design.con"):
+            design_file = stats_dir / filename
+            if not design_file.is_file():
+                print(f"\n    [red1]Required file missing: {design_file}\n")
+                import sys ; sys.exit(1)
+
+        if design_fts_path.is_file():
+            print("    Including F-tests from design.fts\n")
+        else:
+            print("    Running t-contrasts only; no F-tests\n")
     else:
         print("\n    [red1]There should be at least two groups with different prefixes in the input .nii.gz files.\n")
 
