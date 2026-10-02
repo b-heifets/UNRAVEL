@@ -263,6 +263,12 @@ def main():
                 "common": True,
                 "alias": "vs"
             },
+            "vstats_glm": {
+                "module": "unravel.voxel_stats.vstats_glm",
+                "description": "Compute voxel statistics with GLM.",
+                "common": False,
+                "alias": "vsg"
+            },
             "vstats_mirror": {
                 "module": "unravel.voxel_stats.mirror",
                 "description": "Flip and optionally shift content of images in atlas space.",

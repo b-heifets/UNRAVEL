@@ -11,6 +11,7 @@ unravel.voxel_stats package
    whole_to_LR_avg
    hemi_to_LR_avg
    vstats
+   vstats_glm
    mirror
    vstats_check_fsleyes
    match_files
