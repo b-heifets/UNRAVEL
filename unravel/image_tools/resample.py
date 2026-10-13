@@ -1,37 +1,30 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_resample`` (``resample``) from UNRAVEL to resample a 3D image and save it.
+Use ``img_resample`` (``resample``) from UNRAVEL to resample a 3D image.
 
-Note:
-    - target_res, xy_res, and z_res should have the same units (e.g., microns).
-    - If saving as .nii.gz without a reference, orientation defaults to RAS. Use ``io_reorient_nii`` to set orientation.
-
-Supports:
-    - Input formats: .nii.gz, .tif, .zarr, .h5, .czi
-    - Output formats: .nii.gz, .tif, .zarr, .h5
+Notes:
+    - Resolutions are in microns, in array-axis order (not world RAS order).
+      For a PIR NIfTI, -tr 200 10 10 sets P/I/R spacing to 200/10/10 µm.
+    - NIfTI orientation and the center of voxel (0, 0, 0) are preserved.
+      Unknown NIfTI spatial units are assumed to be mm, as elsewhere in UNRAVEL.
+    - Use --input_res for non-NIfTI inputs with unequal x/y spacing;
+      otherwise their input metadata uses UNRAVEL's xy_res/z_res convention.
+    - A NIfTI reference defines the complete output grid; it does not register
+      images. Non-NIfTI images use a zero-origin RAS grid.
+    - Output dimensions are rounded; voxel sizes stay at the requested values.
+      Sampling outside the source uses zero. Order 0 is intended for labels.
+    - TIFF output is a single OME-TIFF, with independent x/y/z voxel sizes.
+      HDF5/Zarr outputs store data and spacing in z/y/x order.
 
 Usage:
 ------
-    img_resample -i image.nii.gz [-tr target_res | -td target_dims | -sc scale_factor | -r reference_image] [-s save_as] [-zo zoom_order] [-o output_dir] [-c czi_channel] [-x xy_res] [-z z_res] [-d dtype] [-v]
-    
-
-Usage for isotropic resampling:
--------------------------------
-    img_resample -i image.nii.gz -tr 50
-
-Usage for anisotropic resampling:
----------------------------------
-    img_resample -i image.nii.gz -tr 200 10 10
-
-Usage for resampling by scale factor:
--------------------------------------
-    img_resample -i image.nii.gz -sc 0.5
-
-Usage to resample using a reference image:
-------------------------------------------
-    img_resample -i image.nii.gz -r ref.nii.gz
-
+    resample -i annotation_10.nii.gz -tr 200 10 10 -zo 0 -d uint16
+    resample -i image.nii.gz -tr 50
+    resample -i image.nii.gz -td 512 512 30
+    resample -i image.nii.gz -sc 0.5
+    resample -i image.nii.gz -r reference.nii.gz
+    resample -i image.tif -ir 2 3 5 -tr 10 10 20
 """
 
 import nibabel as nib
@@ -39,39 +32,206 @@ import numpy as np
 from pathlib import Path
 from rich.traceback import install
 from rich import print
+from scipy.ndimage import affine_transform
+
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_3D_img
-from unravel.core.img_tools import resample
 from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, get_stem
+
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='Image file path(s) or pattern(s), e.g., path/input_image.nii.gz or *.nii.gz', required=True, nargs='*', action=SM)
+    reqs.add_argument(
+        '-i', '--input',
+        help='Image file path(s) or pattern(s), e.g., path/input_image.nii.gz or *.nii.gz',
+        required=True, nargs='*', action=SM
+    )
 
     input_group = parser.add_argument_group('Optional arguments for input processing')
+    input_group.add_argument('-ir', '--input_res', help='Input voxel sizes in microns: one value or three in array-axis order. Overrides metadata.', type=float, nargs='*', action=SM)
     input_group.add_argument('-c', '--channel', help='Channel number. Default: 0', default=0, type=int, action=SM)
     input_group.add_argument('-x', '--xy_res', help='xy resolution (e.g., in microns) for input .tif, .zarr, or .h5 files.', type=float, action=SM)
     input_group.add_argument('-z', '--z_res', help='z resolution (e.g., in microns) for input .tif, .zarr, or .h5 files.', type=float, action=SM)
 
     resample_group = parser.add_argument_group('Optional arguments for resampling (MUST PROVIDE: -tr, -td, -sc, or -r)')
-    resample_group.add_argument('-tr', '--target_res', help='Target resolution (x, y, z in microns, etc.) for resampling (can be isotropic \[e.g., 50 50 50] or anisotropic \[e.g., 50 50 100])', default=None, type=float, nargs='*', action=SM)
-    resample_group.add_argument('-td', '--target_dims', help='Target dimensions for resampling (x, y, z). E.g., 512 512 30', default=None, type=int, nargs='*', action=SM)
-    resample_group.add_argument('-sc', '--scale', help='Scaling factor (e.g., 0.5 or 2 or 0.5 1 1)', default=None, nargs='*', type=float, action=SM)
-    resample_group.add_argument('-r', '--reference', help='Use reference image to set resampling parameters and .nii.gz metadata.', default=None, action=SM)
-    resample_group.add_argument('-zo', '--zoom_order', help='SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.', default=0, type=int, action=SM)
+    resample_group.add_argument(
+        '-tr', '--target_res',
+        help='Target resolution (array axes 0, 1, 2 in microns) for resampling (can be isotropic [e.g., 50] or anisotropic [e.g., 200 10 10])',
+        default=None, type=float, nargs='*', action=SM
+    )
+    resample_group.add_argument(
+        '-td', '--target_dims',
+        help='Target dimensions for resampling (x, y, z). E.g., 512 512 30',
+        default=None, type=int, nargs='*', action=SM
+    )
+    resample_group.add_argument(
+        '-sc', '--scale',
+        help='Scaling factor (e.g., 0.5 or 2 or 0.5 1 1)',
+        default=None, nargs='*', type=float, action=SM
+    )
+    resample_group.add_argument(
+        '-r', '--reference',
+        help='Use reference image to set resampling parameters and .nii.gz metadata.',
+        default=None, action=SM
+    )
+    resample_group.add_argument(
+        '-zo', '--zoom_order',
+        help='Spline interpolation order (0–5). Default: 0 (nearest-neighbor). Use 1 for linear interpolation.',
+        default=0, type=int, choices=range(6), action=SM
+    )
 
     save_group = parser.add_argument_group('Optional arguments for saving')
-    save_group.add_argument('-s', '--save_as', help='Output format extension (nii.gz, .zarr, .tif, or .h5). Default: .nii.gz', default='.nii.gz', choices=['.nii.gz', '.tif', '.zarr', '.h5'], action=SM)
-    save_group.add_argument('-o', '--out_dir', help='Optional output directory. If not provided, saves alongside input (as input_name_resampled.ext).', default=None, action=SM)
-    save_group.add_argument('-d', '--dtype', help='Data type if saving as .nii.gz. Options: uint8, uint16\, float32.', default=None, action=SM)
+    save_group.add_argument(
+        '-s', '--save_as',
+        help='Output format extension (nii.gz, .zarr, .tif, or .h5). Default: .nii.gz',
+        default='.nii.gz',
+        choices=['.nii.gz', '.tif', '.zarr', '.h5'],
+        action=SM
+    )
+    save_group.add_argument(
+        '-o', '--out_dir',
+        help='Optional output directory. If not provided, saves alongside input (as input_name_resampled.ext).',
+        default=None, action=SM
+    )
+    save_group.add_argument(
+        '-d', '--dtype',
+        help='Output data type. Default: input type for order 0, float32 otherwise.',
+        default=None, action=SM
+    )
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
+
+
+def as_xyz(values, name):
+    """Return one or three finite, positive values as an xyz vector."""
+    values = np.atleast_1d(values).astype(float)
+    if values.size == 1:
+        values = np.repeat(values, 3)
+    if values.shape != (3,) or not np.all(np.isfinite(values) & (values > 0)):
+        raise ValueError(f"{name} must contain one or three finite, positive values.")
+    return values
+
+
+def load_image(path, args, reference=False):
+    """Return data (or a NIfTI proxy), an affine in mm, and a NIfTI header."""
+    if str(path).lower().endswith(('.nii', '.nii.gz')):
+        nii = nib.load(str(path))
+        unit = nii.header.get_xyzt_units()[0]
+        factor = {'unknown': 1, 'mm': 1, 'micron': 0.001, 'meter': 1000}[unit]
+        affine = nii.affine.copy()
+        affine[:3, :] *= factor
+        img, header = nii.dataobj, nii.header.copy()
+    else:
+        # Legacy loaders need xy/z values even when only reading pixel data.
+        override = args.input_res if not reference else None
+        xy_res = override[0] if override is not None else args.xy_res
+        z_res = override[2] if override is not None else args.z_res
+        img, xy_res, z_res = load_3D_img(
+            path, channel=args.channel, return_res=True,
+            xy_res=xy_res, z_res=z_res, verbose=args.verbose,
+        )
+        spacing = override if override is not None else [xy_res, xy_res, z_res]
+        spacing = as_xyz(spacing, 'Input resolution; supply --input_res if metadata is missing')
+        affine, header = np.diag([*spacing / 1000, 1]), None
+
+    if len(img.shape) != 3:
+        raise ValueError(f"{path} must be a 3D image. Got shape {img.shape}.")
+
+    if not reference:
+        spacing = args.input_res
+        if spacing is None and (args.xy_res is not None or args.z_res is not None):
+            spacing = nib.affines.voxel_sizes(affine) * 1000
+            if args.xy_res is not None:
+                spacing[:2] = args.xy_res
+            if args.z_res is not None:
+                spacing[2] = args.z_res
+        if spacing is not None:
+            spacing = as_xyz(spacing, 'Input resolution')
+            affine[:3, :3] *= spacing / 1000 / nib.affines.voxel_sizes(affine)
+
+    return img, affine, header
+
+
+def target_grid(shape, affine, args, reference=None):
+    """Define the output grid without changing the source orientation or origin."""
+    if reference is not None:
+        return reference[0].shape, reference[1].copy()
+
+    shape = np.asarray(shape)
+    spacing = nib.affines.voxel_sizes(affine)
+    if args.target_dims is not None:
+        target_shape = np.asarray(args.target_dims)
+        ratio = shape / target_shape
+    else:
+        ratio = args.target_res / 1000 / spacing if args.target_res is not None else 1 / args.scale
+        target_shape = np.rint(shape / ratio).astype(int)
+    if np.any(target_shape < 1):
+        raise ValueError('Target resolution/scale produces an empty axis. Use a finer resolution.')
+
+    target_affine = affine.copy()
+    target_affine[:3, :3] *= ratio
+    return tuple(target_shape), target_affine
+
+
+def resample_image(img, affine, shape, target_affine, order, dtype):
+    """Sample output voxel centers at their corresponding source coordinates."""
+    transform = np.linalg.solve(affine, target_affine)
+    # Avoid floating-point noise at boundaries of otherwise identical grids.
+    rounded = np.rint(transform)
+    transform = np.where(np.abs(transform - rounded) < 1e-10, rounded, transform)
+    return affine_transform(
+        np.asanyarray(img), transform[:3, :3], offset=transform[:3, 3],
+        output_shape=shape, output=np.dtype(dtype), order=order,
+        mode='constant', cval=0, prefilter=order > 1,
+    )
+
+
+def save_image(img, output, affine, header, verbose=False):
+    """Save all three voxel sizes without the legacy xy_res restriction."""
+    output.parent.mkdir(parents=True, exist_ok=True)
+    spacing = nib.affines.voxel_sizes(affine) * 1000
+    if str(output).endswith('.nii.gz'):
+        header = header.copy() if header is not None else nib.Nifti1Header()
+        header.set_xyzt_units('mm')
+        nii = nib.Nifti1Image(img, affine, header)
+        nii.set_data_dtype(img.dtype)
+        nii.set_sform(affine, code=int(header['sform_code']) or 2)
+        try:
+            nii.set_qform(affine, code=int(header['qform_code']) or 1, strip_shears=False)
+        except nib.spatialimages.HeaderDataError:
+            nii.set_qform(None, code=0)  # Shears are represented only by the sform.
+        nii.header.set_slope_inter(1, 0)
+        nib.save(nii, str(output))
+    elif output.suffix == '.tif':
+        import tifffile
+        tifffile.imwrite(
+            str(output), img.transpose(2, 1, 0), ome=True, photometric='minisblack',
+            metadata=dict(axes='ZYX', PhysicalSizeX=spacing[0], PhysicalSizeY=spacing[1],
+                          PhysicalSizeZ=spacing[2], PhysicalSizeXUnit='µm',
+                          PhysicalSizeYUnit='µm', PhysicalSizeZUnit='µm'),
+        )
+    elif output.suffix == '.h5':
+        import h5py
+        with h5py.File(output, 'w') as f:
+            dataset = f.create_dataset('data', data=img.transpose(2, 1, 0), compression='lzf')
+            dataset.attrs['element_size_um'] = spacing[::-1]
+    else:
+        import zarr
+        save_3D_img(img, output, verbose=verbose)
+        zarr.open(str(output), mode='a').attrs['multiscales'] = [{
+            'version': '0.4',
+            'axes': [{'name': axis, 'type': 'space', 'unit': 'micrometer'} for axis in 'zyx'],
+            'datasets': [{'path': '.', 'coordinateTransformations': [
+                {'type': 'scale', 'scale': spacing[::-1].tolist()},
+            ]}],
+        }]
+    print(f"\n    Output: [default bold]{output.resolve()}")
 
 
 @log_command
@@ -81,97 +241,35 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    if not any([args.target_res, args.target_dims, args.scale, args.reference]):
-        raise ValueError("You must specify one of --target_res, --target_dims, --scale, or --reference.")
+    if sum(value is not None for value in (args.target_res, args.target_dims, args.scale, args.reference)) != 1:
+        raise ValueError('Specify exactly one of --target_res, --target_dims, --scale, or --reference.')
+    for name in ('target_res', 'scale', 'input_res'):
+        if getattr(args, name) is not None:
+            setattr(args, name, as_xyz(getattr(args, name), name))
+    if args.target_dims is not None:
+        if len(args.target_dims) != 3 or min(args.target_dims) < 1:
+            raise ValueError('Target dimensions must contain three positive integers.')
+    if args.input_res is not None and (args.xy_res is not None or args.z_res is not None):
+        raise ValueError('Use --input_res or --xy_res/--z_res, not both.')
 
-
-    image_paths = match_files(args.input)
-
-    # Reference logic
-    scale = args.scale
-    target_dims = args.target_dims
-    target_res = args.target_res
-
-    if target_dims and len(target_dims) != 3:
-        raise ValueError("Target dimensions must have 3 values (x, y, z).")
-
-    if args.reference:
-        if str(args.reference).endswith('.nii.gz') or str(args.reference).endswith('.czi'):
-            ref_img, target_res_xy, target_res_z = load_3D_img(args.reference, channel=args.channel, return_res=True, verbose=args.verbose)
-        else:
-            ref_img = load_3D_img(args.reference, channel=args.channel, verbose=args.verbose)
-        target_dims = ref_img.shape   
-
-        if ref_img.ndim != 3:
-            raise ValueError(f"Reference image {args.reference} must be a 3D image. Got {ref_img.ndim}.")
-
-    for image_path in image_paths:
-        stem = get_stem(image_path)
-        filename = stem + '_resampled' + args.save_as
-
-        if args.out_dir:
-            Path(args.out_dir).mkdir(parents=True, exist_ok=True)
-            out_path = Path(args.out_dir) / filename
-        else:
-            out_path = image_path.with_name(filename)
-
-        # Load image and resolution
-        xy_res, z_res = args.xy_res, args.z_res
-        if xy_res is None or z_res is None:
-            img, xy_res, z_res = load_3D_img(image_path, args.channel, return_res=True, verbose=args.verbose)
-        else:
-            img = load_3D_img(image_path, args.channel, verbose=args.verbose)
-
-        # Resample
-        img_resampled = resample(
-            img,
-            xy_res=xy_res,
-            z_res=z_res,
-            target_res=target_res,
-            target_dims=target_dims,
-            scale=scale,
-            zoom_order=args.zoom_order,
-        )
-
-        # Determine output resolution for saving
-        if scale:
-            zooms = np.atleast_1d(scale)
-            if len(zooms) == 1:
-                zooms = [zooms[0]] * 3
-            target_res_xy = xy_res / zooms[0]
-            target_res_z = z_res / zooms[2] if len(zooms) > 2 else z_res / zooms[0]
-        elif target_dims and len(target_dims) == 3:
-            target_res_xy = xy_res * (img.shape[0] / target_dims[0])
-            target_res_z = z_res * (img.shape[2] / target_dims[2])
-        elif target_res:
-            target_res = np.atleast_1d(target_res)
-            if len(target_res) == 1:
-                target_res = [target_res[0]] * 3
-            elif len(target_res) != 3:
-                raise ValueError("target_res must be a float or list of 3 floats.")
-            target_res_xy = target_res[0]
-            target_res_z = target_res[2]
-
-        # Calculate zoom factors
-        zoom_xy = xy_res / target_res_xy
-        zoom_z  = z_res / target_res_z
-
+    reference = load_image(args.reference, args, reference=True) if args.reference else None
+    for image_path in match_files(args.input):
+        image_path = Path(image_path)
+        output_dir = Path(args.out_dir) if args.out_dir else image_path.parent
+        output = output_dir / (get_stem(image_path) + '_resampled' + args.save_as)
+        img, affine, header = load_image(image_path, args)
+        shape, target_affine = target_grid(img.shape, affine, args, reference)
+        # Materialize NIfTI scaling before choosing an output dtype.
+        img = np.asanyarray(img)
+        dtype = args.dtype or (img.dtype if args.zoom_order == 0 else np.float32)
+        result = resample_image(img, affine, shape, target_affine, args.zoom_order, dtype)
         if args.verbose:
-            print(f"\n[bold]{image_path.name}[/bold]")
-            print(f"    Original shape: {img.shape}")
-            print(f"    xy res: {xy_res} µm, z res: {z_res} µm")
-            print(f"    Zoom factors: xy={zoom_xy}, z={zoom_z}")
-            print(f"    Resampled shape: {img_resampled.shape}")
-            print(f"    Target xy res: {target_res_xy} µm, Target z res: {target_res_z} µm")
-            print(f"    Zoom order: {args.zoom_order}")
-            print(f"    Output path: {out_path}\n")
-
-        if args.reference and str(args.save_as) == '.nii.gz':
-            save_3D_img(img_resampled, out_path, xy_res=target_res_xy, z_res=target_res_z, data_type=args.dtype, reference_img=args.reference, verbose=args.verbose)
-        else:
-            save_3D_img(img_resampled, out_path, xy_res=target_res_xy, z_res=target_res_z, verbose=args.verbose)
+            print(f"\n    Original shape: {img.shape}; resampled shape: {result.shape}")
+            print(f"    Voxel sizes (µm): {tuple(nib.affines.voxel_sizes(target_affine) * 1000)}")
+        save_image(result, output, target_affine, reference[2] if reference else header, args.verbose)
 
     verbose_end_msg()
+
 
 if __name__ == '__main__':
     main()
