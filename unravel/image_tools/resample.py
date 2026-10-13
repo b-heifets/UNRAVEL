@@ -57,7 +57,7 @@ def parse_args():
     input_group.add_argument('-z', '--z_res', help='z resolution (e.g., in microns) for input .tif, .zarr, or .h5 files.', type=float, action=SM)
 
     resample_group = parser.add_argument_group('Optional arguments for resampling (MUST PROVIDE: -tr, -td, -sc, or -r)')
-    resample_group.add_argument('-tr', '--target_res', help='Target resolution (x, y, z in microns, etc.) for resampling (can be isotropic [e.g., 50 50 50] or anisotropic [e.g., 50 50 100])', default=None, type=float, nargs='*', action=SM)
+    resample_group.add_argument('-tr', '--target_res', help='Target resolution (x, y, z in microns, etc.) for resampling (can be isotropic \[e.g., 50 50 50] or anisotropic \[e.g., 50 50 100])', default=None, type=float, nargs='*', action=SM)
     resample_group.add_argument('-td', '--target_dims', help='Target dimensions for resampling (x, y, z). E.g., 512 512 30', default=None, type=int, nargs='*', action=SM)
     resample_group.add_argument('-sc', '--scale', help='Scaling factor (e.g., 0.5 or 2 or 0.5 1 1)', default=None, nargs='*', type=float, action=SM)
     resample_group.add_argument('-r', '--reference', help='Use reference image to set resampling parameters and .nii.gz metadata.', default=None, action=SM)
@@ -65,7 +65,7 @@ def parse_args():
 
     save_group = parser.add_argument_group('Optional arguments for saving')
     save_group.add_argument('-s', '--save_as', help='Output format extension (nii.gz, .zarr, .tif, or .h5). Default: .nii.gz', default='.nii.gz', choices=['.nii.gz', '.tif', '.zarr', '.h5'], action=SM)
-    save_group.add_argument('-o', '--out_dir', help='Optional output directory. If not provided, saves alongside input', default=None, action=SM)
+    save_group.add_argument('-o', '--out_dir', help='Optional output directory. If not provided, saves alongside input (as input_name_resampled.ext).', default=None, action=SM)
     save_group.add_argument('-d', '--dtype', help='Data type if saving as .nii.gz. Options: uint8, uint16, float32.', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
