@@ -19,7 +19,7 @@ Notes:
 
 Usage:
 ------
-    resample -i annotation_10.nii.gz -tr 200 10 10 -zo 0 -d uint16 -n annotation_200x10x10.nii.gz
+    resample -i annotation_10.nii.gz -tr 200 10 10 -zo 0 -d uint16 -o resampled -n annotation_200x10x10.nii.gz
     resample -i image.nii.gz -tr 50
     resample -i image.nii.gz -td 512 512 30
     resample -i image.nii.gz -sc 0.5
