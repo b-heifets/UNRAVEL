@@ -19,7 +19,7 @@ Notes:
 
 Usage:
 ------
-    resample -i annotation_10.nii.gz -tr 200 10 10 -zo 0 -d uint16
+    resample -i annotation_10.nii.gz -tr 200 10 10 -zo 0 -d uint16 -n annotation_200x10x10.nii.gz
     resample -i image.nii.gz -tr 50
     resample -i image.nii.gz -td 512 512 30
     resample -i image.nii.gz -sc 0.5
@@ -79,7 +79,7 @@ def parse_args():
     )
     resample_group.add_argument(
         '-zo', '--zoom_order',
-        help='Spline interpolation order (0–5). Default: 0 (nearest-neighbor). Use 1 for linear interpolation.',
+        help='Spline interpolation order (0-5). Default: 0 (nearest-neighbor). Use 1 for linear interpolation.',
         default=0, type=int, choices=range(6), action=SM
     )
 
@@ -94,6 +94,11 @@ def parse_args():
     save_group.add_argument(
         '-o', '--out_dir',
         help='Optional output directory. If not provided, saves alongside input (as input_name_resampled.ext).',
+        default=None, action=SM
+    )
+    save_group.add_argument(
+        '-n', '--output_name',
+        help='Output filename, including the --save_as extension. Requires exactly one matched input. Use --out_dir for its directory.',
         default=None, action=SM
     )
     save_group.add_argument(
@@ -252,11 +257,23 @@ def main():
     if args.input_res is not None and (args.xy_res is not None or args.z_res is not None):
         raise ValueError('Use --input_res or --xy_res/--z_res, not both.')
 
+    image_paths = match_files(args.input)
+    if args.output_name is not None:
+        if len(image_paths) != 1:
+            raise ValueError('--output_name requires exactly one matched input file.')
+        if Path(args.output_name).name != args.output_name:
+            raise ValueError('--output_name must be a filename. Use --out_dir for its directory.')
+        if not args.output_name.endswith(args.save_as):
+            raise ValueError(f'--output_name must end with {args.save_as}, as selected by --save_as.')
+
     reference = load_image(args.reference, args, reference=True) if args.reference else None
-    for image_path in match_files(args.input):
+    for image_path in image_paths:
         image_path = Path(image_path)
         output_dir = Path(args.out_dir) if args.out_dir else image_path.parent
-        output = output_dir / (get_stem(image_path) + '_resampled' + args.save_as)
+        filename = args.output_name or (get_stem(image_path) + '_resampled' + args.save_as)
+        output = output_dir / filename
+        if output.resolve() == image_path.resolve():
+            raise ValueError('Output must differ from the input file.')
         img, affine, header = load_image(image_path, args)
         shape, target_affine = target_grid(img.shape, affine, args, reference)
         # Materialize NIfTI scaling before choosing an output dtype.
