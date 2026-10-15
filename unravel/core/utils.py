@@ -253,20 +253,31 @@ def log_command(func):
         # Command string
         cmd = f"\n{os.path.basename(sys.argv[0])} {' '.join(sys.argv[1:])}"
 
-        # Log command to file
-        with open(log_file, "a") as file:  # Open in append mode
-            file.write(cmd)
-            start_time = datetime.now()
-            file.write(f"\n    Start: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        logging_enabled = True
+
+        # Log command and start time to file
+        try:
+            with open(log_file, "a") as file:
+                file.write(cmd)
+                start_time = datetime.now()
+                file.write(f"\n    Start: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        except OSError as e:
+            logging_enabled = False
+            print(f"Warning: Could not write to {log_file}: {e}", file=sys.stderr)
 
         result = func(*args, **kwargs)  # Call the original function
 
-        # Always log end time to file
-        with open(log_file, "a") as file:
-            end_time = datetime.now()
-            file.write(f"\n    End: {end_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
-        
+        # Log end time if logging was successful
+        if logging_enabled:
+            try:
+                with open(log_file, "a") as file:
+                    end_time = datetime.now()
+                    file.write(f"\n    End: {end_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+            except OSError as e:
+                print(f"Warning: Could not write to {log_file}: {e}", file=sys.stderr)
+
         return result
+
     return wrapper
 
 
