@@ -285,8 +285,8 @@ def main():
         # Get the CoG for each cluster (values in last three columns of each row)
         CoGs = cluster_info_df.iloc[:, -3:].values
 
-        # Convert to this format: 'x,y,z'
-        CoGs = [','.join(map(str, CoG)) for CoG in CoGs]
+        # Convert to this format: 'x, y, z'
+        CoGs = [', '.join(map(str, CoG)) for CoG in CoGs]
 
         # Create a dict w/ the first column as keys and the CoG as values
         cluster_CoGs = dict(zip(cluster_info_df[first_column_name], CoGs))
