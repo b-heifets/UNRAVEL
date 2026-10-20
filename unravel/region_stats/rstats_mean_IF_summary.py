@@ -12,14 +12,20 @@ Inputs:
     - `*`.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
 
 Outputs:
-    - rstats_mean_IF_summary/region_<region_id>_<region_abbr>.pdf for each region
+    - regional_mean_IF_summary/region_<region_id>_<region_abbr>.pdf for each region
     - regional_mean_IF_summary/regional_mean_IF_summary_<test>.csv
-    - If significant differences are found, a prefix '_' is added to the filename to sort the files
+    - A prefix '_' marks plots with FDR-significant differences at --q (default: 0.05).
 
 Note:
     - The first word of the csv inputs is used for the the group names (e.g. Control from Control_sample01_cFos_rb4_atlas_space_z.csv)
     - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv
     - Alternatively, use CCFv3-2017__regionID_side_IDpath_region_abbr.csv or provide a custom CSV with the same columns.
+    - Benjamini-Hochberg FDR correction pools all finite p values across all processed regions and group comparisons in this run.
+    - For t-tests, FDR uses raw p values; for Tukey/Dunnett, it uses their within-region adjusted p values (an additional conservative correction).
+    - BH assumes independent or suitably positively dependent tests; it does not guarantee control under arbitrary dependence.
+    - Original p values and significance are retained; p-fdr, reject_fdr, significance_fdr, and fdr_q report the correction.
+    - Plot stars use p-fdr (<0.0001: ****, <0.001: ***, <0.01: **, otherwise * when rejected at q).
+    - Non-finite p values remain untested (NaN p-fdr, False reject_fdr).
     - The look up table (LUT) csv has these columns: 'Region_ID', 'Side', 'Name', 'Abbr'
 
 Usage for t-tests:
@@ -47,6 +53,7 @@ from rich.traceback import install
 from pathlib import Path
 from scipy.stats import ttest_ind, dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
+from statsmodels.stats.multitest import multipletests
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
@@ -66,12 +73,16 @@ def parse_args():
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
     opts.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
     opts.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default="CCFv3-2020__regionID_side_IDpath_region_abbr.csv", action=SM)
+    opts.add_argument('-q', '--q', type=float, default=0.05, help='FDR threshold across all regions and comparisons; must be between 0 and 1. Default: 0.05', action=SM)
     opts.add_argument('-s', '--skip_plots', help='Only write the summary CSV; do not generate PDF plots.', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if not 0 < args.q < 1:
+        parser.error('--q must be strictly between 0 and 1.')
+    return args
 
 # TODO: Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 # TODO: CSVs are loaded for each region. It would be more efficient to load them once for processing all regions. 
@@ -191,8 +202,11 @@ def add_group_summary_columns(test_df, df):
 def run_stats(df, order, test_type, alt):
     """Run the selected statistical test."""
     if test_type == 'tukey':
-        test_results = pairwise_tukeyhsd(df['mean_intensity'], df['group']).summary()
-        test_df = pd.DataFrame(test_results.data[1:], columns=test_results.data[0])
+        test_results = pairwise_tukeyhsd(df['mean_intensity'], df['group'])
+        summary = test_results.summary()
+        test_df = pd.DataFrame(summary.data[1:], columns=summary.data[0])
+        # The formatted summary rounds p values; FDR requires full precision.
+        test_df['p-adj'] = test_results.pvalues
         test_df['statistic'] = np.nan
     elif test_type == 'dunnett':
         control_data = df[df['group'] == order[0]]['mean_intensity'].values
@@ -218,7 +232,31 @@ def run_stats(df, order, test_type, alt):
     return test_df
 
 
-def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tukey', alt='two-sided', skip_plots=False):
+def apply_fdr_correction(test_df, test_type, q=0.05):
+    """Correct one family containing every finite region/comparison p value."""
+    if not 0 < q < 1:
+        raise ValueError('q must be strictly between 0 and 1.')
+    test_df = test_df.copy()
+    p_col = 'p-value' if test_type == 'ttest' else 'p-adj'
+    valid = np.isfinite(test_df[p_col])
+    test_df['p-fdr'] = np.nan
+    test_df['reject_fdr'] = False
+    test_df['fdr_q'] = q
+    if valid.any():
+        reject, adjusted, _, _ = multipletests(
+            test_df.loc[valid, p_col].to_numpy(), alpha=q, method='fdr_bh'
+        )
+        test_df.loc[valid, 'p-fdr'] = adjusted
+        test_df.loc[valid, 'reject_fdr'] = reject
+    test_df['significance_fdr'] = [
+        ('****' if p < 0.0001 else '***' if p < 0.001 else
+         '**' if p < 0.01 else '*') if rejected else 'n.s.'
+        for p, rejected in zip(test_df['p-fdr'], test_df['reject_fdr'])
+    ]
+    return test_df
+
+
+def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tukey', alt='two-sided', skip_plots=False, test_df=None):
     df = load_data(region_id)
 
     if 'group' not in df.columns:
@@ -255,16 +293,20 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
     else:
         df['group_label'] = df['group']
 
-    test_df = run_stats(df, order, test_type, alt)
+    if test_df is None:
+        test_df = run_stats(df, order, test_type, alt)
+    else:
+        test_df = test_df.copy()
     test_df['region_ID'] = region_id
     test_df['region'] = region_name
     test_df['abbr'] = region_abbr
 
-    p_col = 'p-value' if test_type == 'ttest' else 'p-adj'
-
     if skip_plots:
         return test_df
     
+    if 'reject_fdr' not in test_df:
+        raise ValueError('Plotting requires FDR-corrected results from all regions.')
+
     # Bar plot
     plt.figure(figsize=(4, 4))
     ax = sns.barplot(x='group_label', y='mean_intensity', data=df, color='white', errorbar=('se'), capsize=0.1, linewidth=2, edgecolor='black')
@@ -286,7 +328,7 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
     if ax.legend_:
         ax.legend_.remove()
 
-    significant_comparisons = test_df[test_df['reject'] == True]
+    significant_comparisons = test_df[test_df['reject_fdr'] == True]
 
     # Calculate y-axis limits
     y_max = df['mean_intensity'].max()
@@ -303,15 +345,8 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
 
         plt.plot([x1, x1, x2, x2], [y_pos, y_pos + height_diff, y_pos + height_diff, y_pos], lw=1.5, c='black')
         
-        if row[p_col] < 0.0001:
-            sig = '****'
-        elif row[p_col] < 0.001:
-            sig = '***'
-        elif row[p_col] < 0.01:
-            sig = '**'
-        else:
-            sig = '*'
-            
+        sig = row['significance_fdr']
+
         plt.text((x1+x2)*.5, y_pos + 0.8*height_diff, sig, horizontalalignment='center', size='xx-large', color='black', weight='bold')
         y_pos += 3 * height_diff
 
@@ -324,7 +359,7 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
     output_folder = Path('regional_mean_IF_summary')
     output_folder.mkdir(parents=True, exist_ok=True)
 
-    title = f"{region_name} ({region_abbr})"
+    title = f"{region_name} ({region_abbr})\nFDR q = {test_df['fdr_q'].iloc[0]:g}"
     wrapped_title = textwrap.fill(title, 42)  # wraps at x characters. Adjust as needed.
     plt.title(wrapped_title)
     plt.tight_layout()
@@ -334,6 +369,9 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
     file_prefix = '_' if is_significant else ''
     file_name = f"{file_prefix}region_{region_id}_{region_abbr}.pdf"
     plt.savefig(output_folder / file_name)
+    # Remove the opposite significance prefix left by an earlier run.
+    stale_name = f"{'' if is_significant else '_'}region_{region_id}_{region_abbr}.pdf"
+    (output_folder / stale_name).unlink(missing_ok=True)
 
     plt.close()
 
@@ -353,8 +391,8 @@ def main():
     if args.order and args.labels and len(args.order) != len(args.labels):
         raise ValueError("The number of entries in --order and --labels must match.")
 
-    if len(args.order) < 2:
-        raise ValueError("At least two groups are required for comparison)")
+    if not args.order or len(args.order) < 2:
+        raise ValueError("At least two groups are required for comparison.")
     
     if args.test is not None:
         test_type = args.test
@@ -388,12 +426,24 @@ def main():
 
     test_results = []
 
-    # Process each region ID
+    if not region_ids_to_process:
+        raise ValueError('No nonzero regions remain to test.')
+
+    # Collect every test before correcting or plotting.
     for region_id in region_ids_to_process:
-        test_df = plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=test_type, alt=args.alternate, skip_plots=args.skip_plots)
+        test_df = plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=test_type, alt=args.alternate, skip_plots=True)
         test_results.append(test_df)
 
-    test_df_all = pd.concat(test_results, ignore_index=True)
+    test_df_all = apply_fdr_correction(
+        pd.concat(test_results, ignore_index=True), test_type, q=args.q
+    )
+    if not args.skip_plots:
+        for region_id in region_ids_to_process:
+            plot_data(
+                region_id, args.order, args.labels, csv_path=lut,
+                test_type=test_type, alt=args.alternate,
+                test_df=test_df_all[test_df_all['region_ID'] == region_id],
+            )
 
     id_cols = ['region_ID', 'region', 'abbr']
     stats_cols = [
@@ -404,6 +454,10 @@ def main():
         'p-adj', # Used for Dunnett's and Tukey's tests
         # 'reject',
         'significance',
+        'p-fdr',
+        'reject_fdr',
+        'significance_fdr',
+        'fdr_q',
         'n_group1',
         'n_group2',
         'mean_group1',
