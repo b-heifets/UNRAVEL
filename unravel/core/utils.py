@@ -36,7 +36,7 @@ Examples:
     >>> samples = get_samples(["path/to/dir1", "path/to/dir2"], dir_pattern="sample??", verbose=True)
     
     >>> # Initialize a progress bar
-    >>> progress, task_id = initialize_progress_bar(len(samples), task_message="[red]Processing samples...")
+    >>> progress, task_id = initialize_progress_bar(len(samples), task_message="Processing samples...")
 
 """
 

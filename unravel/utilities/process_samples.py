@@ -60,7 +60,7 @@ def process_samples(command, output, dirs, pattern, verbose):
 
     sample_paths = get_samples(dirs, pattern, verbose)
 
-    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(sample_paths), "Processing samples...")
     with Live(progress):
         for sample_path in sample_paths:
 

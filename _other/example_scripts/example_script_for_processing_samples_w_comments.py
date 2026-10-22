@@ -45,7 +45,7 @@ def example_function(img_path, verbose=False):
 def main(): # This is the main function that is called at the bottom of the script
     args = parse_args()
     samples = get_samples(args.dirs, args.pattern) # get_samples() returns a list of sample directories
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(samples), "Processing samples...")
     with Live(progress): # This starts the progress bar
         for sample in samples: # This iterates through each sample directory
             example_function(Path(sample).resolve(), verbose=args.verbose) # This calls the example_function() function defined above, passing the path to sample directory as an argument (e.g., the sample dir could contain a .czi file)

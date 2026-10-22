@@ -56,7 +56,7 @@ def main():
     if samples == ['.']:
         samples[0] = Path.cwd().name
 
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(samples), "Processing samples...")
     with Live(progress):
         for sample in samples:
 

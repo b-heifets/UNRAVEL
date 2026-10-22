@@ -52,7 +52,7 @@ def main():
 
     rows = []
 
-    progress, task_id = initialize_progress_bar(len(nii_files), "[red]Processing .nii.gz files...")
+    progress, task_id = initialize_progress_bar(len(nii_files), "Processing .nii.gz files...")
     with Live(progress):
 
         for nii in nii_files:

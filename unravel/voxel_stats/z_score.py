@@ -206,7 +206,7 @@ def main():
         print("\n    Warning: No mask provided. Z-scoring will be done for the whole image.\n")
         
     sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
-    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(sample_paths), "Processing samples...")
     with Live(progress):
         for sample_path in sample_paths:
             input_paths = match_files(args.input, sample_path)

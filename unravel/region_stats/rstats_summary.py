@@ -660,7 +660,7 @@ def main():
 
         # Averaging data across hemispheres and plotting pooled data
         unique_region_ids = df[df["Side"] == "R"]["Region_ID"].unique()
-        progress, task_id = initialize_progress_bar(len(unique_region_ids), "[red]Processing regions (pooled)...")
+        progress, task_id = initialize_progress_bar(len(unique_region_ids), "Processing regions (pooled)...")
         with Live(progress):
             for region_id in unique_region_ids:
                 region_name, region_abbr = get_region_details(region_id, df)
@@ -694,7 +694,7 @@ def main():
         side_df = df[df['Side'] == side]
         side_df = mask_excluded_side(side_df, side, exclude_map)
         unique_region_ids = side_df["Region_ID"].unique() # Get unique region IDs for the current side
-        progress, task_id = initialize_progress_bar(len(unique_region_ids), f"[red]Processing regions ({side})...")
+        progress, task_id = initialize_progress_bar(len(unique_region_ids), f"Processing regions ({side})...")
         with Live(progress):
             for region_id in unique_region_ids:
                 region_name, region_abbr = get_region_details(region_id, side_df)

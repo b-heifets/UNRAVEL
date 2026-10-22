@@ -396,7 +396,7 @@ def main():
                                 (args.output and Path(args.output).is_absolute())):
         raise ValueError('Use sample-relative input/output paths for batch processing.')
     failures = 0
-    progress, task_id = initialize_progress_bar(len(sample_paths), '[red]Processing samples...')
+    progress, task_id = initialize_progress_bar(len(sample_paths), 'Processing samples...')
     with Live(progress):
         for sample_path in sample_paths:
             print(f'\n    {sample_path}')
