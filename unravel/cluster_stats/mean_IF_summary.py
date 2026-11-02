@@ -20,6 +20,7 @@ Note:
     - The first word of each CSV filename is used as the group name.
       Example: Control_sample01_cFos_z.csv -> group = Control
     - If significant differences are found, a prefix '_' is added to the plot filename.
+    - For Dunnett's test, the first group in --order is used as the control.
 
 Usage for cluster-only t-tests:
 -------------------------------
@@ -76,7 +77,7 @@ def parse_args():
     reqs.add_argument(
         '--order',
         nargs='*',
-        help='Group order for plotting and stats. Must match first word of CSV filenames.',
+        help="Group order for plotting and stats. Must match first word of CSV filenames. For Dunnett's test, the first group is the control.",
         required=True,
         action=SM,
     )
