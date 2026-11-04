@@ -3,6 +3,11 @@
 """
 Use ``img_modify_labels`` (``ml``) from UNRAVEL to modify specified label IDs in a NIfTI image.
 
+Notes:
+------
+    -val sets the value of specified IDs by default. With --retain_IDs,
+    it instead sets the value of excluded voxels (default: 0).
+
 Usage: 
 ------
     img_modify_labels -i path/image.nii.gz -ids 1 2 3 -o path/image.nii.gz [-val 0] [--retain_IDs] [--binarize] [-v]
@@ -29,12 +34,12 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/image.nii.gz', required=True, action=SM)
-    reqs.add_argument('-ids', '--label_IDs', help='Space-separated list of label IDs to modify.', nargs='*', type=int, default=None, required=True, action=SM)
+    reqs.add_argument('-l', '-ids', '--label_IDs', help='Space-separated list of label IDs to modify.', nargs='*', type=int, default=None, required=True, action=SM)
     reqs.add_argument('-o', '--output', help='path/image.nii.gz', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-val', '--value', help='Intensity to set for specified labels (default: 0).', type=int, default=0)
-    opts.add_argument('-r', '--retain_IDs', help='Retain only specified label IDs, setting others using -val.', action='store_true', default=False)
+    opts.add_argument('-val', '--value', help='Value assigned to specified label IDs, or to excluded IDs when --retain_IDs is used (default: 0).', type=int, default=0)
+    opts.add_argument('-r', '--retain_IDs', help='Retain specified label IDs and set all other voxels to -val (default: 0).', action='store_true', default=False)
     opts.add_argument('-b', '--binarize', help='Binarize the output image (set all non-zero values to 1).', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
