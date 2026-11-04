@@ -7,9 +7,9 @@ Usage:
 ------
     img_modify_labels -i path/image.nii.gz -ids 1 2 3 -o path/image.nii.gz [-val 0] [--retain_IDs] [--binarize] [-v]
 
-Usage to mask a region w/ multiple labels:
-------------------------------------------
-    img_modify_labels -i atlas.nii.gz -o mask.nii.gz --retain_IDs -ids <ID1> <ID2> -val 0 -b
+Usage to make a region mask:
+----------------------------
+    img_modify_labels -i atlas.nii.gz -o mask.nii.gz --retain_IDs -ids <ID1> <ID2> -b
 """
 
 from pathlib import Path
@@ -106,7 +106,7 @@ def main():
 
     # Binarize the image if specified
     if args.binarize:
-        new_img_array[new_img_array > 0] = 1
+        new_img_array[new_img_array != 0] = 1
 
     # Save the modified image as a NIfTI file
     output_path = Path(args.output)
