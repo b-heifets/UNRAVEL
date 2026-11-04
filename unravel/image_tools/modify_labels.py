@@ -109,9 +109,10 @@ def main():
     else:
         new_img_array = set_labels(img, args.label_IDs, args.value)
 
-    # Binarize the image if specified
+    # Binarize and convert to uint8 if specified
     if args.binarize:
-        new_img_array[new_img_array != 0] = 1
+        new_img_array = (new_img_array != 0).astype(np.uint8)
+        nii.header.set_data_dtype(np.uint8)
 
     # Save the modified image as a NIfTI file
     output_path = Path(args.output)
