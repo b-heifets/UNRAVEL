@@ -98,7 +98,7 @@ def copy_specific_tifs(sample_path, source_dir, target_dir, slice_numbers, verbo
 
     for file_path in tif_files:
         # Extract the final numeric portion of the filename
-        match = re.search(r"(\d+)$", file_path.stem)
+        match = re.search(r"(\d+)(?:\.ome)?$", file_path.stem, re.IGNORECASE)
 
         if not match:
             continue
