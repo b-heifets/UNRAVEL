@@ -19,6 +19,7 @@ Usage to copy tifs for ilastik:
     seg_copy_tifs -i <relative path to dir with tifs or to a 3D image> -s 0100 0500 1000 [-td ilastik_segmentation] [-d list of paths] [-p sample??] [-v]
 """
 
+import re
 import shutil
 import tifffile
 import numpy as np
@@ -55,31 +56,76 @@ def parse_args():
 
 
 def copy_specific_tifs(sample_path, source_dir, target_dir, slice_numbers, verbose=False):
-    """Copy the specified tif slices from the source directory to the target directory.
-    
-    Parameters:
-    -----------
-    sample_path : Path or str
-        Path to the sample directory (appended to the destination file name).
-    source_dir : Path or str
-        Path to the source directory containing the .tif files.
-    target_dir : Path or str
-        Path to the target directory where the selected slices will be copied.
-    slice_numbers : list
-        List of slice numbers to copy (4 digits each).
-    verbose : bool
-        Print verbose output.
     """
-    tif_files = match_files("*.tif", source_dir)
-    
-    Path(target_dir).mkdir(exist_ok=True, parents=True)
+    Copy specified TIFF slices from a sample directory to a target directory.
+
+    Supports .tif, .tiff, .ome.tif, and .ome.tiff files. Matches slice indices
+    numerically using the trailing digits in each filename (e.g., 0250 or 250).
+    Prepends the sample directory name to copied filenames to avoid conflicts.
+    Warns when requested slices are missing.
+
+    Parameters
+    ----------
+    sample_path : str or Path
+        Sample directory; its name is prepended to output filenames.
+    source_dir : str or Path
+        Directory containing the source TIFF files.
+    target_dir : str or Path
+        Destination directory, created if needed.
+    slice_numbers : list of str
+        Requested slice indices (e.g., ['0250', '0500', '0750']).
+    verbose : bool, optional
+        Print each copied file when True.
+
+    Returns
+    -------
+    int
+        Number of TIFF files successfully copied.
+    """
+
+    tif_files = sorted(
+        p for p in Path(source_dir).iterdir()
+        if p.is_file() and p.suffix.lower() in (".tif", ".tiff")
+    )
+
+    requested = set(map(int, slice_numbers))
+    found = set()
+    copied = 0
+
+    if not tif_files:
+        print(f"[yellow]WARNING: No TIFF files found in {source_dir}[/yellow]")
+        return 0
 
     for file_path in tif_files:
-        if any(file_path.stem.endswith(f"{slice:04}") for slice in map(int, slice_numbers)):
-            dest_file = Path(target_dir) / f'{Path(sample_path).name}_{file_path.name}'
-            shutil.copy(file_path, dest_file)
+        # Extract the final numeric portion of the filename
+        match = re.search(r"(\d+)$", file_path.stem)
+
+        if not match:
+            continue
+
+        slice_idx = int(match.group(1))
+
+        if slice_idx in requested:
+            dest_file = Path(target_dir) / f"{Path(sample_path).name}_{file_path.name}"
+            Path(target_dir).mkdir(parents=True, exist_ok=True)
+
+            shutil.copy2(file_path, dest_file)
+            found.add(slice_idx)
+            copied += 1
+
             if verbose:
-                print(f"    Copied {file_path} to {dest_file}")
+                print(f"    Copied {file_path.name} -> {dest_file}")
+
+    missing = requested - found
+
+    if missing:
+        print(
+            f"[yellow]WARNING: {Path(sample_path).name}: "
+            f"No matching TIFF for slices {sorted(missing)} "
+            f"in {source_dir}[/yellow]"
+        )
+
+    return copied
 
 
 @log_command
@@ -91,6 +137,7 @@ def main():
 
     sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
+    total_copied = 0
     progress, task_id = initialize_progress_bar(len(sample_paths), "Processing samples...")
     with Live(progress):
         for sample_path in sample_paths:
@@ -98,8 +145,10 @@ def main():
             input_path = Path(sample_path) / args.input  # Path to dir w/ the .tif files to copy
             target_dir = Path(args.target_dir).resolve() if args.target_dir else Path.cwd()
 
-            if input_path.is_dir() and any(input_path.glob("*.tif")):
-                copy_specific_tifs(sample_path, input_path, target_dir, args.slices, args.verbose)
+            if input_path.is_dir():
+                total_copied += copy_specific_tifs(
+                    sample_path, input_path, target_dir, args.slices, args.verbose
+                )
             else:
                 # Load the image, extract the specified slices, and save them to the target directory
                 matches = match_files(args.input, sample_path)
@@ -130,10 +179,22 @@ def main():
                     
                     slice_path = target_dir / f"{Path(sample_path).stem}_{slice_number:04d}.tif"
                     tifffile.imwrite(str(slice_path), slice_img)
+                    total_copied += 1
                     if args.verbose:
                         print(f"    Saved {slice_path}")
 
             progress.update(task_id, advance=1)
+
+    if total_copied == 0:
+        raise RuntimeError(
+            "No TIFF files were copied or saved. "
+            "Check input paths, filenames, and requested slice indices."
+        )
+
+    print(
+        f"[green]Successfully copied/saved {total_copied} TIFF files "
+        f"from {len(sample_paths)} samples.[/green]"
+    )
 
     verbose_end_msg()
 
