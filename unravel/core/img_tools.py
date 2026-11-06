@@ -125,9 +125,11 @@ def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executabl
     print("\n    Running Ilastik with command:\n", ' '.join(cmd[:10]), ' '.join(tif_list[:3]), f'[default bold]...\n')
     result = subprocess.run(cmd, capture_output=True, text=True, shell=(os.name == 'nt'))
     if result.returncode != 0:
-        print("\n    Ilastik failed with error:\n", result.stderr)
-    else:
-        print("    Ilastik completed successfully.")
+        raise RuntimeError(
+            f"Ilastik failed (exit code {result.returncode}):\n{result.stderr}"
+        )
+
+    print("    Ilastik completed successfully.")
 
 @print_func_name_args_times()
 def pad(ndarray, pad_percent=0.25):
