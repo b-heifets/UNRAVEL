@@ -92,6 +92,14 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
+    ilastik_exe = Path(args.ilastik_exe).expanduser()
+
+    if not ilastik_exe.is_file():
+        raise FileNotFoundError(
+            f"Ilastik executable not found: {ilastik_exe}\n"
+            "Specify the correct path with -ie."
+        )
+
     sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
     progress, task_id = initialize_progress_bar(len(sample_paths), "Processing samples...")
@@ -109,17 +117,11 @@ def main():
 
             # Check for final output and skip if it already exists
             labels = args.labels if args.labels else []
-            if labels:
-                last_label = labels[-1]
-                final_output = segmentation_dir / f"{args.output}_{last_label}.nii.gz"
-                if final_output.exists():
-                    print(f"\n\n    {final_output} already exists. Skipping.\n")
-                    progress.update(task_id, advance=1)
-                    continue
-
-            # Also check if there are already segmented TIFFs (intermediate output) and skip (to avoid redundant processing with parallel runs)
-            if output_tif_dir.exists() and any(output_tif_dir.glob("*.tif")):
-                print(f"\n\n    {output_tif_dir} already contains segmented TIFFs. Skipping.\n")
+            if labels and all(
+                (segmentation_dir / f"{args.output}_{label}.nii.gz").exists()
+                for label in labels
+            ):
+                print("\n    All requested label masks already exist. Skipping.")
                 progress.update(task_id, advance=1)
                 continue
 
@@ -143,20 +145,44 @@ def main():
                 save_as_tifs(img, input_tif_dir)
                 remove_tmp_tifs = True
 
-            # Check if output TIFFs already exist
-            if output_tif_dir.exists():
-                output_z_size = count_files(output_tif_dir)
-            else:
-                output_z_size = 0
+            output_z_size = len(list(output_tif_dir.glob("*.tif")))
 
-            if input_z_size == output_z_size:
-                print(f"\n\n    {output_tif_dir} already contains {output_z_size} TIFFs. Skipping.\n")
+            if output_z_size == input_z_size:
+                print(f"\n    Found {output_z_size} segmented TIFFs.")
+
+                if labels:
+                    save_labels_as_masks(
+                        output_tif_dir, labels, segmentation_dir,
+                        args.output, verbose=args.verbose
+                    )
+
+                if remove_tmp_tifs:
+                    shutil.rmtree(input_tif_dir)
+
+                if args.rm_out_tifs:
+                    shutil.rmtree(output_tif_dir)
+
                 progress.update(task_id, advance=1)
                 continue
+
+            if output_z_size > 0:
+                raise RuntimeError(
+                    f"Incomplete segmentation in {output_tif_dir}: "
+                    f"found {output_z_size}/{input_z_size} TIFFs. "
+                    "Remove incomplete outputs before rerunning."
+                )
 
             # Perform pixel classification and output segmented tifs
             output_tif_dir.mkdir(exist_ok=True, parents=True)
             pixel_classification(str(input_tif_dir), str(args.ilastik_prj), str(output_tif_dir), args.ilastik_exe)
+
+            output_z_size = len(list(output_tif_dir.glob("*.tif")))
+
+            if output_z_size != input_z_size:
+                raise RuntimeError(
+                    f"Expected {input_z_size} segmented TIFFs, "
+                    f"but found {output_z_size} in {output_tif_dir}."
+                )
 
             # Save labels as binary masks if requested
             if labels:
