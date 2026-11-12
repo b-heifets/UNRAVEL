@@ -70,6 +70,7 @@ def parse_args():
 # TODO: Add an email option to send a message when the processing is complete. Add progress bar. See if fragments can be generated in parallel. Could make avg and avg diff maps in this script (e.g., before merge since this is fast)
 # TODO: Test nargs=argparse.REMAINDER with options
 # TODO: Remove all.nii.gz after vstats is done
+# TODO: Remove -k arg, since that can be done with lr_avg or smooth
 
 def check_fdr_command():
     """Check if the 'fdr' command is available in the system's path."""
