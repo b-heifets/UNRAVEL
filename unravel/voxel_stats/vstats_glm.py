@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_glm`` (``vsg``)as a fast parametric alternative to ``vstats`` for a
+Use ``vstats_glm`` (``vsg``) from UNRAVEL as a fast parametric alternative to ``vstats`` for a
 two-sample unpaired voxel-wise t-test.
 
 The script is intentionally organized similarly to UNRAVEL's ``vstats``:
@@ -62,53 +62,54 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from rich import print
+from rich.traceback import install
 
 import nibabel as nib
 import numpy as np
 
-try:
-    from rich import print
-    from rich.traceback import install
-except ImportError:
-    install = lambda: None
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Fast parametric voxel-wise two-sample t-test using FSL fsl_glm.",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    parser.add_argument(
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument(
         "-mas", "--mask",
         help="Path to mask.nii.gz. If omitted, fsl_glm is run without an explicit mask.",
+        action=SM
     )
-    parser.add_argument(
+    opts.add_argument(
         "-k", "--kernel",
         help="Gaussian smoothing sigma in mm if > 0. Default: 0.",
         default=0,
         type=float,
+        action=SM
     )
-    parser.add_argument(
+    opts.add_argument(
         "-a", "--atlas",
-        help=(
-            "Atlas copied to stats/ for viewing. "
-            "Default: atlas/atlas_CCFv3_2020_30um.nii.gz"
-        ),
+        help="Atlas copied to stats/ for viewing. Default: atlas/atlas_CCFv3_2020_30um.nii.gz",
         default="atlas/atlas_CCFv3_2020_30um.nii.gz",
+        action=SM
     )
-    parser.add_argument(
+    opts.add_argument(
         "-v", "--verbose",
         help="Stream FSL command output. Default: False.",
         action="store_true",
     )
-    parser.add_argument(
+    opts.add_argument(
         "-opt", "--options",
         help="Additional options passed to fsl_glm; this must be the final script argument.",
         nargs=argparse.REMAINDER,
         default=[],
     )
+
     return parser.parse_args()
 
+# TODO: Remove -k arg, since that can be done with lr_avg or smooth
 
 def run_command(command, verbose=False):
     """Run a command, optionally streaming combined stdout/stderr."""
@@ -268,17 +269,18 @@ def copy_if_available(source, stats_dir, label):
     return source
 
 
+@log_command
 def main():
     install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     cwd = Path.cwd()
-    stats_dir = cwd / "stats"
+    stats_dir = cwd / "glm_stats"
     stats_dir.mkdir(exist_ok=True)
 
-    images = match_images()
-    if len(images) < 2:
-        sys.exit("Error: At least two input *.nii.gz files are required.")
+    images = match_files('*.nii.gz')
 
     groups = get_groups_info(images)
     group_names = list(groups)
@@ -392,5 +394,7 @@ def main():
     print("    Apply FDR or another multiple-comparison correction for whole-brain inference.\n")
 
 
-if __name__ == "__main__":
+    verbose_end_msg()
+
+if __name__ == '__main__':
     main()
