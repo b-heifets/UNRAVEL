@@ -90,7 +90,7 @@ def parse_args():
     opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
     opts.add_argument('-min', '--min_voxels', help='Minimum voxel count per connected component to keep (default: 1 keeps all)', type=int, default=1, action=SM)
     opts.add_argument('-i', '--intensity_img', help='rel_path/intensity image used for mean or mean_in_seg', default=None, action=SM)
-    opts.add_argument('-ch', '--channel', help='Channel number for .czi images. Default: 0', default=0, type=int, action=SM)
+    opts.add_argument('-ch', '--channel', help='Channel number for .czi images (loaded with -i) for mean or mean_in_seg. Default: 1', default=1, type=int, action=SM)
 
     compatibility = parser.add_argument_group('Compatibility options')
     compatibility.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
