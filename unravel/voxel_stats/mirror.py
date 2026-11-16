@@ -18,6 +18,7 @@ import numpy as np
 import nibabel as nib
 from pathlib import Path
 from rich.traceback import install
+from rich import print
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
@@ -97,7 +98,7 @@ def main():
         else:
             mirrored_filename = Path.cwd() / f"mirror_{basename}"
 
-        if not os.path.exists(mirrored_filename): 
+        if not mirrored_filename.exists(): 
             nii = nib.load(file)
             img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
 
@@ -105,6 +106,8 @@ def main():
 
             mirrored_nii = nib.Nifti1Image(mirrored_img, nii.affine, nii.header)
             nib.save(mirrored_nii, mirrored_filename)
+        else:
+            print(f"[yellow]{mirrored_filename} exists. Skipping...")
 
     verbose_end_msg()
 
