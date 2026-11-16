@@ -17,6 +17,7 @@ unravel.image_io package
    tif_to_tifs
    zarr_to_nii
    zarr_compress
+   check_tif_counts
 
 .. automodule:: unravel.image_io
    :members:

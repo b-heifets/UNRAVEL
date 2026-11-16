@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Use ``io_check_tif_counts`` to compare the number of TIFF files across two or more
-image directories for each sample. Accepts .tif, .ome.tif, and .tiff files.
+Use ``io_check_tif_counts`` or ``ctc`` from UNRAVEL to compare the number of TIFF files
+across two or more image directories for each sample. Accepts .tif, .ome.tif, and .tiff files.
 
 Inputs:
     - Relative paths to TIFF directories within each sample (e.g., 488 561 561_rb20)

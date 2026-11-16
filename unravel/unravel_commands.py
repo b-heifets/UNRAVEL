@@ -551,6 +551,12 @@ def main():
                 "common": False,
                 "alias": "zc"
             },
+            "io_check_tif_counts": {
+                "module": "unravel.image_io.check_tif_counts",
+                "description": "Check if dirs with TIFF series in sample?? dirs have matching numbers of TIFFs",
+                "common": False,
+                "alias": "ctc"
+            },            
         },
         "Image tools": {
             "img_math": {
