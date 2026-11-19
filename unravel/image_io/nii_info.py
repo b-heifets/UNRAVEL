@@ -13,10 +13,7 @@ import numpy as np
 from rich import print
 from rich.traceback import install
 
-from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.img_tools import label_IDs
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -43,7 +40,9 @@ def main():
     install()
     args = parse_args()
 
-    nii_path = args.input if str(args.input).endswith(".nii.gz") else f"{args.input}.nii.gz"
+    nii_path = str(args.input)
+    if not nii_path.endswith((".nii", ".nii.gz")):
+        nii_path += ".nii.gz"
     nii = nib.load(nii_path)
     
     np.set_printoptions(precision=2, suppress=True)
@@ -78,6 +77,7 @@ def main():
 
     # Print number of unique intensities
     if args.unique:
+        from unravel.core.img_tools import label_IDs
         if not 'img' in locals():
             img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
         uniq_intensities = label_IDs(img, min_voxel_count=1, print_IDs=False, print_sizes=False)
