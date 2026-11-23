@@ -99,10 +99,16 @@ def sunburst(img, atlas, atlas_res_in_um, output_path, sunburst_csv_path='sunbur
 
     volumes_dict = calculate_regional_volumes(img, atlas, atlas_res_in_um)
 
-    if sunburst_csv_path == 'sunburst_IDPath_Abbrv.csv': 
-        sunburst_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / sunburst_csv_path)
-    else:
-        sunburst_df = pd.read_csv(sunburst_csv_path)
+    # Load the sunburst hierarchy CSV from a provided path or the bundled CSVs
+    sunburst_csv = Path(sunburst_csv_path)
+
+    if not sunburst_csv.is_file() and sunburst_csv.parent == Path('.'):
+        sunburst_csv = Path(__file__).parent.parent / 'core' / 'csvs' / sunburst_csv.name
+
+    if not sunburst_csv.is_file():
+        raise FileNotFoundError(f"Sunburst CSV not found: {sunburst_csv_path}")
+
+    sunburst_df = pd.read_csv(sunburst_csv)
 
     # Load the specified columns from the CSV with CCFv3 info
     if info_csv_path == 'CCFv3-2017_info.csv' or info_csv_path == 'CCFv3-2020_info.csv': 
