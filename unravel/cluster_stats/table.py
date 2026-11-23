@@ -77,11 +77,11 @@ def parse_args():
 
 # TODO: Correct font color for the volumes column. 'fiber tracts' is filled with white rather than the color of the fiber tracts
 # TODO: 'CUL4, 5' is not filled with the color of the region. 
-# TODO: The first 3 columns need to be converted to a number in the excel file. Can this be done in the code?
+# TODO: The column with cluster IDs need to be converted to a number in the excel file. Can this be done in the code?
 # TODO: Sometimes when copying tables to PPT, the close to black color in the Volumes column is not visible.
 # TODO: Fix the font in the volumes column to be white if the fill color is dark and black if the fill color is light
 # TODO: CA3slm is not filled with the color of the region.
-
+# TODO: Getting CoGs from nii_CoGs() takes more time (nii loading). Maybe ci could generate the table to reduce redudant loading and save about 10s per run.
 
 def can_collapse(df, depth_col):
     """
