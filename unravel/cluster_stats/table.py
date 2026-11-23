@@ -61,7 +61,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-ci', '--cluster_index', help='Labeled cluster-index NIfTI image used to calculate CoGs.', required=True, action=SM)
+    reqs.add_argument('-i', '-ci', '--cluster_index', help='Labeled cluster-index NIfTI image used to calculate CoGs.', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)', action=SM)
