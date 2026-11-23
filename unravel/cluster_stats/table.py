@@ -39,6 +39,7 @@ Usage:
 
 import openpyxl
 import math
+import nibabel as nib
 import numpy as np
 import pandas as pd
 from glob import glob
@@ -49,6 +50,7 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Border, Side, Font, Alignment
 from rich import print
 from rich.traceback import install
+from scipy.ndimage import center_of_mass
 
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -57,6 +59,9 @@ from unravel.cluster_stats.sunburst_sort import sunburst_sort
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-ci', '--cluster_index', help='Labeled cluster-index NIfTI image used to calculate CoGs.', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)', action=SM)
@@ -240,6 +245,22 @@ def get_fill_color(value, max_value):
     
     return fill_color, font_color
 
+def nii_CoGs(cluster_index_nii_path):
+    """ Calculate CoGs directly from the cluster-index image """
+    nii = nib.load(cluster_index_nii_path)
+    img = np.asanyarray(nii.dataobj).squeeze()
+
+    cluster_ids = np.unique(img)
+    cluster_ids = cluster_ids[cluster_ids > 0].astype(int)
+
+    cogs = center_of_mass(img, labels=img, index=cluster_ids)
+
+    cluster_CoGs = {
+        str(cluster_id): ', '.join(f'{coord:.1f}' for coord in cog)
+        for cluster_id, cog in zip(cluster_ids, cogs)
+    }
+    return cluster_CoGs
+
 @log_command
 def main():
     install()
@@ -257,39 +278,8 @@ def main():
     # Generate dynamic column names based on args.top_regions
     column_names = ['Cluster'] + ['Volume'] + ['CoG'] + ['~Region'] + ['ID_Path'] + [f'Top_Region_{i+1}' for i in range(args.top_regions)]
 
-    # Load the *cluster_info.txt file from the parent dir to get the cluster Centroid of Gravity (CoG)
-    cluster_info_txt_parent = Path(args.val_clusters_dir).parent if args.val_clusters_dir else Path.cwd()
-    cluster_info_files = list(cluster_info_txt_parent.glob('*cluster_info.txt'))
-    
-    # If no cluster_info.txt file is found, search in the grandparent dir
-    if not cluster_info_files:
-        # Check for it in the grandparent dir
-        cluster_info_txt_grandparent = cluster_info_txt_parent.parent
-        cluster_info_files = list(cluster_info_txt_grandparent.glob('*cluster_info.txt'))
-
-    cluster_CoGs = {}
-    if not cluster_info_files:
-        print(f'\n    [yellow]Warning: No *cluster_info.txt file found in {cluster_info_txt_parent} or {cluster_info_txt_grandparent}. CoG values will be blank.[/yellow]')
-    else:
-        cluster_info_file = cluster_info_files[0] # first match
-
-        # Load the cluster info file
-        cluster_info_df = pd.read_csv(cluster_info_file, sep='\t', header=None)  # Assuming tab-separated values; adjust if different
-
-        # Reverse the row order of only the first column (excluding the header)
-        first_column_name = cluster_info_df.columns[0]
-        reversed_data = cluster_info_df[first_column_name].iloc[1:].iloc[::-1].reset_index(drop=True) # Reverse the data 
-        new_first_column = pd.concat([cluster_info_df[first_column_name].iloc[:1], reversed_data]) # Concat header w/ reversed data
-        cluster_info_df[first_column_name] = new_first_column.values # Assign the new column back to the DataFrame
-
-        # Get the CoG for each cluster (values in last three columns of each row)
-        CoGs = cluster_info_df.iloc[:, -3:].values
-
-        # Convert to this format: 'x, y, z'
-        CoGs = [', '.join(map(str, CoG)) for CoG in CoGs]
-
-        # Create a dict w/ the first column as keys and the CoG as values
-        cluster_CoGs = dict(zip(cluster_info_df[first_column_name], CoGs))
+    # Calculate CoGs directly from the cluster-index image
+    cluster_CoGs = nii_CoGs(args.cluster_index)
 
     # Create an empty DataFrame with the column names
     top_regions_and_percent_vols_df = pd.DataFrame(columns=column_names)

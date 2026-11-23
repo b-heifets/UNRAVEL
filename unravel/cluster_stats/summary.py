@@ -303,6 +303,7 @@ def main():
         # Run cstats_table
         table_args = [
             '-vcd', valid_clusters_index_dir,
+            '-ci', valid_cluster_index_path,
             '-t', cfg.table.top_regions,
             '-pv', cfg.table.percent_vol,
             '-csv', cfg.index.info_csv_path,
