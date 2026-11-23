@@ -256,7 +256,7 @@ def nii_CoGs(cluster_index_nii_path):
     cogs = center_of_mass(img, labels=img, index=cluster_ids)
 
     cluster_CoGs = {
-        str(cluster_id): ', '.join(f'{coord:.1f}' for coord in cog)
+        str(cluster_id): ', '.join(f'{coord:.0f}' for coord in cog)
         for cluster_id, cog in zip(cluster_ids, cogs)
     }
     return cluster_CoGs
