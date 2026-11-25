@@ -302,7 +302,11 @@ def load_3D_tif(tif_path, desired_axis_order="xyz", return_res=False, return_met
                 root = ET.fromstring(ome_xml)
 
                 # Find the Pixels element and get PhysicalSizeX and PhysicalSizeZ
-                pixels = root.find(".//{http://www.openmicroscopy.org/Schemas/OME/2016-06}Pixels")
+                pixels = root.find(".//{*}Pixels")
+
+                if pixels is None:
+                    raise ValueError("No Pixels element found in OME metadata.")
+
                 xy_res = float(pixels.attrib['PhysicalSizeX'])
                 z_res = float(pixels.attrib['PhysicalSizeZ'])
 
